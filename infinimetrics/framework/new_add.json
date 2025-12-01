@@ -1,0 +1,102 @@
+{
+    "config": {
+        "model_source": "Manual_Test",
+        "opset_version": 11,
+        "operator": "mul",
+        "attributes": [],
+        "inputs": [
+            {
+                "name": "a",
+                "dtype": "float32",
+                "shape": [
+                    13,
+                    4,
+                    4
+                ],
+                "strides": [
+                    20,
+                    4,
+                    1
+                ]
+            },
+            {
+                "name": "b",
+                "dtype": "float32",
+                "shape": [
+                    13,
+                    4,
+                    4
+                ],
+                "strides": [
+                    20,
+                    4,
+                    1
+                ]
+            }
+        ],
+        "outputs": [
+            {
+                "name": "c",
+                "dtype": "float32",
+                "shape": [
+                    13,
+                    4,
+                    4
+                ],
+                "strides": [
+                    20,
+                    4,
+                    1
+                ]
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 100,
+        "command": "python base_op_bench.py --op Mul --input_shapes 13x4x4,13x4x4 --precision FP32 --iter 100 --device cuda",
+        "device": "cuda",
+        "bench": "both"
+    },
+    "metrics": [
+        {
+            "name": "operator.latency",
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_latency.csv",
+            "unit": "ms"
+        },
+        {
+            "name": "operator.flops",
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_flops.csv",
+            "unit": "TFLOPS"
+        },
+        {
+            "name": "operator.bandwidth",
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_bandwidth.csv",
+            "unit": "GB/s"
+        },
+        {
+            "name": "operator.tensor_accuracy",
+            "type": "tensor_diff",
+            "reference": {
+                "uri": "./operator/data/result/${run_id}_operator_reference_output.npy",
+                "shape": [
+                    13,
+                    4,
+                    4
+                ],
+                "dtype": "float32"
+            },
+            "candidate": {
+                "uri": "./operator/data/result/${run_id}_operator_candidate_output.npy",
+                "shape": [
+                    13,
+                    4,
+                    4
+                ],
+                "dtype": "float32"
+            },
+            "unit": ""
+        }
+    ]
+}

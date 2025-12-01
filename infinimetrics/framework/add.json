@@ -1,0 +1,110 @@
+{
+    "config": {
+        "model_source": "FM9G_70B",
+        "opset_version": 11,
+        "operator": "add",
+        "attributes": [],
+        "inputs": [
+            {
+                "name": "A",
+                "dtype": "float16",
+                "shape": [
+                    1,
+                    64,
+                    128,
+                    128
+                ],
+                "strides": [
+                    1048576,
+                    16384,
+                    128,
+                    1
+                ]
+            },
+            {
+                "name": "B",
+                "dtype": "float16",
+                "shape": [
+                    1,
+                    64,
+                    128,
+                    128
+                ],
+                "strides": [
+                    1048576,
+                    16384,
+                    128,
+                    1
+                ]
+            }
+        ],
+        "outputs": [
+            {
+                "name": "Y",
+                "dtype": "float16",
+                "shape": [
+                    1,
+                    64,
+                    128,
+                    128
+                ],
+                "strides": [
+                    1048576,
+                    16384,
+                    128,
+                    1
+                ]
+            }
+        ],
+        "warmup_iterations": 100,
+        "measured_iterations": 1000,
+        "command": "python base_op_bench.py --op Add --input_shapes 1x64x128x128,1x64x128x128 --precision FP16 --iter 1000",
+        "device": "cpu",
+        "bench": "both"
+    },
+    "metrics": [
+        {
+            "name": "operator.latency",
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_latency.csv",
+            "unit": "ms"
+        },
+        {
+            "name": "operator.flops",
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_flops.csv",
+            "unit": "TFLOPS"
+        },
+        {
+            "name": "operator.bandwidth",
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_bandwidth.csv",
+            "unit": "GB/s"
+        },
+        {
+            "name": "operator.tensor_accuracy",
+            "type": "tensor_diff",
+            "reference": {
+                "uri": "./operator/data/result/${run_id}_operator_reference_output.npy",
+                "shape": [
+                    1,
+                    64,
+                    128,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            "candidate": {
+                "uri": "./operator/data/result/${run_id}_operator_candidate_output.npy",
+                "shape": [
+                    1,
+                    64,
+                    128,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            "unit": ""
+        }
+    ]
+}
