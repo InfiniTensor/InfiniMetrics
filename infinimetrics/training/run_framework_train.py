@@ -2,6 +2,19 @@
 import argparse
 import os
 import sys
+import logging
+import json
+
+# Setup logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('framework_train.log') # optional: output to file
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # Add current directory to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -15,7 +28,7 @@ def create_training_runner(framework, config_manager, gpu_monitor):
         return MegatronRunner(config_manager, gpu_monitor)
     elif framework.lower() == "infinitrain":
         try:
-            from frameworks import InfinitrainRunner
+            from frameworks import InfinitainRunner
             return InfinitrainRunner(config_manager, gpu_monitor)
         except ImportError:
             print("Warning: Infinitrain runner not found, using Megatron as fallback")
@@ -27,24 +40,52 @@ def create_training_runner(framework, config_manager, gpu_monitor):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", required=True, help="path to config.json")
-    parser.add_argument("--framework", default="megatron", choices=["megatron", "infinitrain"], 
-                       help="training framework to use")
     parser.add_argument("--gpu-platform", default="nvidia", choices=["nvidia", "other"],
                        help="GPU platform for monitoring")
     args = parser.parse_args()
     
-    # Create configuration manager
-    config_manager = ConfigManager(args.config)
-    
-    # Create GPU monitor
-    gpu_monitor = create_gpu_monitor(args.gpu_platform)
-    
-    # Create training runner
-    runner = create_training_runner(args.framework, config_manager, gpu_monitor)
-    
-    # Execute training
-    result_json = runner.run()
-    print(f"\nTraining completed. Results saved to: {result_json}")
+    # Check if config file exists
+    if not os.path.exists(args.config):
+        logger.error(f"Config file '{args.config}' not found")
+        return 1
+
+    try:
+        # Load config to get framework (评论5)
+        with open(args.config, "r") as f:
+            config_data = json.load(f)
+
+        # Get framework from config (评论5)
+        framework = config_data.get("config", {}).get("framework", "megatron")
+        logger.info(f"Using framework from config: {framework}")
+
+        # Create configuration manager
+        config_manager = ConfigManager(args.config)
+
+        # Determine GPU platform: command line overrides config
+        gpu_platform = args.gpu_platform
+        if gpu_platform is None:
+            gpu_platform = config_manager.gpu_platform
+            logger.info(f"Using GPU platform from config: {gpu_platform}")
+        else:
+            logger.info(f"Using GPU platform from command line: {gpu_platform}")
+
+        # Create GPU monitor
+        gpu_monitor = create_gpu_monitor(gpu_platform)
+
+        # Create training runner
+        runner = create_training_runner(framework, config_manager, gpu_monitor)
+
+        # Execute training
+        result_json = runner.run()
+        logger.info(f"Training completed. Results saved to: {result_json}")
+        return 0
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON config file: {e}")
+        return 1
+    except Exception as e:
+        logger.error(f"Training failed with error: {e}", exc_info=True)
+        return 1
 
 if __name__ == "__main__":
-    main()
+    exit(main())

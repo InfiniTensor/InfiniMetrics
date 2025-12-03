@@ -1,6 +1,7 @@
 import random
 import re
 import subprocess
+import logging
 
 try:
     import torch
@@ -26,12 +27,15 @@ class MegatronRunner(TrainingRunner):
         "vision_inpaint": "pretrain_vision_inpaint.py",
         "vlm": "pretrain_vlm.py"
     }
-    
+
     def __init__(self, config_manager, gpu_monitor):
         super().__init__(config_manager, gpu_monitor)
         self.nproc_per_node = self._calculate_nproc_per_node()
         self.master_port = self._pick_random_port()
         
+        # Setup logger
+        self.logger = logging.getLogger(self.__class__.__name__)
+
         # Compile regex patterns
         self.iter_pattern = re.compile(r"iteration\s+(\d+)\s*/\s*(\d+)", re.IGNORECASE)
         self.loss_pattern = re.compile(r"lm loss:\s*([+\-]?\d+(?:\.\d+)?(?:[Ee][+\-]?\d+)?)", re.IGNORECASE)
@@ -52,6 +56,12 @@ class MegatronRunner(TrainingRunner):
     def build_training_command(self):
         """Build Megatron training command"""
         train_script = self.MODEL_SCRIPT_MAP.get(self.config.model_name, self.MODEL_SCRIPT_MAP["gpt"])
+        
+        # Set CUDA_VISIBLE_DEVICES if device_ids specified
+        env_vars = {}
+        if hasattr(self.config, 'device_ids') and self.config.device_ids:
+            env_vars['CUDA_VISIBLE_DEVICES'] = ','.join(map(str, self.config.device_ids))
+
         # Build torchrun command
         torchrun_cmd = [
             "torchrun", 
@@ -82,8 +92,69 @@ class MegatronRunner(TrainingRunner):
             f"--vocab-size={self.config.vocab_size}",
         ]
         
+        # Add precision configuration
+        precision_map = {
+            "bf16": "--bf16",
+            "fp16": "--fp16",
+            "fp32": "",
+            "mixed": "--mixed-precision"
+        }
+
+        if self.config.precision in precision_map:
+            arg = precision_map[self.config.precision]
+            if arg:
+                megatron_args.append(arg)
+
+        # Add optimizer parameters
+        if self.config.optimizer.lower() in ["adam", "sgd"]:
+            megatron_args.append(f"--optimizer={self.config.optimizer.lower()}")
+        else:
+            self.logger.warning(f"Optimizer '{self.config.optimizer}' not supported by Megatron, using 'adam' instead")
+            megatron_args.append("--optimizer=adam")
+
+        if self.config.weight_decay > 0:
+            megatron_args.append(f"--weight-decay={self.config.weight_decay}")
+
+        if self.config.clip_grad > 0:
+            megatron_args.append(f"--clip-grad={self.config.clip_grad}")
+        
+        if self.config.optimizer.lower() == "adam" or self.config.optimizer.lower() == "adamw":
+            megatron_args.append(f"--adam-beta1={self.config.beta1}")
+            megatron_args.append(f"--adam-beta2={self.config.beta2}")
+
+        # Add learning rate scheduler
+        scheduler_map = {
+            "cosine": "cosine",
+            "linear": "linear",
+            "constant": "constant"
+        }
+
+        if self.config.lr_scheduler in scheduler_map:
+            megatron_args.append(f"--lr-decay-style={scheduler_map[self.config.lr_scheduler]}")
+
+        if self.config.min_lr > 0:
+            megatron_args.append(f"--min-lr={self.config.min_lr}")
+
+        # Warmup configuration
+        warmup_settings = self.config.get_warmup_settings()
+        if warmup_settings["type"] == "ratio":
+            megatron_args.append(f"--lr-warmup-fraction={warmup_settings['value']}")
+        elif warmup_settings["type"] == "iters":
+            megatron_args.append(f"--lr-warmup-iters={warmup_settings['value']}")
+        elif warmup_settings["type"] == "samples":
+            megatron_args.append(f"--lr-warmup-samples={warmup_settings['value']}")
+
+        # Learning rate decay settings
+        lr_decay_settings = self.config.get_lr_decay_settings()
+        if lr_decay_settings:
+            if lr_decay_settings["type"] == "iters":
+                megatron_args.append(f"--lr-decay-iters={lr_decay_settings['value']}")
+            elif lr_decay_settings["type"] == "samples":
+                megatron_args.append(f"--lr-decay-samples={lr_decay_settings['value']}")
+
         # Add data configuration
         if self.config.train_dataset is None or (isinstance(self.config.train_dataset, str) and self.config.train_dataset.lower() == "mock"):
+            tokenizer_type = "NullTokenizer" 
             megatron_args += ["--mock-data", "--tokenizer-type", "NullTokenizer", "--vocab-size", str(self.config.vocab_size)]
         else:
             megatron_args += [f"--data-path={self.config.train_dataset}"]
@@ -97,17 +168,32 @@ class MegatronRunner(TrainingRunner):
         # Add common parameters
         megatron_args += [
             "--transformer-impl", "local",
-            "--bf16",
             "--no-gradient-accumulation-fusion",
             "--no-persist-layer-norm",
             "--log-interval", "1",
             "--log-throughput"
         ]
+
+        # Add evaluation configuration
+        if self.config.eval_interval > 0:
+            megatron_args.append(f"--eval-interval={self.config.eval_interval}")
+            megatron_args.append(f"--eval-iters={self.config.eval_iters}")
+
+        # Add checkpoint saving
+        if self.config.save_interval > 0:
+            megatron_args.append(f"--save-interval={self.config.save_interval}")
         
         if self.config.sp == 1:
             megatron_args.append("--sequence-parallel")
         
-        return torchrun_cmd + megatron_args
+        # Combine commands
+        cmd = torchrun_cmd + megatron_args
+
+        # Set environment variables if needed
+        if env_vars:
+            self.logger.info(f"Setting environment variables: {env_vars}")
+
+        return cmd
     
     def parse_training_output(self, line, metrics):
         """Parse Megatron training output"""

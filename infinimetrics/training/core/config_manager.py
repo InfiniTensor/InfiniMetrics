@@ -1,5 +1,7 @@
 import json
 import os
+import uuid
+from datetime import datetime
 
 class ConfigManager:
     """Configuration manager class, unified handling of training configuration parameters"""
@@ -19,9 +21,16 @@ class ConfigManager:
     
     def extract_parameters(self):
         """Extract and standardize configuration parameters"""
-        # Model configuration
+        # Framework and Model configuration
+        self.framework = self.conf.get("framework", "megatron").lower()
         self.model_name = self.conf.get("model", "gpt").lower()
         
+        # Device configuration
+        device_config = self.conf.get("device", {})
+        self.gpu_platform = device_config.get("gpu_platform", "nvidia")
+        self.device_ids = device_config.get("device_ids", [0])
+        self.cpu_only = device_config.get("cpu_only", False)
+
         # Training parameters
         train_args = self.conf.get("train_args", {})
         self.train_args = train_args
@@ -53,6 +62,27 @@ class ConfigManager:
         self.max_position_embeddings = int(train_args.get("max_position_embeddings", train_args.get("max-position-embeddings", self.seq_len)))
         self.vocab_size = int(train_args.get("vocab_size", train_args.get("vocab-size", 128256)))
         
+        self.precision = train_args.get("precision", "bf16")
+        self.optimizer = train_args.get("optimizer", "adamw")
+        self.weight_decay = float(train_args.get("weight_decay", 0.0))
+        self.clip_grad = float(train_args.get("clip_grad", 0.0))
+        self.beta1 = float(train_args.get("beta1", 0.9))
+        self.beta2 = float(train_args.get("beta2", 0.95))
+
+        # Learning rate scheduler
+        self.lr_scheduler = train_args.get("lr_scheduler", "cosine")
+        self.min_lr = float(train_args.get("min_lr", 0.0))
+        self.warmup_ratio = train_args.get("warmup_ratio")
+        self.warmup_iters = train_args.get("warmup_iters")
+        self.warmup_samples = train_args.get("warmup_samples")
+        self.lr_decay_iters = train_args.get("lr_decay_iters")
+        self.lr_decay_samples = train_args.get("lr_decay_samples")
+        
+        # Evaluation and saving
+        self.eval_interval = int(train_args.get("eval_interval", 100))
+        self.eval_iters = int(train_args.get("eval_iters", 10))
+        self.save_interval = int(train_args.get("save_interval", 1000))
+
         # Dataset configuration
         self.train_dataset = self.conf.get("train_dataset", None)
         self.validation_dataset = self.conf.get("validation_dataset", None)
@@ -91,3 +121,23 @@ class ConfigManager:
     def get_training_args(self):
         """Get training arguments"""
         return self.train_args
+
+    def get_warmup_settings(self):
+        """Intelligently get warmup settings, prioritize non-null values"""
+        if self.warmup_samples is not None:
+            return {"type": "samples", "value": self.warmup_samples}
+        elif self.warmup_iters is not None:
+            return {"type": "iters", "value": self.warmup_iters}
+        elif self.warmup_ratio is not None:
+            return {"type": "ratio", "value": self.warmup_ratio}
+        else:
+            return {"type": "ratio", "value": 0.03}  # Default
+
+    def get_lr_decay_settings(self):
+        """Intelligently get learning rate decay settings"""
+        if self.lr_decay_samples is not None:
+            return {"type": "samples", "value": self.lr_decay_samples}
+        elif self.lr_decay_iters is not None:
+            return {"type": "iters", "value": self.lr_decay_iters}
+        else:
+            return None
