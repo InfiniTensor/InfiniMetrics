@@ -1,7 +1,6 @@
 import json
 import math
 import os
-import uuid
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
@@ -14,16 +13,13 @@ class TrainingRunner(ABC):
         self.gpu_monitor = gpu_monitor
         self.logger = logging.getLogger(self.__class__.__name__)
         
-        #Determine the type of task
-        task_type = "Pretrain"  # default
+        # Use run_id from config
+        self.run_id = self.config.run_id
 
-        if hasattr(self.config, 'task_type') and self.config.task_type:
-            task_type = self.config.task_type
-        elif self.config.train_dataset and (isinstance(self.config.train_dataset, str) and
-                                       self.config.train_dataset.lower() == "mock"):
-            task_type = "Pretrain"
+        # Certificate run_id format
+        if not self.run_id:
+            raise ValueError("run_id is required in config")
 
-        self.run_id = f"train.{self.config.framework}.{task_type}.{uuid.uuid4()}"
         self.setup_output_files()
     
     def setup_output_files(self):
@@ -121,48 +117,12 @@ class TrainingRunner(ABC):
     
     def _save_result_json(self):
         """Save result JSON file"""
-        framework_display_map = {
-            "megatron": "MegatronLM",
-            "infinitrain": "InfiniTrain"
-        }
-
-        task_type = "Pretrain"  # default
-        
-        # Get It from config first
-        if hasattr(self.config, 'task_type') and self.config.task_type:
-            task_type = self.config.task_type
-        # Judging from the training data,
-        elif self.config.train_dataset:
-            dataset_lower = self.config.train_dataset.lower()
-            if dataset_lower == "mock":
-                task_type = "Pretrain"
-            elif any(keyword in dataset_lower for keyword in ['sft', 'instruction', 'finetune', 'fine-tune']):
-                task_type = "SFT"
-            elif any(keyword in dataset_lower for keyword in ['rlhf', 'dpo', 'ppo', 'reward']):
-                task_type = "RLHF"
-        # Judging from the training parameters
-        elif hasattr(self.config, 'lora_rank') and self.config.lora_rank:
-            task_type = "LoRA"
-    
-        framework_display = framework_display_map.get(
-            self.config.framework, 
-            self.config.framework.capitalize()
-        )
-
-        testcase = f"train.{framework_display}.{task_type}"
-        
-        run_id_parts = self.run_id.split('.')
-            
-        if len(run_id_parts) >= 3:
-            new_run_id = f"train.{self.config.framework}.{task_type}.{run_id_parts[-1]}"
-        else:
-            new_run_id = f"train.{self.config.framework}.{task_type}.{uuid.uuid4()}"
-       
         result = {
             "run_id": self.run_id,
             "success": 0,  # 0 indicates success
             "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "testcase": testcase,
+            "testcase": self.config.testcase,
+
             "config": {
                 "command": " ".join(self.build_training_command()),
                 "framework": self.config.framework,

@@ -1,6 +1,7 @@
 import json
 import os
-import uuid
+import random
+import string
 from datetime import datetime
 
 class ConfigManager:
@@ -10,6 +11,7 @@ class ConfigManager:
         self.config_path = config_path
         self.load_config()
         self.extract_parameters()
+        self.validate_and_complete_config()
     
     def load_config(self):
         """Load configuration file"""
@@ -18,12 +20,82 @@ class ConfigManager:
         
         self.conf = cfg.get("config", {})
         self.raw_config = cfg
+
+    def validate_and_complete_config(self):
+        """Validate required fields and complete missing optional fields"""
+        required_fields = ["framework", "model"]
+        for field in required_fields:
+            if field not in self.conf:
+                raise ValueError(f"Required field '{field}' missing in config")
+
+        if "run_id" not in self.conf:
+            # Automatic generation run_id: train.{framework}.{task_type}.{timestamp}.{random_str}
+            framework = self.conf.get("framework", "unknown")
+
+            # Infer the type of task
+            task_type = self.infer_task_type()
+
+            # Generate a timestamp (YYYYMMDDHHMM)
+            timestamp = datetime.now().strftime("%Y%m%d%H%M")
+
+            # Generates an 8-bit random string
+            random_str = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
+
+            self.conf["run_id"] = f"train.{framework}.{task_type}.{timestamp}.{random_str}"
+            print(f"Generated run_id: {self.conf['run_id']}")
+
+        # Generate or validate testcase
+        if "testcase" not in self.conf:
+            # The frame displays the name mapping
+            framework_display_map = {
+                "megatron": "MegatronLM",
+                "infinitrain": "InfiniTrain"
+            }
+
+            framework = self.conf.get("framework", "unknown")
+            task_type = self.infer_task_type()
+
+            framework_display = framework_display_map.get(framework, framework.capitalize())
+            self.conf["testcase"] = f"train.{framework_display}.{task_type}"
+            print(f"Generated testcase: {self.conf['testcase']}")
+
+    def infer_task_type(self):
+        """Infer task type from configuration"""
+        # Get from config or infer from data
+        if "task_type" in self.conf:
+            return self.conf["task_type"]
+
+        # Inferring from the training data
+        train_args = self.conf.get("train_args", {})
+
+        # Check for LoRA-related parameters
+        if train_args.get("lora_rank"):
+            return "LoRA"
+
+        # Check the training data set
+        train_dataset = self.conf.get("train_dataset", "")
+        if isinstance(train_dataset, str):
+            dataset_lower = train_dataset.lower()
+            if dataset_lower == "mock":
+                return "Pretrain"
+            elif any(keyword in dataset_lower for keyword in ['sft', 'instruction', 'finetune', 'fine-tune']):
+                return "SFT"
+            elif any(keyword in dataset_lower for keyword in ['rlhf', 'dpo', 'ppo', 'reward']):
+                return "RLHF"
+
+        # By default Pretrain
+        return "Pretrain"
     
     def extract_parameters(self):
         """Extract and standardize configuration parameters"""
+        # Test ID
+        self.run_id = self.conf.get("run_id", "")
+        self.testcase = self.conf.get("testcase", "")
+
         # Framework and Model configuration
         self.framework = self.conf.get("framework", "megatron").lower()
         self.model_name = self.conf.get("model", "gpt").lower()
+        self.task_type = self.infer_task_type().lower()
         
         # Device configuration
         device_config = self.conf.get("device", {})

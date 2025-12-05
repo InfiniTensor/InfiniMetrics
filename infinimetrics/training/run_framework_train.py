@@ -23,6 +23,8 @@ from core import ConfigManager, create_gpu_monitor
 
 def create_training_runner(framework, config_manager, gpu_monitor):
     """Factory function to create training runner"""
+    logger.info(f"Creating training runner for framework: {framework}")
+
     if framework.lower() == "megatron":
         from frameworks import MegatronRunner
         return MegatronRunner(config_manager, gpu_monitor)
@@ -50,13 +52,18 @@ def main():
         return 1
 
     try:
-        # Load config to get framework (评论5)
+        # Load config to get basic info
         with open(args.config, "r") as f:
             config_data = json.load(f)
 
-        # Get framework from config (评论5)
+        # Get framework from config
         framework = config_data.get("config", {}).get("framework", "megatron")
-        logger.info(f"Using framework from config: {framework}")
+        run_id = config_data.get("config", {}).get("run_id", "unknown")
+        testcase = config_data.get("config", {}).get("testcase", "unknown")
+        
+        logger.info(f"Run ID: {run_id}")
+        logger.info(f"Testcase: {testcase}")
+        logger.info(f"Framework: {framework}")
 
         # Create configuration manager
         config_manager = ConfigManager(args.config)
