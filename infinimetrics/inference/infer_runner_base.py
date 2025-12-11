@@ -432,15 +432,39 @@ class InferRunnerBase(abc.ABC):
         cmd_parts = []
         
         if self.config.framework.value == "infinilm":
-            cmd_parts.append("python scripts/jiuge.py --nvidia")
-            cmd_parts.append(self.config.model_path)
-            cmd_parts.append(str(self.config.infer_args.parallel.tp))
-            
-            # Add batch size parameter (if jiuge.py supports it)
             if self.config.mode.value == "direct":
-                if hasattr(self.config.infer_args, 'static_batch_size'):
-                    cmd_parts.append(f"--batch-size {self.config.infer_args.static_batch_size}")
+                # Direct mode: use jiuge.py for direct inference
+                cmd_parts.append("python scripts/jiuge.py --nvidia")
+                cmd_parts.append(self.config.model_path)
+                cmd_parts.append(str(self.config.infer_args.parallel.tp))
+            
+                # Add batch size parameter (if jiuge.py supports it)
+                if self.config.mode.value == "direct":
+                    if hasattr(self.config.infer_args, 'static_batch_size'):
+                        cmd_parts.append(f"--batch-size {self.config.infer_args.static_batch_size}")
         
+            else:  # service mode
+                # Service mode: use launch_server.py to start inference service
+                cmd_parts.append("python scripts/launch_server.py")
+                cmd_parts.append(f"--model-path {self.config.model_path}")
+                cmd_parts.append(f"--dev nvidia")
+                cmd_parts.append(f"--ndev {self.config.infer_args.parallel.tp}")
+
+                # Add common arguments
+                if hasattr(self.config.infer_args, 'max_batch'):
+                    cmd_parts.append(f"--max-batch {self.config.infer_args.max_batch}")
+                elif hasattr(self.config.infer_args, 'max_seq_len'):
+                    cmd_parts.append(f"--max-tokens {self.config.infer_args.max_seq_len}")
+
+                # Add trace testing command (if trace is provided)
+                if hasattr(self.config.infer_args, 'request_trace'):
+                    trace_cmd = (
+                        f"# Trace test: python trace_client.py "
+                        f"--trace {self.config.infer_args.request_trace} "
+                        f"--concurrency {self.config.infer_args.concurrency}"
+                    )
+                    cmd_parts.append(trace_cmd)
+
         else:  # vllm
             if self.config.mode.value == "direct":
                 cmd_parts.append("python -m vllm.benchmarks.benchmark_throughput")
@@ -451,6 +475,15 @@ class InferRunnerBase(abc.ABC):
                 cmd_parts.append("python -m vllm.entrypoints.api_server")
                 cmd_parts.append(f"--model {self.config.model_path}")
                 cmd_parts.append(f"--port 8000")
+                cmd_parts.append(f"--tensor-parallel-size {self.config.infer_args.parallel.tp}")
+
+                # Add trace serving command
+                if hasattr(self.config.infer_args, 'request_trace'):
+                    trace_cmd = (
+                        f"# Trace test: python -m vllm.benchmarks.benchmark_serving "
+                        f"--trace {self.config.infer_args.request_trace}"
+                    )
+                    cmd_parts.append(trace_cmd)
         
         return " ".join(cmd_parts)
     
