@@ -5,7 +5,7 @@ Unified Reasoning Evaluation Framework
 """
 
 __version__ = "1.0.0"
-__author__ = "Infinimetrics Team"
+__author__ = "InfiniTensor Team"
 
 from .infer_config import (
     InferConfig, InferConfigManager,

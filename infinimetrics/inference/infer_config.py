@@ -14,6 +14,20 @@ from datetime import datetime
 import random
 import string
 
+from common.testcase_utils import (
+    parse_testcase, 
+    generate_run_id,
+    validate_testcase_format
+)
+from common.constants import (
+    ProcessorType,
+    AcceleratorType,
+    DEFAULT_WARMUP_ITERATIONS,
+    DEFAULT_MEASURED_ITERATIONS,
+    DEFAULT_TIMEOUT_MS,
+    DEFAULT_OUTPUT_DIR
+)
+
 logger = logging.getLogger(__name__)
 
 class InferMode(Enum):
@@ -25,6 +39,17 @@ class FrameworkType(Enum):
     """Framework type enumeration"""
     INFINILM = "infinilm"
     VLLM = "vllm"
+#inference default
+DEFAULT_TIMEOUT_MS_SERVICE = 30000
+DEFAULT_MAX_SEQ_LEN = 4096
+DEFAULT_PROMPT_TOKEN_NUM = 1024
+DEFAULT_OUTPUT_TOKEN_NUM = 128
+DEFAULT_TEMPERATURE = 0.7
+DEFAULT_TOP_P = 0.9
+DEFAULT_TOP_K = 50
+DEFAULT_CONCURRENCY = 32
+DEFAULT_STATIC_BATCH_SIZE = 1
+DEFAULT_STREAM = True
 
 @dataclass
 class ParallelConfig:
@@ -58,32 +83,92 @@ class ParallelConfig:
 @dataclass
 class DeviceConfig:
     """Device configuration"""
-    gpu_platform: str = "nvidia"
+    processor_type: ProcessorType = ProcessorType.ACCELERATOR
+    accelerator: Optional[AcceleratorType] = AcceleratorType.NVIDIA
     device_ids: List[int] = None
     cpu_only: bool = False
 
     def __post_init__(self):
         if self.device_ids is None:
             self.device_ids = [0]
+        
+        if self.cpu_only:
+            self.processor_type = ProcessorType.CPU
+            self.accelerator = None
+        
+        if self.processor_type == ProcessorType.ACCELERATOR and self.accelerator is None:
+            raise ValueError("accelerator must be specified when processor_type is ACCELERATOR")
+        
+        if self.processor_type == ProcessorType.CPU and self.accelerator is not None:
+            self.accelerator = None
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'DeviceConfig':
         """Create device configuration from dictionary"""
         if not data:
             return cls()
-        return cls(
-            gpu_platform=data.get("gpu_platform", "nvidia"),
-            device_ids=data.get("device_ids", [0]),
-            cpu_only=data.get("cpu_only", False)
-        )
+        
+        cpu_only = data.get("cpu_only", False)
+        
+        if cpu_only:
+            # CPU mode
+            return cls(
+                processor_type=ProcessorType.CPU,
+                accelerator=None,
+                device_ids=data.get("device_ids", [0]),
+                cpu_only=True
+            )
+        else:
+            # accelerator mode
+            accelerator_str = data.get("accelerator")
+            if not accelerator_str:
+                accelerator_str = data.get("gpu_platform", "nvidia")
+            
+            # Mapping to the correct acceleratorType
+            accelerator_map = {
+                "nvidia": AcceleratorType.NVIDIA,
+                "cambricon": AcceleratorType.CAMBRICON,
+                "ascend": AcceleratorType.ASCEND,
+                "intel": AcceleratorType.INTEL,
+                "xpu": AcceleratorType.INTEL,    
+                "amd": AcceleratorType.AMD,
+                "rocm": AcceleratorType.AMD,         
+            }
+            
+            accelerator = accelerator_map.get(accelerator_str.lower())
+            if accelerator is None:
+                logger.warning(f"Unknown accelerator: {accelerator_str}, using NVIDIA as default")
+                accelerator = AcceleratorType.NVIDIA
+            
+            return cls(
+                processor_type=ProcessorType.ACCELERATOR,
+                accelerator=accelerator,
+                device_ids=data.get("device_ids", [0]),
+                cpu_only=False
+            )
 
     def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary"""
-        return {
-            "gpu_platform": self.gpu_platform,
+        """Into a dictionary"""
+        result = {
+            "processor_type": self.processor_type.value,
             "device_ids": self.device_ids,
             "cpu_only": self.cpu_only
         }
+        
+        if self.accelerator:
+            result["accelerator"] = self.accelerator.value
+        
+        return result
+    
+    @property
+    def is_cpu(self) -> bool:
+        """If it is in CPU mode"""
+        return self.processor_type == ProcessorType.CPU
+    
+    @property
+    def accelerator_type(self) -> Optional[AcceleratorType]:
+        """Gets the accelerator type"""
+        return self.accelerator if self.processor_type == ProcessorType.ACCELERATOR else None
 
 @dataclass
 class DirectInferArgs:
@@ -91,24 +176,24 @@ class DirectInferArgs:
     parallel: ParallelConfig
     static_batch_size: int
     prompt_token_num: int
-    output_token_num: int = 128
-    max_seq_len: int = 4096
-    temperature: float = 0.7
-    top_p: float = 0.9
-    top_k: int = 50
+    output_token_num: int = DEFAULT_OUTPUT_TOKEN_NUM
+    max_seq_len: int = DEFAULT_MAX_SEQ_LEN
+    temperature: float = DEFAULT_TEMPERATURE
+    top_p: float = DEFAULT_TOP_P
+    top_k: int = DEFAULT_TOP_K
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'DirectInferArgs':
         """Create direct inference arguments from dictionary"""
         return cls(
             parallel=ParallelConfig.from_dict(data.get("parallel", {})),
-            static_batch_size=data.get("static_batch_size", 1),
-            prompt_token_num=data.get("prompt_token_num", 1024),
-            output_token_num=data.get("output_token_num", 128),
-            max_seq_len=data.get("max_seq_len", 4096),
-            temperature=data.get("temperature", 0.7),
-            top_p=data.get("top_p", 0.9),
-            top_k=data.get("top_k", 50)
+            static_batch_size=data.get("static_batch_size", DEFAULT_STATIC_BATCH_SIZE),
+            prompt_token_num=data.get("prompt_token_num", DEFAULT_PROMPT_TOKEN_NUM),
+            output_token_num=data.get("output_token_num", DEFAULT_OUTPUT_TOKEN_NUM),
+            max_seq_len=data.get("max_seq_len", DEFAULT_MAX_SEQ_LEN),
+            temperature=data.get("temperature", DEFAULT_TEMPERATURE),
+            top_p=data.get("top_p", DEFAULT_TOP_P),
+            top_k=data.get("top_k", DEFAULT_TOP_K)
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -129,10 +214,10 @@ class ServiceInferArgs:
     """Service inference arguments"""
     parallel: ParallelConfig
     request_trace: str
-    concurrency: int = 32
-    max_seq_len: int = 4096
-    stream: bool = True
-    timeout_ms: int = 30000
+    concurrency: int = DEFAULT_CONCURRENCY
+    max_seq_len: int = DEFAULT_MAX_SEQ_LEN
+    stream: bool = DEFAULT_STREAM
+    timeout_ms: int = DEFAULT_TIMEOUT_MS_SERVICE
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'ServiceInferArgs':
@@ -140,10 +225,10 @@ class ServiceInferArgs:
         return cls(
             parallel=ParallelConfig.from_dict(data.get("parallel", {})),
             request_trace=data.get("request_trace", ""),
-            concurrency=data.get("concurrency", 32),
-            max_seq_len=data.get("max_seq_len", 4096),
-            stream=data.get("stream", True),
-            timeout_ms=data.get("timeout_ms", 30000)
+            concurrency=data.get("concurrency", DEFAULT_CONCURRENCY),
+            max_seq_len=data.get("max_seq_len", DEFAULT_MAX_SEQ_LEN),
+            stream=data.get("stream", DEFAULT_STREAM),
+            timeout_ms=data.get("timeout_ms", DEFAULT_TIMEOUT_MS_SERVICE)
         )
 
     def to_dict(self) -> Dict[str, Any]:
@@ -192,76 +277,50 @@ class InferConfig:
 
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'InferConfig':
-        """Create configuration object from dictionary - implemented with clear logic"""
+        """Create configuration object from dictionary"""
         # 1. Read outer level
         outer_run_id = config_dict.get("run_id")
         outer_testcase = config_dict.get("testcase")
         config_data = config_dict.get("config", {})
 
-        # 2. Read inner level (for error checking)
-        inner_run_id = config_data.get("run_id")
+        # 2. verify testcase position
         inner_testcase = config_data.get("testcase")
-
-        # 3. Process testcase
-        # Rule 2.1: If outer level has testcase → use it
         if outer_testcase:
             testcase = outer_testcase
+            if not validate_testcase_format(testcase):
+                raise ValueError(f"Invalid testcase format: {testcase}")
             logger.info(f"Using outer testcase: {testcase}")
-
-        # Rule 2.2: If inner level has testcase → raise error
         elif inner_testcase:
             raise ValueError(
                 "testcase must be at the outer level, not inside 'config'. "
-                f"Found: '{inner_testcase}' inside 'config'. "
-                "Please move it to the outer level."
+                f"Found: '{inner_testcase}' inside 'config'."
             )
-
-        # Rule 2.3: If no testcase at either level → raise error
         else:
             raise ValueError(
-                "testcase is required at the outer level of the config. "
-                "Example: {\"testcase\": \"infer.InfiniLM.Direct\", ...}"
+                "testcase is required at the outer level of the config."
             )
 
-        testcase = outer_testcase
-        logger.info(f"Using testcase: {testcase}")
-
-        # 4. Process run_id
-        # Rule 1.2: If inner level has run_id → raise error
+        # 3. verify run_id position
+        inner_run_id = config_data.get("run_id")
         if inner_run_id:
             raise ValueError(
                 "run_id must be at the outer level, not inside 'config'. "
-                f"Found: '{inner_run_id}' inside 'config'. "
-                "Please move it to the outer level or remove it to auto-generate."
+                f"Found: '{inner_run_id}' inside 'config'."
             )
 
-        # Rule 1.1: If outer level has run_id → use it (add timestamp+random code to prevent overwriting)
-        elif outer_run_id:
-            run_id = cls._enhance_user_run_id(outer_run_id)
-            logger.info(f"Using enhanced user-provided run_id: {run_id}")
-        else:
-            # Rule 1.3: Auto-generate run_id
-            run_id = cls._generate_auto_run_id(testcase)
-            logger.info(f"Auto-generated run_id: {run_id}")
+        # 4.  generate run_id
+        run_id = generate_run_id(testcase, outer_run_id)
 
-        # 5. Parse mode and framework from testcase
-        testcase_lower = testcase.lower()
-
-        # Determine inference mode
-        if "service" in testcase_lower:
-            mode = InferMode.SERVICE
-        elif "direct" in testcase_lower:
-            mode = InferMode.DIRECT
-        else:
-            mode = InferMode.DIRECT
-
-        # Determine framework
-        if "vllm" in testcase_lower:
-            framework = FrameworkType.VLLM
-        elif "infinilm" in testcase_lower:
+        # 5. Analytical reasoning models and frameworks
+        mode_str, framework_str = parse_testcase(testcase)
+        
+        mode = InferMode.DIRECT if mode_str == "direct" else InferMode.SERVICE
+        if framework_str == "infinilm":
             framework = FrameworkType.INFINILM
+        elif framework_str == "vllm":
+            framework = FrameworkType.VLLM
         else:
-            raise ValueError(f"Cannot determine framework from testcase: {testcase}")
+            raise ValueError(f"Unsupported inference framework: {framework_str}")
 
         # 6. Parse model_path
         model_path = config_data.get("model_path")
@@ -305,63 +364,6 @@ class InferConfig:
             warmup_iterations=config_data.get("warmup_iterations", 10),
             measured_iterations=config_data.get("measured_iterations", 100)
         )
-
-    def _enhance_user_run_id(user_run_id: str) -> str:
-        """
-        Enhance user-provided run_id by adding timestamp and random code to prevent overwriting
-        Args:
-            user_run_id: User-provided run_id
-        Returns:
-            Enhanced run_id: {user_run_id}.{timestamp}.{random8}
-        """
-        # If already contains timestamp and random code, return directly (prevent duplicate addition)
-        import re
-        timestamp_pattern = r'\.\d{8}_\d{6}\.[a-z0-9]{8}$'
-        if re.search(timestamp_pattern, user_run_id):
-            logger.info(f"User run_id already contains timestamp and random code: {user_run_id}")
-            return user_run_id
-
-        # Add timestamp and random code
-        from datetime import datetime
-        import random
-        import string
-
-        # Clean user run_id
-        cleaned_user_id = user_run_id.strip().strip(".").replace("..", ".")
-
-        # Timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-        # 8-character random code
-        random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-
-        # Combine
-        enhanced_run_id = f"{cleaned_user_id}.{timestamp}.{random_suffix}"
-
-        logger.info(f"Enhanced user run_id: {user_run_id} -> {enhanced_run_id}")
-        return enhanced_run_id
-
-    @staticmethod
-    def _generate_auto_run_id(testcase: str) -> str:
-        """
-        Auto-generate run_id
-        Format: {testcase}.{timestamp}.{random8}
-        Example: infer.InfiniLM.Direct.20251210_143025.a1b2c3d4
-        """
-        # Clean testcase
-        cleaned_testcase = testcase.strip().strip(".").replace("..", ".")
-
-        # Timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-        # 8-character random code
-        random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-
-        # Combine
-        run_id = f"{cleaned_testcase}.{timestamp}.{random_suffix}"
-
-        return run_id
-
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary (for JSON output)"""
         return {
@@ -484,32 +486,18 @@ class InferConfigManager:
     def generate_auto_run_id(testcase: str) -> str:
         """
         Auto-generate run_id (public method)
-        
-        Format: {testcase}.{timestamp}.{random8}
-        Example: infer.InfiniLM.Direct.20251210_143025.a1b2c3d4
-        
+    
         Args:
             testcase: testcase string
-            
+        
         Returns:
             Generated run_id
         """
-        # Clean testcase
-        cleaned_testcase = testcase.strip().strip(".").replace("..", ".")
-
-        # Timestamp
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-        # 8-character random code
-        random_suffix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
-
-        # Combine
-        run_id = f"{cleaned_testcase}.{timestamp}.{random_suffix}"
-
-        return run_id
+        from common.testcase_utils import generate_auto_run_id as common_generate_run_id
+        return common_generate_run_id(testcase)
 
     # Original private method calls public method
     @staticmethod
     def _generate_auto_run_id(testcase: str) -> str:
         """Private method, calls public method (maintain backward compatibility)"""
-        return InferConfig.generate_auto_run_id(testcase)
+        return InferConfigManager.generate_auto_run_id(testcase)

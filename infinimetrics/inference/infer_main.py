@@ -14,9 +14,30 @@ import logging
 import traceback
 from pathlib import Path
 
-# Add current directory to Python path
+# Start by setting up the Python path
 current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, current_dir)
+parent_dir = os.path.dirname(current_dir) 
+
+# Add the parent directory to your Python Path
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+# Verify that the common module exists
+common_dir = os.path.join(parent_dir, "common")
+if not os.path.exists(common_dir):
+    print(f"ERROR: Common module not found at: {common_dir}")
+    print(f"Current directory: {os.getcwd()}")
+    print(f"Looking for: {common_dir}")
+    sys.exit(1)
+
+# import infer_config
+try:
+    from infer_config import InferConfigManager
+    from infer_runner_factory import InferRunnerFactory
+except ImportError as e:
+    print(f"ERROR: Failed to import modules: {e}")
+    print(f"Python path: {sys.path}")
+    sys.exit(1)
 
 # Configure logging
 logging.basicConfig(
@@ -39,26 +60,21 @@ def setup_logging(verbose: bool):
         logging.getLogger().setLevel(logging.INFO)
 
 def check_current_directory():
-    """Check current directory and provide guidance"""
+    """Check current directory - simplified version"""
     current_dir = os.getcwd()
     logger.info(f"Current working directory: {current_dir}")
-
-    # Check if we're in InfiniLM or vLLM directory
-    possible_frameworks = []
-
-    if os.path.exists("scripts/jiuge.py"):
-        possible_frameworks.append("InfiniLM")
-
-    if os.path.exists("vllm") or "site-packages/vllm" in current_dir:
-        possible_frameworks.append("vLLM")
-
-    if possible_frameworks:
-        logger.info(f"Detected framework(s): {', '.join(possible_frameworks)}")
-    else:
-        logger.warning("No known inference framework detected in current directory")
-        logger.warning("Please run this script from either:")
-        logger.warning("  1. InfiniLM directory (contains scripts/jiuge.py)")
-        logger.warning("  2. vLLM directory or vLLM installation directory")
+    
+    # Check only the basic directory information, not the specific framework 
+    # list the contents of the current directory for debugging
+    if logger.isEnabledFor(logging.DEBUG):
+        try:
+            dir_contents = os.listdir(".")
+            dirs = [d for d in dir_contents if os.path.isdir(d)]
+            files = [f for f in dir_contents if os.path.isfile(f)]
+            logger.debug(f"Directories in current path: {', '.join(dirs[:5])}{'...' if len(dirs) > 5 else ''}")
+            logger.debug(f"Files in current path: {', '.join(files[:5])}{'...' if len(files) > 5 else ''}")
+        except Exception:
+            pass
 
 def load_config(config_file: str):
     """Load configuration file"""
@@ -78,8 +94,6 @@ def load_config(config_file: str):
 
 def check_dependencies():
     """Check for required dependencies"""
-    from infer_runner_factory import InferRunnerFactory
-
     dependencies = InferRunnerFactory.check_dependencies()
 
     logger.info("Dependency check:")
@@ -90,6 +104,9 @@ def check_dependencies():
     # Check for essential dependencies
     if not dependencies["numpy"]:
         logger.warning("NumPy is not installed. Some statistics may not be available.")
+    
+    if not dependencies.get("torch", False):
+        logger.warning("PyTorch is not installed. Some features may be limited.")
 
     return dependencies
 
@@ -101,22 +118,22 @@ def main():
         epilog="""
 Usage examples:
   1. Run from InfiniLM directory:
-     cd ~/InfiniLM
+     cd /path/to//InfiniLM
      python /path/to/infinimetrics/inference/infer_main.py --config config.json
      
   2. Run from vLLM directory:
-     cd ~/vllm
+     cd /path/to//vllm
      python /path/to/infinimetrics/inference/infer_main.py --config config.json
      
   3. Enable verbose logging:
-     python infer_main.py --config config.json --verbose
+     python inference/infer_main.py --config config.json --verbose
         """
     )
 
     parser.add_argument(
         "--config",
         type=str,
-        required=False,
+        required=True,
         help="Path to configuration file (JSON format)"
     )
 
@@ -161,9 +178,6 @@ Usage examples:
         check_dependencies()
         sys.exit(0)
 
-    if not args.config:
-        parser.error("the following arguments are required: --config")
-
     # Load configuration
     config = load_config(args.config)
 
@@ -172,41 +186,17 @@ Usage examples:
         config.output_dir = args.output_dir
         logger.info(f"Output directory overridden: {config.output_dir}")
 
-    # Validate configuration
-    from infer_config import InferConfigManager
-    errors = InferConfigManager.validate_config(config)
-
-    if errors:
-        logger.warning("Configuration validation warnings:")
-        for error in errors:
-            logger.warning(f"  - {error}")
-
     if args.validate_only:
         logger.info("Configuration validation completed")
-        if not errors:
-            logger.info("✓ Configuration is valid")
-        else:
-            logger.warning("⚠ Configuration has warnings but may still work")
+        logger.info("✓ Configuration is valid")
         sys.exit(0)
 
     # Check dependencies
     dependencies = check_dependencies()
 
-    # Check if framework is available
-    if config.framework.value == "infinilm" and not dependencies["infinilm"]:
-        logger.error("InfiniLM not detected in current directory")
-        logger.error("Please run this script from InfiniLM directory")
-        sys.exit(1)
-
-    if config.framework.value == "vllm" and not dependencies["vllm"]:
-        logger.error("vLLM not detected or not installed")
-        logger.error("Please install vLLM or run from vLLM directory")
-        sys.exit(1)
-
     try:
         # Create Runner and Adapter
-        from infer_runner_factory import InferRunnerFactory
-        runner, adapter = InferRunnerFactory.create_runner_and_adapter(config)
+        runner = InferRunnerFactory.create_runner_only(config)
 
         # Run benchmark
         logger.info(f"Starting benchmark: {config.run_id}")

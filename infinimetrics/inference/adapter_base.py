@@ -8,9 +8,8 @@ import abc
 import logging
 import random
 from typing import List, Tuple, Optional, Dict, Any, Set
-from typing import Set
-
 from infer_config import InferConfig
+from utils.gpu_monitor import create_accelerator_monitor
 
 logger = logging.getLogger(__name__)
 
@@ -249,18 +248,69 @@ class InferAdapter(abc.ABC):
 
     def get_peak_memory_usage(self) -> Optional[float]:
         """
-        Get peak GPU memory usage (GB)
-        Subclasses can override this to implement specific memory monitoring
+        Get peak accelerator memory usage (GB)
+        Uses the unified accelerator monitoring system
         """
         try:
+            # First try to use PyTorch APIs for accurate peak memory
             import torch
-            if torch.cuda.is_available():
-                # Get peak memory usage across all GPUs
+        
+            # Check various PyTorch accelerator backends
+            if hasattr(torch, 'cuda') and torch.cuda.is_available():
+                # NVIDIA CUDA
                 max_memory = 0
                 for i in range(torch.cuda.device_count()):
                     max_memory = max(max_memory, torch.cuda.max_memory_allocated(i))
-                return max_memory / (1024 ** 3)  # Convert to GB
+                if max_memory > 0:
+                    return max_memory / (1024 ** 3)  # Convert to GB
+        
+            elif hasattr(torch, 'mlu') and torch.mlu.is_available():
+                # Cambricon MLU
+                if hasattr(torch.mlu, 'max_memory_allocated'):
+                    max_memory = 0
+                    for i in range(torch.mlu.device_count()):
+                        max_memory = max(max_memory, torch.mlu.max_memory_allocated(i))
+                    if max_memory > 0:
+                        return max_memory / (1024 ** 3)
+        
+            elif hasattr(torch, 'xpu') and torch.xpu.is_available():
+                # Intel XPU
+                if hasattr(torch.xpu, 'max_memory_allocated'):
+                    max_memory = 0
+                    for i in range(torch.xpu.device_count()):
+                        max_memory = max(max_memory, torch.xpu.max_memory_allocated(i))
+                    if max_memory > 0:
+                        return max_memory / (1024 ** 3)
+        
+            # Other accelerators could be added here
+            # elif hasattr(torch, 'hip') and torch.hip.is_available():  # AMD ROCm
+            #     pass
+        
+            logger.debug("No PyTorch accelerator API available for peak memory")
+        
+            # Fallback: Try to import and use the accelerator monitor
+            try:            
+                # Get accelerator type from config (assuming it's stored somewhere)
+                accelerator_type = getattr(self.config.device, 'accelerator', 'nvidia')
+                device_ids = getattr(self.config.device, 'device_ids', [0])
+            
+                # Create monitor and get peak memory
+                monitor = create_accelerator_monitor(accelerator_type, device_ids)
+                monitor.start_monitoring()
+                # Need to actually run some monitoring here
+                time.sleep(0.1)  # Brief monitoring
+                monitor.stop_monitoring()
+            
+                peak_gb = monitor.get_peak_memory_gb()
+                if peak_gb > 0:
+                    return peak_gb
+                
+            except ImportError:
+                logger.debug("Accelerator monitor not available")
+            
         except ImportError:
-            logger.warning("PyTorch not available, cannot get GPU memory usage")
-
+            logger.warning("PyTorch not available, cannot get accelerator memory usage")
+        except Exception as e:
+            logger.warning(f"Failed to get peak memory usage: {e}")
+    
         return None

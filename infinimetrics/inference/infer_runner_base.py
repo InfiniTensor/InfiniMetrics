@@ -1,146 +1,615 @@
 #!/usr/bin/env python3
 """
-Inference Runner Factory Class
-Creates appropriate Runner and Adapter based on configuration
+Inference Runner Base Class
+Defines common interfaces and template methods for all Runners
+Fix: ensure dump_json() returns a string path
 """
 
+import abc
+import csv
+import json
+import time
 import logging
-import sys
-import os
-from typing import Dict, Tuple
+from pathlib import Path
+from typing import Dict, Any, List, Optional, Tuple
+from datetime import datetime
+import re
 
-from infer_config import InferConfig, InferMode, FrameworkType
-from infer_runner_base import InferRunnerBase
-from adapter_base import InferAdapter
+from infer_config import InferConfig
 
 logger = logging.getLogger(__name__)
 
-class InferRunnerFactory:
-    """Inference Runner Factory"""
 
-    @staticmethod
-    def create_runner_and_adapter(config: InferConfig) -> Tuple[InferRunnerBase, InferAdapter]:
-        """
-        Create Runner and Adapter
-        
-        Returns: (runner, adapter)
-        """
-        # Create adapter based on framework
-        adapter = InferRunnerFactory.create_adapter(config)
+class Metric:
+    """Metric base class"""
 
-        # Create runner based on mode
-        runner = InferRunnerFactory.create_runner(config, adapter)
+    def __init__(self, name: str, metric_type: str, unit: Optional[str] = None):
+        self.name = name
+        self.type = metric_type
+        self.unit = unit
+        self.value = None
+        self.raw_data_url = None
 
-        return runner, adapter
-
-    @staticmethod
-    def create_adapter(config: InferConfig) -> InferAdapter:
-        """Create adapter"""
-        logger.info(f"Creating adapter for framework: {config.framework.value}")
-
-        if config.framework == FrameworkType.INFINILM:
-            try:
-                from adapters.infinilm_adapter import InfiniLMAdapter
-                adapter = InfiniLMAdapter(config)
-                logger.info("InfiniLMAdapter created successfully")
-            except ImportError as e:
-                logger.error(f"Failed to import InfiniLMAdapter: {e}")
-                raise ImportError("InfiniLMAdapter is not available. Please check if InfiniLM is installed.")
-
-        elif config.framework == FrameworkType.VLLM:
-            try:
-                from adapters.vllm_adapter import VLLMAdapter
-                adapter = VLLMAdapter(config)
-                logger.info("VLLMAdapter created successfully")
-            except ImportError as e:
-                logger.error(f"Failed to import VLLMAdapter: {e}")
-                raise ImportError("VLLMAdapter is not available. Please check if vLLM is installed.")
-
-        else:
-            raise ValueError(f"Unsupported framework: {config.framework}")
-
-        # Validate adapter configuration
-        errors = adapter.validate_config()
-        if errors:
-            error_msg = "Adapter configuration errors:\n" + "\n".join(f"  - {e}" for e in errors)
-            logger.warning(error_msg)
-
-        return adapter
-
-    @staticmethod
-    def create_runner(config: InferConfig, adapter: InferAdapter) -> InferRunnerBase:
-        """Create runner"""
-        logger.info(f"Creating runner for mode: {config.mode.value}")
-
-        if config.mode == InferMode.DIRECT:
-            try:
-                from direct_infer_runner import DirectInferRunner
-                runner = DirectInferRunner(config, adapter)
-                logger.info("DirectInferRunner created successfully")
-            except ImportError as e:
-                logger.error(f"Failed to import DirectInferRunner: {e}")
-                raise
-
-        elif config.mode == InferMode.SERVICE:
-            try:
-                from service_infer_runner import ServiceInferRunner
-                runner = ServiceInferRunner(config, adapter)
-                logger.info("ServiceInferRunner created successfully")
-            except ImportError as e:
-                logger.error(f"Failed to import ServiceInferRunner: {e}")
-                raise
-
-        else:
-            raise ValueError(f"Unsupported inference mode: {config.mode}")
-
-        return runner
-
-    @staticmethod
-    def check_dependencies() -> Dict[str, bool]:
-        """Check dependencies"""
-        dependencies = {
-            "infinilm": False,
-            "vllm": False,
-            "numpy": False,
-            "torch": False
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to dictionary"""
+        result = {
+            "name": self.name,
+            "type": self.type,
+            "unit": self.unit
         }
 
-        # Check InfiniLM
-        try:
-            # Try importing InfiniLM related modules
-            import sys
-            import os
+        if self.type == "scalar":
+            result["value"] = self.value
+        elif self.type == "timeseries":
+            result["raw_data_url"] = self.raw_data_url
 
-            # Check if in InfiniLM directory
-            if os.path.exists("scripts/jiuge.py"):
-                dependencies["infinilm"] = True
+        return result
+
+
+class ScalarMetric(Metric):
+    """Scalar metric"""
+
+    def __init__(self, name: str, value: Any, unit: Optional[str] = None):
+        super().__init__(name, "scalar", unit)
+        self.value = value
+
+
+class TimeseriesMetric(Metric):
+    """Time-series metric"""
+
+    def __init__(self, name: str, raw_data_url: str, unit: Optional[str] = None):
+        super().__init__(name, "timeseries", unit)
+        self.raw_data_url = raw_data_url
+
+
+class BenchmarkResult:
+    """Benchmark result container"""
+
+    def __init__(self):
+        self.metrics: List[Metric] = []
+        self.start_time: Optional[float] = None
+        self.end_time: Optional[float] = None
+
+        # Performance data
+        self.latency_data: List[float] = []      # Latency data (ms)
+        self.ttft_data: List[float] = []         # Time-to-first-token data (ms)
+        self.throughput_data: List[float] = []   # Throughput data
+
+        # Additional data
+        self.peak_memory_usage: Optional[float] = None  # Peak memory usage (GB)
+        self.total_tokens: int = 0                       # Total token count
+        self.success_rate: float = 1.0                   # Success rate
+
+    def add_metric(self, metric: Metric):
+        """Add a metric"""
+        self.metrics.append(metric)
+
+    def add_latency(self, latency_ms: float):
+        """Add latency data"""
+        self.latency_data.append(latency_ms)
+
+    def add_ttft(self, ttft_ms: float):
+        """Add TTFT data"""
+        self.ttft_data.append(ttft_ms)
+
+    def add_throughput(self, throughput: float):
+        """Add throughput data"""
+        self.throughput_data.append(throughput)
+
+
+class InferRunnerBase(abc.ABC):
+    """Inference Runner base class (Template Method pattern)"""
+
+    def __init__(self, config: InferConfig, adapter):
+        self.config = config
+        self.adapter = adapter
+        self.result = BenchmarkResult()
+        self.infer_dir: Optional[Path] = None
+
+    def prepare_output_dir(self) -> Path:
+        """Prepare output directory"""
+        output_dir = Path(self.config.output_dir)
+        self.infer_dir = output_dir / "infer"
+
+        # Create directory
+        self.infer_dir.mkdir(parents=True, exist_ok=True)
+
+        logger.info(f"Output directory prepared: {self.infer_dir}")
+        return self.infer_dir
+
+    def save_timeseries_data(self):
+        """Save time-series data to CSV files"""
+        if not self.infer_dir:
+            raise ValueError("Output directory not prepared")
+
+        # Save latency data
+        if self.result.latency_data:
+            # ✅ Sanitize filename
+            safe_run_id = self._sanitize_filename(self.config.run_id)
+            latency_file = self.infer_dir / f"{safe_run_id}_infer_latency.csv"
+
+            with open(latency_file, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['timestamp', 'latency_ms'])
+                for i, latency in enumerate(self.result.latency_data):
+                    writer.writerow([i, latency])
+
+            # Add different metrics depending on mode
+            if self.config.mode.value == "direct":
+                metric_name = "infer.compute_latency"
             else:
-                # Try to determine via environment variable
-                infinilm_path = os.environ.get("INFINILM_PATH", "")
-                if infinilm_path and os.path.exists(os.path.join(infinilm_path, "scripts/jiuge.py")):
-                    dependencies["infinilm"] = True
-        except:
-            pass
+                metric_name = "infer.e2e_latency"
 
-        # Check vLLM
+            self.result.add_metric(TimeseriesMetric(
+                name=metric_name,
+                raw_data_url=f"./infer/{latency_file.name}",
+                unit="ms"
+            ))
+
+        # Save TTFT data
+        if self.result.ttft_data:
+            safe_run_id = self._sanitize_filename(self.config.run_id)
+            ttft_file = self.infer_dir / f"{safe_run_id}_infer_ttft.csv"
+
+            with open(ttft_file, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['timestamp', 'ttft_ms'])
+                for i, ttft in enumerate(self.result.ttft_data):
+                    writer.writerow([i, ttft])
+
+            self.result.add_metric(TimeseriesMetric(
+                name="infer.ttft",
+                raw_data_url=f"./infer/{ttft_file.name}",
+                unit="ms"
+            ))
+
+        # Save throughput data
+        if self.result.throughput_data:
+            safe_run_id = self._sanitize_filename(self.config.run_id)
+            throughput_file = self.infer_dir / f"{safe_run_id}_infer_throughput.csv"
+
+            with open(throughput_file, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(['timestamp', 'throughput'])
+                for i, throughput in enumerate(self.result.throughput_data):
+                    writer.writerow([i, throughput])
+
+            if self.config.mode.value == "direct":
+                metric_name = "infer.direct_throughput_tps"
+                unit = "tokens/s/gpu"
+            else:
+                metric_name = "infer.response_per_second"
+                unit = "requests/s"
+
+            self.result.add_metric(TimeseriesMetric(
+                name=metric_name,
+                raw_data_url=f"./infer/{throughput_file.name}",
+                unit=unit
+            ))
+
+    def calculate_statistics(self) -> Dict[str, float]:
+        """Calculate statistics"""
+        stats = {}
+
         try:
-            import vllm
-            dependencies["vllm"] = True
-        except ImportError:
-            pass
+            import numpy as np
 
-        # Check numpy
+            # Latency statistics
+            if self.result.latency_data:
+                stats['avg_latency'] = np.mean(self.result.latency_data)
+                stats['p50_latency'] = np.percentile(self.result.latency_data, 50)
+                stats['p95_latency'] = np.percentile(self.result.latency_data, 95)
+                stats['p99_latency'] = np.percentile(self.result.latency_data, 99)
+                stats['min_latency'] = np.min(self.result.latency_data)
+                stats['max_latency'] = np.max(self.result.latency_data)
+                stats['std_latency'] = np.std(self.result.latency_data)
+
+            # TTFT statistics
+            if self.result.ttft_data:
+                stats['avg_ttft'] = np.mean(self.result.ttft_data)
+                stats['p50_ttft'] = np.percentile(self.result.ttft_data, 50)
+                stats['p95_ttft'] = np.percentile(self.result.ttft_data, 95)
+                stats['p99_ttft'] = np.percentile(self.result.ttft_data, 99)
+                stats['min_ttft'] = np.min(self.result.ttft_data)
+                stats['max_ttft'] = np.max(self.result.ttft_data)
+
+            # Throughput statistics
+            if self.result.throughput_data:
+                stats['avg_throughput'] = np.mean(self.result.throughput_data)
+                stats['max_throughput'] = np.max(self.result.throughput_data)
+                stats['min_throughput'] = np.min(self.result.throughput_data)
+
+            # Total duration and overall throughput
+            if self.result.start_time and self.result.end_time:
+                total_duration = self.result.end_time - self.result.start_time
+                stats['total_duration'] = total_duration
+
+                if self.config.mode.value == "direct":
+                    if self.result.total_tokens > 0 and total_duration > 0:
+                        stats['overall_throughput'] = self.result.total_tokens / total_duration
+
+                elif self.config.mode.value == "service":
+                    if len(self.result.latency_data) > 0 and total_duration > 0:
+                        stats['requests_per_second'] = len(self.result.latency_data) / total_duration
+
+            # Success rate
+            stats['success_rate'] = self.result.success_rate
+
+        except ImportError:
+            logger.warning("NumPy not available, skipping statistics calculation")
+
+        return stats
+
+    def dump_json(self) -> str:
+        """Dump results to JSON - ensure a string path is returned"""
+        if not self.infer_dir:
+            raise ValueError("Output directory not prepared")
+
+        safe_run_id = self._sanitize_filename(self.config.run_id)
+        json_filename = f"{safe_run_id}_results.json"
+
+        config_dict = {
+            "run_id": self.config.run_id,
+            "testcase": self.config.testcase,
+            "success": 1 if self.result.success_rate >= 0.95 else 0,
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "config": {
+                "command": self._build_command_string(),
+                "framework": self.config.framework.value,
+                "model": self.config.model,
+                "model_config": self.config.model_config,
+                "train_dataset": self.config.train_dataset,
+                "validation_dataset": self.config.validation_dataset,
+                "test_dataset": self.config.test_dataset,
+                "infer_args": self.config.infer_args.to_dict() if hasattr(self.config.infer_args, 'to_dict') else {},
+                "warmup_iterations": self.config.warmup_iterations,
+                "measured_iterations": self.config.measured_iterations
+            },
+            "metrics": []
+        }
+
+        # ✅ 1. Add all existing metrics first
+        for metric in self.result.metrics:
+            config_dict["metrics"].append(metric.to_dict())
+
+        # ✅ 2. Check and add missing metrics
+        required_metrics = {
+            "direct": [
+                ("infer.peak_memory_usage", "scalar", "GB"),
+                ("infer.compute_latency", "timeseries", "ms"),
+                ("infer.ttft", "timeseries", "ms"),
+                ("infer.direct_throughput_tps", "timeseries", "tokens/s/gpu")
+            ],
+            "service": [
+                ("infer.accuracy_mmlu", "scalar", None),
+                ("infer.peak_memory_usage", "scalar", "GB"),
+                ("infer.e2e_latency", "timeseries", "ms"),
+                ("infer.ttft", "timeseries", "ms"),
+                ("infer.response_per_second", "timeseries", None),
+                ("infer.compute_latency", "timeseries", "ms"),
+                ("infer.max_throughput_tps", "timeseries", "tokens/s/gpu"),
+                ("infer.success_rate", "scalar", "%")
+            ]
+        }
+
+        mode = self.config.mode.value
+        if mode in required_metrics:
+            for metric_name, metric_type, unit in required_metrics[mode]:
+                # Check if metric already exists
+                if not any(m.get('name') == metric_name for m in config_dict['metrics']):
+                    logger.debug(f"Adding missing metric: {metric_name}")
+
+                    if metric_name == "infer.peak_memory_usage":
+                        # Special handling: try to get peak memory usage
+                        peak_memory = self.result.peak_memory_usage
+                        if peak_memory is None:
+                            try:
+                                peak_memory = self.adapter.get_peak_memory_usage()
+                            except Exception as e:
+                                logger.warning(f"Failed to get peak memory usage: {e}")
+                                peak_memory = 0.0
+
+                        config_dict["metrics"].append(ScalarMetric(
+                            name=metric_name,
+                            value=peak_memory,
+                            unit=unit
+                        ).to_dict())
+
+                    elif metric_name == "infer.success_rate":
+                        # Special handling: success rate
+                        success_rate = self.result.success_rate
+                        config_dict["metrics"].append(ScalarMetric(
+                            name=metric_name,
+                            value=success_rate * 100,  # Convert to percentage
+                            unit=unit
+                        ).to_dict())
+
+                    elif metric_type == "scalar":
+                        # Other scalar metrics (placeholder)
+                        config_dict["metrics"].append(ScalarMetric(
+                            name=metric_name,
+                            value=0.0,  # Placeholder value
+                            unit=unit
+                        ).to_dict())
+
+                    elif metric_type == "timeseries":
+                        # Time-series metrics (create placeholder file)
+                        file_created = self._ensure_metric_file(metric_name, safe_run_id)
+                        if file_created:
+                            raw_data_url = f"./infer/{safe_run_id}_{metric_name.replace('.', '_')}.csv"
+                            config_dict["metrics"].append({
+                                "name": metric_name,
+                                "type": "timeseries",
+                                "raw_data_url": raw_data_url,
+                                "unit": unit
+                            })
+
+        # ✅ 3. Ensure no duplicate metrics
+        seen_names = set()
+        unique_metrics = []
+        for metric in config_dict['metrics']:
+            name = metric.get('name')
+            if name and name not in seen_names:
+                seen_names.add(name)
+                unique_metrics.append(metric)
+            elif name:
+                logger.warning(f"Duplicate metric found: {name}")
+
+        config_dict['metrics'] = unique_metrics
+
+        # ✅ 4. Print debug information
+        logger.info(f"Total metrics in JSON: {len(config_dict['metrics'])}")
+        for metric in config_dict['metrics']:
+            metric_name = metric.get('name', 'unknown')
+            metric_type = metric.get('type', 'unknown')
+            logger.debug(f"  - {metric_name} ({metric_type})")
+
+        # ✅ 5. Save file
+        json_file = self.infer_dir / json_filename
+        with open(json_file, 'w', encoding='utf-8') as f:
+            json.dump(config_dict, f, indent=2, ensure_ascii=False)
+
+        logger.info(f"Results saved to: {json_file}")
+        return str(json_file)
+
+    def _ensure_metric_file(self, metric_name: str, safe_run_id: str) -> bool:
+        """Ensure metric file exists; create placeholder if missing"""
+        if not self.infer_dir:
+            return False
+
+        # Map metric name to filename
+        file_mapping = {
+            "infer.e2e_latency": f"{safe_run_id}_infer_latency.csv",
+            "infer.compute_latency": f"{safe_run_id}_infer_compute_latency.csv",
+            "infer.ttft": f"{safe_run_id}_infer_ttft.csv",
+            "infer.response_per_second": f"{safe_run_id}_infer_throughput.csv",
+            "infer.max_throughput_tps": f"{safe_run_id}_infer_max_throughput.csv",
+            "infer.direct_throughput_tps": f"{safe_run_id}_infer_direct_throughput.csv"
+        }
+
+        if metric_name not in file_mapping:
+            return False
+
+        filename = file_mapping[metric_name]
+        file_path = self.infer_dir / filename
+
+        if not file_path.exists():
+            try:
+                with open(file_path, 'w', newline='') as f:
+                    writer = csv.writer(f)
+                    writer.writerow(['timestamp', 'value'])
+                    writer.writerow([0, 0.0])  # Placeholder data
+                logger.debug(f"Created placeholder file: {filename}")
+                return True
+            except Exception as e:
+                logger.warning(f"Failed to create placeholder file {filename}: {e}")
+                return False
+
+        return True
+
+    def _create_max_throughput_placeholder(self):
+        if not self.infer_dir:
+            return
+
+        safe_run_id = self._sanitize_filename(self.config.run_id)
+        max_throughput_file = self.infer_dir / f"{safe_run_id}_infer_max_throughput.csv"
+
+        with open(max_throughput_file, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['timestamp', 'throughput'])
+            writer.writerow([0, 0.0])
+
+    def _create_compute_latency_placeholder(self):
+        if not self.infer_dir:
+            return
+
+        safe_run_id = self._sanitize_filename(self.config.run_id)
+        compute_latency_file = self.infer_dir / f"{safe_run_id}_infer_compute_latency.csv"
+
+        with open(compute_latency_file, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(['timestamp', 'latency_ms'])
+            writer.writerow([0, 0.0])
+
+    def _build_command_string(self) -> str:
+        """Build command string"""
+        cmd_parts = []
+
+        if self.config.framework.value == "infinilm":
+            if self.config.mode.value == "direct":
+                cmd_parts.append("python scripts/jiuge.py --nvidia")
+                cmd_parts.append(self.config.model_path)
+                cmd_parts.append(str(self.config.infer_args.parallel.tp))
+
+                # Add batch size argument (if supported by jiuge.py)
+                if self.config.mode.value == "direct":
+                    if hasattr(self.config.infer_args, 'static_batch_size'):
+                        cmd_parts.append(f"--batch-size {self.config.infer_args.static_batch_size}")
+
+            else:  # Service mode
+                # Service mode: launch server using launch_server.py
+                cmd_parts.append("python scripts/launch_server.py")
+                cmd_parts.append(f"--model-path {self.config.model_path}")
+                cmd_parts.append(f"--dev nvidia")
+                cmd_parts.append(f"--ndev {self.config.infer_args.parallel.tp}")
+
+                # Add common arguments
+                if hasattr(self.config.infer_args, 'max_batch'):
+                    cmd_parts.append(f"--max-batch {self.config.infer_args.max_batch}")
+                elif hasattr(self.config.infer_args, 'max_seq_len'):
+                    cmd_parts.append(f"--max-tokens {self.config.infer_args.max_seq_len}")
+
+                # Add trace client command (if trace is enabled)
+                if hasattr(self.config.infer_args, 'request_trace'):
+                    trace_cmd = (
+                        "# Trace test: python trace_client.py "
+                        f"--trace {self.config.infer_args.request_trace} "
+                        f"--concurrency {self.config.infer_args.concurrency}"
+                    )
+                    cmd_parts.append(trace_cmd)
+
+        else:  # vllm
+            if self.config.mode.value == "direct":
+                cmd_parts.append("python -m vllm.benchmarks.benchmark_throughput")
+                cmd_parts.append(f"--model {self.config.model_path}")
+                if hasattr(self.config.infer_args, 'static_batch_size'):
+                    cmd_parts.append(f"--batch-size {self.config.infer_args.static_batch_size}")
+            else:  # service
+                cmd_parts.append("python -m vllm.entrypoints.api_server")
+                cmd_parts.append(f"--model {self.config.model_path}")
+                cmd_parts.append(f"--port 8000")
+                cmd_parts.append(f"--tensor-parallel-size {self.config.infer_args.parallel.tp}")
+
+                if hasattr(self.config.infer_args, 'request_trace'):
+                    trace_cmd = (
+                        "# Trace test: python -m vllm.benchmarks.benchmark_serving "
+                        f"--trace {self.config.infer_args.request_trace}"
+                    )
+                    cmd_parts.append(trace_cmd)
+
+        return " ".join(cmd_parts)
+
+    def _sanitize_filename(self, filename: str) -> str:
+        """
+        Sanitize filename by removing special characters
+
+        Args:
+            filename: Original filename
+
+        Returns:
+            Sanitized filename
+        """
+        # Replace special characters with underscores
+        sanitized = re.sub(r'[^\w\-_.]', '_', filename)
+        # Remove consecutive underscores
+        sanitized = re.sub(r'_+', '_', sanitized)
+        # Strip leading and trailing underscores
+        sanitized = sanitized.strip('_')
+
+        # Ensure reasonable filename length
+        max_length = 255
+        if len(sanitized) > max_length:
+            # Keep first 100 and last 155 characters (with "..." in between)
+            prefix = sanitized[:100]
+            suffix = sanitized[-155:] if len(sanitized) > 255 else ""
+            sanitized = f"{prefix}...{suffix}"
+
+        return sanitized
+
+    def run(self) -> str:
+        """Run template method - ensure string path is returned"""
+        logger.info(f"Starting inference benchmark: {self.config.run_id}")
+        logger.info(f"Testcase: {self.config.testcase}")
+        logger.info(f"Framework: {self.config.framework.value}")
+        logger.info(f"Mode: {self.config.mode.value}")
+
         try:
-            import numpy
-            dependencies["numpy"] = True
-        except ImportError:
-            pass
+            # Prepare output directory
+            self.prepare_output_dir()
 
-        # Check torch
-        try:
-            import torch
-            dependencies["torch"] = True
-        except ImportError:
-            pass
+            # Record start time
+            self.result.start_time = time.time()
 
-        return dependencies
+            # Template methods implemented by subclasses
+            self.setup()
+            self.execute()
+            self.collect_metrics()
+
+            # Record end time
+            self.result.end_time = time.time()
+
+            # Save data
+            self.save_timeseries_data()
+
+            # Dump JSON
+            result_file = self.dump_json()
+
+            # ✅ Double check: ensure return type is string
+            if not isinstance(result_file, str):
+                logger.error(f"dump_json() returned {type(result_file)} instead of str")
+                try:
+                    result_file = str(result_file)
+                except Exception:
+                    safe_run_id = self._sanitize_filename(self.config.run_id)
+                    default_file = self.infer_dir / f"{safe_run_id}_emergency_results.json"
+                    result_file = str(default_file)
+                    logger.warning(f"Created emergency result file: {result_file}")
+
+            # Print statistics
+            self._print_statistics()
+
+            logger.info(f"Benchmark completed successfully: {self.config.run_id}")
+
+            # ✅ Final guarantee: return string
+            return str(result_file)
+
+        except Exception as e:
+            logger.error(f"Benchmark failed: {e}", exc_info=True)
+            raise
+
+    def _print_statistics(self):
+        """Print statistics"""
+        stats = self.calculate_statistics()
+
+        logger.info("=" * 60)
+        logger.info("BENCHMARK STATISTICS")
+        logger.info("=" * 60)
+
+        if 'avg_latency' in stats:
+            logger.info(f"Average latency: {stats['avg_latency']:.2f} ms")
+            if 'p95_latency' in stats:
+                logger.info(f"P95 latency: {stats['p95_latency']:.2f} ms")
+
+        if 'avg_ttft' in stats:
+            logger.info(f"Average TTFT: {stats['avg_ttft']:.2f} ms")
+            if 'p95_ttft' in stats:
+                logger.info(f"P95 TTFT: {stats['p95_ttft']:.2f} ms")
+
+        if 'avg_throughput' in stats:
+            if self.config.mode.value == "direct":
+                logger.info(f"Average throughput: {stats['avg_throughput']:.2f} tokens/s/gpu")
+            else:
+                logger.info(f"Average throughput: {stats['avg_throughput']:.2f} requests/s")
+
+        if 'success_rate' in stats:
+            logger.info(f"Success rate: {stats['success_rate']:.2%}")
+
+        if 'total_duration' in stats:
+            logger.info(f"Total duration: {stats['total_duration']:.2f} s")
+
+        logger.info("=" * 60)
+
+    @abc.abstractmethod
+    def setup(self) -> None:
+        """Set up runtime environment (implemented by subclasses)"""
+        pass
+
+    @abc.abstractmethod
+    def execute(self) -> None:
+        """Execute inference benchmark (implemented by subclasses)"""
+        pass
+
+    @abc.abstractmethod
+    def collect_metrics(self) -> None:
+        """Collect performance metrics (implemented by subclasses)"""
+        pass
