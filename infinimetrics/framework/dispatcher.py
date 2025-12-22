@@ -1,28 +1,51 @@
-class TestGateway:
+from .runner import TestRunner
+from .adapters.infinicore import InfiniCoreAdapter
+from .runner import TestRunner
+
+
+class WorkloadDispatcher:
     """
-    The Gateway is the facade of the system.
-    Currently in Direct Call mode, can be easily wrapped as an HTTP Controller in the future.
+    WorkloadDispatcher:
+    Responsible for identifying the test type (Operator vs Training vs Inference)
+    and dispatching it to the correct Adapter via a Runner.
     """
+
     def __init__(self):
-        # Configure dependency injection here, deciding which Adapter to use.
-        # If there are multiple backends, different Adapters can be loaded based on configuration.
-        self.default_adapter = InfiniCoreAdapter()
-        print("[Gateway] System initialized.")
+
+        self.adapters = {
+            "operator": InfiniCoreAdapter(),
+            # "training": InfiniCoreTrainAdapter(), # Future extension
+        }
+        print("[Dispatcher] System initialized. Adapters loaded.")
 
     def dispatch(self, request_json: dict) -> dict:
         """
-        Dispatch the request:
-        1. Receive request
-        2. Instantiate/Get Runner (Demonstrating creating a new Runner per request, could also use a Runner Pool)
-        3. Execute
+        Route the request to the appropriate adapter based on the testcase name or config.
         """
-        # Global authentication, rate limiting, and route dispatching can be done here.
-        # e.g., if request_json['target'] == 'nvidia': use NvidiaAdapter...
-        
-        # Create Runner
-        runner = TestRunner(self.default_adapter)
-        
+        testcase_name = request_json.get("testcase", "").lower()
+
+        # Simple Routing Logic
+        # Default to operator if not specified, or add logic to detect 'train'
+        category = "operator"
+
+        if "operator" != category:
+
+            print(
+                f"[Dispatcher] Warning: {category} adapter not yet implemented, falling back to Operator for demo."
+            )
+            pass
+
+        adapter = self.adapters.get(category)
+
+        if not adapter:
+            raise ValueError(f"No adapter found for category: {category}")
+
+        print(
+            f"[Dispatcher] Routing task '{testcase_name}' to -> {category.upper()} Adapter"
+        )
+
+        # Instantiate the Runner (Project Manager) with the selected Adapter (Worker)
+        runner = TestRunner(adapter)
+
         # Execute
-        response = runner.run(request_json)
-        
-        return response
+        return runner.run(request_json)
