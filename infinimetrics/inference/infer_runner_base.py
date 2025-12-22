@@ -2,7 +2,6 @@
 """
 Inference Runner Base Class
 Defines common interfaces and template methods for all Runners
-Fix: ensure dump_json() returns a string path
 """
 
 import abc
@@ -11,56 +10,15 @@ import json
 import time
 import logging
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
 from datetime import datetime
+from typing import Dict, Any, List, Optional, Tuple
+from common.metrics import Metric, ScalarMetric, TimeseriesMetric
 import re
 
 from infer_config import InferConfig
+from common.metrics import ScalarMetric
 
 logger = logging.getLogger(__name__)
-
-
-class Metric:
-    """Metric base class"""
-
-    def __init__(self, name: str, metric_type: str, unit: Optional[str] = None):
-        self.name = name
-        self.type = metric_type
-        self.unit = unit
-        self.value = None
-        self.raw_data_url = None
-
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary"""
-        result = {
-            "name": self.name,
-            "type": self.type,
-            "unit": self.unit
-        }
-
-        if self.type == "scalar":
-            result["value"] = self.value
-        elif self.type == "timeseries":
-            result["raw_data_url"] = self.raw_data_url
-
-        return result
-
-
-class ScalarMetric(Metric):
-    """Scalar metric"""
-
-    def __init__(self, name: str, value: Any, unit: Optional[str] = None):
-        super().__init__(name, "scalar", unit)
-        self.value = value
-
-
-class TimeseriesMetric(Metric):
-    """Time-series metric"""
-
-    def __init__(self, name: str, raw_data_url: str, unit: Optional[str] = None):
-        super().__init__(name, "timeseries", unit)
-        self.raw_data_url = raw_data_url
-
 
 class BenchmarkResult:
     """Benchmark result container"""
@@ -268,11 +226,11 @@ class InferRunnerBase(abc.ABC):
             "metrics": []
         }
 
-        # ✅ 1. Add all existing metrics first
+        # Add all existing metrics first
         for metric in self.result.metrics:
             config_dict["metrics"].append(metric.to_dict())
 
-        # ✅ 2. Check and add missing metrics
+        # Check and add missing metrics
         required_metrics = {
             "direct": [
                 ("infer.peak_memory_usage", "scalar", "GB"),
@@ -344,7 +302,7 @@ class InferRunnerBase(abc.ABC):
                                 "unit": unit
                             })
 
-        # ✅ 3. Ensure no duplicate metrics
+        # Ensure no duplicate metrics
         seen_names = set()
         unique_metrics = []
         for metric in config_dict['metrics']:
@@ -357,14 +315,14 @@ class InferRunnerBase(abc.ABC):
 
         config_dict['metrics'] = unique_metrics
 
-        # ✅ 4. Print debug information
+        # Print debug information
         logger.info(f"Total metrics in JSON: {len(config_dict['metrics'])}")
         for metric in config_dict['metrics']:
             metric_name = metric.get('name', 'unknown')
             metric_type = metric.get('type', 'unknown')
             logger.debug(f"  - {metric_name} ({metric_type})")
 
-        # ✅ 5. Save file
+        #  Save file
         json_file = self.infer_dir / json_filename
         with open(json_file, 'w', encoding='utf-8') as f:
             json.dump(config_dict, f, indent=2, ensure_ascii=False)
@@ -544,7 +502,7 @@ class InferRunnerBase(abc.ABC):
             # Dump JSON
             result_file = self.dump_json()
 
-            # ✅ Double check: ensure return type is string
+            # Double check: ensure return type is string
             if not isinstance(result_file, str):
                 logger.error(f"dump_json() returned {type(result_file)} instead of str")
                 try:
@@ -560,7 +518,7 @@ class InferRunnerBase(abc.ABC):
 
             logger.info(f"Benchmark completed successfully: {self.config.run_id}")
 
-            # ✅ Final guarantee: return string
+            # Final guarantee: return string
             return str(result_file)
 
         except Exception as e:

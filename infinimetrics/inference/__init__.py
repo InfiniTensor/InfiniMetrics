@@ -14,7 +14,6 @@ from .infer_config import (
 )
 from .infer_runner_base import (
     InferRunnerBase, BenchmarkResult,
-    Metric, ScalarMetric, TimeseriesMetric
 )
 from .adapter_base import InferAdapter
 from .infer_runner_factory import InferRunnerFactory

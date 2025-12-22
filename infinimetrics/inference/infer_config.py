@@ -6,17 +6,19 @@ Parses config.json, identifies direct/service mode, identifies infinilm/vllm fra
 
 import json
 import logging
-from pathlib import Path
-from typing import Dict, Any, Optional, List
-from dataclasses import dataclass
-from enum import Enum
-from datetime import datetime
 import random
 import string
+from enum import Enum
+from pathlib import Path
+from datetime import datetime
+
+from common.testcase_utils import generate_run_id
+from typing import Dict, Any, Optional, List
+from dataclasses import dataclass
 
 from common.testcase_utils import (
+    generate_run_id_from_config,
     parse_testcase, 
-    generate_run_id,
     validate_testcase_format
 )
 from common.constants import (
@@ -30,15 +32,6 @@ from common.constants import (
 
 logger = logging.getLogger(__name__)
 
-class InferMode(Enum):
-    """Inference mode enumeration"""
-    DIRECT = "direct"
-    SERVICE = "service"
-
-class FrameworkType(Enum):
-    """Framework type enumeration"""
-    INFINILM = "infinilm"
-    VLLM = "vllm"
 #inference default
 DEFAULT_TIMEOUT_MS_SERVICE = 30000
 DEFAULT_MAX_SEQ_LEN = 4096
@@ -50,6 +43,17 @@ DEFAULT_TOP_K = 50
 DEFAULT_CONCURRENCY = 32
 DEFAULT_STATIC_BATCH_SIZE = 1
 DEFAULT_STREAM = True
+
+class InferMode(Enum):
+    """Inference mode enumeration"""
+    DIRECT = "direct"
+    SERVICE = "service"
+
+class FrameworkType(Enum):
+    """Framework type enumeration"""
+    INFINILM = "infinilm"
+    VLLM = "vllm"
+
 
 @dataclass
 class ParallelConfig:
@@ -83,8 +87,7 @@ class ParallelConfig:
 @dataclass
 class DeviceConfig:
     """Device configuration"""
-    processor_type: ProcessorType = ProcessorType.ACCELERATOR
-    accelerator: Optional[AcceleratorType] = AcceleratorType.NVIDIA
+    accelerator: AcceleratorType = AcceleratorType.NVIDIA
     device_ids: List[int] = None
     cpu_only: bool = False
 
@@ -93,14 +96,7 @@ class DeviceConfig:
             self.device_ids = [0]
         
         if self.cpu_only:
-            self.processor_type = ProcessorType.CPU
-            self.accelerator = None
-        
-        if self.processor_type == ProcessorType.ACCELERATOR and self.accelerator is None:
-            raise ValueError("accelerator must be specified when processor_type is ACCELERATOR")
-        
-        if self.processor_type == ProcessorType.CPU and self.accelerator is not None:
-            self.accelerator = None
+            self.accelerator = AcceleratorType.CPU
 
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'DeviceConfig':
@@ -108,57 +104,59 @@ class DeviceConfig:
         if not data:
             return cls()
         
+        # cpu_only
         cpu_only = data.get("cpu_only", False)
         
+        # Get accelerator type
+        accelerator_str = data.get("accelerator")
+        if not accelerator_str:
+            accelerator_str = data.get("gpu_platform", "nvidia")
+        
+        try:
+            accelerator = AcceleratorType(accelerator_str.lower())
+        except ValueError:
+            valid_values = [e.value for e in AcceleratorType]
+            raise ValueError(
+                f"Unsupported accelerator: '{accelerator_str}'. "
+                f"Supported values: {', '.join(valid_values)}"
+            )
+            
+        # CPU mode
         if cpu_only:
-            # CPU mode
+            accelerator = AcceleratorType.CPU
             return cls(
-                processor_type=ProcessorType.CPU,
-                accelerator=None,
+                accelerator=accelerator,
                 device_ids=data.get("device_ids", [0]),
-                cpu_only=True
+                cpu_only=cpu_only
             )
         else:
             # accelerator mode
             accelerator_str = data.get("accelerator")
-            if not accelerator_str:
-                accelerator_str = data.get("gpu_platform", "nvidia")
-            
-            # Mapping to the correct acceleratorType
-            accelerator_map = {
-                "nvidia": AcceleratorType.NVIDIA,
-                "cambricon": AcceleratorType.CAMBRICON,
-                "ascend": AcceleratorType.ASCEND,
-                "intel": AcceleratorType.INTEL,
-                "xpu": AcceleratorType.INTEL,    
-                "amd": AcceleratorType.AMD,
-                "rocm": AcceleratorType.AMD,         
-            }
-            
-            accelerator = accelerator_map.get(accelerator_str.lower())
-            if accelerator is None:
-                logger.warning(f"Unknown accelerator: {accelerator_str}, using NVIDIA as default")
-                accelerator = AcceleratorType.NVIDIA
-            
-            return cls(
-                processor_type=ProcessorType.ACCELERATOR,
-                accelerator=accelerator,
-                device_ids=data.get("device_ids", [0]),
-                cpu_only=False
+        if not accelerator_str:
+            accelerator_str = data.get("gpu_platform", "nvidia")
+        
+        try:
+            accelerator = AcceleratorType(accelerator_str.lower())
+        except ValueError:
+            valid_values = [e.value for e in AcceleratorType]
+            raise ValueError(
+                f"Unsupported accelerator: '{accelerator_str}'. "
+                f"Supported values: {', '.join(valid_values)}"
             )
+        
+        return cls(
+            accelerator=accelerator,
+            device_ids=data.get("device_ids", [0]),
+            cpu_only=False
+        )
 
     def to_dict(self) -> Dict[str, Any]:
-        """Into a dictionary"""
-        result = {
-            "processor_type": self.processor_type.value,
+        """Convert to dictionary"""
+        return {
+            "accelerator": self.accelerator.value,
             "device_ids": self.device_ids,
             "cpu_only": self.cpu_only
         }
-        
-        if self.accelerator:
-            result["accelerator"] = self.accelerator.value
-        
-        return result
     
     @property
     def is_cpu(self) -> bool:
@@ -278,42 +276,15 @@ class InferConfig:
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'InferConfig':
         """Create configuration object from dictionary"""
-        # 1. Read outer level
-        outer_run_id = config_dict.get("run_id")
-        outer_testcase = config_dict.get("testcase")
+        # Generate run_id using common utility
+        run_id = generate_run_id_from_config(config_dict)
+    
         config_data = config_dict.get("config", {})
-
-        # 2. verify testcase position
-        inner_testcase = config_data.get("testcase")
-        if outer_testcase:
-            testcase = outer_testcase
-            if not validate_testcase_format(testcase):
-                raise ValueError(f"Invalid testcase format: {testcase}")
-            logger.info(f"Using outer testcase: {testcase}")
-        elif inner_testcase:
-            raise ValueError(
-                "testcase must be at the outer level, not inside 'config'. "
-                f"Found: '{inner_testcase}' inside 'config'."
-            )
-        else:
-            raise ValueError(
-                "testcase is required at the outer level of the config."
-            )
-
-        # 3. verify run_id position
-        inner_run_id = config_data.get("run_id")
-        if inner_run_id:
-            raise ValueError(
-                "run_id must be at the outer level, not inside 'config'. "
-                f"Found: '{inner_run_id}' inside 'config'."
-            )
-
-        # 4.  generate run_id
-        run_id = generate_run_id(testcase, outer_run_id)
-
-        # 5. Analytical reasoning models and frameworks
+        testcase = config_dict.get("testcase")
+    
+        # Parse mode and framework
         mode_str, framework_str = parse_testcase(testcase)
-        
+    
         mode = InferMode.DIRECT if mode_str == "direct" else InferMode.SERVICE
         if framework_str == "infinilm":
             framework = FrameworkType.INFINILM
@@ -322,7 +293,7 @@ class InferConfig:
         else:
             raise ValueError(f"Unsupported inference framework: {framework_str}")
 
-        # 6. Parse model_path
+        #  Parse model_path
         model_path = config_data.get("model_path")
         model_config = config_data.get("model_config")
 
@@ -332,14 +303,14 @@ class InferConfig:
         elif not model_path:
             raise ValueError("Either model_path or model_config must be provided in config")
 
-        # 7. Parse inference arguments
+        # Parse inference arguments
         infer_args_dict = config_data.get("infer_args", {})
         if mode == InferMode.DIRECT:
             infer_args = DirectInferArgs.from_dict(infer_args_dict)
         else:
             infer_args = ServiceInferArgs.from_dict(infer_args_dict)
 
-        # 8. Parse device configuration
+        # Parse device configuration
         device_config = DeviceConfig.from_dict(config_data.get("device", {}))
 
         return cls(
@@ -495,9 +466,3 @@ class InferConfigManager:
         """
         from common.testcase_utils import generate_auto_run_id as common_generate_run_id
         return common_generate_run_id(testcase)
-
-    # Original private method calls public method
-    @staticmethod
-    def _generate_auto_run_id(testcase: str) -> str:
-        """Private method, calls public method (maintain backward compatibility)"""
-        return InferConfigManager.generate_auto_run_id(testcase)

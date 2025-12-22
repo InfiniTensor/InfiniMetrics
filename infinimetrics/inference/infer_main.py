@@ -2,7 +2,7 @@
 """
 Main entry point for inference evaluation
 Usage:
-cd ~/InfiniLM  # or vLLM directory
+cd path/to/InfiniLM  # or path/to/vLLM directory
 python /path/to/infinimetrics/inference/infer_main.py --config config.json
 """
 
@@ -19,25 +19,12 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir) 
 
 # Add the parent directory to your Python Path
+sys.path.insert(0, current_dir)
 if parent_dir not in sys.path:
     sys.path.insert(0, parent_dir)
 
-# Verify that the common module exists
-common_dir = os.path.join(parent_dir, "common")
-if not os.path.exists(common_dir):
-    print(f"ERROR: Common module not found at: {common_dir}")
-    print(f"Current directory: {os.getcwd()}")
-    print(f"Looking for: {common_dir}")
-    sys.exit(1)
-
-# import infer_config
-try:
-    from infer_config import InferConfigManager
-    from infer_runner_factory import InferRunnerFactory
-except ImportError as e:
-    print(f"ERROR: Failed to import modules: {e}")
-    print(f"Python path: {sys.path}")
-    sys.exit(1)
+from infer_config import InferConfigManager
+from infer_runner_factory import InferRunnerFactory
 
 # Configure logging
 logging.basicConfig(
@@ -60,7 +47,7 @@ def setup_logging(verbose: bool):
         logging.getLogger().setLevel(logging.INFO)
 
 def check_current_directory():
-    """Check current directory - simplified version"""
+    """Check current directory and provide guidance"""
     current_dir = os.getcwd()
     logger.info(f"Current working directory: {current_dir}")
     
