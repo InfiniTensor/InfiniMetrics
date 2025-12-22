@@ -22,7 +22,7 @@
         "warmup_iterations": 10,
         "measured_iterations": 100,
         "command": "python base_op_bench.py --op Mul --mode out_of_place",
-        "device": "cuda",
+        "device": "nvidia",
         "bench": "both"
     },
     "metrics": [

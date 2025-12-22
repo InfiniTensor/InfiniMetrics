@@ -1,12 +1,10 @@
 import sys
 import os
 import json
-import importlib
-import inspect
 import argparse
-from typing import Any, Optional, List
+from typing import Any, Dict, List
 
-# Ensure infinicore is available (Mock or Real)
+# Ensure infinicore is available
 import infinicore 
 
 # Path adaptation
@@ -14,22 +12,23 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.append(current_dir)
 
-from framework.base import BaseOperatorTest, TestCase, TensorSpec, TestConfig
-from framework.runner import GenericTestRunner
+# --- Key Modification: Import TestCaseManager ---
+# Assuming your TestCaseManager is defined in framework.manager or framework.runner
+# If your manager is elsewhere, please modify this import
+from infinicore.test.framework import TestCaseManager
 from adapters import ExternalSystemAdapter
 
 class TestExecutionGateway:
     """
-    Test Execution Gateway
-    Orchestrates the test execution flow using an injected adapter.
+    Test Execution Gateway (File-Based Architecture)
+    
+    Flow:
+    1. External JSON -> Adapter -> Internal JSON File (Temp)
+    2. Internal JSON File -> TestCaseManager -> Execution Results (Dict)
+    3. Execution Results -> Adapter -> Final JSON Response
     """
 
     def __init__(self, adapter: ExternalSystemAdapter):
-        """
-        Args:
-            adapter: An instance implementing ExternalSystemAdapter interface.
-                     This is REQUIRED.
-        """
         if adapter is None:
             raise ValueError("TestExecutionGateway requires an adapter instance.")
         self.adapter = adapter
@@ -37,15 +36,6 @@ class TestExecutionGateway:
     def run(self, json_file_path: str, device="cuda", config=None) -> str:
         """
         Main entry point.
-        
-        Flow:
-        1. Validate Input
-        2. Parse Request (Adapter) -> Logic Object
-        3. Dispatch Execution (Operator / Training / etc.) -> Raw Results
-        4. Format Response (Adapter) -> JSON String
-        
-        Returns:
-            str: The final formatted JSON response string.
         """
         print(f"🚀 Gateway: Start processing...")
 
@@ -56,106 +46,72 @@ class TestExecutionGateway:
         if not os.path.exists(json_file_path):
             raise FileNotFoundError(f"❌ JSON file not found: {json_file_path}")
 
-        # 2. Parse Request using Injected Adapter
-        print(f"📄 Source: Loading from JSON file: {json_file_path}")
+        # 2. Parse Request using Adapter
+        # [Modification 1] parseRequest now only returns the path to the generated internal config file
+        print(f"📄 Adapter: Translating request from {json_file_path}...")
+        temp_config_path = self.adapter.parseRequest(json_file_path)
         
-        # Expects: Op/Task Name (str), TestCase (Obj), Runtime Args (Namespace)
-        target_name, test_case, runtime_args = self.adapter.parseRequest(json_file_path)
-        
-        # Prioritize external config if provided
-        final_config = config if config is not None else runtime_args
+        # Prepare config overrides
+        final_config = config if config is not None else {}
+        # If device argument is passed, add to override
+        if device:
+            final_config["device"] = device
 
-        # 3. Dispatch Execution
-        # The Gateway delegates the "How to run" logic to a dispatcher
-        print(f"⚙️  Dispatching execution for target: '{target_name}'")
-        raw_results = self._dispatch_execution(target_name, test_case, final_config)
-
-        # 4. Format Response
-        # The Gateway asks the Adapter to convert raw results back to the external format
-        print(f"📝 Formatting response...")
-        final_json_response = self.adapter.formatResponse(raw_results)
-        
-        print(f"🏁 Gateway: Process finished.")
-        return final_json_response
-
-    def _dispatch_execution(self, target_name: str, test_case: Any, config: argparse.Namespace) -> List[Any]:
-        """
-        Dispatcher: Determines which execution engine to use based on the target.
-        
-        Currently supports:
-        - Operator Benchmarks (default)
-        
-        Future expansion:
-        - Model Training
-        - Inference Service Testing
-        """
-        # Logic to determine execution type. 
-        # For now, we assume standard Operator Benchmark if it's not explicitly something else.
-        
-        # Example extensibility:
-        # if target_name == "Training":
-        #     return self._execute_training_job(test_case, config)
-        
-        return self._execute_operator_benchmark(target_name, test_case, config)
-
-    def _execute_operator_benchmark(self, op_name: str, test_case: TestCase, config: argparse.Namespace) -> List[Any]:
-        """
-        Internal execution logic specifically for Operator Benchmarks.
-        Handles dynamic module loading, class proxying, and the GenericTestRunner.
-        """
-        cases_to_run = [test_case]
-        print(f"  -> Executing Operator Benchmark: '{op_name}'...")
-        
-        # A. Dynamic import of the operator module
-        # Note: Op names are often CamelCase (e.g., "Conv"), but files are snake_case (e.g., "ops/conv.py")
-        module_name = op_name.lower()
-        module_path = f"ops.{module_name}"
-        
         try:
-            module = importlib.import_module(module_path)
-        except ImportError:
-            print(f"❌ Module not found: {module_path}")
-            print(f"   (Please ensure 'ops/{module_name}.py' exists)")
-            return []
+            # 3. Dispatch Execution
+            print(f"⚙️  Dispatching execution with internal config: {temp_config_path}")
+            run_output_full = self._dispatch_execution(temp_config_path, final_config)
 
-        # B. Find the original OpTest class within the module
-        OriginalOpTest = None
-        for name, obj in inspect.getmembers(module, inspect.isclass):
-            if issubclass(obj, BaseOperatorTest) and obj is not BaseOperatorTest:
-                OriginalOpTest = obj
-                break
+            # =========================================================
+            # 👇👇👇 [DEBUG] Print content of run_output_full 👇👇👇
+            # =========================================================
+            print("\n" + "="*30 + " DEBUG: run_output_full " + "="*30)
+            try:
+                # default=str prevents errors due to non-serializable objects (like class instances)
+                print(json.dumps(run_output_full, indent=4, default=str))
+            except Exception as e:
+                # If json dump fails, fallback to raw print
+                print(f"⚠️ JSON dump failed ({e}), printing raw object:")
+                print(run_output_full)
+            print("="*80 + "\n")
+            # =========================================================
+
+            # 4. Format Response
+            # [Modification 2] Pass the full execution result dictionary back to the adapter
+            print(f"📝 Formatting response...")
+            final_json_response = self.adapter.formatResponse(run_output_full)
+            
+            print(f"🏁 Gateway: Process finished.")
+            return final_json_response
+
+        finally:
+            # [Optional] Clean up temporary file
+            if os.path.exists(temp_config_path):
+                # os.remove(temp_config_path) 
+                print(f"🧹 [Debug] Temp file preserved at: {temp_config_path}")
+
+    def _dispatch_execution(self, config_file_path: str, overrides: Dict) -> Dict[str, Any]:
+        """
+        [Modification 3] The dispatcher is now greatly simplified.
+        It no longer needs to import modules or construct classes itself, but delegates directly to TestCaseManager.
+        """
+        manager = TestCaseManager()
         
-        if not OriginalOpTest:
-            print(f"❌ Valid OpTest subclass not found in {module_path}")
-            return []
-
-        # C. Dynamic subclass (Proxy Class) to inject test cases
-        class ProxyOpTest(OriginalOpTest):
-            def __init__(self):
-                super().__init__() 
-
-            def get_test_cases(self):
-                return cases_to_run
+        print(f"   -> Manager running file...")
         
-        # D. Run tests
-        generic_runner = GenericTestRunner(ProxyOpTest, config)
-        success, internal_runner = generic_runner.run()
-
-        # E. Retrieve and Debug results
-        results = getattr(internal_runner, "test_results", [])
+        # Manager.run usually returns a List[SuiteResult]
+        # Since we map one file to one request, we take the result of the first Suite
+        results = manager.run(
+            json_file_path=config_file_path, 
+            config=overrides, 
+            save_path=None # Gateway mode doesn't need Manager to save another file
+        )
         
-        self._debug_print_results(results)
-        
-        return results
+        if not results or not isinstance(results, list):
+            return {"error": "Invalid results from manager", "execution_results": []}
 
-    def _debug_print_results(self, results: List[Any]):
-        """Helper to print raw results for debugging"""
-        print("\n" + "="*50)
-        print(f"📊 Debug: Internal Results (Count: {len(results)})")
-        if isinstance(results, list):
-            for i, res in enumerate(results):
-                print(f"  [Result {i}]: Success={getattr(res, 'success', 'Unknown')}")
-        print("="*50 + "\n")
+        # Return the full dictionary of the first Suite (containing operator, args, testcases, execution_results, etc.)
+        return results[0]
 
 
 # ==========================================
@@ -168,8 +124,17 @@ if __name__ == "__main__":
     # 1. Configure Argument Parser
     parser = argparse.ArgumentParser(description="Test Execution Gateway")
     parser.add_argument("file_path", type=str, help="Path to input JSON request file")
+    # Allow CLI overrides
+    parser.add_argument("--device", type=str, default=None)
+    parser.add_argument("--bench", type=str, default=None)
+    
     args = parser.parse_args()
     
+    # Construct config dictionary
+    cli_config = {}
+    if args.bench: cli_config["bench"] = args.bench
+    # device is passed as a separate argument
+
     # 2. Create Concrete Adapter
     specific_adapter = InfiniCoreAdapter()
 
@@ -177,8 +142,12 @@ if __name__ == "__main__":
         # 3. Inject into Gateway
         gateway = TestExecutionGateway(adapter=specific_adapter)
 
-        # 4. Run (Returns Final JSON String)
-        final_response_json = gateway.run(json_file_path=args.file_path)
+        # 4. Run
+        final_response_json = gateway.run(
+            json_file_path=args.file_path, 
+            device=args.device,
+            config=cli_config
+        )
 
         # 5. Output
         print("\n[Final Output]:")
