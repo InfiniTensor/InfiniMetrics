@@ -30,9 +30,13 @@ def load_payload_from_file(file_path):
         print(f"[Error] Failed to read {file_path}: {e}")
         return None
 
-def process_single_task(dispatcher, payload, source_name):
+def process_single_task(dispatcher, payload, source_name, output_dir="results"):
     """
     Core logic for processing a single task.
+    1. Dispatch execution.
+    2. Save result to JSON file.
+    3. Print summary.
+    
     Returns: bool (True if success, False otherwise)
     """
     run_id = payload.get('run_id', 'Unknown')
@@ -42,12 +46,24 @@ def process_single_task(dispatcher, payload, source_name):
         # 1. Execute task
         result = dispatcher.dispatch(payload)
         
-        # 2. [New] Print full result (formatted output)
-        print("-" * 40)
-        print("📜 Execution Result Payload:")
-        # indent=4 for pretty printing, ensure_ascii=False ensures non-ASCII characters display correctly
-        print(json.dumps(result, indent=4, ensure_ascii=False))
-        print("-" * 40)
+        # 2. [New Feature] Save Result to File
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            
+        # Generate filename: use filename for file input, run_id for mock input
+        if os.path.isfile(source_name):
+            base_name = os.path.basename(source_name).replace(".json", "")
+            save_name = f"{base_name}_result.json"
+        else:
+            save_name = f"{run_id}_result.json"
+            
+        save_path = os.path.join(output_dir, save_name)
+        
+        with open(save_path, 'w', encoding='utf-8') as f:
+            # indent=4 for pretty printing, ensure_ascii=False ensures non-ASCII characters display correctly
+            json.dump(result, f, indent=4, ensure_ascii=False)
+            
+        print(f"    💾 Saved result to: {save_path}")
         
         # 3. Result summary check
         success_code = result.get("success")
@@ -62,7 +78,7 @@ def process_single_task(dispatcher, payload, source_name):
 
     except Exception as e:
         print(f"    ❌ Crashed: {e}")
-        # If crashed, print detailed traceback
+        # If crashed, print detailed traceback for debugging
         import traceback
         traceback.print_exc()
         return False
