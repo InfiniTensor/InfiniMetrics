@@ -10,116 +10,118 @@ from infinimetrics.framework.dispatcher import WorkloadDispatcher
 
 
 def create_mock_payload():
-    """
-    Creates a mock payload simulating the content of 'add.json'.
-    Used as a fallback if no file is provided.
-    """
+    """Fallback mock payload."""
     return {
-        "run_id": "test_run_manual_001",
-        "time": "2025-12-22 10:00:00",
+        "run_id": "mock_run_001",
         "testcase": "infiniCore.operator.Mul",
-        "config": {
-            "model_source": "Manual_Test",
-            "operator": "mul",
-            "device": "cuda",
-            "measured_iterations": 100,
-            "inputs": [
-                {
-                    "name": "a",
-                    "dtype": "float32",
-                    "shape": [13, 4, 4],
-                    "strides": [20, 4, 1],
-                },
-                {
-                    "name": "b",
-                    "dtype": "float32",
-                    "shape": [13, 4, 4],
-                    "strides": [20, 4, 1],
-                },
-            ],
-        },
-        "metrics": [
-            {
-                "name": "operator.latency",
-                "type": "timeseries",
-                "raw_data_url": "./latency.csv",
-                "unit": "ms",
-            }
-        ],
+        "config": {"operator": "mul", "device": "cuda", "inputs": []}, # Simplified demo
+        "metrics": []
     }
 
-
 def load_payload_from_file(file_path):
-    """
-    [New] Read external JSON file and parse into a dictionary.
-    """
+    """Read and parse JSON file."""
     if not os.path.exists(file_path):
         print(f"[Error] File not found: {file_path}")
-        sys.exit(1)
-    
+        return None
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
-            print(f"[Main] Loading payload from: {file_path}")
             return json.load(f)
-    except json.JSONDecodeError as e:
-        print(f"[Error] Failed to parse JSON file: {e}")
-        sys.exit(1)
     except Exception as e:
-        print(f"[Error] Unexpected error reading file: {e}")
-        sys.exit(1)
+        print(f"[Error] Failed to read {file_path}: {e}")
+        return None
 
+def process_single_task(dispatcher, payload, source_name):
+    """
+    Core logic for processing a single task.
+    Returns: bool (True if success, False otherwise)
+    """
+    run_id = payload.get('run_id', 'Unknown')
+    print(f"\n>>> Processing Task: {source_name} (RunID: {run_id})")
+    
+    try:
+        # 1. Execute task
+        result = dispatcher.dispatch(payload)
+        
+        # 2. [New] Print full result (formatted output)
+        print("-" * 40)
+        print("📜 Execution Result Payload:")
+        # indent=4 for pretty printing, ensure_ascii=False ensures non-ASCII characters display correctly
+        print(json.dumps(result, indent=4, ensure_ascii=False))
+        print("-" * 40)
+        
+        # 3. Result summary check
+        success_code = result.get("success")
+        if success_code == 0:
+            print(f"    ✅ Passed.")
+            return True
+        else:
+            print(f"    ❌ Failed (Error Code: {success_code}).")
+            if "error_msg" in result:
+                print(f"       Reason: {result['error_msg']}")
+            return False
 
+    except Exception as e:
+        print(f"    ❌ Crashed: {e}")
+        # If crashed, print detailed traceback
+        import traceback
+        traceback.print_exc()
+        return False
+        
 def main():
-    # 1. Parse command line arguments
-    parser = argparse.ArgumentParser(description="InfiniCore Test System CLI")
+    # 1. Define command line arguments
+    parser = argparse.ArgumentParser(description="InfiniMetrics Batch Runner")
     parser.add_argument(
-        "input_file", 
-        nargs="?", 
-        help="Path to the input JSON file (e.g., add.json). If omitted, uses mock data."
+        "input_files", 
+        nargs="*",  # [Core Change] * accepts 0 or more files
+        help="List of JSON files to execute sequentially."
     )
     args = parser.parse_args()
 
     print("========================================")
-    print("   InfiniCore Test System - CLI Entry   ")
+    print("      InfiniMetrics Batch Runner        ")
     print("========================================")
 
-    # 2. Initialize Dispatcher
+    # 2. Initialize Dispatcher (Initialize once, reuse)
     try:
         dispatcher = WorkloadDispatcher()
     except Exception as e:
-        print(f"[Fatal Error] Failed to initialize Dispatcher: {e}")
+        print(f"[Fatal Error] Dispatcher Init Failed: {e}")
         return
 
-    # 3. Determine Payload Source (File vs Mock)
-    if args.input_file:
-        payload = load_payload_from_file(args.input_file)
+    # 3. Prepare task list
+    tasks = []
+    if args.input_files:
+        # If files are provided, process them
+        for fpath in args.input_files:
+            data = load_payload_from_file(fpath)
+            if data:
+                tasks.append((fpath, data))
     else:
-        print("\n[Info] No input file provided. Using internal Mock Payload for demo.")
-        payload = create_mock_payload()
+        # No inputs provided, run Mock
+        print("[Info] No inputs provided. Using Mock data.")
+        tasks.append(("Mock Data", create_mock_payload()))
 
-    print(f"[Main] RunID: {payload.get('run_id', 'Unknown')}")
-
-    # 4. Dispatch the Task
-    try:
-        result = dispatcher.dispatch(payload)
-
-        # 5. Output Result
-        print("\n[Main] Execution Finished. Result:")
-        print("-" * 40)
-        print(json.dumps(result, indent=4, ensure_ascii=False))
-        print("-" * 40)
-
-        # 6. Verification
-        if result.get("success") == 0:
-            print("[Main] ✅ Test Passed Successfully.")
+    # 4. Batch Execution
+    stats = {"total": len(tasks), "passed": 0, "failed": 0}
+    
+    for source_name, payload in tasks:
+        is_success = process_single_task(dispatcher, payload, source_name)
+        if is_success:
+            stats["passed"] += 1
         else:
-            print(f"[Main] ❌ Test Failed (Code: {result.get('success')}).")
+            stats["failed"] += 1
 
-    except Exception as e:
-        print(f"\n[Main] ❌ Execution crashed: {e}")
-        import traceback
-        traceback.print_exc()
-
+    # 5. Final Report
+    print("\n" + "="*40)
+    print(f" 📊 Execution Summary")
+    print(f"    Total:  {stats['total']}")
+    print(f"    Passed: {stats['passed']}")
+    print(f"    Failed: {stats['failed']}")
+    print("="*40)
+    
+    # Set exit code to non-zero if failures occurred (useful for CI/CD)
+    if stats["failed"] > 0:
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
