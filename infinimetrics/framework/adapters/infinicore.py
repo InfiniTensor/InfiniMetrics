@@ -87,47 +87,152 @@ class InfiniCoreAdapter(BaseAdapter):
         }
         return resp
 
+    # =========================================================================
+    # 新增辅助方法：计算理论数据量和计算量
+    # =========================================================================
+    def _get_dtype_bytes(self, dtype_str: str) -> int:
+        """简单的 dtype 字节数映射"""
+        d = dtype_str.lower()
+        if "float32" in d or "int32" in d: return 4
+        if "float16" in d or "bfloat16" in d or "int16" in d: return 2
+        if "int8" in d or "uint8" in d or "bool" in d: return 1
+        if "float64" in d or "int64" in d: return 8
+        return 4 # 默认按 4 字节算
+
+    def _estimate_workload(self, config: dict) -> tuple[float, float]:
+        """
+        根据 config 解析输入输出，估算:
+        1. total_bytes (用于计算 Bandwidth)
+        2. total_flops (用于计算 FLOPS)
+        
+        返回: (total_bytes, total_flops)
+        """
+        total_bytes = 0.0
+        total_flops = 0.0
+        
+        # 1. 计算带宽数据量 (Sum of Inputs + Outputs)
+        # -------------------------------------------------
+        tensors_to_count = config.get("inputs", []) + config.get("outputs", [])
+        
+        for tensor in tensors_to_count:
+            shape = tensor.get("shape", [])
+            dtype = tensor.get("dtype", "float32")
+            
+            # 计算元素个数 (volume)
+            if shape:
+                volume = 1
+                for dim in shape:
+                    volume *= dim
+            else:
+                volume = 0
+                
+            # 累加字节数
+            total_bytes += volume * self._get_dtype_bytes(dtype)
+
+        # 2. 估算 FLOPS (根据算子类型使用不同公式)
+        # -------------------------------------------------
+        op_type = config.get("operator", "").lower()
+        
+        # [示例] Matmul: 2 * M * N * K
+        if op_type == "matmul":
+            try:
+                inputs = config.get("inputs", [])
+                # 假设 Input A=[M, K], B=[K, N] (简化处理，未考虑Batch)
+                shape_a = inputs[0]["shape"]
+                shape_b = inputs[1]["shape"]
+                
+                M = shape_a[-2]
+                K = shape_a[-1]
+                N = shape_b[-1]
+                
+                total_flops = 2.0 * M * N * K
+            except:
+                total_flops = 0.0
+        
+        # [示例] Conv: 2 * Batch * OutCh * OutH * OutW * InCh * KH * KW
+        elif op_type == "conv":
+            # 这里的计算比较复杂，需要结合 attributes (stride, padding) 推导
+            # 为了演示，这里先留空，或者你可以写一个简化估算
+            # 如果你有 attributes 中的 kernel_shape 等信息，可以在这里算
+            pass 
+        
+        # [兜底] 如果没实现特定算子公式，FLOPS 设为 0 (避免除以零报错)
+        
+        return total_bytes, total_flops
+
+    # =========================================================================
+    # 修改后的核心方法
+    # =========================================================================
     def _convert_from_response(self, infinicore_resp: list, original_req: dict) -> dict:
         final_json = copy.deepcopy(original_req)
         final_json["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         try:
-            result_data = infinicore_resp[0]["testcases"][0]["result"]
-            
-            # 状态处理
+            # 1. 提取基础数据
+            testcase_res = infinicore_resp[0]["testcases"][0]
+            result_data = testcase_res["result"]
+            config = original_req.get("config", {})
+
+            # 2. 状态处理
             is_success = result_data.get("status", {}).get("success", False)
             final_json["success"] = 0 if is_success else 1
             if not is_success:
                 final_json["error_msg"] = result_data.get("status", {}).get("error", "Unknown")
+                # 失败时直接返回，不再计算指标
                 return final_json
 
-            # Metrics 动态回填
+            # 3. 准备计算基础值
+            latency_ms = result_data.get("perf_ms", {}).get("infinicore", {}).get("device")
+            
+            # 只有当 Latency 有效且大于0时才进行计算
+            if latency_ms and latency_ms > 0:
+                latency_sec = latency_ms / 1000.0
+                
+                # 调用上面的辅助方法获取理论工作量
+                total_bytes, total_flops = self._estimate_workload(config)
+                
+                # 计算结果
+                # GB/s = Bytes / Seconds / 10^9
+                bandwidth_gbs = (total_bytes / latency_sec) / 1e9
+                # TFLOPS = Flops / Seconds / 10^12
+                tflops = (total_flops / latency_sec) / 1e12
+            else:
+                bandwidth_gbs = 0.0
+                tflops = 0.0
+
+            # 4. Metrics 动态回填
             if "metrics" in final_json and self.req_metrics_template:
                 filled_metrics = []
                 for metric_template in self.req_metrics_template:
                     metric = copy.deepcopy(metric_template)
                     name = metric.get("name")
                     
-                    # 1. Latency
+                    # --- 1. Latency (直接获取) ---
                     if name == "operator.latency":
-                        val = result_data.get("perf_ms", {}).get("infinicore", {}).get("device")
-                        if val is not None: metric["value"] = val
+                        if latency_ms is not None:
+                            metric["value"] = latency_ms
                     
-                    # 2. Accuracy
+                    # --- 2. Accuracy (Mock) ---
                     elif name == "operator.tensor_accuracy":
+                        # 只要 success=0 就认为是 PASS
                         metric["value"] = "PASS" if is_success else "FAIL"
+                        # 如果需要 Mock 文件路径，这里已经保留了 original_req 里的 reference/candidate 结构
                     
-                    # 3. [补丁 2] FLOPS 支持
+                    # --- 3. FLOPS (计算得出) ---
                     elif name == "operator.flops":
-                        # 假设后端返回字段叫 tflops 或 flops
-                        val = result_data.get("tflops") or result_data.get("flops")
-                        if val is not None: metric["value"] = val
+                        # 只有当算子公式已实现且 Latency 有效时才填
+                        if tflops > 0:
+                            metric["value"] = round(tflops, 4)
+                        else:
+                            # 如果没算出，给个 0 或者 null，或者不填 value
+                            metric["value"] = 0.0
                             
-                    # 4. [补丁 3] Bandwidth 支持
+                    # --- 4. Bandwidth (计算得出) ---
                     elif name == "operator.bandwidth":
-                        # 假设后端返回字段叫 bandwidth_gb_s
-                        val = result_data.get("bandwidth_gb_s") or result_data.get("bandwidth")
-                        if val is not None: metric["value"] = val
+                        if bandwidth_gbs > 0:
+                            metric["value"] = round(bandwidth_gbs, 4)
+                        else:
+                            metric["value"] = 0.0
                             
                     filled_metrics.append(metric)
                 
@@ -137,6 +242,8 @@ class InfiniCoreAdapter(BaseAdapter):
             print(f"[Adapter] Parsing Error: {e}")
             final_json["success"] = 1
             final_json["error_msg"] = str(e)
+            import traceback
+            traceback.print_exc()
 
         return final_json
 
