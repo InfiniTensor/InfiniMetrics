@@ -1,8 +1,13 @@
 {
+    "run_id": "train.infiniTrain.SFT.a8b4c9e1-5b1a-4f8a-9e3b-b2c1d0f8e3a4",
+    "time": "2025-12-26 11:15:25",
+    "testcase": "train.InfiniTrain.SFT",
+    "success": 0,
     "config": {
         "model_source": "FM9G_70B",
         "opset_version": 11,
-        "operator": "conv",
+        "operator": "Conv",
+        "device": "cuda",
         "attributes": [
             {
                 "name": "auto_pad",
@@ -93,31 +98,35 @@
                     254,
                     1
                 ],
-                "inplace": "X"
+                "inplace": "A"
             }
         ],
         "warmup_iterations": 100,
         "measured_iterations": 1000,
+        "bench": true,
         "command": "python base_op_bench.py --op Conv --input_shapes 1x64x256x256,128x64x3x3 --precision FP16 --iter 1000"
     },
     "metrics": [
         {
             "name": "operator.latency",
-            "type": "timeseries",
-            "raw_data_url": "./operator/${run_id}_operator_latency.csv",
-            "unit": "ms"
+            "type": "scalar",
+            "raw_data_url": "",
+            "unit": "ms",
+            "value": 19.2
         },
         {
             "name": "operator.flops",
-            "type": "timeseries",
-            "raw_data_url": "./operator/${run_id}_operator_flops.csv",
-            "unit": "TFLOPS"
+            "type": "scalar",
+            "raw_data_url": "",
+            "unit": "TFLOPS",
+            "value": 0.4955
         },
         {
             "name": "operator.bandwidth",
-            "type": "timeseries",
-            "raw_data_url": "./operator/${run_id}_operator_bandwidth.csv",
-            "unit": "GB/s"
+            "type": "scalar",
+            "raw_data_url": "",
+            "unit": "GB/s",
+            "value": 1.3048
         },
         {
             "name": "operator.tensor_accuracy",
@@ -138,7 +147,8 @@
                 ],
                 "dtype": "float16"
             },
-            "unit": ""
+            "unit": "",
+            "value": "PASS"
         }
     ]
 }

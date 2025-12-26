@@ -2,9 +2,10 @@ import sys
 import os
 import json
 import argparse
+from datetime import datetime
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from infinimetrics.framework.dispatcher import WorkloadDispatcher
+from infinimetrics.core.dispatcher import WorkloadDispatcher
 
 
 def create_mock_payload():
@@ -47,18 +48,18 @@ def process_single_task(dispatcher, payload, source_name, output_dir="results"):
         # 2. Save Result to File
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
-            
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")    
         # Generate filename: use filename for file input, run_id for mock input
         if os.path.isfile(source_name):
             base_name = os.path.basename(source_name).replace(".json", "")
-            save_name = f"{base_name}_result.json"
+            save_name = f"{base_name}_result_{timestamp}.json"
         else:
-            save_name = f"{run_id}_result.json"
+            save_name = f"{run_id}_result_{timestamp}.json"
             
         save_path = os.path.join(output_dir, save_name)
         
         with open(save_path, 'w', encoding='utf-8') as f:
-            # indent=4 for pretty printing, ensure_ascii=False ensures non-ASCII characters display correctly
             json.dump(result, f, indent=4, ensure_ascii=False)
             
         print(f"    💾 Saved result to: {save_path}")

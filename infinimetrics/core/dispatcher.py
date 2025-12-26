@@ -1,6 +1,5 @@
 from .runner import TestRunner
-from .adapters.infinicore import InfiniCoreAdapter
-from .runner import TestRunner
+from ..adapters.infinicore import InfiniCoreAdapter
 
 
 class WorkloadDispatcher:

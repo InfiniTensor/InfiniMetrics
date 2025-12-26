@@ -3,7 +3,7 @@ import time
 import copy
 from datetime import datetime
 
-from .adapters.base import BaseAdapter
+from ..adapters.base import BaseAdapter
 
 
 class TestRunner:

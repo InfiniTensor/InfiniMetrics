@@ -2,68 +2,12 @@ import copy
 import time
 import math
 from datetime import datetime
-from typing import Dict, Any, Callable, List
+
 from .base import BaseAdapter
+from ..tools.estimator import WorkloadEstimator
 
 # =========================================================================
-# 1. Workload / FLOPS Estimator (Strategy Pattern)
-# =========================================================================
-class WorkloadEstimator:
-    """
-    Strategy class for FLOPs calculation.
-    """
-    _calculators: Dict[str, Callable] = {}
-
-    @classmethod
-    def register(cls, op_name: str):
-        def decorator(func):
-            cls._calculators[op_name.lower()] = func
-            return func
-        return decorator
-
-    @classmethod
-    def get_flops(cls, op_type: str, inputs: list, outputs: list, attrs: dict) -> float:
-        calculator = cls._calculators.get(op_type.lower())
-        if not calculator:
-            return 0.0
-        try:
-            return calculator(inputs, outputs, attrs)
-        except Exception as e:
-            # [Optimization] Log detailed warning but don't crash
-            print(f"[Warn] FLOPS calc error for {op_type}: {e}")
-            return 0.0
-
-# --- Formulas ---
-
-@WorkloadEstimator.register("matmul")
-def _calc_matmul(inputs, outputs, attrs):
-    # Shape assumption: [..., M, K] x [..., K, N]
-    shape_a = inputs[0]["shape"]
-    shape_b = inputs[1]["shape"]
-    M = shape_a[-2]
-    K = shape_a[-1]
-    N = shape_b[-1]
-    # Handle batch dimensions if needed, here simplified
-    batch = math.prod(shape_a[:-2]) if len(shape_a) > 2 else 1
-    return 2.0 * batch * M * N * K
-
-@WorkloadEstimator.register("conv")
-def _calc_conv(inputs, outputs, attrs):
-    in_shape = inputs[0]["shape"]
-    out_shape = outputs[0]["shape"]
-    
-    # N, C_out, H_out, W_out
-    N, C_out, H_out, W_out = out_shape[0], out_shape[1], out_shape[2], out_shape[3]
-    C_in = in_shape[1]
-    
-    k_shape = attrs.get("kernel_shape", [1, 1])
-    group = attrs.get("group", 1)
-    
-    return 2.0 * N * H_out * W_out * C_out * (C_in / group) * k_shape[0] * k_shape[1]
-
-
-# =========================================================================
-# 2. Main Adapter
+# Main Adapter
 # =========================================================================
 
 class InfiniDtype:
@@ -161,7 +105,7 @@ class InfiniCoreAdapter(BaseAdapter):
 
     def _get_dtype_bytes(self, dtype_str: str) -> int:
         d = dtype_str.lower()
-        # [Optimization] Use 'in' check tuple for cleaner logic
+        # Use 'in' check tuple for cleaner logic
         if any(x in d for x in ("float32", "int32")): return 4
         if any(x in d for x in ("float16", "bfloat16", "int16")): return 2
         if any(x in d for x in ("int8", "uint8", "bool")): return 1
@@ -176,7 +120,7 @@ class InfiniCoreAdapter(BaseAdapter):
         for tensor in tensors:
             shape = tensor.get("shape", [])
             dtype = tensor.get("dtype", "float32")
-            # [Optimization] math.prod is faster than manual loop
+            # math.prod is faster than manual loop
             volume = math.prod(shape) if shape else 0
             total_bytes += volume * self._get_dtype_bytes(dtype)
 
@@ -246,7 +190,7 @@ class InfiniCoreAdapter(BaseAdapter):
                 bandwidth_gbs = (total_bytes / latency_sec) / 1e9
                 tflops = (total_flops / latency_sec) / 1e12
 
-            # 3. [Optimization] Metrics Dispatcher Map
+            # 3. Metrics Dispatcher Map
             # This avoids the long if-elif chain and makes it easy to add new metrics
             metric_handlers = {
                 self.METRIC_LATENCY: self._handle_latency,
