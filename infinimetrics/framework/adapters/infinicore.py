@@ -1,6 +1,6 @@
 import copy
 import time
-import math  # [Optimization] Use math.prod
+import math
 from datetime import datetime
 from typing import Dict, Any, Callable, List
 from .base import BaseAdapter

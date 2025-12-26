@@ -1,5 +1,3 @@
-# File: main.py
-
 import sys
 import os
 import json
@@ -46,7 +44,7 @@ def process_single_task(dispatcher, payload, source_name, output_dir="results"):
         # 1. Execute task
         result = dispatcher.dispatch(payload)
         
-        # 2. [New Feature] Save Result to File
+        # 2. Save Result to File
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
             
@@ -88,7 +86,7 @@ def main():
     parser = argparse.ArgumentParser(description="InfiniMetrics Batch Runner")
     parser.add_argument(
         "input_files", 
-        nargs="*",  # [Core Change] * accepts 0 or more files
+        nargs="*",  # accepts 0 or more files
         help="List of JSON files to execute sequentially."
     )
     args = parser.parse_args()
