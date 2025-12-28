@@ -51,14 +51,14 @@ def parse_testcase(testcase_str: str) -> tuple[str, str]:
     else:
         # Try to extract from dot-separated parts
         parts = testcase_str.split('.')
-        if len(parts) >= 2:
-            framework_candidate = parts[-2].lower()  # e.g., "infinilm" in "infer.InfiniLM.Direct"
-            if framework_candidate in ["infinilm", "vllm", "bmtrain", "megatron", "infinitrain"]:
-                framework = framework_candidate
-            else:
-                raise ValueError(f"Cannot determine framework from testcase: {testcase_str}")
-        else:
+        if len(parts) < 2:
             raise ValueError(f"Cannot determine framework from testcase: {testcase_str}")
+    
+        framework_candidate = parts[-2].lower()
+        if framework_candidate not in ["infinilm", "vllm", "bmtrain", "megatron", "infinitrain"]:
+            raise ValueError(f"Cannot determine framework from testcase: {testcase_str}")
+    
+        framework = framework_candidate
     
     return mode, framework
 
@@ -80,18 +80,7 @@ def generate_run_id(testcase: str, user_run_id: Optional[str] = None) -> str:
         return generate_auto_run_id(testcase)
 
 def generate_run_id_from_config(config_dict: Dict[str, Any]) -> str:
-    """
-    Generate run_id from configuration dictionary
-    
-    Args:
-        config_dict: Configuration dictionary with run_id and testcase
-    
-    Returns:
-        Generated run_id
-    
-    Raises:
-        ValueError: If configuration is invalid
-    """
+    """Generate run_id from configuration dictionary"""
     outer_run_id = config_dict.get("run_id")
     outer_testcase = config_dict.get("testcase")
     config_data = config_dict.get("config", {})
@@ -121,15 +110,7 @@ def generate_run_id_from_config(config_dict: Dict[str, Any]) -> str:
     return generate_run_id(outer_testcase, outer_run_id)
 
 def enhance_user_run_id(user_run_id: str) -> str:
-    """
-    Enhance user-provided run_id by adding timestamp and random code
-    
-    Args:
-        user_run_id: user-provided run_id
-    
-    Returns:
-        Enhanced run_id: {user_run_id}.{timestamp}.{random8}
-    """
+    """Enhance user-provided run_id by adding timestamp and random code"""
     # If already contains timestamp and random code, return directly
     timestamp_pattern = r'\.\d{8}_\d{6}\.[a-z0-9]{8}$'
     if re.search(timestamp_pattern, user_run_id):
@@ -153,18 +134,7 @@ def enhance_user_run_id(user_run_id: str) -> str:
 
 
 def generate_auto_run_id(testcase: str) -> str:
-    """
-    Auto-generate run_id
-    
-    Format: {testcase}.{timestamp}.{random8}
-    Example: infer.InfiniLM.Direct.20251210_143025.a1b2c3d4
-    
-    Args:
-        testcase: testcase string
-    
-    Returns:
-        Generated run_id
-    """
+    """Auto-generate run_id"""
     # Clean testcase
     cleaned_testcase = testcase.strip().strip(".").replace("..", ".")
 
@@ -181,15 +151,7 @@ def generate_auto_run_id(testcase: str) -> str:
 
 
 def validate_testcase_format(testcase: str) -> bool:
-    """
-    Validate testcase format
-    
-    Args:
-        testcase: testcase string
-    
-    Returns:
-        True if valid, False otherwise
-    """
+    """Validate testcase format"""
     # Basic validation: should contain at least 2 parts separated by dots
     parts = testcase.split('.')
     if len(parts) < 2:
@@ -204,21 +166,13 @@ def validate_testcase_format(testcase: str) -> bool:
 
 
 def extract_testcase_components(testcase: str) -> dict:
-    """
-    Extract components from testcase string
-    
-    Args:
-        testcase: testcase string
-    
-    Returns:
-        dict with extracted components
-    """
+    """Extract components from testcase string"""
     parts = testcase.split('.')
     
     result = {
         "full": testcase,
         "parts": parts,
-        "domain": parts[0] if len(parts) > 0 else "",  # e.g., "infer" or "train"
+        "domain": parts[0] if len(parts) > 0 else "",
         "framework": parts[1] if len(parts) > 1 else "",
         "mode": "service" if "service" in testcase.lower() else "direct"
     }

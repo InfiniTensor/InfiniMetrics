@@ -6,7 +6,6 @@ Defines common metric types used by both inference and training modules
 
 from typing import Dict, Any, Optional
 
-
 class Metric:
     """Metric base class"""
 
@@ -39,7 +38,6 @@ class ScalarMetric(Metric):
     def __init__(self, name: str, value: Any, unit: Optional[str] = None):
         super().__init__(name, "scalar", unit)
         self.value = value
-
 
 class TimeseriesMetric(Metric):
     """Time-series metric"""
