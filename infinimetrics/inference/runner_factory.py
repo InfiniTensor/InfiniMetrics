@@ -20,11 +20,7 @@ class InferRunnerFactory:
 
     @staticmethod
     def create_runner_and_adapter(config: InferConfig) -> Tuple[InferRunnerBase, InferAdapter]:
-        """
-        Create Runner and Adapter
-        
-        Returns: (runner, adapter)
-        """
+        """Create Runner and Adapter"""
         # Create adapter based on framework
         adapter = InferRunnerFactory.create_adapter(config)
 
@@ -63,7 +59,8 @@ class InferRunnerFactory:
         errors = adapter.validate_config()
         if errors:
             error_msg = "Adapter configuration errors:\n" + "\n".join(f"  - {e}" for e in errors)
-            logger.warning(error_msg)
+            logger.error(error_msg)
+            raise ValueError(f"Adapter configuration validation failed: {error_msg}") # throw exception
 
         return adapter
 
@@ -97,50 +94,34 @@ class InferRunnerFactory:
 
     @staticmethod
     def check_dependencies() -> Dict[str, bool]:
-        """Check dependencies"""
+        """Check general system dependencies only"""
         dependencies = {
-            "infinilm": False,
-            "vllm": False,
             "numpy": False,
             "torch": False
         }
-
-        # Check InfiniLM
-        try:
-            # Try importing InfiniLM related modules
-            import sys
-            import os
-
-            # Check if in InfiniLM directory
-            if os.path.exists("scripts/jiuge.py"):
-                dependencies["infinilm"] = True
-            else:
-                # Try to determine via environment variable
-                infinilm_path = os.environ.get("INFINILM_PATH", "")
-                if infinilm_path and os.path.exists(os.path.join(infinilm_path, "scripts/jiuge.py")):
-                    dependencies["infinilm"] = True
-        except:
-            pass
-
-        # Check vLLM
-        try:
-            import vllm
-            dependencies["vllm"] = True
-        except ImportError:
-            pass
 
         # Check numpy
         try:
             import numpy
             dependencies["numpy"] = True
         except ImportError:
-            pass
+            logger.debug("NumPy not available")
 
         # Check torch
         try:
             import torch
             dependencies["torch"] = True
         except ImportError:
-            pass
+            logger.debug("PyTorch not available")
 
         return dependencies
+
+    @staticmethod
+    def create_runner_only(config: InferConfig) -> InferRunnerBase:
+        """
+        Create Runner only (for infer_main.py)
+        
+        Returns: runner instance
+        """
+        adapter = InferRunnerFactory.create_adapter(config)
+        return InferRunnerFactory.create_runner(config, adapter)

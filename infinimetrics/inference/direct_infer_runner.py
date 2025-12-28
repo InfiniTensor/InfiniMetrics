@@ -3,16 +3,19 @@
 Direct Inference Runner Implementation
 Launch real model for batch inference testing
 """
-
+import random
+import string
 import logging
 import time
 import json
 from pathlib import Path
 from typing import List, Dict, Any
 from datetime import datetime
+from utils.accelerator_monitor import create_accelerator_monitor
 
 from infer_runner_base import InferRunnerBase, ScalarMetric, TimeseriesMetric
 from infer_config import InferConfig, DirectInferArgs
+from common.metrics import ScalarMetric
 
 logger = logging.getLogger(__name__)
 
@@ -23,8 +26,8 @@ class DirectInferRunner(InferRunnerBase):
         super().__init__(config, adapter)
         self.infer_args: DirectInferArgs = config.infer_args
 
-        # GPU monitor
-        self.gpu_monitor = None
+        # accelerator monitor
+        self.accelerator_monitor = None
 
         logger.info(f"DirectInferRunner created for batch_size={self.infer_args.static_batch_size}")
 
@@ -32,22 +35,24 @@ class DirectInferRunner(InferRunnerBase):
         """Set up direct inference environment"""
         logger.info("Setting up direct inference environment")
 
-        # Create GPU monitor
-        device_ids = self.config.device.device_ids
+        # Create accelerator monitor
+        accelerator_type = self.config.device.accelerator  
+        device_ids = self.config.device.device_ids         
+        cpu_only = self.config.device.cpu_only            
+        
         if self.config.device.cpu_only:
-            logger.info("CPU-only mode, GPU monitoring disabled")
-            self.gpu_monitor = None
+            logger.info("CPU-only mode, accelerator monitoring disabled")
+            self.accelerator_monitor = None
         else:
-            from utils.gpu_monitor import create_gpu_monitor
-            self.gpu_monitor = create_gpu_monitor(
-                gpu_platform=self.config.device.gpu_platform,
+            self.accelerator_monitor = create_accelerator_monitor(
+                accelerator_type=self.config.device.accelerator.value, 
                 device_ids=device_ids
             )
 
-        # Start GPU monitoring
-        if self.gpu_monitor:
-            self.gpu_monitor.start_monitoring()
-            logger.info(f"GPU monitoring started for devices: {device_ids}")
+        # Start accelerator monitoring
+        if self.accelerator_monitor:
+            self.accelerator_monitor.start_monitoring()
+            logger.info(f"accelerator monitoring started for devices: {device_ids}")
 
         # Validate configuration
         if self.infer_args.static_batch_size <= 0:
@@ -94,7 +99,10 @@ class DirectInferRunner(InferRunnerBase):
                         self.infer_args.top_k
                     )
                 except Exception as e:
-                    logger.warning(f"Warmup batch failed: {e}")
+                    logger.error(f"Warmup batch failed: {e}")
+                    logger.error("Exiting due to warmup failure. This may indicate:")
+
+                    raise RuntimeError(f"Warmup failed: {e}")
 
         # Actual testing phase
         logger.info(f"Measurement phase ({self.config.measured_iterations} iterations)")
@@ -137,7 +145,6 @@ class DirectInferRunner(InferRunnerBase):
                 batch_tokens = len(batch_prompts) * self.infer_args.output_token_num
                 throughput = (batch_tokens * 1000) / avg_latency if avg_latency > 0 else 0
                 self.result.add_throughput(throughput)
-
                 logger.info(f"  Iteration {i+1}: avg_latency={avg_latency:.2f}ms, throughput={throughput:.2f} tokens/s")
             else:
                 logger.warning(f"  Iteration {i+1}: No latency data collected")
@@ -156,63 +163,32 @@ class DirectInferRunner(InferRunnerBase):
 
         # Get peak memory usage
         peak_memory = 0.0
-        if self.gpu_monitor:
+        if self.accelerator_monitor:
             try:
-                self.gpu_monitor.stop_monitoring()
-                peak_memory = self.gpu_monitor.get_peak_memory_gb()
-                logger.info(f"Peak GPU memory usage: {peak_memory:.6f} GB")
+                self.accelerator_monitor.stop_monitoring()
+                peak_memory = self.accelerator_monitor.get_peak_memory_gb()
+                logger.info(f"Peak accelerator memory usage: {peak_memory:.6f} GB")
             except Exception as e:
-                logger.warning(f"Failed to get peak memory from GPU monitor: {e}")
+                logger.warning(f"Failed to get peak memory from accelerator monitor: {e}")
 
         # Save to result
         self.result.peak_memory_usage = peak_memory
 
         # Calculate total tokens
-        total_iterations = self.config.warmup_iterations + self.config.measured_iterations
-        total_batches = total_iterations * self.infer_args.static_batch_size
-        self.result.total_tokens = total_batches * self.infer_args.output_token_num
+        measured_batches = self.config.measured_iterations * self.infer_args.static_batch_size
+        self.result.total_tokens = measured_batches * self.infer_args.output_token_num
 
-        logger.info(f"Total tokens generated: {self.result.total_tokens}")
+        logger.info(f"Total tokens generated (measured only): {self.result.total_tokens}")
+        logger.info(f"Warmup tokens (excluded): {self.config.warmup_iterations * self.infer_args.static_batch_size * self.infer_args.output_token_num}")
 
         # Calculate throughput statistics
         if self.result.throughput_data:
             avg_throughput = sum(self.result.throughput_data) / len(self.result.throughput_data)
             logger.info(f"Average throughput: {avg_throughput:.2f} tokens/s")
 
-        # Add ppl and accuracy placeholders
-        # 1. Calculate perplexity (if test dataset exists)
-        if self.config.test_dataset:
-            try:
-                perplexity = self._calculate_perplexity()
-                # Use correct ScalarMetric class
-                self.result.add_metric(ScalarMetric(
-                    name="infer.ppl",
-                    value=perplexity,
-                    unit=None
-                ))
-                logger.info(f"Perplexity calculated: {perplexity:.4f}")
-            except Exception as e:
-                logger.warning(f"Failed to calculate perplexity: {e}")
-                # Add placeholder
-                self.result.add_metric(ScalarMetric(
-                    name="infer.ppl",
-                    value=0.0,  # placeholder
-                    unit=None
-                ))
-        else:
-            # No test dataset, add placeholder
-            self.result.add_metric(ScalarMetric(
-                name="infer.ppl",
-                value=0.0,  # placeholder
-                unit=None
-            ))
-
-        # 2. Add accuracy placeholder
-        self.result.add_metric(ScalarMetric(
-            name="infer.accuracy",
-            value=0.0,  # TODO: Actually calculate accuracy
-            unit=None
-        ))
+        # Extract the public methods
+        self._add_perplexity_metric()
+        self._add_accuracy_metric()
 
         # Calculate statistics
         stats = self.calculate_statistics()
@@ -222,6 +198,33 @@ class DirectInferRunner(InferRunnerBase):
 
         if 'avg_ttft' in stats:
             logger.info(f"Average TTFT: {stats['avg_ttft']:.2f} ms")
+
+    def _add_perplexity_metric(self):
+        """Add The xx perplexity indicator"""
+        perplexity = 0.0
+        has_actual_value = False
+    
+        if self.config.test_dataset:
+            try:
+                perplexity = self._calculate_perplexity()
+                has_actual_value = True
+                logger.info(f"Perplexity calculated: {perplexity:.4f}")
+            except Exception as e:
+                logger.warning(f"Failed to calculate perplexity: {e}")
+        
+        self.result.add_metric(ScalarMetric(
+            name="infer.ppl",
+            value=perplexity,
+            unit=None if has_actual_value else "placeholder"
+        ))
+        
+    def _add_accuracy_metric(self):
+        """Add The accuracy indicator """
+        self.result.add_metric(ScalarMetric(
+            name="infer.accuracy",
+            value=0.0,  # placeholder
+            unit="placeholder"
+        ))
 
     def _calculate_perplexity(self) -> float:
         """Calculate perplexity"""
@@ -255,7 +258,6 @@ class DirectInferRunner(InferRunnerBase):
             return []
 
         try:
-            import json
             with open(test_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
 
@@ -286,9 +288,73 @@ class DirectInferRunner(InferRunnerBase):
 
     def _generate_test_prompts(self) -> List[str]:
         """Generate test prompts"""
+    
+        total_prompts_needed = (self.config.warmup_iterations + self.config.measured_iterations) * self.infer_args.static_batch_size
+    
+        # Attempt to get prompt configuration from configuration file
+        prompt_config = getattr(self.config, 'prompt_config', None)
+    
+        if prompt_config:
+            # Special configuration, using PpromptGenerator
+            try:
+                from utils.prompt_generator import PromptGenerator
+            
+                # creat prompt generator
+                generator = PromptGenerator(
+                    method=prompt_config.get("method", "template"),
+                    template_name=prompt_config.get("template_name", "ai_qa"),
+                    topic_name=prompt_config.get("topic_name", "ai_ml"),
+                    prompt_file=prompt_config.get("prompt_file"),
+                    fixed_prompt=prompt_config.get("fixed_prompt"),
+                    tokenizer=self.adapter.tokenizer if hasattr(self.adapter, 'tokenizer') else None
+                )
+            
+                prompts = generator.generate_prompts(total_prompts_needed, self.infer_args.prompt_token_num)
+                logger.info(f"Generated {len(prompts)} prompts using PromptGenerator")
+                return prompts
+            
+            except ImportError as e:
+                logger.warning(f"PromptGenerator not available: {e}, using fallback")
+                return self._generate_fallback_prompts(total_prompts_needed)
+    
+        # No configuration, using a simple build
+        logger.info("No prompt config provided, using default prompt generation")
+        return self._generate_simple_prompts(total_prompts_needed)
+
+    def _generate_fallback_prompts(self, total_prompts_needed: int) -> List[str]:
+        """D used when XX is not available"""
+        prompts = []
+        topics = [
+            "artificial intelligence and its applications in healthcare",
+            "machine learning algorithms and their use cases", 
+            "deep learning and neural networks",
+            "natural language processing techniques",
+            "computer vision and image recognition",
+        ]
+    
+        for i in range(total_prompts_needed):
+            topic = topics[i % len(topics)]
+            base_prompt = f"Please provide a detailed explanation about {topic}. "
+        
+            # Adjust the length
+            repeat_count = max(1, self.infer_args.prompt_token_num // len(base_prompt))
+            prompt = base_prompt * repeat_count
+            prompt = prompt[:self.infer_args.prompt_token_num]
+        
+            # Add a unique identifier
+            random_suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
+            prompt += f" [Request {i+1}:{random_suffix}]"
+        
+            prompts.append(prompt)
+    
+        logger.info(f"Generated {len(prompts)} fallback prompts")
+        return prompts
+
+    def _generate_simple_prompts(self, total_prompts_needed: int) -> List[str]:
+        """Simple generation method"""
         prompts = []
         base_template = "Please provide a detailed explanation about {topic}. "
-
+    
         topics = [
             "artificial intelligence and its applications in healthcare",
             "machine learning algorithms and their use cases", 
@@ -301,26 +367,18 @@ class DirectInferRunner(InferRunnerBase):
             "Internet of Things and smart devices",
             "cloud computing and distributed systems"
         ]
-
-        total_prompts_needed = (self.config.warmup_iterations + self.config.measured_iterations) * self.infer_args.static_batch_size
-
+    
         for i in range(total_prompts_needed):
             topic = topics[i % len(topics)]
-
-            # Create prompt of specified length
             base_prompt = base_template.format(topic=topic)
             repeat_count = max(1, self.infer_args.prompt_token_num // len(base_prompt))
-
+        
             prompt = base_prompt * repeat_count
             prompt = prompt[:self.infer_args.prompt_token_num]
-
-            # Add unique identifier
-            import random
-            import string
+                   
             random_suffix = ''.join(random.choices(string.ascii_letters + string.digits, k=6))
             prompt += f" [Request {i+1}:{random_suffix}]"
-
             prompts.append(prompt)
-
-        logger.info(f"Generated {len(prompts)} test prompts")
+    
+        logger.info(f"Generated {len(prompts)} simple prompts")
         return prompts

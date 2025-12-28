@@ -12,60 +12,124 @@ import logging
 import random
 from pathlib import Path
 from typing import List, Tuple, Optional, Dict, Any
+from adapter_base import InferAdapter
+from infer_config import InferConfig
 import subprocess
 import threading
 
-# Try to import InfiniLM related modules
+from common.constants import (
+    DEFAULT_TEMPERATURE,
+    DEFAULT_TOP_P,
+    DEFAULT_TOP_K,
+    DEFAULT_MAX_SEQ_LEN
+)
+
+logger = logging.getLogger(__name__)
+
+def _locate_infinilm_scripts(user_path: Optional[str] = None) -> Optional[Path]:
+    """
+    Inline function: locate InfiniLM scripts directory
+    Args:
+        user_path: user-specified path
+    Returns:
+        Path object or None
+    """
+    # Search priority
+    search_paths = []
+    
+    # User-specified path
+    if user_path:
+        search_paths.append(Path(user_path))
+    
+    # Environment variable
+    env_path = os.environ.get("INFINILM_PATH")
+    if env_path:
+        search_paths.append(Path(env_path))
+
+    # Current working directory
+    search_paths.append(Path.cwd())
+    
+    # Common locations
+    search_paths.extend([
+        Path.home() / "InfiniLM",
+        Path("/opt/InfiniLM"),
+        Path("/usr/local/InfiniLM"),
+    ])
+    
+    # Search
+    for base_path in search_paths:
+        scripts_dir = base_path / "scripts"
+        if scripts_dir.exists():
+            logger.info(f"Found InfiniLM scripts at: {scripts_dir}")
+            return scripts_dir
+    
+    logger.error("Cannot locate InfiniLM scripts directory")
+    return None
+
+# Attempt to import InfiniLM-related modules
+INFINILM_AVAILABLE = False
+JiugeForCauslLM = None
+DeviceType = None
+InferTask = None
+KVCache = None
+
 try:
-    # Add scripts directory to path
-    scripts_dir = Path.cwd() / "scripts"
-    if scripts_dir.exists():
-        sys.path.insert(0, str(scripts_dir))
+    # First try importing from standard package
+    try:
+        from infinilm.jiuge import JiugeForCauslLM
+        from infinilm.libinfinicore_infer import DeviceType as InfiniDeviceType
+        from infinilm.infer_task import InferTask, KVCache
+        
+        INFINILM_AVAILABLE = True
+        InfiniLMModel = JiugeForCauslLM
+        DeviceType = InfiniDeviceType
+        logger.info("InfiniLM modules imported from package")
+        
+    except ImportError:
+        scripts_dir = _locate_infinilm_scripts()
 
-    # Import jiuge module
-    from jiuge import JiugeForCauslLM
-    from libinfinicore_infer import DeviceType
-    from infer_task import InferTask, KVCache
-
-    INFINILM_AVAILABLE = True
-    logger = logging.getLogger(__name__)
-    logger.info("InfiniLM modules imported successfully")
+        if scripts_dir and (scripts_dir / "jiuge.py").exists():
+            if str(scripts_dir) not in sys.path:
+                sys.path.insert(0, str(scripts_dir))
+            
+            from jiuge import JiugeForCauslLM
+            from libinfinicore_infer import DeviceType as InfiniDeviceType
+            from infer_task import InferTask, KVCache
+            
+            INFINILM_AVAILABLE = True
+            DeviceType = InfiniDeviceType
+            logger.info("InfiniLM modules imported from scripts directory")
+        else:
+            raise ImportError("Cannot locate InfiniLM scripts directory")
 
 except ImportError as e:
     INFINILM_AVAILABLE = False
-    logger = logging.getLogger(__name__)
     logger.error(f"Failed to import InfiniLM modules: {e}")
-    raise
 
-from adapter_base import InferAdapter
-from infer_config import InferConfig, InferMode, DirectInferArgs
-from utils.token_generator import TokenGenerator, create_token_generator
 
 
 class InfiniLMAdapter(InferAdapter):
-    """InfiniLM adapter implementation - Fixed version (using API correctly)"""
+    """InfiniLM adapter implementation"""
 
     def __init__(self, config: InferConfig):
         super().__init__(config)
 
         # InfiniLM specific attributes
-        self.jiuge_model: Optional[JiugeForCauslLM] = None
-        self.token_generator: Optional[TokenGenerator] = None
+        self.model_instance: Optional[JiugeForCauslLM] = None
 
-        # Service related
-        self.server_process: Optional[subprocess.Popen] = None
-        self.server_port = 8000
+        # Record the path
+        self.eos_token_id = None
 
         logger.info(f"InfiniLMAdapter created for model: {config.model}")
         logger.info(f"Model path: {config.model_path}")
 
     def load_model(self) -> None:
-        """Load real InfiniLM model (fixed API usage)"""
-        if not INFINILM_AVAILABLE:
+        """Load real InfiniLM model"""
+        if not INFINILM_AVAILABLE or JiugeForCauslLM is None:
             logger.error("InfiniLM modules not available. Cannot load model.")
             raise ImportError("InfiniLM modules not available")
 
-        logger.info(f"Loading real InfiniLM model from: {self.config.model_path}")
+        logger.info(f"Loading InfiniLM model from: {self.config.model_path}")
 
         try:
             # Determine device type
@@ -74,74 +138,55 @@ class InfiniLMAdapter(InferAdapter):
             # Get tp size (from infer_args.parallel)
             tp_size = self.config.infer_args.parallel.tp
 
-            # ✅ Fix 1: Correctly call JiugeForCauslLM constructor
+            # Correctly call JiugeForCauslLM constructor
             # Original API: JiugeForCauslLM(model_dir_path, device, ndev, max_tokens=None)
-            self.jiuge_model = JiugeForCauslLM(
+            self.model_instance = JiugeForCauslLM(
                 self.config.model_path,
-                device_type,  #
+                device_type, 
                 tp_size,
-                max_tokens=self.config.infer_args.max_seq_len  # ✅ This parameter is optional
+                max_tokens=self.config.infer_args.max_seq_len  # This parameter is optional
             )
 
             # Get tokenizer
-            self.tokenizer = self.jiuge_model.tokenizer
-
-            # Create token generator
-            self.token_generator = create_token_generator(
-                self.tokenizer,
-                exclude_special_tokens=True
-            )
+            self.tokenizer = self.model_instance.tokenizer
 
             self.model_loaded = True
             logger.info("Real InfiniLM model loaded successfully")
             logger.info(f"Tokenizer vocab size: {self.get_vocab_size()}")
-            logger.info(f"Model max context length: {self.jiuge_model.max_context_len()}")
-            logger.info(f"EOS token ID: {self.jiuge_model.eos_token_id}")
 
         except Exception as e:
-            logger.error(f"Failed to load real InfiniLM model: {e}", exc_info=True)
+            logger.error(f"Failed to load InfiniLM model: {e}", exc_info=True)
             raise
 
     def unload_model(self) -> None:
         """Unload model"""
-        if self.jiuge_model:
+        if self.model_instance:
             try:
-                self.jiuge_model.destroy_model_instance()
+                if hasattr(self.model_instance, 'destroy_model_instance'):
+                    self.model_instance.destroy_model_instance()
                 logger.info("InfiniLM model unloaded")
             except Exception as e:
                 logger.warning(f"Error unloading model: {e}")
 
-            self.jiuge_model = None
+            self.model_instance = None
 
         self.model_loaded = False
         self.tokenizer = None
-        self.token_generator = None
 
     def generate(
             self,
             prompts: List[str],
             max_tokens: int,
-            temperature: float = 0.7,
-            top_p: float = 0.9,
-            top_k: int = 50
+            temperature: float = DEFAULT_TEMPERATURE,
+            top_p: float = DEFAULT_TOP_P,
+            top_k: int = DEFAULT_TOP_K
     ) -> Tuple[List[str], List[float], List[float]]:
-        """
-        Real InfiniLM inference implementation (fixed API usage)
-
-        Args:
-            prompts: List of input prompts
-            max_tokens: Maximum tokens to generate per prompt
-            temperature, top_p, top_k: Sampling parameters
-
-        Returns:
-            (List of generated texts, Latency list (ms), TTFT list (ms))
-        """
-        if not self.model_loaded or not self.jiuge_model:
+        """InfiniLM inference implementation"""
+        if not self.model_loaded or not self.model_instance:
             raise RuntimeError("Model not loaded")
 
-        logger.info(f"Real InfiniLM batch inference for {len(prompts)} prompts")
-        logger.info(f"  Max tokens per prompt: {max_tokens}")
-        logger.info(f"  Temperature: {temperature}, Top-p: {top_p}, Top-k: {top_k}")
+        logger.info(f"InfiniLM batch inference for {len(prompts)} prompts")
+        logger.info(f"Max tokens: {max_tokens}, Temperature: {temperature}")
 
         # 1. Encode prompts
         token_lists = []
@@ -149,28 +194,132 @@ class InfiniLMAdapter(InferAdapter):
             tokens = self.tokenizer.encode(prompt)
             token_lists.append(tokens)
             if i == 0:  # Record first prompt information
-                logger.info(f"  First prompt: {len(tokens)} tokens")
-                logger.debug(f"  First prompt preview: {prompt[:100]}...")
+                logger.debug(f"First prompt: {len(tokens)} tokens")
+        
+        tasks = self._create_infer_tasks(token_lists, temperature, top_p, top_k)
+        
+        # Execute inference
+        return self._execute_batch_inference(tasks, max_tokens)
 
-        # 2. Create InferTask and KVCache for each prompt
+    def batch_generate(
+            self,
+            batch_prompts: List[List[str]],
+            max_tokens: int,
+            temperature: float = DEFAULT_TEMPERATURE,
+            top_p: float = DEFAULT_TOP_P,
+            top_k: int = DEFAULT_TOP_K
+    ) -> Tuple[List[List[str]], List[List[float]], List[List[float]]]:
+        """
+        Batch text generation (multiple batches)
+
+        Note: For large batches, we may need to split to avoid OOM
+        """
+        logger.info(f"Batch generating for {len(batch_prompts)} batches")
+
+        all_results = []
+
+        for batch_idx, prompts in enumerate(batch_prompts):
+            logger.info(f"Processing batch {batch_idx + 1}/{len(batch_prompts)}")
+
+            # Check batch size to avoid OOM
+            max_batch_size = 8  # Safe value, can adjust based on GPU memory
+            if len(prompts) > max_batch_size:
+                logger.warning(f"Batch size {len(prompts)} too large, splitting")
+                results = self._split_and_generate(
+                    prompts, max_tokens, temperature, top_p, top_k, max_batch_size
+                )
+            else:
+                texts, latencies, ttfts = self.generate(
+                    prompts, max_tokens, temperature, top_p, top_k
+                )
+                results = (texts, latencies, ttfts)
+            
+            all_results.append(results)
+
+        return self._reorganize_results(all_results)
+
+    def get_peak_memory_usage(self) -> Optional[float]:
+        """Get peak memory usage (GB)"""
+        try:
+            if hasattr(torch, 'cuda') and torch.cuda.is_available():
+                torch.cuda.synchronize()
+                max_memory = max(
+                    [torch.cuda.max_memory_allocated(i) for i in range(torch.cuda.device_count())],
+                    default=0
+                )
+                return max_memory / (1024 ** 3)
+        except ImportError:
+            logger.warning("PyTorch not available")
+        except Exception as e:
+            logger.warning(f"Failed to get memory usage: {e}")
+        
+        return None
+
+    def calculate_perplexity(self, test_data: List[str]) -> float:
+        """Calculate perplexity"""
+        if not self.model_loaded or not self.model_instance:
+            raise RuntimeError("Model not loaded")
+
+        logger.info(f"Calculating perplexity for {len(test_data)} test samples")
+
+        try:
+            # Convert text to token sequences
+            test_sequences = [
+                self.tokenizer.encode(text)[:self.config.infer_args.max_seq_len]
+                for text in test_data
+            ]
+
+            # Use model's perplexity method if available
+            if hasattr(self.model_instance, 'perplexity'):
+                batch_size = min(4, len(test_sequences))
+                return self.model_instance.perplexity(test_sequences, batch_size=batch_size)
+            else:
+                logger.warning("Model does not support perplexity calculation")
+                return 0.0
+                
+        except Exception as e:
+            logger.error(f"Failed to calculate perplexity: {e}")
+            return 0.0
+
+    def _get_device_type(self):
+        """Get device type based on configuration"""
+        if DeviceType is None:
+            return None
+        
+        accelerator = self.config.device.accelerator.value.lower()
+        
+        if accelerator == "nvidia":
+            return DeviceType.DEVICE_TYPE_NVIDIA
+        elif accelerator == "cpu":
+            return DeviceType.DEVICE_TYPE_CPU
+        elif accelerator == "amd":
+            return DeviceType.DEVICE_TYPE_AMD if hasattr(DeviceType, 'DEVICE_TYPE_AMD') else DeviceType.DEVICE_TYPE_NVIDIA
+        elif accelerator == "intel":
+            return DeviceType.DEVICE_TYPE_INTEL if hasattr(DeviceType, 'DEVICE_TYPE_INTEL') else DeviceType.DEVICE_TYPE_NVIDIA
+        else:
+            logger.warning(f"Unknown accelerator: {accelerator}, using default")
+            return DeviceType.DEVICE_TYPE_NVIDIA
+
+    def _create_infer_tasks(self, token_lists, temperature, top_p, top_k):
+        """Create inference tasks"""
         tasks = []
-        kv_caches = []
-
+        
         for i, tokens in enumerate(token_lists):
             try:
-                # InferTask parameters: id, tokens, max_tokens, temperature, topk, topp, topa, end_tokens
-                topa = 0  # Assuming no top-a sampling needed
-
-                if isinstance(self.jiuge_model.eos_token_id, list):
-                    end_tokens = self.jiuge_model.eos_token_id
+                # End tokens
+                if self.eos_token_id:
+                    end_tokens = self.eos_token_id if isinstance(self.eos_token_id, list) else [self.eos_token_id]
                 else:
-                    end_tokens = [self.jiuge_model.eos_token_id]
-
+                    end_tokens = []
+                
+                # Maximum sequence length
                 max_seq_len = min(
                     self.config.infer_args.max_seq_len,
-                    self.jiuge_model.max_context_len()
+                    self.model_instance.max_context_len() if hasattr(self.model_instance, 'max_context_len') 
+                    else self.config.infer_args.max_seq_len
                 )
-
+                
+                # Create task
                 task = InferTask(
                     id=i,
                     tokens=tokens,
@@ -180,432 +329,167 @@ class InfiniLMAdapter(InferAdapter):
                     topp=top_p,
                     end_tokens=end_tokens
                 )
-
-                # Create and bind KVCache
-                kv_cache = KVCache(self.jiuge_model)
+                
+                # Bind KV cache
+                kv_cache = KVCache(self.model_instance)
                 task.bind_kvcache(kv_cache)
-
-                tasks.append(task)
-                kv_caches.append(kv_cache)
-
-                logger.debug(f"  Created InferTask {i}: {len(tokens)} input tokens")
-
+                
+                tasks.append((task, kv_cache))
+                
             except Exception as e:
-                logger.error(f"Failed to create InferTask for prompt {i}: {e}")
+                logger.error(f"Failed to create InferTask {i}: {e}")
                 raise
-
-        logger.info(f"Created {len(tasks)} InferTasks for batch inference")
-
-        # 3. Execute batch inference
+        
+        logger.info(f"Created {len(tasks)} InferTasks")
+        return tasks
+    
+    def _execute_batch_inference(self, tasks_with_caches, max_tokens):
+        """Execute batch inference"""
+        tasks = [t[0] for t in tasks_with_caches]
+        kv_caches = [t[1] for t in tasks_with_caches]
+        
         generated_texts = []
         latencies = []
         ttfts = []
-
-        # Pre-allocate result lists for each prompt
-        all_generated_tokens = [[] for _ in range(len(tasks))]
-
+        all_tokens = [[] for _ in range(len(tasks))]
+        
         try:
-            # Measure TTFT (first batch inference)
+            # First inference (TTFT)
             start_time = time.perf_counter()
-            output_tokens_batch = self.jiuge_model.batch_infer_one_round(tasks)
+            output_tokens = self.model_instance.batch_infer_one_round(tasks)
             ttft = (time.perf_counter() - start_time) * 1000
-
-            # Each task returns a token list (may contain multiple tokens)
-            for i, task_output in enumerate(output_tokens_batch):
-                if task_output:  # May have output
-                    # Take first token (if multiple tokens returned, take first)
-                    first_token = task_output[0] if isinstance(task_output, list) else task_output
-                    all_generated_tokens[i].append(first_token)
-
-                    # Record TTFT for this task (all tasks use same TTFT since batch inference)
+            
+            # Process first output
+            for i, output in enumerate(output_tokens):
+                if output:
+                    token = output[0] if isinstance(output, list) else output
+                    all_tokens[i].append(token)
                     ttfts.append(ttft)
                 else:
-                    all_generated_tokens[i].append(0)  # Placeholder
+                    all_tokens[i].append(0)
                     ttfts.append(0.0)
-
-            # 4. Continue generating remaining tokens (token by token)
-            total_generated = 1  # Already generated first token
-
-            while total_generated < max_tokens:
-                # Update status for all tasks
+            
+            # Continue generating remaining tokens
+            generated = 1
+            while generated < max_tokens:
                 active_tasks = []
                 active_indices = []
-
-                for i, task in enumerate(tasks):
-                    if len(all_generated_tokens[i]) > 0:
-                        last_token = all_generated_tokens[i][-1]
-
-                        # ✅ Fix 6: Correctly check EOS
-                        if isinstance(self.jiuge_model.eos_token_id, list):
-                            is_eos = last_token in self.jiuge_model.eos_token_id
-                        else:
-                            is_eos = last_token == self.jiuge_model.eos_token_id
-
-                        if not is_eos and len(all_generated_tokens[i]) < max_tokens:
-                            task.next(last_token)
-                            active_tasks.append(task)
-                            active_indices.append(i)
-
-                # If no active tasks, stop generation
+                
+                for i, (task, tokens_list) in enumerate(zip(tasks, all_tokens)):
+                    if not tokens_list:
+                        continue
+                    
+                    last_token = tokens_list[-1]
+                    is_eos = self._is_eos_token(last_token)
+                    
+                    if not is_eos and len(tokens_list) < max_tokens:
+                        task.next(last_token)
+                        active_tasks.append(task)
+                        active_indices.append(i)
+                
                 if not active_tasks:
-                    logger.info("All tasks reached EOS or max tokens")
                     break
-
-                # Batch inference for active tasks
-                iteration_start = time.perf_counter()
-                active_outputs = self.jiuge_model.batch_infer_one_round(active_tasks)
-                iteration_time = (time.perf_counter() - iteration_start) * 1000
-
+                
+                # Batch inference
+                active_outputs = self.model_instance.batch_infer_one_round(active_tasks)
+                
                 # Process outputs
                 for idx, task_idx in enumerate(active_indices):
                     if idx < len(active_outputs) and active_outputs[idx]:
-                        next_token = active_outputs[idx][0] if isinstance(active_outputs[idx], list) else \
-                        active_outputs[idx]
-                        all_generated_tokens[task_idx].append(next_token)
-
-                total_generated += 1
-
-                if total_generated % 10 == 0:
-                    logger.debug(f"  Generated {total_generated}/{max_tokens} tokens")
-
-            # 5. Calculate total latency and decode text
+                        token = active_outputs[idx][0] if isinstance(active_outputs[idx], list) else active_outputs[idx]
+                        all_tokens[task_idx].append(token)
+                
+                generated += 1
+                
+                if generated % 10 == 0:
+                    logger.debug(f"Generated {generated}/{max_tokens} tokens")
+            
+            # Compute total latency and decode text
             total_latency = (time.perf_counter() - start_time) * 1000
-
-            for i, generated_tokens in enumerate(all_generated_tokens):
-                # Calculate latency for this prompt (for batch inference, all prompts have same latency)
+            
+            for i, tokens in enumerate(all_tokens):
                 latencies.append(total_latency)
-
-                # Decode text
-                if generated_tokens:
-                    generated_text = self.tokenizer.decode(generated_tokens, skip_special_tokens=True)
-                    generated_texts.append(generated_text)
-
-                    logger.debug(f"  Prompt {i}: {len(generated_tokens)} tokens generated")
-                    if i == 0 and generated_text:
-                        logger.debug(f"  First generated text preview: {generated_text[:100]}...")
+                
+                if tokens:
+                    text = self.tokenizer.decode(tokens, skip_special_tokens=True)
+                    generated_texts.append(text)
                 else:
                     generated_texts.append("")
-                    logger.warning(f"  Prompt {i}: No tokens generated")
-
-        except Exception as e:
-            logger.error(f"Error during batch inference: {e}", exc_info=True)
-            raise
-
+        
         finally:
-            # 6. Clean up KVCaches
-            logger.info("Cleaning up KVCaches...")
-            for i, kv_cache in enumerate(kv_caches):
-                try:
-                    if kv_cache and self.jiuge_model:
-                        kv_cache.drop(self.jiuge_model)
-                except Exception as e:
-                    logger.warning(f"Failed to drop KV cache {i}: {e}")
-
-        # 7. Return results
-        logger.info(f"Inference completed: {len(generated_texts)} prompts processed")
-        if latencies:
-            avg_latency = sum(latencies) / len(latencies)
-            avg_ttft = sum(ttfts) / len(ttfts) if ttfts else 0
-            logger.info(f"  Avg latency: {avg_latency:.2f}ms")
-            logger.info(f"  Avg TTFT: {avg_ttft:.2f}ms")
-
+            # Clean up KV caches
+            self._cleanup_kv_caches(kv_caches)
+        
+        logger.info(f"Inference completed: {len(generated_texts)} prompts")
         return generated_texts, latencies, ttfts
-
-    def batch_generate(
-            self,
-            batch_prompts: List[List[str]],
-            max_tokens: int,
-            temperature: float = 0.7,
-            top_p: float = 0.9,
-            top_k: int = 50
-    ) -> Tuple[List[List[str]], List[List[float]], List[List[float]]]:
-        """
-        Batch text generation (multiple batches)
-
-        Note: For large batches, we may need to split to avoid OOM
-        """
-        logger.info(f"Batch generating for {len(batch_prompts)} batches")
-
-        all_texts = []
-        all_latencies = []
-        all_ttfts = []
-
-        for batch_idx, prompts in enumerate(batch_prompts):
-            logger.info(f"Processing batch {batch_idx + 1}/{len(batch_prompts)} "
-                        f"({len(prompts)} prompts)")
-
-            # Check batch size to avoid OOM
-            max_batch_size = 8  # Safe value, can adjust based on GPU memory
-            if len(prompts) > max_batch_size:
-                logger.warning(f"Batch size {len(prompts)} too large, splitting...")
-
-                # Split processing
-                split_texts = []
-                split_latencies = []
-                split_ttfts = []
-
-                for i in range(0, len(prompts), max_batch_size):
-                    sub_prompts = prompts[i:i + max_batch_size]
-                    logger.info(f"  Processing sub-batch {i // max_batch_size + 1}")
-
-                    texts, latencies, ttfts = self.generate(
-                        sub_prompts, max_tokens, temperature, top_p, top_k
-                    )
-
-                    split_texts.extend(texts)
-                    split_latencies.extend(latencies)
-                    split_ttfts.extend(ttfts)
-
-                all_texts.append(split_texts)
-                all_latencies.append(split_latencies)
-                all_ttfts.append(split_ttfts)
-            else:
-                texts, latencies, ttfts = self.generate(
-                    prompts, max_tokens, temperature, top_p, top_k
-                )
-
-                all_texts.append(texts)
-                all_latencies.append(latencies)
-                all_ttfts.append(ttfts)
-
+    
+    def _is_eos_token(self, token):
+        """Check whether token is EOS"""
+        if not self.eos_token_id:
+            return False
+        
+        if isinstance(self.eos_token_id, list):
+            return token in self.eos_token_id
+        else:
+            return token == self.eos_token_id
+    
+    def _cleanup_kv_caches(self, kv_caches):
+        """Clean up KV caches"""
+        logger.info("Cleaning up KVCaches")
+        for i, kv_cache in enumerate(kv_caches):
+            try:
+                if kv_cache and self.model_instance:
+                    kv_cache.drop(self.model_instance)
+            except Exception as e:
+                logger.warning(f"Failed to drop KV cache {i}: {e}")
+    
+    def _split_and_generate(self, prompts, max_tokens, temperature, top_p, top_k, max_batch_size):
+        """Split and generate"""
+        texts, latencies, ttfts = [], [], []
+        
+        for i in range(0, len(prompts), max_batch_size):
+            sub_prompts = prompts[i:i + max_batch_size]
+            logger.debug(f"Processing sub-batch {i // max_batch_size + 1}")
+            
+            sub_texts, sub_latencies, sub_ttfts = self.generate(
+                sub_prompts, max_tokens, temperature, top_p, top_k
+            )
+            
+            texts.extend(sub_texts)
+            latencies.extend(sub_latencies)
+            ttfts.extend(sub_ttfts)
+        
+        return texts, latencies, ttfts
+    
+    def _reorganize_results(self, all_results):
+        """Reorganize results"""
+        all_texts, all_latencies, all_ttfts = [], [], []
+        
+        for texts, latencies, ttfts in all_results:
+            all_texts.append(texts)
+            all_latencies.append(latencies)
+            all_ttfts.append(ttfts)
+        
         return all_texts, all_latencies, all_ttfts
 
-    def get_peak_memory_usage(self) -> Optional[float]:
-        """Get peak memory usage (GB)"""
-        try:
-            if torch.cuda.is_available():
-                torch.cuda.synchronize()
-
-                # Get peak memory (bytes)
-                max_memory_bytes = 0
-                for i in range(torch.cuda.device_count()):
-                    device_max = torch.cuda.max_memory_allocated(i)
-                    if device_max > max_memory_bytes:
-                        max_memory_bytes = device_max
-
-                # Convert to GB
-                max_memory_gb = max_memory_bytes / (1024 ** 3)
-
-                # Also get current memory usage
-                current_memory_bytes = torch.cuda.memory_allocated()
-                current_memory_gb = current_memory_bytes / (1024 ** 3)
-
-                logger.info(f"GPU memory - Peak: {max_memory_gb:.2f} GB, Current: {current_memory_gb:.2f} GB")
-                return max_memory_gb
-
-        except ImportError:
-            logger.warning("PyTorch not available, cannot get GPU memory usage")
-        except Exception as e:
-            logger.warning(f"Failed to get GPU memory usage: {e}")
-
-        # Try to get via nvidia-smi (fallback method)
-        try:
-
-            result = subprocess.run(
-                ["nvidia-smi", "--query-gpu=memory.used,memory.total", "--format=csv,nounits,noheader"],
-                capture_output=True,
-                text=True,
-                timeout=5
-            )
-
-            if result.returncode == 0:
-                # Parse output, e.g.: "1234, 24576\n"
-                lines = result.stdout.strip().split('\n')
-                max_memory_mb = 0
-
-                for line in lines:
-                    if line:
-                        used_str, total_str = line.split(',')
-                        used_mb = float(used_str.strip())
-                        total_mb = float(total_str.strip())
-
-                        if used_mb > max_memory_mb:
-                            max_memory_mb = used_mb
-
-                if max_memory_mb > 0:
-                    max_memory_gb = max_memory_mb / 1024
-                    logger.info(f"GPU memory (nvidia-smi): {max_memory_gb:.2f} GB")
-                    return max_memory_gb
-
-        except Exception as e:
-            logger.debug(f"nvidia-smi fallback failed: {e}")
-
-        return None
-
-    def calculate_perplexity(self, test_data: List[str]) -> float:
-        """Calculate perplexity"""
-        if not self.model_loaded or not self.jiuge_model:
-            raise RuntimeError("Model not loaded")
-
-        logger.info(f"Calculating perplexity for {len(test_data)} test samples")
-
-        try:
-            # Convert text to token sequences
-            test_sequences = []
-            for text in test_data:
-                tokens = self.tokenizer.encode(text)
-                if len(tokens) > self.config.infer_args.max_seq_len:
-                    tokens = tokens[:self.config.infer_args.max_seq_len]
-                test_sequences.append(tokens)
-
-            # Use jiuge model's perplexity method
-            # Note: Need to test batch_size to avoid OOM
-            batch_size = min(4, len(test_sequences))
-            perplexity = self.jiuge_model.perplexity(test_sequences, batch_size=batch_size)
-
-            logger.info(f"Perplexity calculated: {perplexity:.4f}")
-            return perplexity
-
-        except Exception as e:
-            logger.error(f"Failed to calculate perplexity: {e}")
-            # Return a default value, don't interrupt tests
-            return 0.0
-
-    def launch_service(self, port: int = 8000) -> None:
-        """Launch InfiniLM inference service"""
-        logger.info(f"Launching InfiniLM service on port {port}")
-
-        # Build launch command
-        cmd = [
-            sys.executable, "scripts/launch_server.py",
-            "--model-path", self.config.model_path,
-            "--dev", "nvidia",
-            "--ndev", str(self.config.infer_args.parallel.tp),
-            "--max-batch", "4"
-        ]
-
-        if port != 8000:
-            cmd.extend(["--port", str(port)])
-
-        # Start service process
-        try:
-            self.server_process = subprocess.Popen(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                bufsize=1,
-                universal_newlines=True
-            )
-
-            self.server_port = port
-            self.service_started = True
-
-            # Start thread to read output
-            self._start_output_reader()
-
-            logger.info(f"InfiniLM service started with PID: {self.server_process.pid}")
-            logger.info(f"Command: {' '.join(cmd)}")
-
-        except Exception as e:
-            logger.error(f"Failed to launch InfiniLM service: {e}")
-            raise
-
-    def stop_service(self) -> None:
-        """Stop inference service"""
-        if self.server_process:
-            logger.info("Stopping InfiniLM service")
-
-            try:
-                self.server_process.terminate()
-                self.server_process.wait(timeout=10)
-                logger.info("InfiniLM service stopped")
-            except subprocess.TimeoutExpired:
-                logger.warning("Service did not stop gracefully, forcing kill")
-                self.server_process.kill()
-
-            self.server_process = None
-
-        self.service_started = False
-
-    def is_service_ready(self, port: int = 8000) -> bool:
-        """Simplified service readiness check - only check port"""
-        if not self.service_started or not self.server_process:
-            logger.debug("Service not started or no server process")
-            return False
-
-        # Check if process is alive
-        if self.server_process.poll() is not None:
-            logger.error(f"Server process died with return code: {self.server_process.returncode}")
-            return False
-
-        # Only check if port is open
-        import socket
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(1)
-            result = sock.connect_ex(('localhost', port))
-            sock.close()
-
-            if result == 0:
-                logger.debug(f"Port {port} is open, service is ready")
-                return True
-            else:
-                logger.debug(f"Port {port} not open yet (result={result})")
-                return False
-        except Exception as e:
-            logger.debug(f"Port check failed: {e}")
-            return False
-
-    def get_service_url(self) -> str:
-        """Get service URL"""
-        return f"http://localhost:{self.server_port}"
-
-    def _get_device_type(self):
-        """Get device type based on configuration"""
-        gpu_platform = self.config.device.gpu_platform.lower()
-
-        if gpu_platform == "nvidia":
-            return DeviceType.DEVICE_TYPE_NVIDIA
-        elif gpu_platform == "cpu":
-            return DeviceType.DEVICE_TYPE_CPU
-        else:
-            logger.warning(f"Unknown GPU platform: {gpu_platform}, using NVIDIA as default")
-            return DeviceType.DEVICE_TYPE_NVIDIA
-
-    def _start_output_reader(self):
-        """Start output reading thread"""
-
-        def read_output():
-            if self.server_process:
-                for line in self.server_process.stdout:
-                    logger.info(f"[InfiniLM Server] {line.strip()}")
-
-        self.output_thread = threading.Thread(target=read_output, daemon=True)
-        self.output_thread.start()
-
     def _validate_framework_config(self) -> List[str]:
-        """Validate InfiniLM specific configuration"""
+        """Validate configuration"""
         errors = []
-
-        # Check if scripts directory exists
-        scripts_dir = Path("scripts")
-        if not scripts_dir.exists():
-            errors.append("scripts directory not found in current directory")
-        else:
-            # Check for necessary script files
-            required_scripts = ["jiuge.py", "launch_server.py"]
-            for script in required_scripts:
-                if not (scripts_dir / script).exists():
-                    errors.append(f"Required script not found: {script}")
-
-        # Check parallel configuration
-        if self.config.infer_args.parallel.tp <= 0:
-            errors.append("Tensor parallel size (tp) must be positive")
-
+        
+        if not INFINILM_AVAILABLE:
+            errors.append("InfiniLM modules are not available")
+        
         # Check model directory
         model_dir = Path(self.config.model_path)
         if not model_dir.exists():
             errors.append(f"Model directory does not exist: {model_dir}")
-        else:
-            # Check for necessary model files
-            model_files = list(model_dir.glob("*.safetensors")) + list(model_dir.glob("*.bin"))
-            if not model_files:
-                errors.append(f"No model files found in {model_dir}")
-
-            # Check config.json
-            config_file = model_dir / "config.json"
-            if not config_file.exists():
-                errors.append(f"config.json not found in {model_dir}")
-
+        
+        # Check TP configuration
+        if self.config.infer_args.parallel.tp <= 0:
+            errors.append("Tensor parallel size (tp) must be positive")
+        
         return errors
+    
+        """Get service URL"""
+        port = getattr(self, 'server_port', 8000)
+        return f"http://localhost:{port}"
