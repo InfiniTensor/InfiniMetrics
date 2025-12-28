@@ -4,19 +4,18 @@ Inference Runner Base Class
 Defines common interfaces and template methods for all Runners
 """
 
+import re
 import abc
 import csv
 import json
 import time
 import logging
+import numpy as np
 from pathlib import Path
 from datetime import datetime
+from infer_config import InferConfig
 from typing import Dict, Any, List, Optional, Tuple
 from common.metrics import Metric, ScalarMetric, TimeseriesMetric
-import re
-
-from infer_config import InferConfig
-from common.metrics import ScalarMetric
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +55,7 @@ class BenchmarkResult:
 
 
 class InferRunnerBase(abc.ABC):
-    """Inference Runner base class (Template Method pattern)"""
-
+    """Inference Runner base class"""
     def __init__(self, config: InferConfig, adapter):
         self.config = config
         self.adapter = adapter
@@ -82,7 +80,7 @@ class InferRunnerBase(abc.ABC):
 
         # Save latency data
         if self.result.latency_data:
-            # ✅ Sanitize filename
+            # Sanitize filename
             safe_run_id = self._sanitize_filename(self.config.run_id)
             latency_file = self.infer_dir / f"{safe_run_id}_infer_latency.csv"
 
@@ -150,8 +148,6 @@ class InferRunnerBase(abc.ABC):
         stats = {}
 
         try:
-            import numpy as np
-
             # Latency statistics
             if self.result.latency_data:
                 stats['avg_latency'] = np.mean(self.result.latency_data)
@@ -170,6 +166,7 @@ class InferRunnerBase(abc.ABC):
                 stats['p99_ttft'] = np.percentile(self.result.ttft_data, 99)
                 stats['min_ttft'] = np.min(self.result.ttft_data)
                 stats['max_ttft'] = np.max(self.result.ttft_data)
+                stats['std_ttft'] = np.std(self.result.ttft_data)
 
             # Throughput statistics
             if self.result.throughput_data:
@@ -448,15 +445,7 @@ class InferRunnerBase(abc.ABC):
         return " ".join(cmd_parts)
 
     def _sanitize_filename(self, filename: str) -> str:
-        """
-        Sanitize filename by removing special characters
-
-        Args:
-            filename: Original filename
-
-        Returns:
-            Sanitized filename
-        """
+        """Sanitize filename by removing special characters"""
         # Replace special characters with underscores
         sanitized = re.sub(r'[^\w\-_.]', '_', filename)
         # Remove consecutive underscores

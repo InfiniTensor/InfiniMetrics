@@ -19,14 +19,12 @@ class InferAdapter(abc.ABC):
     def __init__(self, config: InferConfig):
         self.config = config
         self.model_loaded = False
-        self.service_started = False
         self.tokenizer = None
 
     @abc.abstractmethod
     def load_model(self) -> None:
         """
         Load model
-        Subclasses must implement the actual model loading logic
         """
         pass
 
@@ -34,7 +32,6 @@ class InferAdapter(abc.ABC):
     def unload_model(self) -> None:
         """
         Unload model
-        Subclasses must implement model unloading and resource cleanup
         """
         pass
 
@@ -49,11 +46,19 @@ class InferAdapter(abc.ABC):
     ) -> Tuple[List[str], List[float], List[float]]:
         """
         Generate text
-        Returns: (list of generated texts, list of latencies (ms), list of TTFT values (ms))
         """
         pass
-
+    
     @abc.abstractmethod
+    def calculate_perplexity(self, test_data: List[str]) -> float:
+        """Calculate perplexity"""
+        pass
+    
+    @abc.abstractmethod
+    def _validate_framework_config(self) -> List[str]:
+        """Validate framework-specific configuration"""
+        pass
+
     def batch_generate(
         self,
         batch_prompts: List[List[str]],
@@ -64,44 +69,22 @@ class InferAdapter(abc.ABC):
     ) -> Tuple[List[List[str]], List[List[float]], List[List[float]]]:
         """
         Batch text generation
-        Returns: (batch of generated texts, batch of latencies, batch of TTFT values)
         """
-        pass
-
-    @abc.abstractmethod
-    def calculate_perplexity(self, test_data: List[str]) -> float:
-        """
-        Calculate perplexity
-        """
-        pass
-
-    @abc.abstractmethod
-    def launch_service(self, port: int = 8000) -> None:
-        """
-        Launch inference service
-        """
-        pass
-
-    @abc.abstractmethod
-    def stop_service(self) -> None:
-        """
-        Stop inference service
-        """
-        pass
-
-    @abc.abstractmethod
-    def is_service_ready(self, port: int = 8000) -> bool:
-        """
-        Check whether the service is ready
-        """
-        pass
-
-    @abc.abstractmethod
-    def get_service_url(self) -> str:
-        """
-        Get service URL
-        """
-        pass
+        all_results = []
+        for prompts in batch_prompts:
+            texts, latencies, ttfts = self.generate(
+                prompts, max_tokens, temperature, top_p, top_k
+            )
+            all_results.append((texts, latencies, ttfts))
+        
+        # Results of reorganization
+        all_texts, all_latencies, all_ttfts = [], [], []
+        for texts, latencies, ttfts in all_results:
+            all_texts.append(texts)
+            all_latencies.append(latencies)
+            all_ttfts.append(ttfts)
+        
+        return all_texts, all_latencies, all_ttfts
 
     def get_vocab_size(self) -> int:
         """Get vocabulary size"""
@@ -222,56 +205,23 @@ class InferAdapter(abc.ABC):
         return prompts
 
     def validate_config(self) -> List[str]:
-        """
-        Validate adapter configuration
-        Returns: List of error messages
-        """
+        """Validate adapter configuration"""
         errors = []
-
-        # Validate model path
         import os
         if not os.path.exists(self.config.model_path):
             errors.append(f"Model path does not exist: {self.config.model_path}")
-
-        # Validate framework-specific configuration
         errors.extend(self._validate_framework_config())
-
         return errors
 
-    @abc.abstractmethod
-    def _validate_framework_config(self) -> List[str]:
-        """
-        Validate framework-specific configuration
-        Subclasses must implement this
-        """
-        pass
-
     def get_peak_memory_usage(self) -> Optional[float]:
-        """
-        Get peak accelerator memory usage (GB)
-        Delegates to the unified accelerator monitoring system
-        """
+        """Get peak accelerator memory usage (GB)"""
         try:
-            from utils.accelerator_monitor import create_accelerator_monitor
-        
-            if self.config.device.is_cpu:
-                return None
-        
-            accelerator_type = self.config.device.accelerator_type
-            if not accelerator_type:
-                return None
-        
-            monitor = create_accelerator_monitor(
-                accelerator_type=accelerator_type.value,
-                device_ids=self.config.device.device_ids
-            )
-        
-            peak_bytes = monitor.get_peak_memory_allocated()
-            if peak_bytes:
-                return peak_bytes / (1024 ** 3)
-
-            return None
-        
-        except Exception as e:
-            logger.debug(f"Could not get peak memory: {e}")
-            return None
+            import torch
+            if hasattr(torch, 'cuda') and torch.cuda.is_available():
+                max_memory = 0
+                for i in range(torch.cuda.device_count()):
+                    max_memory = max(max_memory, torch.cuda.max_memory_allocated(i))
+                return max_memory / (1024 ** 3)
+        except ImportError:
+            logger.warning("PyTorch not available, cannot get GPU memory usage")
+        return None

@@ -54,7 +54,6 @@ class FrameworkType(Enum):
     INFINILM = "infinilm"
     VLLM = "vllm"
 
-
 @dataclass
 class ParallelConfig:
     """Parallel configuration"""
@@ -110,7 +109,7 @@ class DeviceConfig:
         # Get accelerator type
         accelerator_str = data.get("accelerator")
         if not accelerator_str:
-            accelerator_str = data.get("gpu_platform", "nvidia")
+            accelerator_str = data.get("platform", "nvidia")
         
         try:
             accelerator = AcceleratorType(accelerator_str.lower())
@@ -133,7 +132,7 @@ class DeviceConfig:
             # accelerator mode
             accelerator_str = data.get("accelerator")
         if not accelerator_str:
-            accelerator_str = data.get("gpu_platform", "nvidia")
+            accelerator_str = data.get("platform", "nvidia")
         
         try:
             accelerator = AcceleratorType(accelerator_str.lower())
@@ -254,7 +253,7 @@ class InferConfig:
     train_dataset: Optional[str]
     validation_dataset: Optional[str]
     test_dataset: Optional[str]
-
+     
     # Output
     output_dir: str
 
@@ -273,6 +272,9 @@ class InferConfig:
     warmup_iterations: int
     measured_iterations: int
 
+    # prompt 
+    prompt_config: Optional[Dict[str, Any]] = None
+
     @classmethod
     def from_dict(cls, config_dict: Dict[str, Any]) -> 'InferConfig':
         """Create configuration object from dictionary"""
@@ -281,7 +283,18 @@ class InferConfig:
     
         config_data = config_dict.get("config", {})
         testcase = config_dict.get("testcase")
+
+        # Parse prompt_config
+        prompt_config = config_data.get("prompt_config")
     
+        # If prompt_config is a string, try resolving to a dictionary
+        if isinstance(prompt_config, str):
+            try:
+                prompt_config = json.loads(prompt_config)
+            except:
+                logger.warning(f"Failed to parse prompt_config as JSON: {prompt_config}")
+                prompt_config = {"prompt_file": prompt_config}  
+
         # Parse mode and framework
         mode_str, framework_str = parse_testcase(testcase)
     
@@ -324,6 +337,7 @@ class InferConfig:
             validation_dataset=config_data.get("validation_dataset"),
             test_dataset=config_data.get("test_dataset"),
 
+            prompt_config=prompt_config,
             output_dir=config_data.get("output_dir", "./test_output"),
 
             mode=mode,
@@ -350,6 +364,9 @@ class InferConfig:
             "warmup_iterations": self.warmup_iterations,
             "measured_iterations": self.measured_iterations
         }
+        if self.prompt_config:
+            result["prompt_config"] = self.prompt_config
+
         if self.mode == InferMode.SERVICE and self.timeout_ms is not None:
             result["timeout_ms"] = self.timeout_ms
 
