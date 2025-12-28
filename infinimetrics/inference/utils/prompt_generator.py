@@ -1,4 +1,4 @@
-# utils/prompt_generator.py (Extended Version)
+# utils/prompt_generator.py
 #!/usr/bin/env python3
 """
 Prompt Generator
@@ -11,82 +11,23 @@ import string
 import json
 from pathlib import Path
 from typing import Callable, Optional, Dict, Any, List, Union
+from common.prompt_data import get_template_names, get_topic_names
 import logging
+
+from common.prompt_data import (
+    PRESET_TEMPLATES,
+    PRESET_TOPICS,
+    DEFAULT_TEMPLATE_NAME,
+    DEFAULT_TOPIC_NAME,
+    DEFAULT_CHARS_PER_TOKEN,
+    get_template,
+    get_topics
+)
 
 logger = logging.getLogger(__name__)
 
-# Preset prompt template library
-PRESET_TEMPLATES = {
-    "ai_qa": [
-        "Explain the concept of {topic} in simple terms.",
-        "What are the main applications of {topic} in today's world?",
-        "Describe the history and development of {topic}.",
-        "Compare and contrast {topic} with similar technologies.",
-        "What are the ethical considerations surrounding {topic}?",
-        "How does {topic} impact our daily lives?",
-        "What are the future trends in {topic}?",
-        "What are the key challenges in {topic} research?"
-    ],
-
-    "general_qa": [
-        "Tell me about {topic}.",
-        "What is {topic}?",
-        "Can you explain {topic}?",
-        "I need information about {topic}.",
-        "Please provide details about {topic}.",
-        "Help me understand {topic}."
-    ],
-
-    "technical": [
-        "Discuss the technical implementation of {topic}.",
-        "What are the algorithms used in {topic}?",
-        "Explain the architecture of {topic} systems.",
-        "What are the performance considerations for {topic}?",
-        "Describe the scalability challenges in {topic}."
-    ]
-}
-
-# Preset topic library
-PRESET_TOPICS = {
-    "ai_ml": [
-        "artificial intelligence",
-        "machine learning",
-        "deep learning",
-        "natural language processing",
-        "computer vision",
-        "reinforcement learning",
-        "neural networks",
-        "transformers",
-        "large language models",
-        "generative AI"
-    ],
-
-    "tech": [
-        "cloud computing",
-        "blockchain technology",
-        "quantum computing",
-        "Internet of Things",
-        "edge computing",
-        "distributed systems",
-        "cybersecurity",
-        "databases",
-        "software engineering"
-    ],
-
-    "science": [
-        "climate change",
-        "genetic engineering",
-        "space exploration",
-        "renewable energy",
-        "quantum physics",
-        "biotechnology",
-        "nanotechnology"
-    ]
-}
-
-
 class PromptGenerator:
-    """Prompt Generator Class (New)"""
+    """Prompt Generator Class"""
 
     def __init__(
         self,
@@ -96,11 +37,9 @@ class PromptGenerator:
         fixed_prompt: Optional[str] = None,
         prompt_file: Optional[str] = None,
         tokenizer = None,
-        chars_per_token: int = 4
+        chars_per_token: int = DEFAULT_CHARS_PER_TOKEN
     ):
-        """
-        Initialize prompt generator
-        """
+        """Initialize prompt generator"""
         self.method = method
         self.template_name = template_name
         self.topic_name = topic_name
@@ -109,9 +48,9 @@ class PromptGenerator:
         self.tokenizer = tokenizer
         self.chars_per_token = chars_per_token
 
-        # Load templates and topics
-        self.templates = PRESET_TEMPLATES.get(template_name, PRESET_TEMPLATES["ai_qa"])
-        self.topics = PRESET_TOPICS.get(topic_name, PRESET_TOPICS["ai_ml"])
+        # Load templates and topics from common/prompt_data.py
+        self.templates = get_template(template_name)
+        self.topics = get_topics(topic_name)
 
         # Load prompts from file (if needed)
         self.file_prompts = []
@@ -123,24 +62,20 @@ class PromptGenerator:
         try:
             with open(self.prompt_file, 'r', encoding='utf-8') as f:
                 content = f.read().strip()
-
+                
                 if self.prompt_file.endswith('.json'):
                     data = json.loads(content)
-                    if isinstance(data, list):
-                        self.file_prompts = [str(item) for item in data]
-                    elif isinstance(data, dict):
-                        # Try to extract all string values
-                        for value in data.values():
-                            if isinstance(value, str):
-                                self.file_prompts.append(value)
-                            elif isinstance(value, list):
-                                self.file_prompts.extend([str(v) for v in value if isinstance(v, str)])
+                    # Use the common parsing function
+                    self.file_prompts = _parse_json_prompts(data)
                 else:
-                    # Text file, one prompt per line
+                    # Text file: one prompt per line
                     self.file_prompts = [line.strip() for line in content.split('\n') if line.strip()]
-
+                    
             logger.info(f"Loaded {len(self.file_prompts)} prompts from {self.prompt_file}")
-
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"Invalid JSON in file {self.prompt_file}: {e}")
+            self.file_prompts = []
         except Exception as e:
             logger.error(f"Failed to load prompts from file: {e}")
             self.file_prompts = []
@@ -150,16 +85,7 @@ class PromptGenerator:
         return self.generate_prompt(token_num, prompt_id)
 
     def generate_prompt(self, token_num: int, prompt_id: int = 0) -> str:
-        """
-        Generate single prompt
-        
-        Args:
-            token_num: Required number of tokens
-            prompt_id: Prompt ID (for generating different prompts)
-            
-        Returns:
-            Prompt text
-        """
+        """Generate single prompt"""
         if self.method == "fixed" and self.fixed_prompt:
             # Use fixed prompt
             return self._adjust_length(self.fixed_prompt, token_num)
@@ -212,57 +138,55 @@ class PromptGenerator:
         else:
             # Fallback method
             return self._adjust_length_fallback(prompt, token_num)
+    
+    def _adjust_string_to_length(self, text: str, target_chars: int) -> str:
+        """Generic method: adjust string to target character length"""
+        if not text: 
+            # Return space padding or empty string
+            return " " * target_chars if target_chars > 0 else ""
+        
+        current_length = len(text)
+        
+        if current_length >= target_chars:
+            # Truncate to target length
+            return text[:target_chars]
+        else:
+            # Calculate repeat count
+            repeat_count = (target_chars + current_length - 1) // current_length
+            repeated_text = text * repeat_count
+            return repeated_text[:target_chars]
 
     def _adjust_length_fallback(self, prompt: str, token_num: int) -> str:
         """Fallback method: character-level length adjustment"""
         estimated_chars = token_num * self.chars_per_token
-
-        if len(prompt) >= estimated_chars:
-            # Truncate
-            return prompt[:estimated_chars]
-        else:
-            # Repeat until desired length is reached
-            repeat_count = (estimated_chars + len(prompt) - 1) // len(prompt)
-            repeated_prompt = prompt * repeat_count
-            return repeated_prompt[:estimated_chars]
+        return self._adjust_string_to_length(prompt, estimated_chars)
 
     def _generate_random_prompt(self, token_num: int) -> str:
         """Generate random prompt"""
-        if self.tokenizer:
-            # Randomly select token IDs
-            try:
-                vocab_size = self.tokenizer.vocab_size if hasattr(self.tokenizer, 'vocab_size') else 32000
-                token_ids = [random.randint(0, vocab_size-1) for _ in range(token_num)]
-                return self.tokenizer.decode(token_ids, skip_special_tokens=True)
-            except Exception as e:
-                logger.warning(f"Tokenizer random generation failed: {e}, using fallback")
-                # Fallback to character-level generation
-                return self._generate_random_text(token_num)
-        else:
-            # Fallback method
-            return self._generate_random_text(token_num)
+        return _generate_random_prompt_common(
+            token_num=token_num,
+            tokenizer=self.tokenizer,
+            vocab_size=getattr(self, '_vocab_size', 32000),
+            exclude_special_tokens=getattr(self, '_exclude_special_tokens', True),
+            chars_per_token=self.chars_per_token
+        )
 
     def _generate_random_text(self, token_num: int) -> str:
-        """Generate random text (fallback method)"""
+        """Generate random text"""
         total_chars = token_num * self.chars_per_token
-
+        
         # Use letters, digits, and common punctuation
         chars = string.ascii_letters + string.digits + ' .,!?;:\n-'
-        random_text = ''.join(random.choices(chars, k=total_chars))
-
-        return random_text
+        
+        # Generate base random text
+        base_length = min(100, total_chars)
+        random_text = ''.join(random.choices(chars, k=base_length))
+        
+        # Use generic method to adjust to correct length
+        return self._adjust_string_to_length(random_text, total_chars)
 
     def generate_prompts(self, num_prompts: int, token_num: int) -> List[str]:
-        """
-        Generate multiple prompts
-        
-        Args:
-            num_prompts: Number of prompts to generate
-            token_num: Token count for each prompt
-            
-        Returns:
-            List of prompts
-        """
+        """ Generate multiple prompts"""
         prompts = []
         for i in range(num_prompts):
             prompt = self.generate_prompt(token_num, i)
@@ -307,7 +231,7 @@ class PromptGenerator:
         return ''.join(random.choices(string.ascii_letters + string.digits, k=6))
 
 
-# ==================== Original Functions (Maintaining Compatibility) ====================
+# ==================== Original Functions ====================
 
 def create_prompt_generator(
     tokenizer=None,
@@ -315,16 +239,9 @@ def create_prompt_generator(
     **kwargs
 ) -> Callable[[int], str]:
     """
-    Create prompt generator function (compatible with original interface)
-    
+    Create prompt generator function 
+
     New recommended usage: Create PromptGenerator class instance directly
-    
-    Args:
-        tokenizer: Optional tokenizer for precise token counting
-        method: Generation method, "random" or "template"
-        **kwargs: Additional parameters passed to specific generator
-    Returns:
-        Function: (token_num) -> prompt_text
     """
     logger.warning("Using deprecated create_prompt_generator function. "
                    "Consider using PromptGenerator class directly.")
@@ -336,6 +253,54 @@ def create_prompt_generator(
     else:
         raise ValueError(f"Unknown prompt generation method: {method}")
 
+def _generate_random_prompt_common(
+    token_num: int,
+    tokenizer=None,
+    vocab_size: int = 32000,
+    exclude_special_tokens: bool = True,
+    chars_per_token: int = 4
+) -> str:
+    """
+    Common random prompt generation function
+    Shared by both new and legacy interfaces
+    """
+    if tokenizer:
+        # Use tokenizer for precise control
+        try:
+            if exclude_special_tokens and hasattr(tokenizer, 'special_tokens_map'):
+                # Get special tokens
+                special_tokens = tokenizer.special_tokens_map.values()
+                special_token_ids = set(tokenizer.convert_tokens_to_ids(special_tokens))
+
+                # Generate non-special tokens
+                valid_token_ids = []
+                for token_id in range(vocab_size):
+                    if token_id not in special_token_ids:
+                        valid_token_ids.append(token_id)
+
+                if valid_token_ids:
+                    token_ids = random.choices(valid_token_ids, k=token_num)
+                else:
+                    token_ids = random.choices(list(range(vocab_size)), k=token_num)
+            else:
+                # Simple random token ID selection
+                token_ids = random.choices(list(range(vocab_size)), k=token_num)
+
+            # Decode to text
+            prompt = tokenizer.decode(token_ids, skip_special_tokens=True)
+            return prompt
+
+        except Exception as e:
+            # If tokenizer-based method fails, fall back to random text
+            logger.warning(f"Tokenizer-based prompt generation failed: {e}. "
+                           f"Falling back to random text generation.")
+            # Continue with character-level generation below
+
+    # Character-level generation (fallback)
+    total_chars = token_num * chars_per_token
+    chars = string.ascii_letters + string.digits + ' .,!?;:\n'
+    random_text = ''.join(random.choices(chars, k=total_chars))
+    return random_text
 
 def _create_random_prompt_generator(
     tokenizer=None,
@@ -349,53 +314,16 @@ def _create_random_prompt_generator(
     chars_per_token = kwargs.get('chars_per_token', 4)
 
     def generate_random_prompt(token_num: int) -> str:
-        """Generate random prompt with specified token count"""
-        nonlocal tokenizer, vocab_size, exclude_special_tokens, chars_per_token
-
-        if tokenizer is not None:
-            # Use tokenizer for precise token control
-            # Generate random token ID sequence
-            try:
-                if exclude_special_tokens and hasattr(tokenizer, 'special_tokens_map'):
-                    # Get special tokens
-                    special_tokens = tokenizer.special_tokens_map.values()
-                    special_token_ids = set(tokenizer.convert_tokens_to_ids(special_tokens))
-
-                    # Generate non-special tokens
-                    valid_token_ids = []
-                    for token_id in range(vocab_size):
-                        if token_id not in special_token_ids:
-                            valid_token_ids.append(token_id)
-
-                    if valid_token_ids:
-                        token_ids = random.choices(valid_token_ids, k=token_num)
-                    else:
-                        token_ids = random.choices(list(range(vocab_size)), k=token_num)
-                else:
-                    # Simple random token ID selection
-                    token_ids = random.choices(list(range(vocab_size)), k=token_num)
-
-                # Decode to text
-                prompt = tokenizer.decode(token_ids, skip_special_tokens=True)
-                return prompt
-
-            except Exception as e:
-                # If tokenizer method fails, fall back to random text generation
-                logger.warning(f"Tokenizer-based prompt generation failed: {e}. "
-                               f"Falling back to random text generation.")
-                tokenizer = None  # Mark tokenizer as unavailable
-
-        # Method 1: No tokenizer, generate random text (estimate token count)
-        total_chars = token_num * chars_per_token
-
-        # Generate random text
-        chars = string.ascii_letters + string.digits + ' .,!?;:\n'
-        random_text = ''.join(random.choices(chars, k=total_chars))
-
-        return random_text
-
+        """Generate a random prompt containing the specified number of tokens"""
+        return _generate_random_prompt_common(
+            token_num=token_num,
+            tokenizer=tokenizer,
+            vocab_size=vocab_size,
+            exclude_special_tokens=exclude_special_tokens,
+            chars_per_token=chars_per_token
+        )
+    
     return generate_random_prompt
-
 
 def _create_template_prompt_generator(**kwargs) -> Callable[[int], str]:
     """Create template prompt generator (compatible with original interface)"""
@@ -417,7 +345,7 @@ def _create_template_prompt_generator(**kwargs) -> Callable[[int], str]:
 
         prompt = template * repeat_count
 
-        # Truncate to approximate length (simple handling)
+        # Truncate to approximate length
         estimated_chars = token_num * 4  # Assume average 4 characters per token
         if len(prompt) > estimated_chars:
             prompt = prompt[:estimated_chars]
@@ -426,117 +354,69 @@ def _create_template_prompt_generator(**kwargs) -> Callable[[int], str]:
 
     return generate_template_prompt
 
-
-# ==================== New Helper Functions ====================
+# ==================== Helper Functions ====================
 
 def create_prompt_generator_from_config(
     config: Dict[str, Any], 
     tokenizer=None
 ) -> PromptGenerator:
-    """
-    Create PromptGenerator instance from configuration (recommended new way)
-    
-    Args:
-        config: Configuration dictionary containing prompt-related settings
-        tokenizer: Optional tokenizer
-        
-    Returns:
-        PromptGenerator instance
-    """
+    """Create PromptGenerator instance from configuration"""
     # Extract configuration parameters
     prompt_config = config.get("prompt_config", {})
 
     return PromptGenerator(
         method=prompt_config.get("method", "template"),
-        template_name=prompt_config.get("template_name", "ai_qa"),
-        topic_name=prompt_config.get("topic_name", "ai_ml"),
+        template_name=prompt_config.get("template_name", DEFAULT_TEMPLATE_NAME),
+        topic_name=prompt_config.get("topic_name", DEFAULT_TOPIC_NAME),
         fixed_prompt=prompt_config.get("fixed_prompt"),
         prompt_file=prompt_config.get("prompt_file"),
         tokenizer=tokenizer,
-        chars_per_token=prompt_config.get("chars_per_token", 4)
+        chars_per_token=prompt_config.get("chars_per_token", DEFAULT_CHARS_PER_TOKEN)
     )
 
+def _parse_json_prompts(data: Any) -> List[str]:
+    """Parse prompt list from JSON data"""
+    if isinstance(data, list):
+        # Directly use each element in the list
+        return [str(item) for item in data]
+    elif isinstance(data, dict):
+        # Simplified: only process string values in the dictionary
+        prompts = []
+        for value in data.values():
+            if isinstance(value, str):
+                prompts.append(value)
+            elif isinstance(value, list):
+                prompts.extend([str(v) for v in value if isinstance(v, str)])
+        return prompts
+    elif isinstance(data, str):
+        # If JSON is a single string, use it directly
+        return [data]
+    else:
+        # Other types are not supported
+        logger.warning(f"Unsupported JSON data type for prompts: {type(data).__name__}")
+        return []
 
 def load_prompts_from_file(file_path: str) -> List[str]:
-    """Load prompt list from file (general function)"""
+    """Load prompt list from file (generic function)"""
     if not Path(file_path).exists():
         logger.error(f"Prompt file not found: {file_path}")
         return []
-
+    
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             content = f.read().strip()
-
+            
             if file_path.endswith('.json'):
                 data = json.loads(content)
-                if isinstance(data, list):
-                    return [str(item) for item in data]
-                elif isinstance(data, dict):
-                    # Try to extract all string values
-                    prompts = []
-                    for value in data.values():
-                        if isinstance(value, str):
-                            prompts.append(value)
-                        elif isinstance(value, list):
-                            prompts.extend([str(v) for v in value if isinstance(v, str)])
-                    return prompts
+                # Use the common parsing function
+                return _parse_json_prompts(data)
             else:
-                # Text file, one prompt per line
+                # Text file: one prompt per line
                 return [line.strip() for line in content.split('\n') if line.strip()]
-
+                
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON in file {file_path}: {e}")
     except Exception as e:
         logger.error(f"Failed to load prompts from file {file_path}: {e}")
-
+    
     return []
-
-
-# ==================== Test Functions ====================
-
-def test_prompt_generator():
-    """Test prompt generator"""
-    print("Testing prompt generators...")
-
-    # Test original functions (maintain compatibility)
-    print("\n1. Testing legacy functions:")
-
-    # Test random generator (no tokenizer)
-    print("\n   Random generator (no tokenizer):")
-    random_gen = create_prompt_generator(method="random", chars_per_token=3)
-    prompt1 = random_gen(10)  # Generate prompt with 10 tokens
-    print(f"     Generated prompt (10 tokens): {prompt1[:50]}...")
-
-    # Test template generator
-    print("\n   Template generator:")
-    template_gen = create_prompt_generator(method="template")
-    prompt2 = template_gen(20)  # Generate prompt with 20 tokens
-    print(f"     Generated prompt (20 tokens): {prompt2[:50]}...")
-
-    # Test new PromptGenerator class
-    print("\n2. Testing new PromptGenerator class:")
-
-    config = {
-        "prompt_config": {
-            "method": "template",
-            "template_name": "ai_qa",
-            "topic_name": "ai_ml",
-            "chars_per_token": 4
-        }
-    }
-
-    generator = create_prompt_generator_from_config(config)
-
-    # Generate single prompt
-    single_prompt = generator.generate(15)
-    print(f"   Single prompt (15 tokens): {single_prompt[:50]}...")
-
-    # Generate multiple prompts
-    prompts = generator.generate_prompts(3, 10)
-    print(f"   Generated {len(prompts)} prompts:")
-    for i, prompt in enumerate(prompts):
-        print(f"     Prompt {i+1}: {prompt[:50]}...")
-
-    print("\nPrompt generators test completed.")
-
-
-if __name__ == "__main__":
-    test_prompt_generator()
