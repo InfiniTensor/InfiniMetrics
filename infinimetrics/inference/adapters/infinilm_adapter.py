@@ -493,3 +493,4 @@ class InfiniLMAdapter(InferAdapter):
         """Get service URL"""
         port = getattr(self, 'server_port', 8000)
         return f"http://localhost:{port}"
+
