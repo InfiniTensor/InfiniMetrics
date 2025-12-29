@@ -151,3 +151,4 @@ def _save_to_json(output_file: str, timestamps: List[float],
     
     with open(output_file, 'w') as f:
         json.dump(data, f, indent=2)
+        
