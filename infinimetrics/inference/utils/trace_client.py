@@ -513,3 +513,4 @@ class TraceClient:
         
         logger.info(f"Trace results saved to {output_dir}")
         return detailed_file
+        
