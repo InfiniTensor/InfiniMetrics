@@ -175,3 +175,4 @@ def create_token_generator(tokenizer, **kwargs):
     """Convenience function to create a token generator"""
     config = TokenGeneratorConfig(**kwargs)
     return TokenGenerator(tokenizer, config)
+
