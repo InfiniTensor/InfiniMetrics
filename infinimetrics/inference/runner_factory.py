@@ -125,3 +125,4 @@ class InferRunnerFactory:
         """
         adapter = InferRunnerFactory.create_adapter(config)
         return InferRunnerFactory.create_runner(config, adapter)
+        
