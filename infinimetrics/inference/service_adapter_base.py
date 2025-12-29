@@ -45,3 +45,4 @@ class ServiceAdapter(abc.ABC):
         Get service URL
         """
         pass
+
