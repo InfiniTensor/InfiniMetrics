@@ -350,3 +350,4 @@ class ServiceInferRunner(InferRunnerBase):
                 self.service_manager.stop_service()
             except Exception as e:
                 logger.warning(f"Error stopping service via manager: {e}")
+
