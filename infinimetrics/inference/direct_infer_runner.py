@@ -382,3 +382,4 @@ class DirectInferRunner(InferRunnerBase):
     
         logger.info(f"Generated {len(prompts)} simple prompts")
         return prompts
+        
