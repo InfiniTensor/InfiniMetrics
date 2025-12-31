@@ -8,21 +8,9 @@ from abc import ABC, abstractmethod
 import logging
 from enum import Enum
 from typing import Dict, List, Optional, Union
+from common.constants import ProcessorType, AcceleratorType
 
 logger = logging.getLogger(__name__)
-
-class ProcessorType(str, Enum):
-    CPU = "cpu"           
-    ACCELERATOR = "accelerator"
-
-class AcceleratorType(Enum):
-    """Supported accelerator platforms"""
-    NVIDIA = "nvidia"
-    AMD = "amd"        # ROCm
-    CAMBRICON_MLU = "cambricon_mlu" 
-    CPU = "cpu"        # CPU 
-    MOCK = "mock"      # For testing
-
 
 class AcceleratorMonitor(ABC):
     """Abstract base class for accelerator monitoring"""
@@ -295,13 +283,10 @@ def create_accelerator_monitor(
         # Map string to enum
         type_map = {
             "nvidia": AcceleratorType.NVIDIA,
-            "cuda": AcceleratorType.NVIDIA,
             "amd": AcceleratorType.AMD,
-            "rocm": AcceleratorType.AMD,
-            "cambricon": AcceleratorType.CAMBRICON_MLU,
-            "mlu": AcceleratorType.CAMBRICON_MLU,
+            "ascend":AcceleratorType.ASCEND,
+            "cambricon": AcceleratorType.CAMBRICON,
             "cpu": AcceleratorType.CPU,
-            "mock": AcceleratorType.MOCK,
         }
         
         accel_enum = type_map.get(accelerator_type)
