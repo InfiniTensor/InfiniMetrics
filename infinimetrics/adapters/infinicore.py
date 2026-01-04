@@ -11,7 +11,7 @@ from ..tools.estimator import WorkloadEstimator
 # =========================================================================
 
 class InfiniDtype:
-    # [Optimization] Using a simple mapping dict is faster/cleaner than class attributes for simple lookups,
+    # Using a simple mapping dict is faster/cleaner than class attributes for simple lookups,
     # but the class structure is fine for namespace.
     float16 = "float16"
     float32 = "float32"
@@ -22,7 +22,7 @@ class InfiniDtype:
     bool = "bool"
 
 class InfiniCoreAdapter(BaseAdapter):
-    # [Optimization] Define constants to avoid typo and hardcoding
+    # Define constants to avoid typo and hardcoding
     METRIC_LATENCY = "operator.latency"
     METRIC_ACCURACY = "operator.tensor_accuracy"
     METRIC_FLOPS = "operator.flops"
