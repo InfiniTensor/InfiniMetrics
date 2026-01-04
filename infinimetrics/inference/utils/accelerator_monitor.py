@@ -286,7 +286,6 @@ def create_accelerator_monitor(
             "amd": AcceleratorType.AMD,
             "ascend":AcceleratorType.ASCEND,
             "cambricon": AcceleratorType.CAMBRICON,
-            "cpu": AcceleratorType.CPU,
         }
         
         accel_enum = type_map.get(accelerator_type)
