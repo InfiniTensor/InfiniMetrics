@@ -1,0 +1,131 @@
+{
+    "run_id": "train.infiniTrain.SFT.a8b4c9e1-5b1a-4f8a-9e3b-b2c1d0f8e3a4",
+    "time": "2025-10-11 14:50:50",
+    "testcase": "train.InfiniTrain.SFT",
+    "success": 0, 
+    "config": {
+        "model_source": "FM9G_70B",
+        "opset_version": 11, 
+        "operator": "Conv",
+        "device": "cuda",
+        "attributes": [
+            {
+                "name": "auto_pad",
+                "value": "NOTSET"
+            },
+            {
+                "name": "dilations",
+                "value": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "name": "group",
+                "value": 1
+            },
+            {
+                "name": "kernel_shape",
+                "value": [
+                    3,
+                    3
+                ]
+            },
+            {
+                "name": "pads",
+                "value": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            {
+                "name": "strides",
+                "value": [
+                    1,
+                    1
+                ]
+            }
+        ],
+        "inputs": [
+            {
+                "name": "X",
+                "dtype": "float16", 
+                "shape": [
+                    1,
+                    64,
+                    256,
+                    256
+                ],
+                "strides": [4194304, 65536, 256, 1] 
+            },
+            {
+                "name": "W",
+                "dtype": "float16",
+                "shape": [
+                    128,
+                    64,
+                    3,
+                    3
+                ],
+                "strides": [576, 9, 3, 1] 
+            }
+        ],
+        "outputs": [ 
+            {
+                "name": "Y",
+                "dtype": "float16", 
+                "shape": [
+                    1,
+                    128,
+                    254,
+                    254
+                ],
+                "strides": [8258048, 64516, 254, 1],
+                "inplace": "A"
+                
+                
+            }
+        ],
+        "warmup_iterations": 100,
+        "measured_iterations": 1000,
+        "bench": true,
+        "command": "python base_op_bench.py --op Conv --input_shapes 1x64x256x256,128x64x3x3 --precision FP16 --iter 1000"
+    },
+    "metrics": [
+        {
+            "name": "operator.latency",
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_latency.csv",
+            "unit": "ms"
+        },
+        {
+            "name": "operator.flops",  
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_flops.csv",
+            "unit": "TFLOPS"
+        },
+        {
+            "name": "operator.bandwidth", 
+            "type": "timeseries",
+            "raw_data_url": "./operator/${run_id}_operator_bandwidth.csv",
+            "unit": "GB/s"
+        },
+        {
+            "name": "operator.tensor_accuracy",
+            "type": "tensor_diff",
+            "reference": {
+                "uri": "./operator/data/result/${run_id}_operator_reference_output.npy",
+                "shape": [8192, 1024],
+                "dtype": "float16"
+            },
+            "candidate": {
+                "uri": "./operator/data/result/${run_id}_operator_candidate_output.npy",
+                "shape": [8192, 1024],
+                "dtype": "float16"
+            },
+            "unit": ""
+        }
+    ]
+}
