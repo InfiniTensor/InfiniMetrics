@@ -25,6 +25,7 @@ class TestResult:
     Note:
         success: 0 = success, non-zero = failure code (following Linux convention)
     """
+
     run_id: str
     testcase: str
     success: int  # 0 = success, non-zero = failure code
@@ -34,11 +35,11 @@ class TestResult:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to lightweight dictionary format for Dispatcher aggregation."""
         return {
-            'run_id': self.run_id,
-            'testcase': self.testcase,
-            'success': self.success,
-            'result_file': self.result_file,
-            'skipped': self.skipped
+            "run_id": self.run_id,
+            "testcase": self.testcase,
+            "success": self.success,
+            "result_file": self.result_file,
+            "skipped": self.skipped,
         }
 
 
@@ -62,13 +63,13 @@ class Executor:
         """
         self.payload = payload
         self.adapter = adapter
-        self.testcase = payload.get('testcase', 'unknown')
-        self.run_id = payload.get('run_id', '')
+        self.testcase = payload.get("testcase", "unknown")
+        self.run_id = payload.get("run_id", "")
         self.test_input = None
 
         # Setup output directory from config
-        config = payload.get('config', {})
-        output_dir = config.get('output_dir', './output')
+        config = payload.get("config", {})
+        output_dir = config.get("output_dir", "./output")
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -80,7 +81,7 @@ class Executor:
 
         This should be called before execute().
         """
-        config = self.payload.get('config', {})
+        config = self.payload.get("config", {})
 
         # Convert payload to TestInput object
         self.test_input = TestInput.from_dict(self.payload)
@@ -96,8 +97,8 @@ class Executor:
         This should be called after process() completes.
 
         Args:
-            result: 
-            
+            result:
+
         Returns:
             Path to saved result file
         """
@@ -105,13 +106,15 @@ class Executor:
         try:
             self.adapter.teardown()
         except Exception as teardown_error:
-            logger.warning(f"Executor: Teardown failed for {self.testcase}: {teardown_error}")
+            logger.warning(
+                f"Executor: Teardown failed for {self.testcase}: {teardown_error}"
+            )
 
         # TODO: Add metrics calculation method
 
         # Save result to disk
         result_file = self._save_result(result)
-        
+
         logger.debug(f"Executor: Teardown complete for {self.testcase}")
         return result_file
 
@@ -135,7 +138,7 @@ class Executor:
             run_id=self.run_id,
             testcase=self.testcase,
             success=0,  # Default to success
-            result_file=None
+            result_file=None,
         )
 
         try:
@@ -147,16 +150,20 @@ class Executor:
             response = self.adapter.process(self.test_input)
 
             # Process response (0 = success, non-zero = failure)
-            test_result.success = response.get('success', 0)
+            test_result.success = response.get("success", 1)
 
             if test_result.success != 0:
-                logger.warning(f"Executor: Adapter failed with error code {test_result.success}")
+                logger.warning(
+                    f"Executor: Adapter failed with error code {test_result.success}"
+                )
 
             # Phase 3: Teardown (cleanup, save result)
             result_file = self._save_result(response)
             test_result.result_file = result_file
 
-            logger.info(f"Executor: {self.testcase} completed success={test_result.success}")
+            logger.info(
+                f"Executor: {self.testcase} completed success={test_result.success}"
+            )
 
             return test_result
 
@@ -180,12 +187,13 @@ class Executor:
             Absolute path to saved file
         """
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        safe_name = self.testcase.replace('.', '_').replace('/', '_')
+        safe_name = self.testcase.replace(".", "_").replace("/", "_")
         filename = f"{safe_name}_{timestamp}_results.json"
         output_file = self.output_dir / filename
 
         import json
-        with open(output_file, 'w', encoding='utf-8') as f:
+
+        with open(output_file, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
 
         logger.debug(f"Executor: Results saved to {output_file}")

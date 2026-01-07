@@ -123,17 +123,6 @@ class TestTestInput(unittest.TestCase):
         with self.assertRaises(ValueError):
             TestInput(testcase=None)
 
-    def test_has_metrics(self):
-        """Test has_metrics method."""
-        input1 = TestInput(testcase="test1")
-        self.assertFalse(input1.has_metrics())
-
-        input2 = TestInput(
-            testcase="test2",
-            metrics=[{"name": "latency"}]
-        )
-        self.assertTrue(input2.has_metrics())
-
     def test_config_helpers(self):
         """Test config getter/setter methods."""
         test_input = TestInput(

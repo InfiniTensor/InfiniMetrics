@@ -32,7 +32,7 @@ class TestInput:
 ```python
 from infinimetrics.input import TestInput
 
-input = TestInput(testcase="infer.InfiniLM.Direct")
+test_input = TestInput(testcase="infer.InfiniLM.Direct")
 # time 字段会自动设置为当前时间
 ```
 
@@ -41,7 +41,7 @@ input = TestInput(testcase="infer.InfiniLM.Direct")
 提供所有字段：
 
 ```python
-input = TestInput(
+test_input = TestInput(
     testcase="train.InfiniTrain.SFT",
     run_id="test.my-run.001",
     success=0,
@@ -72,14 +72,14 @@ data = {
     }
 }
 
-input = TestInput.from_dict(data)
+test_input = TestInput.from_dict(data)
 ```
 
 ### 4. 转换为字典
 
 ```python
-input = TestInput(testcase="infer.Test")
-data_dict = input.to_dict()
+test_input = TestInput(testcase="infer.Test")
+data_dict = test_input.to_dict()
 # 可以序列化为JSON
 import json
 json_str = json.dumps(data_dict, indent=2)
@@ -88,29 +88,17 @@ json_str = json.dumps(data_dict, indent=2)
 ### 5. 配置辅助方法
 
 ```python
-input = TestInput(
+test_input = TestInput(
     testcase="test",
     config={"model": "Qwen3-1.7B"}
 )
 
 # 获取配置值
-model = input.get_config_value("model")  # "Qwen3-1.7B"
-missing = input.get_config_value("missing", "default")  # "default"
+model = test_input.get_config_value("model")  # "Qwen3-1.7B"
+missing = test_input.get_config_value("missing", "default")  # "default"
 
 # 设置配置值
-input.set_config_value("device", {"gpu_platform": "nvidia"})
-```
-
-### 6. 检查指标
-
-```python
-input = TestInput(
-    testcase="test",
-    metrics=[{"name": "latency"}]
-)
-
-if input.has_metrics():
-    print("此输入包含指标定义")
+test_input.set_config_value("device", {"gpu_platform": "nvidia"})
 ```
 
 ## 输入文件格式示例
@@ -227,16 +215,16 @@ inputs = [
 ### 用例3：动态修改配置
 
 ```python
-input = TestInput(
+test_input = TestInput(
     testcase="test",
     config={"model": "Qwen3-1.7B"}
 )
 
 # 根据条件修改配置
 if use_gpu:
-    input.set_config_value("device", {"gpu_platform": "nvidia"})
+    test_input.set_config_value("device", {"gpu_platform": "nvidia"})
 else:
-    input.set_config_value("device", {"cpu_only": True})
+    test_input.set_config_value("device", {"cpu_only": True})
 ```
 
 ## 与现有代码的集成
@@ -248,27 +236,27 @@ from infinimetrics.input import TestInput
 from infinimetrics.dispatcher import Dispatcher
 
 # 创建测试输入
-test_input = TestInput(
+test_input_obj = TestInput(
     testcase="infer.InfiniLM.Direct",
     config={"model": "Qwen3-1.7B", "output_dir": "./output"}
 )
 
 # 转换为字典并分发
 dispatcher = Dispatcher()
-result = dispatcher.dispatch(test_input.to_dict())
+result = dispatcher.dispatch(test_input_obj.to_dict())
 ```
 
 ### 在 Adapter 中使用
 
 ```python
 class MyAdapter(BaseAdapter):
-    def process(self, payload: Dict[str, Any]) -> Dict[str, Any]:
-        # 将payload转换为TestInput对象
-        test_input = TestInput.from_dict(payload)
+    def process(self, test_input: Dict[str, Any]) -> Dict[str, Any]:
+        # 将test_input转换为TestInput对象
+        test_input_obj = TestInput.from_dict(test_input)
 
         # 使用辅助方法访问配置
-        model = test_input.get_config_value("model")
-        device = test_input.get_config_value("device")
+        model = test_input_obj.get_config_value("model")
+        device = test_input_obj.get_config_value("device")
 
         # 执行测试...
         return {

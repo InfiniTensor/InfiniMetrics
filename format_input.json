@@ -1,7 +1,7 @@
 {
-    "run_id": "train.infiniTrain.SFT.a8b4c9e1-5b1a-4f8a-9e3b-b2c1d0f8e3a4",
+    "run_id": "operator.infinicore.matmul.a8b4c9e1-5b1a-4f8a-9e3b-b2c1d0f8e3a4",
     "time": "2025-10-11 14:50:50",
-    "testcase": "train.InfiniTrain.SFT",
+    "testcase": "operator.infinicore.matmul",
     "success": 0, 
     "config": {
         "model_source": "FM9G_70B",

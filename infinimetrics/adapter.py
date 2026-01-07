@@ -2,7 +2,9 @@
 """Base Adapter - Unified Interface for All Test Types"""
 
 import abc
-from typing import Dict, Any
+from typing import Dict, Any, Union
+
+from infinimetrics.input import TestInput
 
 
 class BaseAdapter(abc.ABC):
@@ -17,12 +19,12 @@ class BaseAdapter(abc.ABC):
     """
 
     @abc.abstractmethod
-    def process(self, test_input: Dict[str, Any]) -> Dict[str, Any]:
+    def process(self, test_input: Union[TestInput, Dict[str, Any]]) -> Dict[str, Any]:
         """
         Execute the test.
 
         Args:
-            test_input: TestInput dict with testcase, config, etc.
+            test_input: TestInput object or dict with testcase, config, etc.
 
         Returns:
             Dict with:

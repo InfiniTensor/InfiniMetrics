@@ -19,6 +19,7 @@ class TestInput:
         ...     config={"model": "Qwen3-1.7B"}
         ... )
     """
+
     testcase: str
     run_id: Optional[str] = None
     time: Optional[str] = None
@@ -35,28 +36,24 @@ class TestInput:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary, excluding None/empty optional fields."""
-        result = {'testcase': self.testcase, 'config': self.config}
-        for key in ['run_id', 'time', 'success', 'metrics']:
+        result = {"testcase": self.testcase, "config": self.config}
+        for key in ["run_id", "time", "success", "metrics"]:
             value = getattr(self, key)
             if value not in (None, []):
                 result[key] = value
         return result
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> 'TestInput':
+    def from_dict(cls, data: Dict[str, Any]) -> "TestInput":
         """Create TestInput from dictionary."""
         return cls(
-            testcase=data.get('testcase'),
-            run_id=data.get('run_id'),
-            time=data.get('time'),
-            success=data.get('success'),
-            config=data.get('config', {}),
-            metrics=data.get('metrics', [])
+            testcase=data.get("testcase"),
+            run_id=data.get("run_id"),
+            time=data.get("time"),
+            success=data.get("success"),
+            config=data.get("config", {}),
+            metrics=data.get("metrics", []),
         )
-
-    def has_metrics(self) -> bool:
-        """Check if this input has metric definitions."""
-        return bool(self.metrics)
 
     def get_config_value(self, key: str, default: Any = None) -> Any:
         """Get a value from config with a default."""
