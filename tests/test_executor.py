@@ -13,8 +13,8 @@ import json
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from adapter import BaseAdapter
-from executor import Executor, ExecutorFactory
+from infinimetrics.adapter import BaseAdapter
+from infinimetrics.executor import Executor
 
 
 class MockAdapter(BaseAdapter):
@@ -112,13 +112,27 @@ class TestExecutor(unittest.TestCase):
 
         result = executor.run()
 
+        # Check lightweight result (new format)
         self.assertEqual(result['success'], 1)
         self.assertEqual(result['run_id'], 'test_run_123')
         self.assertEqual(result['testcase'], 'infer.Test.Model')
         self.assertIn('duration', result)
-        self.assertIn('data', result)
+        self.assertIn('result_file', result)
         self.assertTrue(adapter.setup_called)
         self.assertTrue(adapter.teardown_called)
+
+        # Verify detailed result was saved to file
+        import json
+        from pathlib import Path
+        result_file = Path(result['result_file'])
+        self.assertTrue(result_file.exists())
+
+        with open(result_file, 'r') as f:
+            detailed_result = json.load(f)
+
+        # Detailed file should contain full data
+        self.assertIn('data', detailed_result)
+        self.assertIn('metrics', detailed_result)
 
     def test_run_failure(self):
         """Test failed test execution."""
@@ -137,11 +151,20 @@ class TestExecutor(unittest.TestCase):
 
         result = executor.run()
 
-        self.assertIn('metrics', result)
-        self.assertGreater(len(result['metrics']), 0)
+        # Lightweight result doesn't include metrics directly
+        self.assertIn('result_file', result)
+
+        # Metrics are in the detailed file
+        import json
+        from pathlib import Path
+        with open(result['result_file'], 'r') as f:
+            detailed_result = json.load(f)
+
+        self.assertIn('metrics', detailed_result)
+        self.assertGreater(len(detailed_result['metrics']), 0)
 
         # Check execution duration metric
-        duration_metrics = [m for m in result['metrics'] if m['name'] == 'execution.duration']
+        duration_metrics = [m for m in detailed_result['metrics'] if m['name'] == 'execution.duration']
         self.assertEqual(len(duration_metrics), 1)
 
     def test_result_file_creation(self):

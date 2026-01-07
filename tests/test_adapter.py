@@ -10,7 +10,7 @@ import os
 # Add parent directory to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from adapter import BaseAdapter
+from infinimetrics.adapter import BaseAdapter
 
 
 class MockAdapter(BaseAdapter):
