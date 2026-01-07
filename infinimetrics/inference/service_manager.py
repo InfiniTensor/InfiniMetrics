@@ -130,15 +130,15 @@ class InfiniLMServiceManager(BaseServiceManager):
         """Locate InfiniLM scripts directory"""
         search_paths = []
         
-        # 1. Environment variable
+        # Environment variable
         env_path = os.environ.get("INFINILM_PATH")
         if env_path:
             search_paths.append(Path(env_path))
         
-        # 2. Current working directory
+        # Current working directory
         search_paths.append(Path.cwd())
         
-        # 3. Common locations
+        # Common locations
         search_paths.extend([
             Path.home() / "InfiniLM",
             Path("/opt/InfiniLM"),
@@ -218,4 +218,81 @@ class InfiniLMServiceManager(BaseServiceManager):
         if not self.wait_for_service_ready():
             self.stop_service()
             raise TimeoutError("InfiniLM service failed to start within timeout")
+            
+class VLLMServiceManager(BaseServiceManager):
+    """vLLM service manager"""
+    
+    def _build_start_command(self, port: int) -> List[str]:
+        """Build vLLM API server start command"""
+        cmd = [
+            sys.executable, "-m", "vllm.entrypoints.api_server",
+            "--model", str(self.config.model_path),
+            "--port", str(port),
+            "--tensor-parallel-size", str(self.config.infer_args.parallel.tp),
+            "--max-model-len", str(self.config.infer_args.max_seq_len),
+        ]
+        
+        # Device type
+        accelerator = self.config.device.accelerator.value.lower()
+        if accelerator == "nvidia":
+            # vLLM uses CUDA by default, no special parameters required
+            pass
+        else:
+            logger.warning(f"vLLM primarily supports NVIDIA GPUs. Accelerator '{accelerator}' may not be fully supported.")
+        
+        # Add GPU memory parameters
+        if not self.config.device.cpu_only and accelerator == "nvidia":
+            cmd.extend([
+                "--gpu-memory-utilization", "0.9",
+                "--swap-space", "4",
+            ])
+        
+        # Retrieve vLLM-specific parameters from framework_kwargs
+        if hasattr(self.config.infer_args, 'framework_kwargs'):
+            framework_kwargs = self.config.infer_args.framework_kwargs
+            if framework_kwargs:
+                # Add vLLM-specific parameters
+                vllm_params = [
+                    "dtype", "trust-remote-code", "disable-log-stats",
+                    "max-num-batched-tokens", "max-num-seqs", "enforce-eager",
+                    "quantization", "block-size", "max-logprobs"
+                ]
+                
+                for param in vllm_params:
+                    if param in framework_kwargs:
+                        cmd.extend([f"--{param.replace('_', '-')}", str(framework_kwargs[param])])
+        
+        return cmd
+    
+    def start_service(self, port: int = DEFAULT_SERVICE_PORT) -> None:
+        """Start vLLM API server"""
+        logger.info(f"Starting vLLM API server on port {port}")
+        
+        # Build the startup command
+        cmd = self._build_start_command(port)
+        
+        logger.info(f"vLLM API server command: {' '.join(cmd)}")
+        
+        # Start the service process
+        self.server_process = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            bufsize=1,
+            universal_newlines=True
+        )
+        
+        self.server_port = port
+        self.service_started = True
+        
+        # Start the output reader thread
+        self._start_output_reader(self.server_process.stdout)
+        
+        logger.info(f"vLLM API server started with PID: {self.server_process.pid}")
+        
+        # Wait for the service to become ready
+        if not self.wait_for_service_ready():
+            self.stop_service()
+            raise TimeoutError("vLLM API server failed to start within timeout")
             
