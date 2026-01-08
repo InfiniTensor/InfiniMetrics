@@ -28,7 +28,7 @@ class BaseAdapter(abc.ABC):
 
         Returns:
             Dict with:
-                - 'success': int (0 = success, non-zero = failure)
+                - 'result_code': int (0 = success, non-zero = error code)
                 - 'metrics': list (performance metrics)
                 - ...
         """

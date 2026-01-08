@@ -24,12 +24,12 @@ class TestResult:
     Used throughout the execution lifecycle and returned to Dispatcher.
 
     Note:
-        success: 0 = success, non-zero = failure code (following Linux convention)
+        result_code: 0 = success, non-zero = error code (following Linux convention)
     """
 
     run_id: str
     testcase: str
-    success: int  # 0 = success, non-zero = failure code
+    result_code: int  # 0 = success, non-zero = error code
     result_file: Optional[str] = None
     skipped: bool = False
 
@@ -38,7 +38,7 @@ class TestResult:
         return {
             "run_id": self.run_id,
             "testcase": self.testcase,
-            "success": self.success,
+            "result_code": self.result_code,
             "result_file": self.result_file,
             "skipped": self.skipped,
         }
@@ -130,15 +130,15 @@ class Executor:
             4. Return TestResult
 
         Returns:
-            TestResult object with success flag and file path.
+            TestResult object with result_code and file path.
         """
         logger.info(f"Executor: Running {self.testcase}")
 
-        # Initialize TestResult directly (default: success=0)
+        # Initialize TestResult directly (default: result_code=0)
         test_result = TestResult(
             run_id=self.run_id,
             testcase=self.testcase,
-            success=0,  # Default to success
+            result_code=0,  # Default to success
             result_file=None,
         )
 
@@ -150,12 +150,12 @@ class Executor:
             logger.debug(f"Executor: Calling adapter.process()")
             response = self.adapter.process(self.test_input)
 
-            # Process response (0 = success, non-zero = failure)
-            test_result.success = response.get("success", 1)
+            # Process response (0 = success, non-zero = error code)
+            test_result.result_code = response.get("result_code", 1)
 
-            if test_result.success != 0:
+            if test_result.result_code != 0:
                 logger.warning(
-                    f"Executor: Adapter failed with error code {test_result.success}"
+                    f"Executor: Adapter failed with error code {test_result.result_code}"
                 )
 
             # Phase 3: Teardown (cleanup, save result)
@@ -163,7 +163,7 @@ class Executor:
             test_result.result_file = result_file
 
             logger.info(
-                f"Executor: {self.testcase} completed success={test_result.success}"
+                f"Executor: {self.testcase} completed with code={test_result.result_code}"
             )
 
             return test_result
@@ -173,7 +173,7 @@ class Executor:
 
             # Still run teardown on failure
             self._save_result(None)
-            test_result.success = 1  # Failure
+            test_result.result_code = 1  # Failure
 
             return test_result
 

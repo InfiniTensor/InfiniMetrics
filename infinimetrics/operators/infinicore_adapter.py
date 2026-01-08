@@ -21,7 +21,7 @@ class InfiniCoreAdapter(BaseAdapter):
             test_input: TestInput object or dict with testcase, config, metrics, etc.
 
         Returns:
-            Dict with success, metrics, time, and error_msg if failed
+            Dict with result_code, metrics, time, and error_msg if failed
         """
         # Convert TestInput object to dict if needed
         if hasattr(test_input, "to_dict"):
@@ -29,7 +29,7 @@ class InfiniCoreAdapter(BaseAdapter):
         elif not isinstance(test_input, dict):
             # Test fails directly
             return {
-                "success": 1,
+                "result_code": 1,
                 "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 "error_msg": f"Invalid test_input type: {type(test_input)}",
                 "metrics": [],
@@ -40,7 +40,7 @@ class InfiniCoreAdapter(BaseAdapter):
 
         # Mock response - all data is fake
         return {
-            "success": 0,
+            "result_code": 0,
             "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "metrics": [
                 {

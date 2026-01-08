@@ -12,6 +12,18 @@ from infinimetrics.executor import Executor, TestResult
 
 logger = logging.getLogger(__name__)
 
+# Adapter registry: maps (test_type, framework) -> adapter factory
+_ADAPTER_REGISTRY = {
+    ("operator", "infinicore"): lambda: _create_infinicore_adapter(),
+}
+
+
+def _create_infinicore_adapter():
+    """Create InfiniCore adapter (lazy import)."""
+    from infinimetrics.operators.infinicore_adapter import InfiniCoreAdapter
+
+    return InfiniCoreAdapter()
+
 
 class Dispatcher:
     """Test orchestration dispatcher for managing test executions."""
@@ -74,7 +86,7 @@ class Dispatcher:
                     TestResult(
                         run_id=test_input.get("run_id", "unknown"),
                         testcase=testcase,
-                        success=1,  # non-zero = failure
+                        result_code=1,  # non-zero = error code
                         result_file=None,
                         skipped=True,
                     ).to_dict()
@@ -104,12 +116,14 @@ class Dispatcher:
 
     def _create_adapter(self, test_type: str, framework: str) -> BaseAdapter:
         """Create adapter based on test type and framework."""
-        if test_type == "operator":
-            from infinimetrics.operators.infinicore_adapter import InfiniCoreAdapter
+        key = (test_type, framework)
+        if key in _ADAPTER_REGISTRY:
+            adapter_factory = _ADAPTER_REGISTRY[key]
+            return adapter_factory()
 
-            return InfiniCoreAdapter()
-
-        raise ValueError(f"{test_type} adapter not implemented")
+        raise ValueError(
+            f"Adapter not registered: test_type={test_type}, framework={framework}"
+        )
 
     def _parse_testcase(self, testcase: str) -> tuple[str, str]:
         """
@@ -122,7 +136,7 @@ class Dispatcher:
             Tuple of (test_type, framework)
 
         Examples:
-            'infer.InfiniLM.Direct' -> ('inference', 'infinilm')
+            'infer.InfiniLM.Direct' -> ('infer', 'infinilm')
             'operator.InfiniCore.Conv' -> ('operator', 'infinicore')
         """
         parts = testcase.split(".")
@@ -141,7 +155,7 @@ class Dispatcher:
     def _aggregate_results(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Aggregate results from executors."""
         total = len(results)
-        successful = sum(1 for r in results if r["success"] == 0)
+        successful = sum(1 for r in results if r["result_code"] == 0)
 
         return {
             "total_tests": total,
@@ -151,7 +165,7 @@ class Dispatcher:
                 {
                     "run_id": r["run_id"],
                     "testcase": r["testcase"],
-                    "success": r["success"],
+                    "result_code": r["result_code"],
                     "result_file": r["result_file"],
                     "skipped": r.get("skipped", False),
                 }
