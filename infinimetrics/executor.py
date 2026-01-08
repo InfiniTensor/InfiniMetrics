@@ -159,7 +159,7 @@ class Executor:
                 )
 
             # Phase 3: Teardown (cleanup, save result)
-            result_file = self._save_result(response)
+            result_file = self.teardown(response)
             test_result.result_file = result_file
 
             logger.info(
