@@ -229,8 +229,11 @@ class VLLMServiceManager(BaseServiceManager):
             "--model", str(self.config.model_path),
             "--port", str(port),
             "--tensor-parallel-size", str(self.config.infer_args.parallel.tp),
-            "--max-model-len", str(self.config.infer_args.max_seq_len),
         ]
+
+        # max-model-len Correspondence max_seq_len
+        if hasattr(self.config.infer_args, 'max_seq_len'):
+            cmd.extend(["--max-model-len", str(self.config.infer_args.max_seq_len)])
         
         # Device type
         accelerator = self.config.device.accelerator.value.lower()
@@ -242,25 +245,44 @@ class VLLMServiceManager(BaseServiceManager):
         
         # Add GPU memory parameters
         if not self.config.device.cpu_only and accelerator == "nvidia":
+            from common.constants import (
+                DEFAULT_VLLM_GPU_MEMORY_UTILIZATION,
+                DEFAULT_VLLM_SWAP_SPACE
+            )
+            
             cmd.extend([
-                "--gpu-memory-utilization", "0.9",
-                "--swap-space", "4",
+                "--gpu-memory-utilization", str(DEFAULT_VLLM_GPU_MEMORY_UTILIZATION),
+                "--swap-space", str(DEFAULT_VLLM_SWAP_SPACE),
             ])
-        
+
+        # # other generic parameters
+        cmd.extend([
+            "--dtype", "auto",
+            "--disable-log-stats",
+        ])
+
         # Retrieve vLLM-specific parameters from framework_kwargs
         if hasattr(self.config.infer_args, 'framework_kwargs'):
             framework_kwargs = self.config.infer_args.framework_kwargs
             if framework_kwargs:
                 # Add vLLM-specific parameters
-                vllm_params = [
-                    "dtype", "trust-remote-code", "disable-log-stats",
-                    "max-num-batched-tokens", "max-num-seqs", "enforce-eager",
-                    "quantization", "block-size", "max-logprobs"
-                ]
+                param_mapping = {
+                    "dtype": "dtype",
+                    "trust_remote_code": "trust-remote-code",
+                    "max_num_batched_tokens": "max-num-batched-tokens",
+                    "max_num_seqs": "max-num-seqs",
+                    "enforce_eager": "enforce-eager",
+                    "quantization": "quantization",
+                    "block_size": "block-size",
+                    "max_logprobs": "max-logprobs",
+                    "seed": "seed",
+                }
                 
-                for param in vllm_params:
-                    if param in framework_kwargs:
-                        cmd.extend([f"--{param.replace('_', '-')}", str(framework_kwargs[param])])
+                for config_param, cmd_param in param_mapping.items():
+                    if config_param in framework_kwargs:
+                        value = framework_kwargs[config_param]
+                        if value is not None:
+                            cmd.extend([f"--{cmd_param}", str(value)])
         
         return cmd
     

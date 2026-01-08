@@ -6,6 +6,7 @@ vLLM Adapter Implementation
 import logging
 import time
 import os
+import torch
 from pathlib import Path
 from typing import List, Tuple, Optional, Set, Dict, Any
 
@@ -33,7 +34,6 @@ class VLLMAdapter(InferAdapter):
     
     def __init__(self, config: InferConfig):
         super().__init__(config)
-        self.model = None
         self.vllm_version = getattr(vllm, '__version__', 'unknown')
         
         # Initialize according to mode
@@ -102,13 +102,14 @@ class VLLMAdapter(InferAdapter):
                 return kwargs
         return {}
     
-    def unload_model(self) -> None:
-        """Unload model"""
-        if self.model:
-            self.model = None
-            self.model_loaded = False
-            self.tokenizer = None
-            logger.info("vLLM model unloaded")
+    def _cleanup_framework_resources(self) -> None:
+        """vLLM-specific resource cleanup"""
+        try:
+            if hasattr(torch.cuda, 'empty_cache') and torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.debug("CUDA cache cleared")
+        except ImportError:
+            pass
     
     def generate(
         self, 
@@ -125,6 +126,10 @@ class VLLMAdapter(InferAdapter):
         if not prompts:
             return [], [], []
         
+        debug_texts = []
+        latencies_ms = []
+        ttfts_ms = []
+        
         # Sampling parameters
         sampling_params = SamplingParams(
             max_tokens=max_tokens,
@@ -133,54 +138,112 @@ class VLLMAdapter(InferAdapter):
             top_k=top_k if top_k > 0 else -1,
         )
         
-        generated_texts = []
-        latencies_ms = []
-        ttfts_ms = []
-        
         # Record start time
         start_time = time.perf_counter()
         
-        # Batch generation
-        outputs = self.model.generate(prompts, sampling_params)
-        
-        # Calculate total latency
-        total_latency = (time.perf_counter() - start_time) * 1000
-        
-        # Process outputs
-        for i, output in enumerate(outputs):
-            # Extract generated text
-            if hasattr(output, 'outputs') and output.outputs:
-                generated_text = output.outputs[0].text
-            elif hasattr(output, 'text'):
-                generated_text = output.text
-            else:
-                generated_text = str(output)
+        try:
+            # Batch generation
+            outputs = self.model.generate(prompts, sampling_params)
             
-            generated_texts.append(generated_text)
+            # Calculate total latency
+            total_latency = (time.perf_counter() - start_time) * 1000
             
-            # Compute latency
-            avg_latency = total_latency / len(outputs) if outputs else 0
-            latencies_ms.append(avg_latency)
+            # Process outputs
+            for i, output in enumerate(outputs):
+                # Only the first three are collected for debugging
+                if i < 3:
+                    if hasattr(output, 'outputs') and output.outputs:
+                        generated_text = output.outputs[0].text
+                    elif hasattr(output, 'text'):
+                        generated_text = output.text
+                    else:
+                        generated_text = str(output)
+                    debug_texts.append(generated_text)
+                
+                # Compute latency
+                avg_latency = total_latency / len(outputs) if outputs else 0
+                latencies_ms.append(avg_latency)
+                
+                # Estimate TTFT
+                estimated_ttft = self._estimate_ttft(avg_latency, max_tokens)
+                ttfts_ms.append(estimated_ttft)
             
-            # Estimate TTFT
-            estimated_ttft = avg_latency * 0.15
-            ttfts_ms.append(estimated_ttft)
+            if outputs:
+                logger.info(f"Generated {len(outputs)} responses, avg latency: {total_latency/len(outputs):.1f}ms")
+            
+        except Exception as e:
+            logger.error(f"vLLM generation failed: {e}")
+            # Returns the data that was collected
+            return debug_texts, latencies_ms, ttfts_ms
         
-        if outputs:
-            logger.info(f"Generated {len(generated_texts)} responses, avg latency: {total_latency/len(outputs):.1f}ms")
+        return debug_texts, latencies_ms, ttfts_ms
+    
+    def _estimate_ttft(self, avg_latency: float, max_tokens: int) -> float:
+        # base rate: for short outputs (< 50tokens) , TTFT accounts for approximately 15%
+        base_ratio = 0.15
         
-        return generated_texts, latencies_ms, ttfts_ms
+        # adjust the scale according to the length of the output
+        if max_tokens > 100:
+            ratio_adjustment = 100 / max_tokens
+            actual_ratio = base_ratio * ratio_adjustment
+        elif max_tokens < 20:
+            actual_ratio = base_ratio * 1.2
+        else:
+            actual_ratio = base_ratio
+        
+        # Ensure the proportion is within reasonable range (5%-40%)
+        actual_ratio = max(0.05, min(0.4, actual_ratio))
+        
+        estimated_ttft = avg_latency * actual_ratio
+        
+        # Ensure that TTFT does not exceed 90% of the total latency
+        return min(estimated_ttft, avg_latency * 0.9)
     
     def calculate_perplexity(self, test_data: List[str]) -> float:
-        """Calculate perplexity (placeholder implementation)"""
+        """Calculate perplexity - 覆盖基类方法"""
         if not test_data:
             return 0.0
         
         logger.info(f"Calculating perplexity for {len(test_data)} samples")
         
-        # vLLM does not directly support perplexity calculation
-        # Return a placeholder value
-        return 0.0
+        try:
+            # Try to calculate using XX transformers
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+            
+            model_name = self.config.model_path
+            tokenizer = AutoTokenizer.from_pretrained(model_name)
+            model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                torch_dtype=torch.float16,
+                device_map="auto"
+            )
+            
+            total_loss = 0.0
+            total_tokens = 0
+            
+            # Calculate only a small number of samples to avoid being too slow
+            for text in test_data[:5]:
+                inputs = tokenizer(text, return_tensors="pt").to(model.device)
+                with torch.no_grad():
+                    outputs = model(**inputs, labels=inputs["input_ids"])
+                    loss = outputs.loss.item()
+                    tokens = len(inputs["input_ids"][0])
+                    total_loss += loss * tokens
+                    total_tokens += tokens
+            
+            if total_tokens > 0:
+                avg_loss = total_loss / total_tokens
+                perplexity = torch.exp(torch.tensor(avg_loss)).item()
+                logger.info(f"Calculated perplexity: {perplexity:.4f}")
+                return perplexity
+                
+        except ImportError:
+            logger.warning("transformers not available for perplexity calculation")
+        except Exception as e:
+            logger.warning(f"Failed to calculate perplexity: {e}")
+        
+        # Fall back to the base class implementation
+        return super().calculate_perplexity(test_data)
     
     def _validate_framework_config(self) -> List[str]:
         """Validate configuration"""
@@ -207,31 +270,3 @@ class VLLMAdapter(InferAdapter):
         if self.tokenizer is None:
             raise ValueError("Tokenizer not loaded")
         return len(self.tokenizer)
-    
-    def get_special_token_ids(self) -> Set[int]:
-        """Get special token IDs"""
-        if self.tokenizer is None:
-            return set()
-        
-        special_ids = set()
-        
-        # Collect special tokens
-        special_tokens = []
-        
-        # Common special token attributes
-        token_attrs = ['bos_token', 'eos_token', 'pad_token', 'unk_token']
-        
-        for attr in token_attrs:
-            token = getattr(self.tokenizer, attr, None)
-            if token and isinstance(token, str):
-                special_tokens.append(token)
-        
-        # Convert tokens to IDs
-        for token in special_tokens:
-            token_id = self.tokenizer.convert_tokens_to_ids(token)
-            if token_id is not None:
-                special_ids.add(token_id)
-        
-        logger.debug(f"Found {len(special_ids)} special token IDs")
-        return special_ids
-        

@@ -133,19 +133,21 @@ class DirectInferRunner(InferRunnerBase):
             )
 
             # Collect data
-            for latency in latencies:
-                self.result.add_latency(latency)
-            for ttft in ttfts:
-                self.result.add_ttft(ttft)
+            if latencies:
+                batch_avg_latency = sum(latencies) / len(latencies)
+                self.result.add_latency(batch_avg_latency)
+            if ttfts:
+                batch_avg_ttft = sum(ttfts) / len(ttfts)
+                self.result.add_ttft(batch_avg_ttft)
 
             # Calculate throughput (tokens/s)
             if latencies:
-                avg_latency = sum(latencies) / len(latencies)
+                batch_avg_latency = sum(latencies) / len(latencies)
                 # Calculate total tokens in this batch
                 batch_tokens = len(batch_prompts) * self.infer_args.output_token_num
-                throughput = (batch_tokens * 1000) / avg_latency if avg_latency > 0 else 0
+                throughput = (batch_tokens * 1000) / batch_avg_latency if batch_avg_latency > 0 else 0
                 self.result.add_throughput(throughput)
-                logger.info(f"  Iteration {i+1}: avg_latency={avg_latency:.2f}ms, throughput={throughput:.2f} tokens/s")
+                logger.info(f"  Iteration {i+1}: avg_latency={batch_avg_latency:.2f}ms, throughput={throughput:.2f} tokens/s")
             else:
                 logger.warning(f"  Iteration {i+1}: No latency data collected")
 

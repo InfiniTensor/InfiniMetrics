@@ -157,6 +157,14 @@ class InfiniLMAdapter(InferAdapter):
         except Exception as e:
             logger.error(f"Failed to load InfiniLM model: {e}", exc_info=True)
             raise
+    def _cleanup_framework_resources(self) -> None:
+        """InfiniLM-specific resource cleanup"""
+        try:
+            if hasattr(torch.cuda, 'empty_cache') and torch.cuda.is_available():
+                torch.cuda.empty_cache()
+                logger.debug("CUDA cache cleared")
+        except ImportError:
+            pass
 
     def unload_model(self) -> None:
         """Unload model"""
@@ -237,23 +245,6 @@ class InfiniLMAdapter(InferAdapter):
             all_results.append(results)
 
         return self._reorganize_results(all_results)
-
-    def get_peak_memory_usage(self) -> Optional[float]:
-        """Get peak memory usage (GB)"""
-        try:
-            if hasattr(torch, 'cuda') and torch.cuda.is_available():
-                torch.cuda.synchronize()
-                max_memory = max(
-                    [torch.cuda.max_memory_allocated(i) for i in range(torch.cuda.device_count())],
-                    default=0
-                )
-                return max_memory / (1024 ** 3)
-        except ImportError:
-            logger.warning("PyTorch not available")
-        except Exception as e:
-            logger.warning(f"Failed to get memory usage: {e}")
-        
-        return None
 
     def calculate_perplexity(self, test_data: List[str]) -> float:
         """Calculate perplexity"""

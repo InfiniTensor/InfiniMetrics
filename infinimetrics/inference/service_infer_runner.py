@@ -60,10 +60,10 @@ class ServiceInferRunner(InferRunnerBase):
                 from service_manager import VLLMServiceManager
                 return VLLMServiceManager
             else:
-                logger.warning(f"Unsupported framework for service mode: {framework}")
-                return None
-        except ImportError as e:
-            logger.warning(f"Failed to import ServiceManager for {framework}: {e}")
+                 raise ValueError(f"Unsupported framework for service mode: {framework}")
+
+        except (ImportError, ValueError) as e:
+            logger.warning(f"Cannot get ServiceManager for {framework}: {e}")
             return None
 
     def setup(self) -> None:
