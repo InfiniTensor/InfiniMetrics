@@ -1,0 +1,18 @@
+[
+    {
+        "operator": "Matmul",
+        "device": "NVIDIA",
+        "torch_op": "torch.matmul",
+        "infinicore_op": "infinicore.matmul",
+        "args": {"bench": "both", "num_prerun": 50, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 3], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [3, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 12.0711, "device": 79.0035}, "infinicore": {"host": 9.3551, "device": 15.3845}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            }
+        ]
+    }
+]

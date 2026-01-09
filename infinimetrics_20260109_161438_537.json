@@ -1,0 +1,74 @@
+[
+    {
+        "operator": "Embedding",
+        "device": "NVIDIA",
+        "torch_op": "torch.nn.functional.embedding",
+        "infinicore_op": "infinicore.nn.functional.embedding",
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 5], "dtype": "int64", "strides": null}, {"name": "in_1", "shape": [32000, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 5], "dtype": "int64", "strides": null}, {"name": "in_1", "shape": [32000, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 5], "dtype": "int64", "strides": null}, {"name": "in_1", "shape": [32000, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 10], "dtype": "int32", "strides": null}, {"name": "in_1", "shape": [32000, 2048], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 10], "dtype": "int32", "strides": null}, {"name": "in_1", "shape": [32000, 2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 10], "dtype": "int32", "strides": null}, {"name": "in_1", "shape": [32000, 2048], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 5], "dtype": "int64", "strides": null}, {"name": "in_1", "shape": [10, 10], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 5], "dtype": "int64", "strides": null}, {"name": "in_1", "shape": [10, 10], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Embedding - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 5], "dtype": "int64", "strides": null}, {"name": "in_1", "shape": [10, 10], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            }
+        ]
+    }
+]

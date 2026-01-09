@@ -1,0 +1,131 @@
+[
+    {
+        "operator": "PagedCaching",
+        "device": "NVIDIA",
+        "torch_op": null,
+        "infinicore_op": "infinicore.paged_caching",
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [106, 8, 128], "dtype": "float16", "strides": null}, 
+                    {"name": "in_1", "shape": [106, 8, 128], "dtype": "float16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 8, 16, 128], "dtype": "float16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 8, 16, 128], "dtype": "float16", "strides": null}, {"name": "in_4", "shape": [106], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [106, 8, 128], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_1", "shape": [106, 8, 128], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 8, 16, 128], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 8, 16, 128], "dtype": "bfloat16", "strides": null}, {"name": "in_4", "shape": [106], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [106, 8, 128], "dtype": "float32", "strides": null}, 
+                    {"name": "in_1", "shape": [106, 8, 128], "dtype": "float32", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 8, 16, 128], "dtype": "float32", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 8, 16, 128], "dtype": "float32", "strides": null}, {"name": "in_4", "shape": [106], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [1135, 40, 128], "dtype": "float16", "strides": null}, 
+                    {"name": "in_1", "shape": [1135, 40, 128], "dtype": "float16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 40, 16, 128], "dtype": "float16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 40, 16, 128], "dtype": "float16", "strides": null}, {"name": "in_4", "shape": [1135], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [1135, 40, 128], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_1", "shape": [1135, 40, 128], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 40, 16, 128], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 40, 16, 128], "dtype": "bfloat16", "strides": null}, {"name": "in_4", "shape": [1135], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [1135, 40, 128], "dtype": "float32", "strides": null}, 
+                    {"name": "in_1", "shape": [1135, 40, 128], "dtype": "float32", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 40, 16, 128], "dtype": "float32", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 40, 16, 128], "dtype": "float32", "strides": null}, {"name": "in_4", "shape": [1135], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [8975, 8, 64], "dtype": "float16", "strides": null}, 
+                    {"name": "in_1", "shape": [8975, 8, 64], "dtype": "float16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 8, 32, 64], "dtype": "float16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 8, 32, 64], "dtype": "float16", "strides": null}, {"name": "in_4", "shape": [8975], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [8975, 8, 64], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_1", "shape": [8975, 8, 64], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 8, 32, 64], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 8, 32, 64], "dtype": "bfloat16", "strides": null}, {"name": "in_4", "shape": [8975], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [8975, 8, 64], "dtype": "float32", "strides": null}, 
+                    {"name": "in_1", "shape": [8975, 8, 64], "dtype": "float32", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 8, 32, 64], "dtype": "float32", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 8, 32, 64], "dtype": "float32", "strides": null}, {"name": "in_4", "shape": [8975], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [7138, 40, 64], "dtype": "float16", "strides": null}, 
+                    {"name": "in_1", "shape": [7138, 40, 64], "dtype": "float16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 40, 32, 64], "dtype": "float16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 40, 32, 64], "dtype": "float16", "strides": null}, {"name": "in_4", "shape": [7138], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [7138, 40, 64], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_1", "shape": [7138, 40, 64], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 40, 32, 64], "dtype": "bfloat16", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 40, 32, 64], "dtype": "bfloat16", "strides": null}, {"name": "in_4", "shape": [7138], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "PagedCaching",
+                "inputs": [{"name": "in_0", "shape": [7138, 40, 64], "dtype": "float32", "strides": null}, 
+                    {"name": "in_1", "shape": [7138, 40, 64], "dtype": "float32", "strides": null}, 
+                    {"name": "in_2", "shape": [4096, 40, 32, 64], "dtype": "float32", "strides": null}, 
+                    {"name": "in_3", "shape": [4096, 40, 32, 64], "dtype": "float32", "strides": null}, {"name": "in_4", "shape": [7138], "dtype": "int64", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            }
+        ]
+    }
+]

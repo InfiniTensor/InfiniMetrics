@@ -1,0 +1,620 @@
+[
+    {
+        "operator": "Mul",
+        "device": "NVIDIA",
+        "torch_op": "torch.mul",
+        "infinicore_op": "infinicore.mul",
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": [10, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": [10, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": [10, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float16", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "bfloat16", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4], "dtype": "float32", "strides": [0, 1]}, {"name": "in_1", "shape": [13, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": [20, 4, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [20, 4, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": [20, 4, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": [4, 0, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": [0, 4, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float16", "strides": [4, 0, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float16", "strides": [0, 4, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [4, 0, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [0, 4, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [4, 0, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": [0, 4, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": [4, 0, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": [0, 4, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [13, 4, 4], "dtype": "float32", "strides": [4, 0, 1]}, {"name": "in_1", "shape": [13, 4, 4], "dtype": "float32", "strides": [0, 4, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [13, 4, 4], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [16, 5632], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [16, 5632], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float16", "strides": [13312, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "bfloat16", "strides": [13312, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Mul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(a)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0, "rtol": 0.001}
+            },
+            {
+                "description": "Mul - INPLACE(b)",
+                "inputs": [{"name": "in_0", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}, {"name": "in_1", "shape": [16, 5632], "dtype": "float32", "strides": [13312, 1]}],
+                "kwargs": {"out": "in_1"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 1, "tolerance": {"atol": 0, "rtol": 0.001}
+            }
+        ]
+    }
+]

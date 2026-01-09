@@ -1,0 +1,235 @@
+[
+    {
+        "operator": "RandomSample",
+        "device": "NVIDIA",
+        "torch_op": "torch.int32",
+        "infinicore_op": null,
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.8, "topp": 0.8, "topk": 3, "temperature": 0.5},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.8, "topp": 0.8, "topk": 3, "temperature": 0.5, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.8, "topp": 0.8, "topk": 3, "temperature": 0.5},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.8, "topp": 0.8, "topk": 3, "temperature": 0.5, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.05, "topp": 0.9, "topk": 5, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.05, "topp": 0.9, "topk": 5, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.05, "topp": 0.9, "topk": 5, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.05, "topp": 0.9, "topk": 5, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.85, "topk": 10, "temperature": 2.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.85, "topk": 10, "temperature": 2.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.85, "topk": 10, "temperature": 2.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.85, "topk": 10, "temperature": 2.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.08, "topp": 0.0, "topk": 3, "temperature": 0.5},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.08, "topp": 0.0, "topk": 3, "temperature": 0.5, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.08, "topp": 0.0, "topk": 3, "temperature": 0.5},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 512, "random_val": 0.08, "topp": 0.0, "topk": 3, "temperature": 0.5, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.5, "topp": 0.9, "topk": 1, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.5, "topp": 0.9, "topk": 1, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.5, "topp": 0.9, "topk": 1, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [4096], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 4096, "random_val": 0.5, "topp": 0.9, "topk": 1, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.0, "topk": 1, "temperature": 2.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.0, "topk": 1, "temperature": 2.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.0, "topk": 1, "temperature": 2.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16384], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 16384, "random_val": 0.15, "topp": 0.0, "topk": 1, "temperature": 2.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 0.8, "topk": 50, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 0.8, "topk": 50, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 0.8, "topk": 50, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 0.8, "topk": 50, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 1.0, "topk": 25, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "float16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 1.0, "topk": 25, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 1.0, "topk": 25, "temperature": 1.0},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0}
+            },
+            {
+                "description": "RandomSample - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32000], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"voc": 32000, "random_val": 0.08, "topp": 1.0, "topk": 25, "temperature": 1.0, "out": {"name": "out", "shape": null, "dtype": "int32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0}
+            }
+        ]
+    }
+]

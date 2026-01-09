@@ -1,0 +1,88 @@
+{
+    "run_id": "test.pagedattention.001",
+    "testcase": "operator.InfiniCore.PagedAttention",
+    "config": {
+        "operator": "pagedattention",
+        "device": "nvidia",
+        "torch_op": null,
+        "infinicore_op": "infinicore.paged_attention",
+        "inputs": [
+            {
+                "name": "in_0",
+                "shape": [
+                    1,
+                    1,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_1",
+                "shape": [
+                    1,
+                    1,
+                    16,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_2",
+                "shape": [
+                    1,
+                    1,
+                    16,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_3",
+                "shape": [
+                    1,
+                    1
+                ],
+                "dtype": "int64"
+            },
+            {
+                "name": "in_4",
+                "shape": [
+                    1
+                ],
+                "dtype": "int64"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [
+                    1,
+                    1,
+                    128
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 1000,
+        "tolerance": {
+            "atol": 0,
+            "rtol": 0.01
+        }
+    },
+    "metrics": [
+        {
+            "name": "operator.latency"
+        },
+        {
+            "name": "operator.tensor_accuracy"
+        },
+        {
+            "name": "operator.flops"
+        },
+        {
+            "name": "operator.bandwidth"
+        }
+    ]
+}

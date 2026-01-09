@@ -1,0 +1,452 @@
+[
+    {
+        "operator": "CausalSoftmax",
+        "device": "NVIDIA",
+        "torch_op": null,
+        "infinicore_op": "infinicore.nn.functional",
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [3, 3], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [3, 3], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [3, 3], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [3, 3], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 512], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 512], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 512], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float16", "strides": [1024, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float16", "strides": [1024, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 512], "dtype": "float16", "strides": [1024, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float16", "strides": [1024, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "bfloat16", "strides": [1024, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "bfloat16", "strides": [1024, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 512], "dtype": "bfloat16", "strides": [1024, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "bfloat16", "strides": [1024, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float32", "strides": [1024, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float32", "strides": [1024, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 512], "dtype": "float32", "strides": [1024, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 512], "dtype": "float32", "strides": [1024, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 5, 5], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 5, 5], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 5, 5], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 5, 5], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 20, 512], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 20, 512], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float16", "strides": [20480, 512, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float16", "strides": [20480, 512, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 20, 512], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float16", "strides": [20480, 512, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": [20480, 512, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": [20480, 512, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "bfloat16", "strides": [20480, 512, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float32", "strides": [20480, 512, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float32", "strides": [20480, 512, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [32, 20, 512], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [32, 20, 512], "dtype": "float32", "strides": [20480, 512, 1]}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [28, 15, 15], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.001, "rtol": 0.01}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [28, 15, 15], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.005, "rtol": 0.05}
+            },
+            {
+                "description": "Causal Softmax - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [28, 15, 15], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            },
+            {
+                "description": "Causal Softmax - INPLACE(input)",
+                "inputs": [{"name": "in_0", "shape": [28, 15, 15], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0"},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 3e-05, "rtol": 1e-05}
+            }
+        ]
+    }
+]

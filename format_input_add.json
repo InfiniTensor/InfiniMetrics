@@ -1,0 +1,59 @@
+{
+    "run_id": "test.add.001",
+    "testcase": "operator.InfiniCore.Add",
+    "config": {
+        "operator": "add",
+        "device": "nvidia",
+        "torch_op": "torch.add",
+        "infinicore_op": "infinicore.add",
+        "inputs": [
+            {
+                "name": "a",
+                "shape": [
+                    13,
+                    4
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "b",
+                "shape": [
+                    13,
+                    4
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [
+                    13,
+                    4
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 1000,
+        "tolerance": {
+            "atol": 0,
+            "rtol": 0.01
+        }
+    },
+    "metrics": [
+        {
+            "name": "operator.latency"
+        },
+        {
+            "name": "operator.tensor_accuracy"
+        },
+        {
+            "name": "operator.flops"
+        },
+        {
+            "name": "operator.bandwidth"
+        }
+    ]
+}

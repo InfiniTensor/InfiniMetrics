@@ -1,0 +1,767 @@
+[
+    {
+        "operator": "RMSNorm",
+        "device": "NVIDIA",
+        "torch_op": "torch.float32",
+        "infinicore_op": "infinicore.nn.functional",
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [1, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [1, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [1, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [1, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [1, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [1, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [1, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "float16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [2, 2, 4], "dtype": "bfloat16", "strides": [12, 8, 1]}, {"name": "in_1", "shape": [4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.002, "rtol": 0.002}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"epsilon": 1e-05, "out": {"name": "out", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.01, "rtol": 0.01}
+            },
+            {
+                "description": "RMSNorm - INPLACE(x)",
+                "inputs": [{"name": "in_0", "shape": [16, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": "in_0", "epsilon": 1e-05},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": 0, "tolerance": {"atol": 0.01, "rtol": 0.01}
+            }
+        ]
+    }
+]

@@ -1,0 +1,305 @@
+[
+    {
+        "operator": "Matmul",
+        "device": "NVIDIA",
+        "torch_op": "torch.matmul",
+        "infinicore_op": "infinicore.matmul",
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 3], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [3, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 3], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [3, 4], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [2, 4], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 3], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [3, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 3], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [3, 4], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [2, 4], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 3], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [3, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 3], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [3, 4], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [2, 4], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [128, 256], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [256, 64], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [128, 256], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [256, 64], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [128, 64], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [128, 256], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [256, 64], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [128, 256], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [256, 64], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [128, 64], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [128, 256], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [256, 64], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [128, 256], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [256, 64], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [128, 64], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2, 2048, 2048], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2, 2048, 2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [2, 4, 2048], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2, 2048, 2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4, 2048], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [2, 2048, 2048], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [2, 4, 2048], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [2, 4, 2048], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [2, 2048, 2048], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [2, 4, 2048], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [2, 2048, 2048], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [2, 4, 2048], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [4, 48, 64], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4, 64, 6], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [4, 48, 64], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [4, 64, 6], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [4, 48, 6], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [4, 48, 64], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4, 64, 6], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [4, 48, 64], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [4, 64, 6], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [4, 48, 6], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [4, 48, 64], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [4, 64, 6], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [4, 48, 64], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [4, 64, 6], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [4, 48, 6], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048, 2048], "dtype": "float16", "strides": [4096, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 2048], "dtype": "float16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048, 2048], "dtype": "float16", "strides": [4096, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [1, 2048], "dtype": "float16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048, 2048], "dtype": "bfloat16", "strides": [4096, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 2048], "dtype": "bfloat16", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048, 2048], "dtype": "bfloat16", "strides": [4096, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [1, 2048], "dtype": "bfloat16", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 2048], "dtype": "float32", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048, 2048], "dtype": "float32", "strides": [4096, 1]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [1, 2048], "dtype": "float32", "strides": [4096, 1]}, {"name": "in_1", "shape": [2048, 2048], "dtype": "float32", "strides": [4096, 1]}],
+                "kwargs": {"out": {"name": "out", "shape": [1, 2048], "dtype": "float32", "strides": [4096, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [6, 2048], "dtype": "float16", "strides": [2048, 1]}, {"name": "in_1", "shape": [2048, 2560], "dtype": "float16", "strides": [1, 2048]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [6, 2048], "dtype": "float16", "strides": [2048, 1]}, {"name": "in_1", "shape": [2048, 2560], "dtype": "float16", "strides": [1, 2048]}],
+                "kwargs": {"out": {"name": "out", "shape": [6, 2560], "dtype": "float16", "strides": [2560, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [6, 2048], "dtype": "bfloat16", "strides": [2048, 1]}, {"name": "in_1", "shape": [2048, 2560], "dtype": "bfloat16", "strides": [1, 2048]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [6, 2048], "dtype": "bfloat16", "strides": [2048, 1]}, {"name": "in_1", "shape": [2048, 2560], "dtype": "bfloat16", "strides": [1, 2048]}],
+                "kwargs": {"out": {"name": "out", "shape": [6, 2560], "dtype": "bfloat16", "strides": [2560, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [6, 2048], "dtype": "float32", "strides": [2048, 1]}, {"name": "in_1", "shape": [2048, 2560], "dtype": "float32", "strides": [1, 2048]}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [6, 2048], "dtype": "float32", "strides": [2048, 1]}, {"name": "in_1", "shape": [2048, 2560], "dtype": "float32", "strides": [1, 2048]}],
+                "kwargs": {"out": {"name": "out", "shape": [6, 2560], "dtype": "float32", "strides": [2560, 1]}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [8, 16, 16], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [8, 16, 32], "dtype": "float16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [8, 16, 16], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [8, 16, 32], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [8, 16, 32], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.01}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [8, 16, 16], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [8, 16, 32], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [8, 16, 16], "dtype": "bfloat16", "strides": null}, {"name": "in_1", "shape": [8, 16, 32], "dtype": "bfloat16", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [8, 16, 32], "dtype": "bfloat16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0, "rtol": 0.05}
+            },
+            {
+                "description": "Matmul - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [8, 16, 16], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [8, 16, 32], "dtype": "float32", "strides": null}],
+                "kwargs": {},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": null, "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            },
+            {
+                "description": "Matmul - INPLACE(out)",
+                "inputs": [{"name": "in_0", "shape": [8, 16, 16], "dtype": "float32", "strides": null}, {"name": "in_1", "shape": [8, 16, 32], "dtype": "float32", "strides": null}],
+                "kwargs": {"out": {"name": "out", "shape": [8, 16, 32], "dtype": "float32", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 0.0, "device": 0.0}, "infinicore": {"host": 0.0, "device": 0.0}}},
+                "comparison_target": "out", "tolerance": {"atol": 0.0001, "rtol": 0.001}
+            }
+        ]
+    }
+]

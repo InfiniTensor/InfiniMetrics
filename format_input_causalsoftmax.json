@@ -1,0 +1,51 @@
+{
+    "run_id": "test.causalsoftmax.001",
+    "testcase": "operator.InfiniCore.CausalSoftmax",
+    "config": {
+        "operator": "causalsoftmax",
+        "device": "nvidia",
+        "torch_op": null,
+        "infinicore_op": "infinicore.nn.functional",
+        "inputs": [
+            {
+                "name": "in_0",
+                "shape": [
+                    3,
+                    3
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [
+                    3,
+                    3
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 1000,
+        "tolerance": {
+            "atol": 0.001,
+            "rtol": 0.01
+        }
+    },
+    "metrics": [
+        {
+            "name": "operator.latency"
+        },
+        {
+            "name": "operator.tensor_accuracy"
+        },
+        {
+            "name": "operator.flops"
+        },
+        {
+            "name": "operator.bandwidth"
+        }
+    ]
+}

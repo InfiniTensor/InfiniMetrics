@@ -1,0 +1,12 @@
+[
+    {
+        "operator": "Rope",
+        "device": "NVIDIA",
+        "torch_op": null,
+        "infinicore_op": "infinicore.from_torch",
+        "args": {"bench": null, "num_prerun": 10, "num_iterations": 1000, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "Rope - OUT_OF_PLACE",
+                "inputs": [{"name": "in_0", "shape": [1, 1, 1, 64], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [1, 32], "dtype": "float16", "strides": null}, 
+                    {"name": "in_2", "shape": [1, 32], "dtype": "float16", "strides": null}],
