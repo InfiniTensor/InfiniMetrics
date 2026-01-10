@@ -11,12 +11,25 @@ from infinicore.test.framework import TestManager
 from infinicore.test.framework.devices import InfiniDeviceNames
 
 from infinimetrics.adapter import BaseAdapter
+from infinimetrics.common.constants import (
+    InfiniMetricsJson,
+    InfiniCoreRequest,
+    OperatorConfig,
+    TensorSpec,
+    InfiniCoreResult,
+    DEVICE_CPU,
+    DEVICE_NVIDIA,
+    PERF_HOST,
+    PERF_DEVICE,
+    PLATFORM_INFINICORE,
+    DEFAULT_TOLERANCE,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class InfiniCoreAdapter(BaseAdapter):
-    """Adapter for InfiniCore operator tests (Conv, MatMul, etc.)."""
+    """Adapter for InfiniCore operator tests (Add, MatMul, etc.)."""
 
     # Metric name constants
     METRIC_LATENCY = "operator.latency"
@@ -38,10 +51,10 @@ class InfiniCoreAdapter(BaseAdapter):
         elif not isinstance(test_input, dict):
             return self._create_error_response(
                 test_input if isinstance(test_input, dict) else {},
-                f"Invalid test_input type: {type(test_input)}"
+                f"Invalid test_input type: {type(test_input)}",
             )
 
-        testcase = test_input.get("testcase", "unknown")
+        testcase = test_input.get(InfiniMetricsJson.TESTCASE, "unknown")
         logger.info(f"InfiniCoreAdapter: Processing {testcase}")
 
         try:
@@ -50,34 +63,46 @@ class InfiniCoreAdapter(BaseAdapter):
             result = self._convert_from_response(core_resp, test_input)
             return result
         except Exception as e:
-            logger.error(f"InfiniCoreAdapter: Error processing {testcase}: {e}")
-            import traceback
-            traceback.print_exc()
+            logger.error(
+                f"InfiniCoreAdapter: Error processing {testcase}", exc_info=True
+            )
             return self._create_error_response(test_input, str(e))
 
-    def _create_error_response(self, test_input: Dict[str, Any], error_msg: str) -> Dict[str, Any]:
+    def _create_error_response(
+        self, test_input: Dict[str, Any], error_msg: str
+    ) -> Dict[str, Any]:
         """Create error response with full context."""
         return {
-            "result_code": 1,
-            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "error_msg": error_msg,
-            "metrics": [],
-            "run_id": test_input.get("run_id", ""),
-            "testcase": test_input.get("testcase", ""),
-            "config": test_input.get("config", {}),
+            InfiniMetricsJson.RESULT_CODE: 1,
+            InfiniMetricsJson.TIME: datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            InfiniMetricsJson.ERROR_MSG: error_msg,
+            InfiniMetricsJson.METRICS: [],
+            InfiniMetricsJson.RUN_ID: test_input.get(InfiniMetricsJson.RUN_ID, ""),
+            InfiniMetricsJson.TESTCASE: test_input.get(InfiniMetricsJson.TESTCASE, ""),
+            InfiniMetricsJson.CONFIG: test_input.get(InfiniMetricsJson.CONFIG, {}),
         }
 
     def _convert_to_request(self, legacy_json: dict) -> list:
         """Convert legacy JSON format to InfiniCore request format."""
-        config = legacy_json.get("config", {})
-        self.req_metrics_template = legacy_json.get("metrics", [])
+        config = legacy_json.get(InfiniMetricsJson.CONFIG, {})
+        self.req_metrics_template = legacy_json.get(InfiniMetricsJson.METRICS, [])
 
-        operator = config.get("operator", "").capitalize()
-        infinicore_op = config.get("infinicore_op", f"infinicore.{config.get('operator', '')}")
-        torch_op = config.get("torch_op", f"torch.{config.get('operator', '')}")
+        operator = config.get(OperatorConfig.OPERATOR, "").capitalize()
+        # TODO: need to also support torch.nn and infinicore.nn case
+        infinicore_op = config.get(
+            OperatorConfig.INFINICORE_OP,
+            f"infinicore.{config.get(OperatorConfig.OPERATOR, '')}",
+        )
+        torch_op = config.get(
+            OperatorConfig.TORCH_OP, f"torch.{config.get(OperatorConfig.OPERATOR, '')}"
+        )
 
         run_args = self._parse_runtime_args(config)
-        device_str = config.get("device", "NVIDIA").upper() if config.get("device") else "CPU"
+        device_str = (
+            config.get(OperatorConfig.DEVICE, DEVICE_NVIDIA).upper()
+            if config.get(OperatorConfig.DEVICE)
+            else DEVICE_CPU
+        )
 
         # Set device flags
         for device in self.DEVICE_NAMES:
@@ -85,44 +110,63 @@ class InfiniCoreAdapter(BaseAdapter):
 
         # Build inputs
         infinicore_inputs = [
-            {k: inp[k] for k in ("name", "shape", "dtype") if k in inp}
-            for inp in config.get("inputs", [])
+            {
+                k: inp[k]
+                for k in (TensorSpec.NAME, TensorSpec.SHAPE, TensorSpec.DTYPE)
+                if k in inp
+            }
+            for inp in config.get(OperatorConfig.INPUTS, [])
         ]
-        for inp, spec in zip(config.get("inputs", []), infinicore_inputs):
-            if "strides" in inp:
-                spec["strides"] = inp["strides"]
+        for inp, spec in zip(config.get(OperatorConfig.INPUTS, []), infinicore_inputs):
+            if TensorSpec.STRIDES in inp:
+                spec[TensorSpec.STRIDES] = inp[TensorSpec.STRIDES]
 
         # Build kwargs
-        infinicore_kwargs = {attr["name"]: attr["value"] for attr in config.get("attributes", [])}
+        infinicore_kwargs = {
+            attr[TensorSpec.NAME]: attr[TensorSpec.VALUE]
+            for attr in config.get(OperatorConfig.ATTRIBUTES, [])
+        }
 
-        outputs = config.get("outputs", [])
+        outputs = config.get(OperatorConfig.OUTPUTS, [])
         if outputs:
             out_cfg = outputs[0]
-            if "inplace" in out_cfg:
-                infinicore_kwargs["out"] = out_cfg["inplace"]
+            if TensorSpec.INPLACE in out_cfg:
+                infinicore_kwargs["out"] = out_cfg[TensorSpec.INPLACE]
             else:
                 arg_name = out_cfg.get("arg_name", "out")
-                infinicore_kwargs[arg_name] = {k: out_cfg[k] for k in ("name", "shape", "dtype") if k in out_cfg}
-                if "strides" in out_cfg:
-                    infinicore_kwargs[arg_name]["strides"] = out_cfg["strides"]
+                infinicore_kwargs[arg_name] = {
+                    k: out_cfg[k]
+                    for k in (TensorSpec.NAME, TensorSpec.SHAPE, TensorSpec.DTYPE)
+                    if k in out_cfg
+                }
+                if TensorSpec.STRIDES in out_cfg:
+                    infinicore_kwargs[arg_name][TensorSpec.STRIDES] = out_cfg[
+                        TensorSpec.STRIDES
+                    ]
 
         if "op_kwargs" in config:
             infinicore_kwargs.update(config["op_kwargs"])
 
-        return [{
-            "operator": operator,
-            "device": device_str,
-            "torch_op": torch_op,
-            "infinicore_op": infinicore_op,
-            "args": run_args,
-            "testcases": [{
-                "description": f"Auto-Gen: {operator}",
-                "inputs": infinicore_inputs,
-                "kwargs": infinicore_kwargs,
-                "tolerance": config.get("tolerance", {"atol": 1e-3, "rtol": 1e-3}),
-                "result": None
-            }]
-        }]
+        return [
+            {
+                InfiniCoreRequest.OPERATOR: operator,
+                InfiniCoreRequest.DEVICE: device_str,
+                InfiniCoreRequest.TORCH_OP: torch_op,
+                InfiniCoreRequest.INFINICORE_OP: infinicore_op,
+                InfiniCoreRequest.ARGS: run_args,
+                InfiniCoreRequest.TESTCASES: [
+                    {
+                        InfiniCoreRequest.DESCRIPTION: f"Auto-Gen: {operator}",
+                        InfiniCoreRequest.INPUTS: infinicore_inputs,
+                        InfiniCoreRequest.KWARGS: infinicore_kwargs,
+                        InfiniCoreRequest.TOLERANCE: config.get(
+                            OperatorConfig.TOLERANCE, DEFAULT_TOLERANCE
+                        ),
+                        InfiniCoreRequest.RESULT: None,
+                    }
+                ],
+            }
+        ]
 
     def _parse_runtime_args(self, config: dict) -> dict:
         """Parse runtime arguments from config."""
@@ -134,20 +178,17 @@ class InfiniCoreAdapter(BaseAdapter):
             "debug": False,
             "eq_nan": False,
             "save": "test_report.json",
-            **{device.lower(): False for device in self.DEVICE_NAMES}
+            **{device.lower(): False for device in self.DEVICE_NAMES},
         }
-        if "backend_args" in config:
-            args.update(config["backend_args"])
+
         return args
 
     def _handle_latency(self, metric: dict, context: dict):
         """Handle latency metric."""
-        if context.get('latency_ms') is not None:
-            metric.update({
-                "value": context['latency_ms'],
-                "type": "scalar",
-                "raw_data_url": ""
-            })
+        if context.get("latency_ms") is not None:
+            metric.update(
+                {"value": context["latency_ms"], "type": "scalar", "raw_data_url": ""}
+            )
 
     def _handle_accuracy(self, metric: dict, context: dict):
         """Handle accuracy metric (mock)."""
@@ -155,37 +196,50 @@ class InfiniCoreAdapter(BaseAdapter):
 
     def _handle_mock_metric(self, metric: dict, context: dict):
         """Handle mock metrics (FLOPS, bandwidth)."""
-        metric.update({
-            "value": 0.0,
-            "type": "scalar",
-            "raw_data_url": ""
-        })
+        metric.update({"value": 0.0, "type": "scalar", "raw_data_url": ""})
 
     def _convert_from_response(self, saved_files: list, original_req: dict) -> dict:
-        """Convert InfiniCore saved files to legacy format."""
+        """Convert InfiniCore saved file content to InfiniMetrics format."""
         final_json = copy.deepcopy(original_req)
-        final_json["time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        final_json[InfiniMetricsJson.TIME] = datetime.now().strftime(
+            "%Y-%m-%d %H:%M:%S"
+        )
 
         try:
             if not saved_files:
                 raise ValueError("No saved files returned from TestManager")
 
-            with open(saved_files[0], 'r') as f:
+            with open(saved_files[0], "r") as f:
                 saved_data = json.load(f)
 
-            tc_result = saved_data[0]["testcases"][0]["result"]
-            is_success = tc_result.get("status", {}).get("success", False)
-            final_json["result_code"] = 0 if is_success else 1
+            tc_result = saved_data[0][InfiniCoreResult.TESTCASES][0][
+                InfiniCoreResult.RESULT
+            ]
+            is_success = tc_result.get(InfiniCoreResult.STATUS, {}).get(
+                InfiniCoreResult.SUCCESS, False
+            )
+            final_json[InfiniMetricsJson.RESULT_CODE] = 0 if is_success else 1
 
             if not is_success:
-                final_json["error_msg"] = tc_result.get("status", {}).get("error", "Unknown")
+                final_json[InfiniMetricsJson.ERROR_MSG] = tc_result.get(
+                    InfiniCoreResult.STATUS, {}
+                ).get(InfiniCoreResult.ERROR, "Unknown")
                 return final_json
 
-            perf_data = tc_result.get("perf_ms", {}).get("infinicore", {})
+            perf_data = tc_result.get(InfiniCoreResult.PERF_MS, {}).get(
+                PLATFORM_INFINICORE, {}
+            )
+
+            # CPU devices use "host", accelerator devices use "device"
+            device_type = saved_data[0].get("device", DEVICE_CPU).upper()
+            latency_field = PERF_HOST if device_type == DEVICE_CPU else PERF_DEVICE
+
             context = {
-                'latency_ms': perf_data.get("device"),
-                'tflops': tc_result.get("metrics", {}).get("tflops"),
-                'bandwidth_gbs': tc_result.get("metrics", {}).get("bandwidth_gbs")
+                "latency_ms": perf_data.get(latency_field),
+                "tflops": tc_result.get(InfiniCoreResult.METRICS, {}).get("tflops"),
+                "bandwidth_gbs": tc_result.get(InfiniCoreResult.METRICS, {}).get(
+                    "bandwidth_gbs"
+                ),
             }
 
             metric_handlers = {
@@ -195,16 +249,20 @@ class InfiniCoreAdapter(BaseAdapter):
                 self.METRIC_BANDWIDTH: self._handle_mock_metric,
             }
 
-            if "metrics" in final_json and self.req_metrics_template:
-                for i, metric in enumerate(final_json["metrics"][:len(self.req_metrics_template)]):
+            if InfiniMetricsJson.METRICS in final_json and self.req_metrics_template:
+                for i, metric in enumerate(
+                    final_json[InfiniMetricsJson.METRICS][
+                        : len(self.req_metrics_template)
+                    ]
+                ):
                     handler = metric_handlers.get(metric.get("name"))
                     if handler:
                         handler(metric, context)
 
         except Exception as e:
-            logger.error(f"[Adapter] Parsing Error: {e}")
-            final_json["result_code"] = 1
-            final_json["error_msg"] = str(e)
+            logger.error(f"[InfiniCoreAdapter] Parsing Error: {e}")
+            final_json[InfiniMetricsJson.RESULT_CODE] = 1
+            final_json[InfiniMetricsJson.ERROR_MSG] = str(e)
 
         return final_json
 
@@ -212,8 +270,6 @@ class InfiniCoreAdapter(BaseAdapter):
         """Execute InfiniCore backend API using TestManager."""
         test_manager = TestManager(verbose=False, bench_mode=True)
         all_passed, saved_files = test_manager.test(
-            target_ops=None,
-            json_cases_list=infinicore_req,
-            global_exec_args=None
+            target_ops=None, json_cases_list=infinicore_req, global_exec_args=None
         )
         return saved_files
