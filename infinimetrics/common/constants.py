@@ -6,14 +6,17 @@ Shared constants for both inference and training
 
 from enum import Enum
 
+
 class ProcessorType(str, Enum):
-    CPU = "cpu"                    
+    CPU = "cpu"
     ACCELERATOR = "accelerator"
+
 
 class AcceleratorType(str, Enum):
     """Supported accelerator platforms"""
+
     NVIDIA = "nvidia"
-    AMD = "amd"        # ROCm
+    AMD = "amd"  # ROCm
     ASCEND = "ascend"  # Huawei NPU
     CAMBRICON = "cambricon"  # Cambricon MLU
     GENERIC = "generic"
@@ -39,3 +42,83 @@ DEFAULT_CONCURRENCY = 32
 DEFAULT_STATIC_BATCH_SIZE = 1
 DEFAULT_STREAM = True
 DEFAULT_TIMEOUT_MS_SERVICE = 30000
+
+
+# Field name constants organized by context
+class InfiniMetricsJson:
+    """Top-level JSON field names for InfiniMetrics"""
+
+    CONFIG = "config"
+    METRICS = "metrics"
+    TESTCASE = "testcase"
+    RUN_ID = "run_id"
+    TIME = "time"
+    RESULT_CODE = "result_code"
+    ERROR_MSG = "error_msg"
+
+
+# ============================================================
+# InfiniCore Adapter Constants
+# Only for strings used 2+ times
+# ============================================================
+class InfiniCoreRequest:
+    """InfiniCore API request field names"""
+
+    OPERATOR = "operator"
+    DEVICE = "device"
+    TORCH_OP = "torch_op"
+    INFINICORE_OP = "infinicore_op"
+    ARGS = "args"
+    TESTCASES = "testcases"
+    DESCRIPTION = "description"
+    INPUTS = "inputs"
+    KWARGS = "kwargs"
+    RESULT = "result"
+    TOLERANCE = "tolerance"
+
+
+class OperatorConfig:
+    """Operator configuration field names"""
+
+    OPERATOR = "operator"
+    DEVICE = "device"
+    INPUTS = "inputs"
+    OUTPUTS = "outputs"
+    ATTRIBUTES = "attributes"
+    TOLERANCE = "tolerance"
+    INFINICORE_OP = "infinicore_op"
+    TORCH_OP = "torch_op"
+
+
+class TensorSpec:
+    """Tensor specification field names"""
+
+    NAME = "name"
+    SHAPE = "shape"
+    DTYPE = "dtype"
+    STRIDES = "strides"
+    VALUE = "value"
+    INPLACE = "inplace"
+
+
+class InfiniCoreResult:
+    """InfiniCore test result field names"""
+
+    TESTCASES = "testcases"
+    RESULT = "result"
+    STATUS = "status"
+    SUCCESS = "success"
+    ERROR = "error"
+    PERF_MS = "perf_ms"
+    METRICS = "metrics"
+
+
+# Device and performance constants
+DEVICE_CPU = "CPU"
+DEVICE_NVIDIA = "NVIDIA"
+PERF_HOST = "host"
+PERF_DEVICE = "device"
+PLATFORM_INFINICORE = "infinicore"
+
+# Default values
+DEFAULT_TOLERANCE = {"atol": 1e-3, "rtol": 1e-3}
