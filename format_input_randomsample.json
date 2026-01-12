@@ -1,0 +1,49 @@
+{
+    "run_id": "test.randomsample.001",
+    "testcase": "operator.InfiniCore.RandomSample",
+    "config": {
+        "operator": "randomsample",
+        "device": "nvidia",
+        "torch_op": "torch.int32",
+        "infinicore_op": null,
+        "inputs": [
+            {
+                "name": "in_0",
+                "shape": [
+                    512
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [
+                    512
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 1000,
+        "tolerance": {
+            "atol": 0,
+            "rtol": 0
+        }
+    },
+    "metrics": [
+        {
+            "name": "operator.latency"
+        },
+        {
+            "name": "operator.tensor_accuracy"
+        },
+        {
+            "name": "operator.flops"
+        },
+        {
+            "name": "operator.bandwidth"
+        }
+    ]
+}

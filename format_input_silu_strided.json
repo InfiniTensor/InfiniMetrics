@@ -1,0 +1,35 @@
+{
+    "run_id": "test.silu.strided.001",
+    "testcase": "operator.InfiniCore.SiLU.Strided",
+    "config": {
+        "operator": "silu",
+        "device": "nvidia",
+        "torch_op": "torch.sigmoid",
+        "infinicore_op": "infinicore.nn.functional",
+        "inputs": [
+            {
+                "name": "in_0",
+                "shape": [1, 2048],
+                "dtype": "float16",
+                "strides": [4096, 1]
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [1, 2048],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 1000,
+        "tolerance": {"atol": 1e-3, "rtol": 1e-3}
+    },
+    "metrics": [
+        {"name": "operator.latency"},
+        {"name": "operator.tensor_accuracy"},
+        {"name": "operator.flops"},
+        {"name": "operator.bandwidth"}
+    ]
+}

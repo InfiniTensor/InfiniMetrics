@@ -1,0 +1,89 @@
+{
+    "run_id": "test.pagedcaching.001",
+    "testcase": "operator.InfiniCore.PagedCaching",
+    "config": {
+        "operator": "pagedcaching",
+        "device": "nvidia",
+        "torch_op": null,
+        "infinicore_op": "infinicore.paged_caching",
+        "inputs": [
+            {
+                "name": "in_0",
+                "shape": [
+                    106,
+                    8,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_1",
+                "shape": [
+                    106,
+                    8,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_2",
+                "shape": [
+                    4096,
+                    8,
+                    16,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_3",
+                "shape": [
+                    4096,
+                    8,
+                    16,
+                    128
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_4",
+                "shape": [
+                    106
+                ],
+                "dtype": "int64"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [
+                    106,
+                    8,
+                    128
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 1000,
+        "tolerance": {
+            "atol": 0,
+            "rtol": 0.01
+        }
+    },
+    "metrics": [
+        {
+            "name": "operator.latency"
+        },
+        {
+            "name": "operator.tensor_accuracy"
+        },
+        {
+            "name": "operator.flops"
+        },
+        {
+            "name": "operator.bandwidth"
+        }
+    ]
+}

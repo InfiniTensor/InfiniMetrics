@@ -1,0 +1,59 @@
+{
+    "run_id": "test.swiglu.001",
+    "testcase": "operator.InfiniCore.SwiGLU",
+    "config": {
+        "operator": "swiglu",
+        "device": "nvidia",
+        "torch_op": "torch.sigmoid",
+        "infinicore_op": "infinicore.nn.functional",
+        "inputs": [
+            {
+                "name": "in_0",
+                "shape": [
+                    2,
+                    4
+                ],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_1",
+                "shape": [
+                    2,
+                    4
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [
+                    2,
+                    4
+                ],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 1000,
+        "tolerance": {
+            "atol": 0.001,
+            "rtol": 0.001
+        }
+    },
+    "metrics": [
+        {
+            "name": "operator.latency"
+        },
+        {
+            "name": "operator.tensor_accuracy"
+        },
+        {
+            "name": "operator.flops"
+        },
+        {
+            "name": "operator.bandwidth"
+        }
+    ]
+}
