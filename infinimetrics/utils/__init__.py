@@ -2,5 +2,11 @@
 """Utilities package for InfiniMetrics."""
 
 from infinimetrics.utils.input_loader import load_input_file, load_inputs_from_paths
+from infinimetrics.utils.flops_calculator import FLOPSCalculator, calculate_bandwidth
 
-__all__ = ["load_input_file", "load_inputs_from_paths"]
+__all__ = [
+    "load_input_file",
+    "load_inputs_from_paths",
+    "FLOPSCalculator",
+    "calculate_bandwidth",
+]
