@@ -43,6 +43,18 @@ DEFAULT_STATIC_BATCH_SIZE = 1
 DEFAULT_STREAM = True
 DEFAULT_TIMEOUT_MS_SERVICE = 30000
 
+# Data type byte sizes for bandwidth calculation
+DTYPE_BYTES_MAP = {
+    "float16": 2,
+    "bfloat16": 2,
+    "float32": 4,
+    "float64": 8,
+    "int8": 1,
+    "int16": 2,
+    "int32": 4,
+    "int64": 8,
+}
+
 
 # Field name constants organized by context
 class InfiniMetricsJson:

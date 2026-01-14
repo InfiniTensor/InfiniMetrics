@@ -24,7 +24,10 @@ from infinimetrics.common.constants import (
     PLATFORM_INFINICORE,
     DEFAULT_TOLERANCE,
 )
-from infinimetrics.utils.flops_calculator import FLOPSCalculator, calculate_bandwidth
+from infinimetrics.operators.flops_calculator import (
+    FLOPSCalculator,
+    calculate_bandwidth,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +47,6 @@ class InfiniCoreAdapter(BaseAdapter):
     def __init__(self):
         """Initialize adapter."""
         self.req_metrics_template = []
-        self.flops_calculator = FLOPSCalculator()
 
     def process(self, test_input: Union[Dict[str, Any], Any]) -> Dict[str, Any]:
         """Execute the operator test."""
@@ -189,7 +191,12 @@ class InfiniCoreAdapter(BaseAdapter):
         """Handle latency metric."""
         if context.get("latency_ms") is not None:
             metric.update(
-                {"value": context["latency_ms"], "type": "scalar", "raw_data_url": "", "unit": "ms"}
+                {
+                    "value": context["latency_ms"],
+                    "type": "scalar",
+                    "raw_data_url": "",
+                    "unit": "ms",
+                }
             )
 
     def _handle_accuracy(self, metric: dict, context: dict):
@@ -206,19 +213,16 @@ class InfiniCoreAdapter(BaseAdapter):
             outputs = config.get(OperatorConfig.OUTPUTS, [])
             operator = config.get(OperatorConfig.OPERATOR, "").lower()
 
-            flops = self.flops_calculator.get_flops(operator, inputs, outputs)
+            flops = FLOPSCalculator.get_flops(operator, inputs, outputs)
             latency_sec = context["latency_ms"] / 1000.0
 
             if flops > 0 and latency_sec > 0:
                 tflops = (flops / latency_sec) / 1e12
                 value = tflops if tflops < 0.0001 else round(tflops, 4)
 
-        metric.update({
-            "value": value,
-            "type": "scalar",
-            "raw_data_url": "",
-            "unit": "TFLOPS"
-        })
+        metric.update(
+            {"value": value, "type": "scalar", "raw_data_url": "", "unit": "TFLOPS"}
+        )
 
     def _handle_bandwidth(self, metric: dict, context: dict, config: dict = None):
         """Handle bandwidth metric."""
@@ -231,16 +235,15 @@ class InfiniCoreAdapter(BaseAdapter):
             bandwidth_info = calculate_bandwidth(inputs, outputs)
             latency_sec = context["latency_ms"] / 1000.0
 
-            if bandwidth_info['total_bytes'] > 0 and latency_sec > 0:
-                bandwidth_gbs = (bandwidth_info['total_bytes'] / latency_sec) / 1e9
-                value = bandwidth_gbs if bandwidth_gbs < 0.0001 else round(bandwidth_gbs, 4)
+            if bandwidth_info["total_bytes"] > 0 and latency_sec > 0:
+                bandwidth_gbs = (bandwidth_info["total_bytes"] / latency_sec) / 1e9
+                value = (
+                    bandwidth_gbs if bandwidth_gbs < 0.0001 else round(bandwidth_gbs, 4)
+                )
 
-        metric.update({
-            "value": value,
-            "type": "scalar",
-            "raw_data_url": "",
-            "unit": "GB/s"
-        })
+        metric.update(
+            {"value": value, "type": "scalar", "raw_data_url": "", "unit": "GB/s"}
+        )
 
     def _convert_from_response(self, saved_files: list, original_req: dict) -> dict:
         """Convert InfiniCore saved file content to InfiniMetrics format."""
@@ -304,7 +307,10 @@ class InfiniCoreAdapter(BaseAdapter):
                     handler = metric_handlers.get(metric.get("name"))
                     if handler:
                         # Pass config for FLOPS and bandwidth calculation
-                        if metric.get("name") in [self.METRIC_FLOPS, self.METRIC_BANDWIDTH]:
+                        if metric.get("name") in [
+                            self.METRIC_FLOPS,
+                            self.METRIC_BANDWIDTH,
+                        ]:
                             handler(metric, context, config)
                         else:
                             handler(metric, context)

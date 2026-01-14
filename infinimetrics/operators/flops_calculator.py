@@ -8,6 +8,8 @@ Actual performance may vary due to hardware optimizations and implementation det
 
 from typing import Dict, List, Optional, Callable
 
+from infinimetrics.common.constants import DTYPE_BYTES_MAP
+
 
 class FLOPSCalculator:
     """Calculate FLOPS for various operators using registry pattern"""
@@ -25,10 +27,12 @@ class FLOPSCalculator:
             def _matmul_flops(inputs, outputs):
                 ...
         """
+
         def decorator(func: Callable[[List[Dict], List[Dict]], float]):
             for name in operator_names:
                 cls._flops_registry[name.lower()] = func
             return func
+
         return decorator
 
     # FLOPS multipliers for different operators
@@ -157,9 +161,10 @@ def _addmm_flops(inputs: List[Dict], outputs: List[Dict]) -> float:
 @FLOPSCalculator.register(["conv2d", "conv2d_backward"])
 def _conv2d_flops(inputs: List[Dict], outputs: List[Dict]) -> float:
     """
-    2D Convolution (FLOPS = 2 * N * C_out * H_out * W_out * K_h * K_w * C_in)
+    2D Convolution (FLOPS = 2 * N * C_out * H_out * W_out * K_h * K_w * C_in / groups)
 
-    Note: Uses output shape to correctly account for stride and padding effects.
+    Note:
+    - Uses output shape to correctly account for stride and padding effects.
     """
     if len(inputs) < 2 or not outputs:
         return 0.0
@@ -178,10 +183,15 @@ def _conv2d_flops(inputs: List[Dict], outputs: List[Dict]) -> float:
     kh, kw = weight_shape[2], weight_shape[3]
     c_in = input_shape[1]  # or weight_shape[1]
 
+    # TODO: Currently assumes groups=1 (standard convolution). For group convolution,
+    # FLOPS should be divided by groups. Update to extract groups from config/kwargs
+    # when InfiniCore supports it.
+    groups = 1
+
     # Key fix: use output tensor's H and W (accounts for stride/padding)
     n, c_out, h_out, w_out = output_shape
 
-    return 2.0 * n * c_out * h_out * w_out * kh * kw * c_in
+    return 2.0 * n * c_out * h_out * w_out * kh * kw * c_in / groups
 
 
 def calculate_bandwidth(
@@ -195,7 +205,7 @@ def calculate_bandwidth(
     Args:
         inputs: List of input tensor specs
         outputs: List of output tensor specs
-        dtype_bytes_map: Mapping from dtype to bytes (default: float16=2, float32=4, etc.)
+        dtype_bytes_map: Mapping from dtype to bytes (default: uses DTYPE_BYTES_MAP from constants)
 
     Returns:
         Dict with 'read_bytes', 'write_bytes', 'total_bytes'
@@ -205,16 +215,7 @@ def calculate_bandwidth(
         Actual bandwidth may vary due to caching, memory alignment, and hardware optimizations.
     """
     if dtype_bytes_map is None:
-        dtype_bytes_map = {
-            "float16": 2,
-            "bfloat16": 2,
-            "float32": 4,
-            "float64": 8,
-            "int8": 1,
-            "int16": 2,
-            "int32": 4,
-            "int64": 8,
-        }
+        dtype_bytes_map = DTYPE_BYTES_MAP
 
     def get_tensor_bytes(tensor: Dict) -> int:
         dtype = tensor.get("dtype", "float32").lower()
