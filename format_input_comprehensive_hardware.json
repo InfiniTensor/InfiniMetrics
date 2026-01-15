@@ -1,0 +1,24 @@
+{
+    "run_id": "hardware.comprehensive.001",
+    "testcase": "hardware.cudaUnified.Comprehensive",
+    "config": {
+        "test_type": "all",
+        "device": "nvidia",
+        "device_id": 0,
+        "iterations": 10,
+        "array_size": 67108864,
+        "buffer_size_mb": 256,
+        "output_dir": "./output"
+    },
+    "metrics": [
+        {"name": "memory.bandwidth.host_to_device", "unit": "GB/s"},
+        {"name": "memory.bandwidth.device_to_host", "unit": "GB/s"},
+        {"name": "memory.bandwidth.device_to_device", "unit": "GB/s"},
+        {"name": "stream.bandwidth.copy", "unit": "GB/s"},
+        {"name": "stream.bandwidth.scale", "unit": "GB/s"},
+        {"name": "stream.bandwidth.add", "unit": "GB/s"},
+        {"name": "stream.bandwidth.triad", "unit": "GB/s"},
+        {"name": "cache.bandwidth.l1", "unit": "GB/s"},
+        {"name": "cache.bandwidth.l2", "unit": "GB/s"}
+    ]
+}

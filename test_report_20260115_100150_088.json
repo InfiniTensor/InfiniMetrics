@@ -1,0 +1,18 @@
+[
+    {
+        "operator": "Matmul",
+        "device": "NVIDIA",
+        "torch_op": "torch.matmul",
+        "infinicore_op": "infinicore.matmul",
+        "args": {"bench": "both", "num_prerun": 10, "num_iterations": 100, "verbose": false, "debug": false},
+        "testcases": [
+            {
+                "description": "Auto-Gen: Matmul",
+                "inputs": [{"name": "in_0", "shape": [2048, 2048], "dtype": "float16", "strides": null}, {"name": "in_1", "shape": [2048, 2048], "dtype": "float16", "strides": null}],
+                "kwargs": {"out": {"name": "output", "shape": [2048, 2048], "dtype": "float16", "strides": null}},
+                "result": {"status": {"success": true, "error": ""}, "perf_ms": {"torch": {"host": 34.2569, "device": 38.5307}, "infinicore": {"host": 32.8424, "device": 32.7743}}},
+                "comparison_target": null, "tolerance": {"atol": 0.001, "rtol": 0.001}
+            }
+        ]
+    }
+]

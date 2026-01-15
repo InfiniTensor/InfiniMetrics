@@ -1,0 +1,42 @@
+{
+    "run_id": "test.matmul.001",
+    "testcase": "operator.InfiniCore.Matmul",
+    "config": {
+        "operator": "matmul",
+        "device": "nvidia",
+        "torch_op": "torch.matmul",
+        "infinicore_op": "infinicore.matmul",
+        "inputs": [
+            {
+                "name": "in_0",
+                "shape": [2, 3],
+                "dtype": "float16"
+            },
+            {
+                "name": "in_1",
+                "shape": [3, 4],
+                "dtype": "float16"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "out",
+                "shape": [2, 4],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 50,
+        "measured_iterations": 1000,
+        "tolerance": {
+            "atol": 0,
+            "rtol": 0.01
+        }
+    },
+    "metrics": [
+        {"name": "operator.latency"},
+        {"name": "operator.tensor_accuracy"},
+        {"name": "operator.flops"},
+        {"name": "operator.bandwidth"}
+    ]
+}

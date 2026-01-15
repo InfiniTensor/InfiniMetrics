@@ -1,0 +1,15 @@
+{
+  "total_tests": 1,
+  "successful_tests": 1,
+  "failed_tests": 0,
+  "results": [
+    {
+      "run_id": "hardware.memory.bandwidth.001",
+      "testcase": "hardware.cudaUnified.MemoryBandwidth",
+      "result_code": 0,
+      "result_file": "output/hardware_cudaUnified_MemoryBandwidth_20260115_175151_results.json",
+      "skipped": false
+    }
+  ],
+  "timestamp": "2026-01-15T17:51:51.968243"
+}

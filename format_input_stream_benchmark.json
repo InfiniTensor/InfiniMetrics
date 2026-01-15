@@ -1,0 +1,18 @@
+{
+    "run_id": "hardware.stream.benchmark.001",
+    "testcase": "hardware.cudaUnified.STREAM",
+    "config": {
+        "test_type": "stream",
+        "device": "nvidia",
+        "device_id": 0,
+        "iterations": 10,
+        "array_size": 67108864,
+        "output_dir": "./output"
+    },
+    "metrics": [
+        {"name": "stream.bandwidth.copy", "unit": "GB/s"},
+        {"name": "stream.bandwidth.scale", "unit": "GB/s"},
+        {"name": "stream.bandwidth.add", "unit": "GB/s"},
+        {"name": "stream.bandwidth.triad", "unit": "GB/s"}
+    ]
+}

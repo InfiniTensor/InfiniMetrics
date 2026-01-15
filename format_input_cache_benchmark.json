@@ -1,0 +1,15 @@
+{
+    "run_id": "hardware.cache.benchmark.001",
+    "testcase": "hardware.cudaUnified.Cache",
+    "config": {
+        "test_type": "cache",
+        "device": "nvidia",
+        "device_id": 0,
+        "iterations": 10,
+        "output_dir": "./output"
+    },
+    "metrics": [
+        {"name": "cache.bandwidth.l1", "unit": "GB/s"},
+        {"name": "cache.bandwidth.l2", "unit": "GB/s"}
+    ]
+}
