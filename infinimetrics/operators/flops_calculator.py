@@ -197,7 +197,6 @@ def _conv2d_flops(inputs: List[Dict], outputs: List[Dict]) -> float:
 def calculate_bandwidth(
     inputs: List[Dict],
     outputs: List[Dict],
-    dtype_bytes_map: Optional[Dict[str, int]] = None,
 ) -> Dict[str, int]:
     """
     Calculate memory bandwidth requirements (bytes read/written).
@@ -205,7 +204,6 @@ def calculate_bandwidth(
     Args:
         inputs: List of input tensor specs
         outputs: List of output tensor specs
-        dtype_bytes_map: Mapping from dtype to bytes (default: uses DTYPE_BYTES_MAP from constants)
 
     Returns:
         Dict with 'read_bytes', 'write_bytes', 'total_bytes'
@@ -214,12 +212,9 @@ def calculate_bandwidth(
         These are theoretical memory transfer sizes.
         Actual bandwidth may vary due to caching, memory alignment, and hardware optimizations.
     """
-    if dtype_bytes_map is None:
-        dtype_bytes_map = DTYPE_BYTES_MAP
-
     def get_tensor_bytes(tensor: Dict) -> int:
         dtype = tensor.get("dtype", "float32").lower()
-        bytes_per_element = dtype_bytes_map.get(dtype, 4)
+        bytes_per_element = DTYPE_BYTES_MAP.get(dtype, 4)
         size = FLOPSCalculator._get_tensor_size(tensor)
         return size * bytes_per_element
 
