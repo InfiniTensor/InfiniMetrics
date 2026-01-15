@@ -1,0 +1,15 @@
+{
+  "total_tests": 1,
+  "successful_tests": 1,
+  "failed_tests": 0,
+  "results": [
+    {
+      "run_id": "hardware.cache.benchmark.001",
+      "testcase": "hardware.cudaUnified.Cache",
+      "result_code": 0,
+      "result_file": "output/hardware_cudaUnified_Cache_20260115_175507_results.json",
+      "skipped": false
+    }
+  ],
+  "timestamp": "2026-01-15T17:55:07.995885"
+}
