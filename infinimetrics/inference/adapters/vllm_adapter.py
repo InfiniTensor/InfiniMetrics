@@ -126,10 +126,6 @@ class VLLMAdapter(InferAdapter):
         if not prompts:
             return [], [], []
         
-        debug_texts = []
-        latencies_ms = []
-        ttfts_ms = []
-        
         # Sampling parameters
         sampling_params = SamplingParams(
             max_tokens=max_tokens,
@@ -137,132 +133,125 @@ class VLLMAdapter(InferAdapter):
             top_p=top_p,
             top_k=top_k if top_k > 0 else -1,
         )
-        
-        # Record start time
-        start_time = time.perf_counter()
-        
-        try:
-            # Batch generation
-            outputs = self.model.generate(prompts, sampling_params)
-            
-            # Calculate total latency
-            total_latency = (time.perf_counter() - start_time) * 1000
-            
-            # Process outputs
-            for i, output in enumerate(outputs):
-                # Only the first three are collected for debugging
-                if i < 3:
-                    if hasattr(output, 'outputs') and output.outputs:
-                        generated_text = output.outputs[0].text
-                    elif hasattr(output, 'text'):
-                        generated_text = output.text
+
+        # Only collect first few texts for debugging        
+        debug_texts = []
+        latencies_ms = []
+        ttfts_ms = []
+
+        # Process each prompt individually to get accurate TTFT
+        for i, prompt in enumerate(prompts):
+
+            try:
+                #  start time
+                start_time = time.perf_counter()
+                outputs = self.model.generate([prompt], sampling_params)
+                output = outputs[0]
+                
+                # latency
+                latency_ms = (time.perf_counter() - start_time) * 1000
+                latencies_ms.append(latency_ms)
+
+                # TTFT from vLLM metrics
+                if hasattr(output, "metrics") and hasattr(
+                    output.metrics, "first_token_time"
+                ):
+                    ttft_ms = output.metrics.first_token_time * 1000
+                else:
+                    # fallback (very rare)
+                    ttft_ms = latency_ms * 0.1
+
+                ttfts_ms.append(ttft_ms)
+
+                if i < 3:  # store a few for debugging
+                    if hasattr(output, "outputs") and output.outputs:
+                        debug_texts.append(output.outputs[0].text)
+                    elif hasattr(output, "text"):
+                        debug_texts.append(output.text)
                     else:
-                        generated_text = str(output)
-                    debug_texts.append(generated_text)
+                        debug_texts.append(str(output))                    
                 
-                # Compute latency
-                avg_latency = total_latency / len(outputs) if outputs else 0
-                latencies_ms.append(avg_latency)
-                
-                # Estimate TTFT
-                estimated_ttft = self._estimate_ttft(avg_latency, max_tokens)
-                ttfts_ms.append(estimated_ttft)
-            
-            if outputs:
-                logger.info(f"Generated {len(outputs)} responses, avg latency: {total_latency/len(outputs):.1f}ms")
-            
-        except Exception as e:
-            logger.error(f"vLLM generation failed: {e}")
-            # Returns the data that was collected
-            return debug_texts, latencies_ms, ttfts_ms
+            except Exception as e:
+                logger.error(f"vLLM generation failed for sample {i}: {e}")
+                latencies_ms.append(0.0)
+                ttfts_ms.append(0.0)
         
+        if latencies_ms:
+            avg_latency = sum(latencies_ms) / len(latencies_ms)
+            logger.info(f"vLLM generation complete — avg latency {avg_latency:.1f} ms")
+
         return debug_texts, latencies_ms, ttfts_ms
     
-    def _estimate_ttft(self, avg_latency: float, max_tokens: int) -> float:
-        # base rate: for short outputs (< 50tokens) , TTFT accounts for approximately 15%
-        base_ratio = 0.15
-        
-        # adjust the scale according to the length of the output
-        if max_tokens > 100:
-            ratio_adjustment = 100 / max_tokens
-            actual_ratio = base_ratio * ratio_adjustment
-        elif max_tokens < 20:
-            actual_ratio = base_ratio * 1.2
-        else:
-            actual_ratio = base_ratio
-        
-        # Ensure the proportion is within reasonable range (5%-40%)
-        actual_ratio = max(0.05, min(0.4, actual_ratio))
-        
-        estimated_ttft = avg_latency * actual_ratio
-        
-        # Ensure that TTFT does not exceed 90% of the total latency
-        return min(estimated_ttft, avg_latency * 0.9)
-    
     def calculate_perplexity(self, test_data: List[str]) -> float:
-        """Calculate perplexity - 覆盖基类方法"""
+        """Use transformers to compute perplexity (shared with InfiniLM idea)"""
+
         if not test_data:
             return 0.0
-        
+
         logger.info(f"Calculating perplexity for {len(test_data)} samples")
-        
+
         try:
-            # Try to calculate using XX transformers
             from transformers import AutoModelForCausalLM, AutoTokenizer
-            
-            model_name = self.config.model_path
-            tokenizer = AutoTokenizer.from_pretrained(model_name)
+
+            tokenizer = AutoTokenizer.from_pretrained(self.config.model_path)
             model = AutoModelForCausalLM.from_pretrained(
-                model_name,
+                self.config.model_path,
                 torch_dtype=torch.float16,
-                device_map="auto"
+                device_map="auto",
             )
-            
+
             total_loss = 0.0
             total_tokens = 0
-            
-            # Calculate only a small number of samples to avoid being too slow
-            for text in test_data[:5]:
+
+            for text in test_data[:5]:  # small sample
                 inputs = tokenizer(text, return_tensors="pt").to(model.device)
                 with torch.no_grad():
-                    outputs = model(**inputs, labels=inputs["input_ids"])
-                    loss = outputs.loss.item()
-                    tokens = len(inputs["input_ids"][0])
-                    total_loss += loss * tokens
-                    total_tokens += tokens
-            
+                    out = model(**inputs, labels=inputs["input_ids"])
+                tokens = len(inputs["input_ids"][0])
+                total_loss += out.loss.item() * tokens
+                total_tokens += tokens
+
             if total_tokens > 0:
                 avg_loss = total_loss / total_tokens
-                perplexity = torch.exp(torch.tensor(avg_loss)).item()
-                logger.info(f"Calculated perplexity: {perplexity:.4f}")
-                return perplexity
-                
-        except ImportError:
-            logger.warning("transformers not available for perplexity calculation")
+                return float(torch.exp(torch.tensor(avg_loss)))
+
         except Exception as e:
-            logger.warning(f"Failed to calculate perplexity: {e}")
-        
-        # Fall back to the base class implementation
+            logger.warning(f"Perplexity calculation failed: {e}")
+
         return super().calculate_perplexity(test_data)
     
     def _validate_framework_config(self) -> List[str]:
-        """Validate configuration"""
+        """Validate vLLM-specific configuration"""
         errors = []
         
         # Check model path
         if not Path(self.config.model_path).exists():
             errors.append(f"Model path does not exist: {self.config.model_path}")
         
-        # Check parallelism parameters
-        tp = self.config.infer_args.parallel.tp
-        if tp <= 0:
-            errors.append(f"Tensor parallel size must be positive, got: {tp}")
+        # Simplified validation logic
+        errors.extend(self._validate_parallel_config())
+        errors.extend(self._validate_sampling_params())
         
-        # Check sequence length
-        max_seq_len = self.config.infer_args.max_seq_len
-        if max_seq_len <= 0:
-            errors.append(f"Max sequence length must be positive, got: {max_seq_len}")
+        return errors
+    
+    def _validate_parallel_config(self) -> List[str]:
+        """Validate parallel configuration"""
+        errors = []
         
+        if self.config.infer_args.parallel.tp <= 0:
+            errors.append("Tensor parallel size must be > 0")
+        if self.config.infer_args.max_seq_len <= 0:
+            errors.append("max_seq_len must be > 0")
+        return errors
+    
+    def _validate_sampling_params(self) -> List[str]:
+        errors = []
+        if self.config.infer_args.temperature < 0:
+            errors.append("Temperature must be >= 0")
+        if not (0 <= self.config.infer_args.top_p <= 1):
+            errors.append("top_p must be in [0,1]")
+        if self.config.infer_args.top_k < -1:
+            errors.append("top_k must be >= -1")
         return errors
     
     def get_vocab_size(self) -> int:
