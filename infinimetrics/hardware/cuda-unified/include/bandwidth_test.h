@@ -7,37 +7,82 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <functional>
 
 namespace cuda_perf {
 
 // ============================================================
-// Device-to-Device Bandwidth Test
+// Generic Bandwidth Test - Template-based Implementation
 // ============================================================
 
-class DeviceToDeviceBandwidthTest {
+enum class BandwidthDirection {
+    DEVICE_TO_DEVICE,
+    DEVICE_TO_HOST,
+    HOST_TO_DEVICE
+};
+
+template <BandwidthDirection Dir>
+class BandwidthTest {
 public:
     void execute(const TestConfig& config = TestConfig()) {
+        print_header();
+        run_test();
+        print_result();
+    }
+
+private:
+    static constexpr unsigned int MEMCOPY_ITERATIONS = 100;
+    static constexpr unsigned int DEFAULT_SIZE = 32 * 1024 * 1024;  // 32 MB
+    float elapsedTimeInMs = 0.0f;
+
+    void print_header() const {
         std::cout << "\n===================================================\n";
-        std::cout << "Device to Device Bandwidth Test\n";
+        std::cout << get_test_name() << "\n";
         std::cout << "===================================================\n\n";
 
-        int device_id = 0;
-        cudaSetDevice(device_id);
-
-        cudaDeviceProp prop;
-        cudaGetDeviceProperties(&prop, device_id);
-
-        std::cout << " Device to Device Bandwidth, 1 Device(s)\n";
+        std::cout << get_device_info();
+        if constexpr (Dir != BandwidthDirection::DEVICE_TO_DEVICE) {
+            std::cout << " PINNED Memory Transfers\n";
+        }
         std::cout << "   Transfer Size (Bytes)\tBandwidth(GB/s)\n";
         std::cout << std::string(45, '-') << "\n";
+    }
 
-        const unsigned int MEMCOPY_ITERATIONS = 100;
-        const unsigned int DEFAULT_SIZE = 32 * 1024 * 1024;  // 32 MB
+    const char* get_test_name() const {
+        if constexpr (Dir == BandwidthDirection::DEVICE_TO_DEVICE) {
+            return "Device to Device Bandwidth Test";
+        } else if constexpr (Dir == BandwidthDirection::DEVICE_TO_HOST) {
+            return "Device to Host Bandwidth Test (Pinned Memory)";
+        } else {
+            return "Host to Device Bandwidth Test (Pinned Memory)";
+        }
+    }
 
+    const char* get_device_info() const {
+        if constexpr (Dir == BandwidthDirection::DEVICE_TO_DEVICE) {
+            return " Device to Device Bandwidth, 1 Device(s)\n";
+        } else if constexpr (Dir == BandwidthDirection::DEVICE_TO_HOST) {
+            return " Device to Host Bandwidth, 1 Device(s)\n";
+        } else {
+            return " Host to Device Bandwidth, 1 Device(s)\n";
+        }
+    }
+
+    void run_test() {
+        if constexpr (Dir == BandwidthDirection::DEVICE_TO_DEVICE) {
+            run_dtod_test();
+        } else if constexpr (Dir == BandwidthDirection::DEVICE_TO_HOST) {
+            run_dtoh_test();
+        } else {
+            run_htod_test();
+        }
+    }
+
+    void run_dtod_test() {
         unsigned char *h_idata = (unsigned char *)malloc(DEFAULT_SIZE);
         unsigned char *d_idata, *d_odata;
 
-        // Initialize the host memory
+        // Initialize host memory
         for (unsigned int i = 0; i < DEFAULT_SIZE / sizeof(unsigned char); i++) {
             h_idata[i] = (unsigned char)(i & 0xff);
         }
@@ -45,111 +90,57 @@ public:
         // Allocate device memory
         cudaMalloc(&d_idata, DEFAULT_SIZE);
         cudaMalloc(&d_odata, DEFAULT_SIZE);
-
-        // Initialize memory
         cudaMemcpy(d_idata, h_idata, DEFAULT_SIZE, cudaMemcpyHostToDevice);
 
-        // Create events
+        // Time the copy
         cudaEvent_t start, stop;
         cudaEventCreate(&start);
         cudaEventCreate(&stop);
 
-        // Run the memcopy
         cudaEventRecord(start, 0);
-
         for (unsigned int i = 0; i < MEMCOPY_ITERATIONS; i++) {
             cudaMemcpy(d_odata, d_idata, DEFAULT_SIZE, cudaMemcpyDeviceToDevice);
         }
-
         cudaEventRecord(stop, 0);
-
-        // Since device to device memory copies are non-blocking,
-        // cudaDeviceSynchronize() is required in order to get proper timing.
         cudaDeviceSynchronize();
 
-        float elapsedTimeInMs = 0.0f;
         cudaEventElapsedTime(&elapsedTimeInMs, start, stop);
 
-        // Calculate bandwidth in GB/s (note: 2.0x because we're reading and writing)
-        double time_s = elapsedTimeInMs / 1e3;
-        float bandwidthInGBs = (2.0f * DEFAULT_SIZE * (float)MEMCOPY_ITERATIONS) / (double)1e9;
-        bandwidthInGBs = bandwidthInGBs / time_s;
-
-        // Print result
-        std::cout << std::fixed << std::setprecision(1);
-        std::cout << "   " << DEFAULT_SIZE << "\t\t" << bandwidthInGBs << "\n\n";
-
-        // Clean up memory
+        // Cleanup
         cudaEventDestroy(stop);
         cudaEventDestroy(start);
         cudaFree(d_idata);
         cudaFree(d_odata);
         free(h_idata);
     }
-};
 
-// ============================================================
-// Device to Host Bandwidth Test (Pinned Memory)
-// ============================================================
-
-class DeviceToHostBandwidthTest {
-public:
-    void execute(const TestConfig& config = TestConfig()) {
-        std::cout << "\n===================================================\n";
-        std::cout << "Device to Host Bandwidth Test (Pinned Memory)\n";
-        std::cout << "===================================================\n\n";
-
-        const unsigned int MEMCOPY_ITERATIONS = 100;
-        const unsigned int DEFAULT_SIZE = 32 * 1024 * 1024;  // 32 MB
-
-        std::cout << " Device to Host Bandwidth, 1 Device(s)\n";
-        std::cout << " PINNED Memory Transfers\n";
-        std::cout << "   Transfer Size (Bytes)\tBandwidth(GB/s)\n";
-        std::cout << std::string(45, '-') << "\n";
-
-        // Allocate pinned memory
+    void run_dtoh_test() {
         unsigned char *h_idata, *h_odata;
+        unsigned char *d_idata;
+
         cudaHostAlloc(&h_idata, DEFAULT_SIZE, 0);
         cudaHostAlloc(&h_odata, DEFAULT_SIZE, 0);
+        cudaMalloc(&d_idata, DEFAULT_SIZE);
 
-        // Initialize the memory
+        // Initialize host memory
         for (unsigned int i = 0; i < DEFAULT_SIZE / sizeof(unsigned char); i++) {
             h_idata[i] = (unsigned char)(i & 0xff);
         }
-
-        // Allocate device memory
-        unsigned char *d_idata;
-        cudaMalloc(&d_idata, DEFAULT_SIZE);
-
-        // Initialize the device memory
         cudaMemcpy(d_idata, h_idata, DEFAULT_SIZE, cudaMemcpyHostToDevice);
 
-        // Create events
         cudaEvent_t start, stop;
         cudaEventCreate(&start);
         cudaEventCreate(&stop);
 
-        // Copy data from GPU to Host
         cudaEventRecord(start, 0);
-
         for (unsigned int i = 0; i < MEMCOPY_ITERATIONS; i++) {
             cudaMemcpyAsync(h_odata, d_idata, DEFAULT_SIZE, cudaMemcpyDeviceToHost, 0);
         }
-
         cudaEventRecord(stop, 0);
         cudaDeviceSynchronize();
+
         cudaEventElapsedTime(&elapsedTimeInMs, start, stop);
 
-        // Calculate bandwidth in GB/s
-        double time_s = elapsedTimeInMs / 1e3;
-        float bandwidthInGBs = (DEFAULT_SIZE * (float)MEMCOPY_ITERATIONS) / (double)1e9;
-        bandwidthInGBs = bandwidthInGBs / time_s;
-
-        // Print result
-        std::cout << std::fixed << std::setprecision(1);
-        std::cout << "   " << DEFAULT_SIZE << "\t\t" << bandwidthInGBs << "\n\n";
-
-        // Clean up memory
         cudaEventDestroy(stop);
         cudaEventDestroy(start);
         cudaFree(d_idata);
@@ -157,77 +148,57 @@ public:
         cudaFreeHost(h_odata);
     }
 
-private:
-    float elapsedTimeInMs;
-};
-
-// ============================================================
-// Host to Device Bandwidth Test (Pinned Memory)
-// ============================================================
-
-class HostToDeviceBandwidthTest {
-public:
-    void execute(const TestConfig& config = TestConfig()) {
-        std::cout << "\n===================================================\n";
-        std::cout << "Host to Device Bandwidth Test (Pinned Memory)\n";
-        std::cout << "===================================================\n\n";
-
-        const unsigned int MEMCOPY_ITERATIONS = 100;
-        const unsigned int DEFAULT_SIZE = 32 * 1024 * 1024;  // 32 MB
-
-        std::cout << " Host to Device Bandwidth, 1 Device(s)\n";
-        std::cout << " PINNED Memory Transfers\n";
-        std::cout << "   Transfer Size (Bytes)\tBandwidth(GB/s)\n";
-        std::cout << std::string(45, '-') << "\n";
-
-        // Allocate pinned memory
+    void run_htod_test() {
         unsigned char *h_odata;
+        unsigned char *d_idata;
+
         cudaHostAlloc(&h_odata, DEFAULT_SIZE, 0);
 
-        // Initialize the memory
         for (unsigned int i = 0; i < DEFAULT_SIZE / sizeof(unsigned char); i++) {
             h_odata[i] = (unsigned char)(i & 0xff);
         }
 
-        // Allocate device memory
-        unsigned char *d_idata;
         cudaMalloc(&d_idata, DEFAULT_SIZE);
 
-        // Create events
         cudaEvent_t start, stop;
         cudaEventCreate(&start);
         cudaEventCreate(&stop);
 
-        // Copy host memory to device memory
         cudaEventRecord(start, 0);
-
         for (unsigned int i = 0; i < MEMCOPY_ITERATIONS; i++) {
             cudaMemcpyAsync(d_idata, h_odata, DEFAULT_SIZE, cudaMemcpyHostToDevice, 0);
         }
-
         cudaEventRecord(stop, 0);
         cudaDeviceSynchronize();
+
         cudaEventElapsedTime(&elapsedTimeInMs, start, stop);
 
-        // Calculate bandwidth in GB/s
-        double time_s = elapsedTimeInMs / 1e3;
-        float bandwidthInGBs = (DEFAULT_SIZE * (float)MEMCOPY_ITERATIONS) / (double)1e9;
-        bandwidthInGBs = bandwidthInGBs / time_s;
-
-        // Print result
-        std::cout << std::fixed << std::setprecision(1);
-        std::cout << "   " << DEFAULT_SIZE << "\t\t" << bandwidthInGBs << "\n\n";
-
-        // Clean up memory
         cudaEventDestroy(stop);
         cudaEventDestroy(start);
         cudaFree(d_idata);
         cudaFreeHost(h_odata);
     }
 
-private:
-    float elapsedTimeInMs;
+    void print_result() const {
+        double time_s = elapsedTimeInMs / 1e3;
+
+        float bandwidthInGBs;
+        if constexpr (Dir == BandwidthDirection::DEVICE_TO_DEVICE) {
+            bandwidthInGBs = (2.0f * DEFAULT_SIZE * MEMCOPY_ITERATIONS) / 1e9;
+        } else {
+            bandwidthInGBs = (DEFAULT_SIZE * (float)MEMCOPY_ITERATIONS) / 1e9;
+        }
+        bandwidthInGBs /= time_s;
+
+        std::cout << std::fixed << std::setprecision(1);
+        std::cout << "   " << DEFAULT_SIZE << "\t\t" << bandwidthInGBs << "\n\n";
+    }
 };
+
+// Type aliases for backward compatibility
+using DeviceToDeviceBandwidthTest = BandwidthTest<BandwidthDirection::DEVICE_TO_DEVICE>;
+using DeviceToHostBandwidthTest = BandwidthTest<BandwidthDirection::DEVICE_TO_HOST>;
+using HostToDeviceBandwidthTest = BandwidthTest<BandwidthDirection::HOST_TO_DEVICE>;
 
 // ============================================================
 // Unified Bandwidth Test Suite

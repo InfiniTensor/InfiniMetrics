@@ -19,7 +19,13 @@ cd benchmarks/hardware/cuda-unified
 ```bash
 ./build/cuda_perf_suite --memory
 ```
-Tests Host↔Device and Device↔Device transfer bandwidths.
+Tests Host↔Device and Device↔Device transfer bandwidths with multiple buffer sizes.
+
+### Bandwidth Tests
+```bash
+./build/cuda_perf_suite --bandwidth
+```
+Tests device-to-device, device-to-host, and host-to-device bandwidth with 32MB transfers.
 
 ### STREAM Benchmark
 ```bash
@@ -39,6 +45,11 @@ Tests L1 and L2 cache performance with varying working set sizes.
 ### Quick Performance Check (Default Settings)
 ```bash
 ./build/cuda_perf_suite --all
+```
+
+### Quick Bandwidth Test (Fast)
+```bash
+./build/cuda_perf_suite --bandwidth
 ```
 
 ### Detailed STREAM Benchmark (More Iterations)

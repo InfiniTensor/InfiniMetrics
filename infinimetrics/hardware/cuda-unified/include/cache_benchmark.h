@@ -8,6 +8,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <utility>
 
 namespace cuda_perf {
 
@@ -156,6 +157,22 @@ void run_measurement() {
 } // namespace l1_cache_impl
 
 // ============================================================
+// Helper to run template measurements at compile time
+// ============================================================
+
+namespace detail {
+template <typename Func, std::size_t... Is>
+constexpr void for_each_index(std::index_sequence<Is...>, Func&& func) {
+    (func(std::integral_constant<std::size_t, Is>{}), ...);
+}
+
+template <std::size_t N, typename Func>
+constexpr void for_each_index(Func&& func) {
+    for_each_index(std::make_index_sequence<N>{}, std::forward<Func>(func));
+}
+} // namespace detail
+
+// ============================================================
 // L1 Cache Sweep Test
 // ============================================================
 
@@ -172,26 +189,18 @@ public:
                   << std::setw(15) << "Eff. bw\n";
         std::cout << std::string(51, '-') << "\n";
 
-        // Run all test configurations
+        // Run all test configurations using compile-time loop
+        // Initial sizes
         l1_cache_impl::run_measurement<128, 128>();
         l1_cache_impl::run_measurement<256, 256>();
         l1_cache_impl::run_measurement<512, 512>();
         l1_cache_impl::run_measurement<3 * 256, 256>();
-        l1_cache_impl::run_measurement<2 * 512, 512>();
-        l1_cache_impl::run_measurement<3 * 512, 512>();
-        l1_cache_impl::run_measurement<4 * 512, 512>();
-        l1_cache_impl::run_measurement<5 * 512, 512>();
-        l1_cache_impl::run_measurement<6 * 512, 512>();
-        l1_cache_impl::run_measurement<7 * 512, 512>();
-        l1_cache_impl::run_measurement<8 * 512, 512>();
-        l1_cache_impl::run_measurement<9 * 512, 512>();
-        l1_cache_impl::run_measurement<10 * 512, 512>();
-        l1_cache_impl::run_measurement<11 * 512, 512>();
-        l1_cache_impl::run_measurement<12 * 512, 512>();
-        l1_cache_impl::run_measurement<13 * 512, 512>();
-        l1_cache_impl::run_measurement<14 * 512, 512>();
-        l1_cache_impl::run_measurement<15 * 512, 512>();
-        l1_cache_impl::run_measurement<16 * 512, 512>();
+
+        // Powers of 512 from 1x to 16x
+        detail::for_each_index<16>([](auto index) {
+            constexpr std::size_t multiplier = index + 1;
+            l1_cache_impl::run_measurement<multiplier * 512, 512>();
+        });
 
         std::cout << "\n";
     }
