@@ -81,35 +81,14 @@ The tests report:
 
 Lower CV = more consistent results.
 
-## 6. Troubleshooting
-
-### "CUDA out of memory"
-Reduce buffer size:
-```bash
-./build/cuda_perf_suite --all --buffer-size 128
-```
-
-### "No CUDA devices found"
-Check GPU availability:
-```bash
-nvidia-smi
-```
-
-### Build fails
-Ensure CUDA toolkit is installed:
-```bash
-nvcc --version
-cmake --version
-```
-
-## 7. Example Output
+## 6. Example Output
 
 ```
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║        CUDA Performance Benchmark Suite v1.0                 ║
+║        CUDA Performance Benchmark Suite v1.0                  ║
 ║                                                               ║
-║        Comprehensive GPU Memory & Cache Testing              ║
+║        Comprehensive GPU Memory & Cache Testing               ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 
@@ -136,7 +115,7 @@ Size (MB)       Time (ms)  Bandwidth (GB/s)     CV (%)
      ...
 ```
 
-## 8. Next Steps
+## 7. Next Steps
 
 - Read [README.md](README.md) for detailed documentation
 - Adjust test parameters for your specific use case

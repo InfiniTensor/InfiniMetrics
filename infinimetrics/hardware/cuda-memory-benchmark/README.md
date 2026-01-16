@@ -142,10 +142,7 @@ Standard STREAM benchmark with 4 operations:
 
 ### 4. Cache Performance Tests
 
-Tests L1 and L2 cache bandwidth by varying working set sizes:
-
-- **L1 Cache**: 8KB to 256KB working sets
-- **L2 Cache**: 256KB to 16MB working sets
+Tests L1 and L2 cache bandwidth by varying working set sizes
 
 **Output**: Bandwidth vs working set size, revealing cache hierarchy characteristics
 
@@ -156,13 +153,6 @@ Tests L1 and L2 cache bandwidth by varying working set sizes:
 - **Average Time**: Mean execution time
 - **Trimmed Mean**: Average excluding min/max values (more robust)
 - **Coefficient of Variation (CV)**: Relative standard deviation (lower is better)
-
-### Expected Performance (A100 Example)
-
-- **HBM Bandwidth**: ~1.5 TB/s (device-to-device)
-- **PCIe Gen4**: ~32 GB/s (host-to-device)
-- **L2 Cache**: ~3 TB/s
-- **L1 Cache**: ~10+ TB/s (very small working sets)
 
 ## Project Structure
 
@@ -181,51 +171,3 @@ cuda-memory-benchmark/
 ├── build.sh                         # Build script
 └── README.md                        # This file
 ```
-
-## Design Principles
-
-1. **No Code Duplication**: Original code was not copied or translated
-2. **Modern C++**: Uses C++17 features, RAII, smart pointers
-3. **Type Safety**: Strong typing, template-based design
-4. **Exception Safety**: Comprehensive error handling
-5. **Modularity**: Clear separation of concerns
-6. **Extensibility**: Easy to add new tests
-
-## Technical Highlights
-
-- **RAII Wrappers**: Automatic resource management for CUDA memory and streams
-- **Template-based Kernels**: Compile-time optimization for different operations
-- **Statistical Analysis**: Robust metrics with trimmed mean and CV
-- **Flexible Configuration**: Command-line options for all parameters
-- **Comprehensive Testing**: Multiple working set sizes for cache analysis
-
-## License
-
-Same license as the parent InfiniPerf project.
-
-## Contributing
-
-When adding new tests:
-
-1. Inherit from `PerformanceTest` base class
-2. Implement required virtual methods
-3. Add test suite to main program
-4. Update documentation
-
-## Troubleshooting
-
-### Build Errors
-
-- **CUDA not found**: Ensure CUDA toolkit is installed and in PATH
-- **Architecture mismatch**: Adjust `CMAKE_CUDA_ARCHITECTURES` in CMakeLists.txt
-- **Compiler errors**: Ensure C++17 support is enabled
-
-### Runtime Errors
-
-- **Out of memory**: Reduce buffer size with `--buffer-size`
-- **Device not available**: Check device ID with `nvidia-smi`
-- **Peer access failed**: Expected on systems without NVLink/SLI
-
-## Contact
-
-For issues or questions, please open an issue in the main InfiniPerf repository.
