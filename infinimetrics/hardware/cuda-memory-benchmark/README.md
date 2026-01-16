@@ -23,7 +23,7 @@ A comprehensive, modern CUDA performance testing suite written in C++17 with CMa
 ### Quick Start
 
 ```bash
-cd benchmarks/hardware/cuda-unified
+cd benchmarks/hardware/cuda-memory-benchmark
 ./build.sh
 ```
 
@@ -167,7 +167,7 @@ Tests L1 and L2 cache bandwidth by varying working set sizes:
 ## Project Structure
 
 ```
-cuda-unified/
+cuda-memory-benchmark/
 ├── include/               # Header files
 │   ├── performance_test.h           # Base testing framework
 │   ├── cuda_utils.h                 # CUDA utilities (RAII wrappers)

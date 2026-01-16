@@ -4,14 +4,14 @@
 ║                                                                           ║
 ╚═══════════════════════════════════════════════════════════════════════════╝
 
-LOCATION: benchmarks/hardware/cuda-unified/
+LOCATION: benchmarks/hardware/cuda-memory-benchmark/
 
 ═══════════════════════════════════════════════════════════════════════════
 
 PROJECT STRUCTURE:
 ═══════════════════
 
-cuda-unified/
+cuda-memory-benchmark/
 ├── include/
 │   ├── performance_test.h           ← Core testing framework
 │   ├── cuda_utils.h                 ← CUDA utilities (RAII wrappers)
@@ -70,7 +70,7 @@ QUICK START:
 ═════════════
 
 1. Build:
-   $ cd benchmarks/hardware/cuda-unified
+   $ cd benchmarks/hardware/cuda-memory-benchmark
    $ ./build.sh
 
 2. Run all tests:
@@ -246,7 +246,7 @@ No modifications to framework code needed!
 CONCLUSION:
 ════════════
 
-The new cuda-unified project provides a complete rewrite of the original
+The new cuda-memory-benchmark project provides a complete rewrite of the original
 CUDA benchmark suite with:
 
 • Modern C++17 design patterns

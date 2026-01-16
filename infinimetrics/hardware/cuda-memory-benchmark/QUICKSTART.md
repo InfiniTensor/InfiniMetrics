@@ -3,7 +3,7 @@
 ## 1. Build the Project
 
 ```bash
-cd benchmarks/hardware/cuda-unified
+cd benchmarks/hardware/cuda-memory-benchmark
 ./build.sh
 ```
 
