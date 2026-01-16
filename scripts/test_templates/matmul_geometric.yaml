@@ -1,0 +1,26 @@
+# Matrix multiplication with geometric progression (powers of 2)
+operator: matmul
+
+# Geometric progression - common for hardware optimization testing
+shape_distributions:
+  - - "powers_of_2(9, 11)"     # 512, 1024, 2048
+    - "powers_of_2(9, 11)"     # 512, 1024, 2048
+  - - "powers_of_2(9, 11)"     # 512, 1024, 2048
+    - "powers_of_2(9, 11)"     # 512, 1024, 2048
+
+dtypes:
+  - float16
+
+devices:
+  - nvidia
+
+# Tensor generation configuration
+tensor_generation:
+  enabled: true
+  init_methods:
+    - identity          # First input: identity matrix
+    - identity          # Second input: identity matrix
+  seed: 42
+
+random_seed: 123
+max_combinations: 5  # Limit to 5 combinations for testing

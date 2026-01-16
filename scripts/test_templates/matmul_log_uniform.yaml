@@ -1,0 +1,18 @@
+# Matrix multiplication with log-uniform distribution
+# Better for exploring size scales (e.g., 512, 2048, 8192)
+operator: matmul
+
+shape_distributions:
+  - - "log_uniform(512, 8192, 3)"   # 512, 2048, 8192
+    - "log_uniform(512, 8192, 3)"
+  - - "log_uniform(512, 8192, 3)"
+    - "log_uniform(512, 8192, 3)"
+
+dtypes:
+  - float16
+  - float32
+
+devices:
+  - nvidia
+
+random_seed: 999

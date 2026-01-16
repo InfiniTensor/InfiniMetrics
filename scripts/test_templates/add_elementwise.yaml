@@ -1,0 +1,16 @@
+# Element-wise addition with various tensor sizes
+operator: add
+
+shape_distributions:
+  - - "uniform(1024, 8192, 5)"   # Test various sizes
+    - "uniform(1024, 8192, 5)"   # 2D tensors
+
+dtypes:
+  - float16
+  - float32
+
+devices:
+  - nvidia
+  - cpu
+
+random_seed: 777

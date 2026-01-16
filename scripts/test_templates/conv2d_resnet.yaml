@@ -1,0 +1,28 @@
+# Conv2D for ResNet-like architectures
+# Tests various channel dimensions and spatial sizes
+operator: conv2d
+
+shape_distributions:
+  # Input tensor: [batch, channels, H, W]
+  - - "[1]"                     # Batch size (fixed)
+    - "geometric(64, 2, 4)"     # Channels: 64, 128, 256, 512
+    - "choice([56, 28, 14, 7], 4, replace=False)"  # H: all values
+    - "choice([56, 28, 14, 7], 4, replace=False)"  # W: all values
+  # Weight tensor: [out_channels, in_channels, kernel_h, kernel_w]
+  - - "geometric(64, 2, 4)"     # Out channels: 64, 128, 256, 512
+    - "geometric(64, 2, 3)"     # In channels: 64, 128, 256
+    - "[3]"                     # Kernel height (fixed)
+    - "[3]"                     # Kernel width (fixed)
+
+dtypes:
+  - float16
+
+devices:
+  - nvidia
+
+operator_params:
+  stride: 1
+  padding: 1
+
+random_seed: 42
+max_combinations: 30

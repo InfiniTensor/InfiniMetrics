@@ -1,0 +1,24 @@
+# Matrix multiplication with uniform shape distribution
+operator: matmul
+
+# Shape distributions for each tensor
+# Tensor A: uniform distribution for both dimensions
+# Tensor B: uniform distribution for both dimensions
+shape_distributions:
+  - - "uniform(512, 4096, 4)"   # Tensor A, dim 0
+    - "uniform(512, 4096, 4)"   # Tensor A, dim 1
+  - - "uniform(512, 4096, 4)"   # Tensor B, dim 0
+    - "uniform(512, 4096, 4)"   # Tensor B, dim 1
+
+dtypes:
+  - float16
+  - float32
+
+devices:
+  - nvidia
+
+# Optional: limit total combinations
+max_combinations: 50
+
+# Random seed for reproducibility
+random_seed: 42

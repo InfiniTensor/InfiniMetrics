@@ -1,0 +1,42 @@
+{
+    "run_id": "test.add.perf.2048",
+    "testcase": "operator.InfiniCore.Add.Performance",
+    "config": {
+        "operator": "add",
+        "device": "nvidia",
+        "torch_op": "torch.add",
+        "infinicore_op": "infinicore.add",
+        "inputs": [
+            {
+                "name": "a",
+                "shape": [2048, 2048],
+                "dtype": "float16"
+            },
+            {
+                "name": "b",
+                "shape": [2048, 2048],
+                "dtype": "float16"
+            }
+        ],
+        "attributes": [],
+        "outputs": [
+            {
+                "name": "output",
+                "shape": [2048, 2048],
+                "dtype": "float16"
+            }
+        ],
+        "warmup_iterations": 10,
+        "measured_iterations": 100,
+        "tolerance": {
+            "atol": 1e-3,
+            "rtol": 1e-3
+        }
+    },
+    "metrics": [
+        {"name": "operator.latency"},
+        {"name": "operator.tensor_accuracy"},
+        {"name": "operator.flops"},
+        {"name": "operator.bandwidth"}
+    ]
+}

@@ -1,0 +1,25 @@
+# Matrix multiplication with tensor data generation
+operator: matmul
+
+# Simple shape for testing
+shape_distributions:
+  - - "[1024]"     # Fixed size
+    - "[1024]"
+  - - "[1024]"
+    - "[1024]"
+
+dtypes:
+  - float16
+
+devices:
+  - nvidia
+
+# Tensor generation configuration
+tensor_generation:
+  enabled: true
+  init_methods:
+    - random_normal     # First input: random normal distribution
+    - zeros             # Second input: all zeros
+  seed: 42
+
+random_seed: 123
