@@ -34,7 +34,11 @@ class HardwareTestAdapter(BaseAdapter):
             mock_output_file: Path to file containing real cuda_perf_suite output for mock mode
         """
         if cuda_perf_path is None:
+<<<<<<< HEAD
             default_path = Path(__file__).parent / "cuda-unified" / "build" / "cuda_perf_suite"
+=======
+            default_path = Path(__file__).parent / "cuda-memory-benchmark" / "build" / "cuda_perf_suite"
+>>>>>>> hardware_temp
             self.cuda_perf_path = str(default_path)
         else:
             self.cuda_perf_path = cuda_perf_path
@@ -118,7 +122,11 @@ class HardwareTestAdapter(BaseAdapter):
         if not Path(self.cuda_perf_path).exists():
             raise RuntimeError(
                 f"cuda_perf_suite not found at: {self.cuda_perf_path}\n"
+<<<<<<< HEAD
                 f"Build it first: cd infinimetrics/hardware/cuda-unified && ./build.sh"
+=======
+                f"Build it first: cd infinimetrics/hardware/cuda-memory-benchmark && ./build.sh"
+>>>>>>> hardware_temp
             )
 
         logger.info(f"Executing: {' '.join(cmd)}")
@@ -139,7 +147,11 @@ class HardwareTestAdapter(BaseAdapter):
                 return f.read()
 
         # Default: use output.log in the same directory
+<<<<<<< HEAD
         default_mock_file = Path(__file__).parent / "cuda-unified" / "output.log"
+=======
+        default_mock_file = Path(__file__).parent / "cuda-memory-benchmark" / "output.log"
+>>>>>>> hardware_temp
         if default_mock_file.exists():
             logger.info(f"Using mock output from: {default_mock_file}")
             with open(default_mock_file, "r") as f:
