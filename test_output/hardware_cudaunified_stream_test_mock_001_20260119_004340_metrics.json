@@ -1,0 +1,31 @@
+{
+  "testcase": "hardware.cudaunified.stream",
+  "run_id": "test_mock_001",
+  "timestamp": "20260119_004340",
+  "metrics": [
+    {
+      "name": "stream.bandwidth.copy",
+      "value": 430.85,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "stream.bandwidth.scale",
+      "value": 440.39,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "stream.bandwidth.add",
+      "value": 456.39,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "stream.bandwidth.triad",
+      "value": 457.05,
+      "type": "scalar",
+      "unit": "GB/s"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "testcase": "hardware.cudaunified.comprehensive",
+  "run_id": "test_001",
+  "timestamp": "20260119_003314",
+  "metrics": [
+    {
+      "name": "memory.bandwidth.host_to_device",
+      "value": 367.2,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "memory.bandwidth.device_to_host",
+      "value": 367.2,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "memory.bandwidth.device_to_device",
+      "value": 367.2,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "stream.bandwidth.copy",
+      "value": 437.36,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "stream.bandwidth.scale",
+      "value": 446.41,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "stream.bandwidth.add",
+      "value": 394.01,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "stream.bandwidth.triad",
+      "value": 417.26,
+      "type": "scalar",
+      "unit": "GB/s"
+    }
+  ]
+}

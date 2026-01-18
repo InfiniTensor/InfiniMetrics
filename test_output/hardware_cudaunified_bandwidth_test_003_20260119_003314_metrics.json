@@ -1,0 +1,25 @@
+{
+  "testcase": "hardware.cudaunified.bandwidth",
+  "run_id": "test_003",
+  "timestamp": "20260119_003314",
+  "metrics": [
+    {
+      "name": "memory.bandwidth.host_to_device",
+      "value": 10.7,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "memory.bandwidth.device_to_host",
+      "value": 9.5,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "memory.bandwidth.device_to_device",
+      "value": 191.8,
+      "type": "scalar",
+      "unit": "GB/s"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+operation,bandwidth_gbps,unit
+copy,437.36,GB/s
+scale,446.41,GB/s
+add,394.01,GB/s
+triad,417.26,GB/s

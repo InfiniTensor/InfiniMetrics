@@ -1,0 +1,4 @@
+direction,size_bytes,bandwidth_gbps
+host_to_device,33554432.0,10.7
+device_to_host,33554432.0,9.5
+device_to_device,33554432.0,191.8
