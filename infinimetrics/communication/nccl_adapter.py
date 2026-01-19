@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""NCCL Communication Test Adapter - Simplified + Single/Multi Node"""
+"""NCCL Communication Test Adapter"""
 
 import csv
 import logging
@@ -12,7 +12,6 @@ import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
-
 from infinimetrics.adapter import BaseAdapter
 
 logger = logging.getLogger(__name__)
@@ -35,35 +34,21 @@ DEFAULTS = {
     },
 }
 
-NVIDIA_SMI_GPU_QUERY = [
-    "nvidia-smi",
-    "--query-gpu=name,memory.total,driver_version",
-    "--format=csv,noheader",
-]
 
 @dataclass(frozen=True)
-class NCCLTestSpec:
+class NCCLTestsSpec:
     operation: str
     binary_name: str
     display_name: str
 
-OPERATION_MAP: Dict[str, NCCLTestSpec] = {
-    "allreduce": NCCLTestSpec("allreduce", "all_reduce_perf", "AllReduce"),
-    "allgather": NCCLTestSpec("allgather", "all_gather_perf", "AllGather"),
-    "alltoall": NCCLTestSpec("alltoall", "alltoall_perf", "AllToAll"),
-    "broadcast": NCCLTestSpec("broadcast", "broadcast_perf", "Broadcast"),
-    "pointtopoint": NCCLTestSpec("pointtopoint", "sendrecv_perf", "PointToPoint"),
+OPERATION_MAP: Dict[str, NCCLTestsSpec] = {
+    "allreduce": NCCLTestsSpec("allreduce", "all_reduce_perf", "AllReduce"),
+    "allgather": NCCLTestsSpec("allgather", "all_gather_perf", "AllGather"),
+    "alltoall": NCCLTestsSpec("alltoall", "alltoall_perf", "AllToAll"),
+    "broadcast": NCCLTestsSpec("broadcast", "broadcast_perf", "Broadcast"),
+    "pointtopoint": NCCLTestsSpec("pointtopoint", "sendrecv_perf", "PointToPoint"),
 }
 
-@dataclass
-class HardwareInfo:
-    cpu_model: str = "Unknown"
-    memory_gb: int = 0
-    gpu_model: str = "Unknown"
-    gpu_count: int = 0
-    gpu_memory_gb: int = 0
-    driver_version: str = "Unknown"
-    cuda_version: str = "Unknown"
 
 @dataclass
 class ResolvedRun:
@@ -74,23 +59,22 @@ class ResolvedRun:
     command: str = ""
 
 
-class NCCLAdapter(BaseAdapter):
+class NcclTestsAdapter(BaseAdapter):
     def __init__(self):
         super().__init__()
         self.nccl_test_dir: Optional[Path] = None
         self.result_dir: Optional[Path] = None
-        self.test_spec: Optional[NCCLTestSpec] = None
+        self.test_spec: Optional[NCCLTestsSpec] = None
         self.run_id: Optional[str] = None
 
-        self.hw = HardwareInfo()
         self.resolved = ResolvedRun()
         self._orig_env: Dict[str, str] = {}
-
     # -----------------------------
     # BaseAdapter hooks
     # -----------------------------
     def setup(self, config: Dict[str, Any]) -> None:
         self._save_orig_env(["CUDA_VISIBLE_DEVICES"])
+
         self.nccl_test_dir = self._find_nccl_test_dir()
         if not self.nccl_test_dir:
             raise FileNotFoundError("NCCL tests directory not found (expected submodules/nccl-tests).")
@@ -100,8 +84,6 @@ class NCCLAdapter(BaseAdapter):
         self.result_dir.mkdir(parents=True, exist_ok=True)
 
         self._setup_nccl_env(config)
-        self._collect_hw_info()
-
         logger.info(f"NCCL tests found at: {self.nccl_test_dir}")
 
     def teardown(self) -> None:
@@ -110,8 +92,8 @@ class NCCLAdapter(BaseAdapter):
 
     def process(self, test_input: Dict[str, Any]) -> Dict[str, Any]:
         input_dict = test_input.to_dict() if hasattr(test_input, "to_dict") else test_input
-        config = input_dict.get("config", {})
-        testcase = input_dict.get("testcase", "")
+        config = input_dict.get("config", {}) or {}
+        testcase = input_dict.get("testcase", "") or ""
 
         self.run_id = input_dict.get("run_id") or self._gen_run_id(testcase)
         self.test_spec = self._parse_test_spec(testcase)
@@ -127,12 +109,11 @@ class NCCLAdapter(BaseAdapter):
             stdout, stderr, rc = self._run(cmd, config)
             wall_ms = (time.perf_counter() - t0) * 1000.0
 
-            # simple success test: resolves at least to rows
             results = self._parse_output(stdout)
             if not results["latency"]:
                 msg = f"No performance data parsed. returncode={rc}"
                 if stderr:
-                    msg += f"\nStderr(last 20 lines):\n" + "\n".join(stderr.splitlines()[-20:])
+                    msg += "\nStderr(last 20 lines):\n" + "\n".join(stderr.splitlines()[-20:])
                 return self._err(input_dict, msg)
 
             raw_files = self._save_raw_csv(results)
@@ -143,10 +124,16 @@ class NCCLAdapter(BaseAdapter):
                 "time": time.strftime("%Y-%m-%d %H:%M:%S"),
                 "testcase": testcase,
                 "success": 0,
-                "environment": self._build_environment(),
                 "config": self._build_config_section(config, cmd_str),
                 "metrics": metrics,
                 "result_code": 0,
+                "resolved": {
+                    "mode": self.resolved.mode,
+                    "nodes": self.resolved.nodes,
+                    "gpus_per_node": self.resolved.gpus_per_node,
+                    "device_used": self.resolved.device_used,
+                    "command": self.resolved.command,
+                },
             }
 
         except Exception as e:
@@ -163,10 +150,7 @@ class NCCLAdapter(BaseAdapter):
         - if config.multi_node exists, allow override there for multi-node mode
         """
         mode = "multi_node" if self._is_multi_node(config) else "single_node"
-        if mode == "single_node":
-            sub = config.get("single_node") or {}
-        else:
-            sub = config.get("multi_node") or {}
+        sub = config.get(mode) or {}
         return sub.get(key, config.get(key, default))
 
     def _is_multi_node(self, config: Dict[str, Any]) -> bool:
@@ -193,81 +177,18 @@ class NCCLAdapter(BaseAdapter):
     def _setup_nccl_env(self, config: Dict[str, Any]) -> None:
         # CUDA_VISIBLE_DEVICES
         device_ids = config.get("device_ids")
+        if device_ids is None and isinstance(config.get("single_node"), dict):
+            device_ids = config["single_node"].get("device_ids")
+
         if isinstance(device_ids, list) and device_ids:
             os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(str(x) for x in device_ids)
             logger.info(f"Set CUDA_VISIBLE_DEVICES={os.environ['CUDA_VISIBLE_DEVICES']}")
 
-        env_vars = {}
+        env_vars: Dict[str, Any] = {}
         env_vars.update(DEFAULTS["nccl_env_defaults"])
         env_vars.update(config.get("env_vars", {}) or {})
         for k, v in env_vars.items():
             os.environ[k] = str(v)
-
-    def _collect_hw_info(self) -> None:
-        # CPU model
-        try:
-            with open("/proc/cpuinfo", "r") as f:
-                for line in f:
-                    if "model name" in line:
-                        self.hw.cpu_model = line.split(":", 1)[1].strip()
-                        break
-        except Exception:
-            pass
-
-        # Memory
-        try:
-            with open("/proc/meminfo", "r") as f:
-                for line in f:
-                    if "MemTotal" in line:
-                        mem_kb = int(line.split()[1])
-                        self.hw.memory_gb = mem_kb // (1024 * 1024)
-                        break
-        except Exception:
-            pass
-
-        # GPU info
-        self._collect_gpu_info()
-
-    def _collect_gpu_info(self) -> None:
-        # Prefer nvidia-smi
-        try:
-            r = subprocess.run(NVIDIA_SMI_GPU_QUERY, capture_output=True, text=True, timeout=5)
-            if r.returncode == 0 and r.stdout.strip():
-                lines = [x.strip() for x in r.stdout.strip().splitlines() if x.strip()]
-                self.hw.gpu_count = len(lines)
-                # parse first line: "A100..., 81920 MiB, 580.xx"
-                p = [x.strip() for x in lines[0].split(",")]
-                if len(p) >= 3:
-                    self.hw.gpu_model = p[0]
-                    self.hw.driver_version = p[2]
-                    m = p[1]
-                    mm = re.search(r"(\d+)\s*MiB", m)
-                    if mm:
-                        self.hw.gpu_memory_gb = int(mm.group(1)) // 1024
-        except Exception:
-            pass
-
-        # fallback: CUDA_VISIBLE_DEVICES
-        if self.hw.gpu_count == 0:
-            cvd = os.environ.get("CUDA_VISIBLE_DEVICES", "")
-            if cvd.strip():
-                self.hw.gpu_count = len([x for x in cvd.split(",") if x.strip()])
-
-        # CUDA version (best-effort)
-        self.hw.cuda_version = self._collect_cuda_version() or self.hw.cuda_version
-
-    def _collect_cuda_version(self) -> Optional[str]:
-        try:
-            r = subprocess.run(["nvcc", "--version"], capture_output=True, text=True, timeout=2)
-            if r.returncode == 0:
-                for line in r.stdout.splitlines():
-                    if "release" in line:
-                        m = re.search(r"release\s+(\d+\.\d+)", line)
-                        if m:
-                            return m.group(1)
-        except Exception:
-            pass
-        return None
 
     # -----------------------------
     # NCCL tests dir / binary
@@ -290,14 +211,15 @@ class NCCLAdapter(BaseAdapter):
         p2 = self.nccl_test_dir / name
         if p2.exists():
             return p2
-        if shutil.which(name):
-            return Path(name)
+        which = shutil.which(name)
+        if which:
+            return Path(which)
         raise FileNotFoundError(f"NCCL binary '{name}' not found")
 
     # -----------------------------
     # testcase / command
     # -----------------------------
-    def _parse_test_spec(self, testcase: str) -> Optional[NCCLTestSpec]:
+    def _parse_test_spec(self, testcase: str) -> Optional[NCCLTestsSpec]:
         # comm.NcclTest.AllReduce
         parts = testcase.split(".")
         if len(parts) < 3:
@@ -328,17 +250,18 @@ class NCCLAdapter(BaseAdapter):
                 raise ValueError("multi_node.hosts is required for multi-node run")
 
             host_arg = ",".join(f"{h}:{gpn}" for h in hosts)
-            np_total = len(hosts) * gpn
 
             # record resolved
             self.resolved.mode = "multi_node"
             self.resolved.nodes = len(hosts)
             self.resolved.gpus_per_node = gpn
-            self.resolved.device_used = np_total 
+            self.resolved.device_used = len(hosts) * gpn 
             # NCCL tests: USE-G to control the number of gpus per node when there is one process per node
             return [
-                mpirun, "-H", host_arg, "-np", str(len(hosts)),
-                *extra_mpi,
+                mpirun,
+                "-H", host_arg,
+                "-np", str(len(hosts)),
+                *[str(x) for x in extra_mpi],
                 str(binary),
                 "-b", str(min_size),
                 "-e", str(max_size),
@@ -353,11 +276,12 @@ class NCCLAdapter(BaseAdapter):
         # single node
         device_involved = int(self._cfg(config, "device_involved", DEFAULTS["device_involved"]))
         visible = os.environ.get("CUDA_VISIBLE_DEVICES", "").strip()
-        visible_cnt = len([x for x in visible.split(",") if x.strip()]) if visible else self.hw.gpu_count
+        visible_cnt = len([x for x in visible.split(",") if x.strip()]) if visible else 0
         g_used = min(device_involved, visible_cnt or device_involved)
 
         self.resolved.mode = "single_node"
         self.resolved.nodes = 1
+        self.resolved.gpus_per_node = g_used
         self.resolved.device_used = g_used
 
         return [
@@ -406,7 +330,7 @@ class NCCLAdapter(BaseAdapter):
         if not stdout:
             return out
 
-        lat, bus, alg = [], [], []
+        lat, bus = [], []
 
         for line in stdout.splitlines():
             line = line.strip()
@@ -433,7 +357,6 @@ class NCCLAdapter(BaseAdapter):
             out["algbw"].append({"size_bytes": size_b, "algbw_gbs": algbw})
             out["busbw"].append({"size_bytes": size_b, "busbw_gbs": busbw})
             lat.append(t_us)
-            alg.append(algbw)
             bus.append(busbw)
 
         if lat:
@@ -464,7 +387,8 @@ class NCCLAdapter(BaseAdapter):
         base = re.sub(r"\d{8}_\d{6}", "", self.run_id).strip("._") or "comm_test"
         prefix = f"{base}_{ts}"
 
-        raw = {}
+        raw: Dict[str, str] = {}
+
         if results["latency"]:
             fp = self.result_dir / f"{prefix}_latency.csv"
             with fp.open("w", newline="") as f:
@@ -488,54 +412,57 @@ class NCCLAdapter(BaseAdapter):
     def _build_metrics(self, duration_ms: float, raw_files: Dict[str, str]) -> List[Dict[str, Any]]:
         metrics: List[Dict[str, Any]] = []
         if raw_files.get("latency"):
-            metrics.append({"name": "comm.latency", "type": "timeseries", "raw_data_url": raw_files["latency"], "unit": "us"})
-        metrics.append({"name": "comm.duration", "type": "scalar", "value": duration_ms, "unit": "ms"})
+            metrics.append({
+                "name": "comm.latency",
+                "type": "timeseries",
+                "raw_data_url": raw_files["latency"],
+                "unit": "us",
+            })
+        metrics.append({
+            "name": "comm.duration",
+            "type": "scalar",
+            "value": duration_ms,
+            "unit": "ms",
+        })
         if raw_files.get("bandwidth"):
-            metrics.append({"name": "comm.bandwidth", "type": "timeseries", "raw_data_url": raw_files["bandwidth"], "unit": "GB/s"})
+            metrics.append({
+                "name": "comm.bandwidth",
+                "type": "timeseries",
+                "raw_data_url": raw_files["bandwidth"],
+                "unit": "GB/s",
+            })
         return metrics
-
-    def _build_environment(self) -> Dict[str, Any]:
-        # Use actual use to construct topology/count
-        used = self.resolved.device_used or 0
-        topo = f"{used}x1 ring mesh" if self.resolved.mode == "single_node" else f"{self.resolved.nodes}x{self.resolved.gpus_per_node} ring mesh"
-        return {
-            "cluster_scale": self.resolved.nodes,
-            "topology": topo,
-            "cluster": [
-                {
-                    "machine": {
-                        "cpu_model": self.hw.cpu_model,
-                        "memory_gb": self.hw.memory_gb,
-                        "accelerators": [
-                            {
-                                "model": self.hw.gpu_model,
-                                "count": used if self.resolved.mode == "single_node" else self.resolved.device_used,
-                                "memory_gb_per_card": self.hw.gpu_memory_gb,
-                                "driver": self.hw.driver_version,
-                                "cuda": self.hw.cuda_version,
-                            }
-                        ],
-                    },
-                    "framework": [{"name": "nccl-test", "version": "unknown"}],
-                }
-            ],
-        }
 
     def _build_config_section(self, config: Dict[str, Any], command: str) -> Dict[str, Any]:
         assert self.test_spec is not None
-        # Keep only schema-required fields + add device_used
-        return {
+        core = {
+            "command": command,
+
             "operator": config.get("operator", self.test_spec.display_name),
             "attributes": config.get("attributes", [{"name": "op", "value": "SUM"}, {"name": "group", "value": "WORLD"}]),
             "inputs": config.get("inputs", [{"name": "input_tensor", "dtype": "float32", "shape": [512, 512]}]),
             "outputs": config.get("outputs", [{"name": "output_tensor", "dtype": "float32", "shape": [512, 512]}]),
+
             "timeout_ms": self._cfg(config, "timeout_ms", DEFAULTS["timeout_ms"]),
-            "device_involved": self._cfg(config, "device_involved", DEFAULTS["device_involved"]),  # expected value
-            "device_used": self.resolved.device_used,  # actual value
-            "warmup_iterations": self._cfg(config, "warmup_iterations", DEFAULTS["warmup_iterations"]),
-            "measured_iterations": self._cfg(config, "measured_iterations", DEFAULTS["measured_iterations"]),
-            "command": command,
+            "device_involved": int(self._cfg(config, "device_involved", DEFAULTS["device_involved"])),
+            "device_used": int(self.resolved.device_used or 0),
+            "warmup_iterations": int(self._cfg(config, "warmup_iterations", DEFAULTS["warmup_iterations"])),
+            "measured_iterations": int(self._cfg(config, "measured_iterations", DEFAULTS["measured_iterations"])),          
         }
+
+        extras = dict(config) if isinstance(config, dict) else {}
+        for k in list(core.keys()):
+            extras.pop(k, None)
+
+        # Optional
+        if extras.get("multi_node", None) is None:
+            extras.pop("multi_node", None)
+
+        # Merger
+        out = {}
+        out.update(core)
+        out.update(extras)
+        return out
 
     # -----------------------------
     # utils

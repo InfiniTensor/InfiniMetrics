@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # Adapter registry: maps (test_type, framework) -> adapter factory
 _ADAPTER_REGISTRY = {
     ("operator", "infinicore"): lambda: _create_infinicore_adapter(),
-    ("comm", "nccltest"): lambda: _create_nccl_adapter(),
+    ("comm", "nccltest"): lambda: _create_nccltests_adapter(),
 }
 
 
@@ -25,10 +25,10 @@ def _create_infinicore_adapter():
 
     return InfiniCoreAdapter()
 
-def _create_nccl_adapter():
+def _create_nccltests_adapter():
     """Create NCCL communication adapter."""
-    from infinimetrics.communication.nccl_adapter import NCCLAdapter
-    return NCCLAdapter()
+    from infinimetrics.communication.nccl_adapter import NcclTestsAdapter
+    return NcclTestsAdapter()
 
 class Dispatcher:
     """Test orchestration dispatcher for managing test executions."""
