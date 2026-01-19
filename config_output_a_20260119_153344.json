@@ -1,0 +1,45 @@
+{
+  "run_id": "template.matmul",
+  "testcase": "operator.InfiniCore.MatMul",
+  "config": {
+    "operator": "matmul",
+    "device": "nvidia",
+    "data_base_dir": "/home/baoming/workplace/random_input/InfiniMetrics/generated_data",
+    "inputs": [
+      {
+        "name": "a",
+        "file_path": "generated_data/a_1024x1024_float16_20260119_153343.npy",
+        "dtype": "float16",
+        "shape": [
+          1024,
+          1024
+        ]
+      }
+    ],
+    "attributes": [],
+    "outputs": [
+      {
+        "name": "output",
+        "shape": [
+          1024,
+          1024
+        ],
+        "dtype": "float16"
+      }
+    ],
+    "warmup_iterations": 10,
+    "measured_iterations": 100,
+    "tolerance": {
+      "atol": 0.001,
+      "rtol": 0.001
+    }
+  },
+  "metrics": [
+    {
+      "name": "operator.latency"
+    },
+    {
+      "name": "operator.tensor_accuracy"
+    }
+  ]
+}

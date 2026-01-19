@@ -1,0 +1,53 @@
+{
+  "run_id": "example.mixed.distributions",
+  "testcase": "operator.InfiniCore.Add.MixedDistributions",
+  "config": {
+    "operator": "add",
+    "device": "nvidia",
+    "data_base_dir": "./generated_data",
+    "inputs": [
+      {
+        "name": "a",
+        "shape": [1024, 1024],
+        "dtype": "float16",
+        "_random": {
+          "distribution": "normal",
+          "params": {
+            "mean": 0.0,
+            "std": 0.1
+          }
+        }
+      },
+      {
+        "name": "b",
+        "shape": [1024, 1024],
+        "dtype": "float16",
+        "_random": {
+          "distribution": "uniform",
+          "params": {
+            "low": -1.0,
+            "high": 1.0
+          }
+        }
+      }
+    ],
+    "attributes": [],
+    "outputs": [
+      {
+        "name": "output",
+        "shape": [1024, 1024],
+        "dtype": "float16"
+      }
+    ],
+    "warmup_iterations": 5,
+    "measured_iterations": 10,
+    "tolerance": {
+      "atol": 1e-3,
+      "rtol": 1e-3
+    }
+  },
+  "metrics": [
+    {"name": "operator.latency"},
+    {"name": "operator.tensor_accuracy"}
+  ]
+}

@@ -112,18 +112,34 @@ class InfiniCoreAdapter(BaseAdapter):
         for device in self.DEVICE_NAMES:
             run_args[device.lower()] = device in device_str
 
+        # Get base directory for relative path resolution
+        data_base_dir = config.get("data_base_dir", ".")
+
         # Build inputs
-        infinicore_inputs = [
-            {
+        infinicore_inputs = []
+        for inp in config.get(OperatorConfig.INPUTS, []):
+            # Build base spec with required fields
+            base_spec = {
                 k: inp[k]
-                for k in (TensorSpec.NAME, TensorSpec.SHAPE, TensorSpec.DTYPE)
+                for k in (TensorSpec.NAME, TensorSpec.DTYPE)
                 if k in inp
             }
-            for inp in config.get(OperatorConfig.INPUTS, [])
-        ]
-        for inp, spec in zip(config.get(OperatorConfig.INPUTS, []), infinicore_inputs):
+
+            # Add optional fields
+            if TensorSpec.SHAPE in inp:
+                base_spec[TensorSpec.SHAPE] = inp[TensorSpec.SHAPE]
             if TensorSpec.STRIDES in inp:
-                spec[TensorSpec.STRIDES] = inp[TensorSpec.STRIDES]
+                base_spec[TensorSpec.STRIDES] = inp[TensorSpec.STRIDES]
+            # Support file_path
+            if TensorSpec.FILE_PATH in inp:
+                from pathlib import Path
+                file_path = Path(inp[TensorSpec.FILE_PATH])
+                # Handle relative paths
+                if not file_path.is_absolute():
+                    file_path = Path(data_base_dir) / file_path
+                base_spec[TensorSpec.FILE_PATH] = str(file_path)
+
+            infinicore_inputs.append(base_spec)
 
         # Build kwargs
         infinicore_kwargs = {
