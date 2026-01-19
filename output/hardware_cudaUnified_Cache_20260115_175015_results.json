@@ -1,6 +1,0 @@
-{
-  "result_code": 1,
-  "time": "2026-01-15 17:50:15",
-  "error_msg": "[Errno 13] Permission denied: '/home/baoming/workplace/InfiniMetrics/infinimetrics/hardware/cuda-unified/build/cuda_perf_suite'",
-  "metrics": []
-}

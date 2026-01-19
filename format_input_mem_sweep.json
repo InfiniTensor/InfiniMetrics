@@ -1,0 +1,15 @@
+{
+    "run_id": "hardware.cudaUnified.MemSweep.001",
+    "testcase": "hardware.cudaUnified.MemSweep",
+    "config": {
+        "test_type": "MemSweep",
+        "device": "nvidia",
+        "buffer_size_mb": 256,
+        "output_dir": "./output"
+    },
+    "metrics": [
+        {"name": "hardware.mem_sweep_h2d"},
+        {"name": "hardware.mem_sweep_d2h"},
+        {"name": "hardware.mem_sweep_d2d"}
+    ]
+}

@@ -1,17 +1,15 @@
 {
-    "run_id": "hardware.memory.bandwidth.001",
-    "testcase": "hardware.cudaUnified.MemoryBandwidth",
+    "run_id": "hardware.cudaUnified.MemBw.001",
+    "testcase": "hardware.cudaUnified.MemBw",
     "config": {
-        "test_type": "memory",
+        "test_type": "MemBw",
         "device": "nvidia",
-        "device_id": 0,
-        "iterations": 10,
         "buffer_size_mb": 256,
         "output_dir": "./output"
     },
     "metrics": [
-        {"name": "memory.bandwidth.host_to_device", "unit": "GB/s"},
-        {"name": "memory.bandwidth.device_to_host", "unit": "GB/s"},
-        {"name": "memory.bandwidth.device_to_device", "unit": "GB/s"}
+        {"name": "hardware.mem_bw_h2d"},
+        {"name": "hardware.mem_bw_d2h"},
+        {"name": "hardware.mem_bw_d2d"}
     ]
 }

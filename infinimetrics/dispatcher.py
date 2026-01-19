@@ -29,15 +29,8 @@ def _create_infinicore_adapter():
 def _create_hardware_adapter():
     """Create Hardware adapter (lazy import)."""
     from infinimetrics.hardware.hardware_adapter import HardwareTestAdapter
-    import os
 
-    # Check if mock mode is enabled via environment variable
-    mock_mode = os.getenv("HARDWARE_MOCK_MODE", "false").lower() == "true"
-
-    # Get mock output file path from environment variable
-    mock_output_file = os.getenv("HARDWARE_MOCK_OUTPUT")
-
-    return HardwareTestAdapter(mock_mode=mock_mode, mock_output_file=mock_output_file)
+    return HardwareTestAdapter()
 
 
 class Dispatcher:
