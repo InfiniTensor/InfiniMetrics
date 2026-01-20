@@ -253,10 +253,10 @@ class RandomInputGenerator:
                              shape: List[int],
                              dtype: str,
                              file_format: str) -> Path:
-        """Generate unique file path based on timestamp"""
+        """Generate unique file path based on timestamp with microseconds"""
 
-        # Create timestamp string
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        # Create timestamp string with microseconds
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S_%f")  # %f gives microseconds
 
         # Create filename
         shape_str = "x".join(map(str, shape))
