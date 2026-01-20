@@ -2,9 +2,14 @@
 """Base Adapter - Unified Interface for All Test Types"""
 
 import abc
-from typing import Dict, Any, Union
+import logging
+from datetime import datetime
+from typing import Dict, Any, Union, Optional
 
 from infinimetrics.input import TestInput
+from infinimetrics.common.constants import InfiniMetricsJson
+
+logger = logging.getLogger(__name__)
 
 
 class BaseAdapter(abc.ABC):
@@ -52,3 +57,67 @@ class BaseAdapter(abc.ABC):
         Called by Executor after process() (even if process() fails).
         """
         pass
+
+    def _normalize_test_input(
+        self, test_input: Union[TestInput, Dict[str, Any], Any]
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Normalize test input to dictionary format.
+
+        Args:
+            test_input: TestInput object, dict, or other type
+
+        Returns:
+            Dict representation of test_input, or None if conversion fails
+        """
+        if isinstance(test_input, dict):
+            return test_input
+        if hasattr(test_input, "to_dict"):
+            return test_input.to_dict()
+        return None
+
+    def _create_error_response(
+        self,
+        error_msg: str,
+        test_input: Optional[Dict[str, Any]] = None,
+        result_code: int = 1,
+    ) -> Dict[str, Any]:
+        """
+        Create standardized error response.
+
+        Args:
+            error_msg: Error message describing the failure
+            test_input: Optional original test input for context
+            result_code: Error code (default: 1)
+
+        Returns:
+            Dict with error information in standardized format
+        """
+        response = {
+            InfiniMetricsJson.RESULT_CODE: result_code,
+            InfiniMetricsJson.TIME: self._get_timestamp(),
+            InfiniMetricsJson.ERROR_MSG: error_msg,
+            InfiniMetricsJson.METRICS: [],
+        }
+
+        # Include context if test_input is provided
+        if test_input:
+            response.update(
+                {
+                    InfiniMetricsJson.RUN_ID: test_input.get(InfiniMetricsJson.RUN_ID, ""),
+                    InfiniMetricsJson.TESTCASE: test_input.get(InfiniMetricsJson.TESTCASE, ""),
+                    InfiniMetricsJson.CONFIG: test_input.get(InfiniMetricsJson.CONFIG, {}),
+                }
+            )
+
+        return response
+
+    @staticmethod
+    def _get_timestamp() -> str:
+        """
+        Get current timestamp in standardized format.
+
+        Returns:
+            Timestamp string in 'YYYY-MM-DD HH:MM:SS' format
+        """
+        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")

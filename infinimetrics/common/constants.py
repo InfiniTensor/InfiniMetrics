@@ -134,3 +134,46 @@ PLATFORM_INFINICORE = "infinicore"
 
 # Default values
 DEFAULT_TOLERANCE = {"atol": 1e-3, "rtol": 1e-3}
+
+
+# ============================================================
+# Hardware Test Adapter Constants
+# ============================================================
+
+# Test type mappings
+TEST_TYPE_MAP = {
+    "MemSweep": "memory",
+    "MemBw": "bandwidth",
+    "Stream": "stream",
+    "Cache": "cache",
+    "Comprehensive": "all",
+}
+
+# Memory direction mappings
+MEMORY_DIRECTIONS = [
+    ("Host to Device", "h2d"),
+    ("Device to Host", "d2h"),
+    ("Device to Device", "d2d"),
+]
+
+# STREAM operations
+STREAM_OPERATIONS = ["copy", "scale", "add", "triad"]
+
+# Regex patterns for parsing hardware test output
+L1_CACHE_PATTERN = r"L1 Cache Bandwidth Sweep Test.*?Eff\. bw\s*-+\s*\n(.*?)(?=L2 Cache|\Z)"
+L2_CACHE_PATTERN = r"L2 Cache Bandwidth Sweep Test.*?Eff\. bw\s*-+\s*\n(.*?)(?=\Z)"
+
+STREAM_PATTERN_TEMPLATE = r"STREAM_{op}\s+(\d+\.\d+)"
+
+# CSV field names for hardware tests
+MEMORY_CSV_FIELDS = ["size_mb", "bandwidth_gbps"]
+L1_CACHE_CSV_FIELDS = ["data_set", "exec_time", "spread", "eff_bw"]
+L2_CACHE_CSV_FIELDS = ["data_set", "exec_data", "exec_time", "spread", "eff_bw"]
+
+# Test timeouts (seconds)
+CACHE_TEST_TIMEOUT = 1800
+DEFAULT_TEST_TIMEOUT = 600
+
+# Metric prefixes
+METRIC_PREFIX_MEM_SWEEP = "hardware.mem_sweep"
+METRIC_PREFIX_MEM_BW = "hardware.mem_bw"
