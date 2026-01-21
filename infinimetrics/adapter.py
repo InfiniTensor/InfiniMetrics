@@ -3,11 +3,11 @@
 
 import abc
 import logging
-from datetime import datetime
 from typing import Dict, Any, Union, Optional
 
 from infinimetrics.input import TestInput
 from infinimetrics.common.constants import InfiniMetricsJson
+from infinimetrics.utils.time_utils import get_timestamp
 
 logger = logging.getLogger(__name__)
 
@@ -95,7 +95,7 @@ class BaseAdapter(abc.ABC):
         """
         response = {
             InfiniMetricsJson.RESULT_CODE: result_code,
-            InfiniMetricsJson.TIME: self._get_timestamp(),
+            InfiniMetricsJson.TIME: get_timestamp(),
             InfiniMetricsJson.ERROR_MSG: error_msg,
             InfiniMetricsJson.METRICS: [],
         }
@@ -111,13 +111,3 @@ class BaseAdapter(abc.ABC):
             )
 
         return response
-
-    @staticmethod
-    def _get_timestamp() -> str:
-        """
-        Get current timestamp in standardized format.
-
-        Returns:
-            Timestamp string in 'YYYY-MM-DD HH:MM:SS' format
-        """
-        return datetime.now().strftime("%Y-%m-%d %H:%M:%S")

@@ -25,6 +25,7 @@ from infinimetrics.common.constants import (
     METRIC_PREFIX_MEM_BW,
     InfiniMetricsJson,
 )
+from infinimetrics.utils.time_utils import get_timestamp
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +102,7 @@ class HardwareTestAdapter(BaseAdapter):
 
             return {
                 InfiniMetricsJson.RESULT_CODE: 0,
-                InfiniMetricsJson.TIME: self._get_timestamp(),
+                InfiniMetricsJson.TIME: get_timestamp(),
                 InfiniMetricsJson.RUN_ID: run_id,
                 InfiniMetricsJson.TESTCASE: testcase,
                 InfiniMetricsJson.CONFIG: result_config,
