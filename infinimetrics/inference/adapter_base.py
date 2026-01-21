@@ -20,6 +20,7 @@ class InferAdapter(abc.ABC):
         self.config = config
         self.model_loaded = False
         self.tokenizer = None
+        self.model = None
 
     @abc.abstractmethod
     def load_model(self) -> None:
@@ -28,11 +29,23 @@ class InferAdapter(abc.ABC):
         """
         pass
 
-    @abc.abstractmethod
     def unload_model(self) -> None:
-        """
-        Unload model
-        """
+        """Unload model"""
+        if self.model_loaded:
+            try:
+                # Framework-specific cleanup logic is implemented in subclasses
+                self._cleanup_framework_resources()
+            except Exception as e:
+                logger.warning(f"Error during framework-specific cleanup: {e}")
+            
+            self.model = None
+            self.model_loaded = False
+            self.tokenizer = None
+            logger.info("Model unloaded")
+    
+    @abc.abstractmethod
+    def _cleanup_framework_resources(self) -> None:
+        """Framework-specific resource cleanup"""
         pass
 
     @abc.abstractmethod
@@ -49,10 +62,17 @@ class InferAdapter(abc.ABC):
         """
         pass
     
-    @abc.abstractmethod
     def calculate_perplexity(self, test_data: List[str]) -> float:
         """Calculate perplexity"""
-        pass
+        if not test_data:
+            logger.warning("No test data provided for perplexity calculation")
+            return 0.0
+        
+        logger.info(f"Calculating perplexity for {len(test_data)} samples")
+        
+        # The default implementation, which returns a placeholder value
+        logger.warning("Perplexity calculation not implemented, returning placeholder value")
+        return 0.0
     
     @abc.abstractmethod
     def _validate_framework_config(self) -> List[str]:
@@ -99,38 +119,17 @@ class InferAdapter(abc.ABC):
 
         special_ids = set()
 
-        # Retrieve tokenizer's special token map
-        special_tokens_map = getattr(self.tokenizer, 'special_tokens_map', {})
-
-        # Collect IDs of all special tokens
-        for key, token in special_tokens_map.items():
-            if isinstance(token, int):
-                special_ids.add(token)
-            elif isinstance(token, str):
+        # Generic special token fetching logic
+        token_attrs = ['bos_token', 'eos_token', 'pad_token', 'unk_token']
+        
+        for attr in token_attrs:
+            token = getattr(self.tokenizer, attr, None)
+            if token and isinstance(token, str):
                 token_id = self.tokenizer.convert_tokens_to_ids(token)
                 if token_id is not None:
                     special_ids.add(token_id)
-
-        # Add commonly used special tokens
-        common_special_tokens = [
-            "bos_token", "eos_token", "pad_token", "unk_token",
-            "sep_token", "cls_token", "mask_token"
-        ]
-
-        for token_name in common_special_tokens:
-            token = getattr(self.tokenizer, token_name, None)
-            if token is not None:
-                if isinstance(token, str):
-                    token_id = self.tokenizer.convert_tokens_to_ids(token)
-                    if token_id is not None:
-                        special_ids.add(token_id)
-                elif hasattr(token, 'content'):
-                    # Handle special token objects
-                    token_id = self.tokenizer.convert_tokens_to_ids(token.content)
-                    if token_id is not None:
-                        special_ids.add(token_id)
-
-        logger.debug(f"Found {len(special_ids)} special token IDs: {sorted(list(special_ids))}")
+        
+        logger.debug(f"Found {len(special_ids)} special token IDs")
         return special_ids
 
     def generate_random_tokens(self, num_tokens: int, exclude_special: bool = True) -> List[int]:
@@ -225,3 +224,4 @@ class InferAdapter(abc.ABC):
         except ImportError:
             logger.warning("PyTorch not available, cannot get GPU memory usage")
         return None
+        
