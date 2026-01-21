@@ -1,0 +1,3 @@
+[submodule "submodules/nccl-tests"]
+	path = submodules/nccl-tests
+	url = git@github.com:NVIDIA/nccl-tests.git
