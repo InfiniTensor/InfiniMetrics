@@ -123,6 +123,8 @@ class TensorSpec:
     STRIDES = "strides"
     VALUE = "value"
     INPLACE = "inplace"
+    FILE_PATH = "file_path"
+    INIT_MODE = "init_mode"
 
 
 class InfiniCoreResult:
