@@ -47,7 +47,6 @@ if [ $? -eq 0 ]; then
     echo "  ./build/cuda_perf_suite --memory      # Run memory bandwidth tests"
     echo "  ./build/cuda_perf_suite --stream      # Run STREAM benchmark only"
     echo "  ./build/cuda_perf_suite --cache       # Run cache tests only"
-    echo "  ./build/cuda_perf_suite --bandwidth   # Run bandwidth test (dtod/dtoh/htod)"
     echo ""
 else
     echo ""

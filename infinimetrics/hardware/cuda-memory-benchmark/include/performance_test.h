@@ -106,7 +106,7 @@ private:
 
 // Configuration for running tests
 struct TestConfig {
-    size_t warmup_iterations = 1;
+    size_t warmup_iterations = 5;  // Ensure GPU is warmed up
     size_t measurement_iterations = 10;
     bool verbose = true;
     bool output_csv = false;

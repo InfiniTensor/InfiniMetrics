@@ -64,9 +64,6 @@ Common architectures:
 # Memory bandwidth tests only
 ./build/cuda_perf_suite --memory
 
-# Bandwidth test (device-to-device, device-to-host, host-to-device)
-./build/cuda_perf_suite --bandwidth
-
 # STREAM benchmark only
 ./build/cuda_perf_suite --stream
 
@@ -80,7 +77,6 @@ Common architectures:
 Options:
   --all                    Run all tests (default)
   --memory                 Run memory bandwidth tests only
-  --bandwidth              Run bandwidth test (dtod/dtoh/htod)
   --stream                 Run STREAM benchmark only
   --cache                  Run cache benchmarks only
   --device <id>            Specify CUDA device ID (default: 0)
@@ -119,17 +115,7 @@ Tests data transfer bandwidth between different memory spaces:
 
 **Output**: Transfer time and bandwidth for various buffer sizes (64KB to 1GB)
 
-### 2. Device Bandwidth Tests
-
-Tests specific device-to-device, device-to-host, and host-to-device bandwidth:
-
-- **Device to Device**: Single large transfer bandwidth measurement
-- **Device to Host**: Pinned memory transfer bandwidth
-- **Host to Device**: Pinned memory transfer bandwidth
-
-**Output**: Bandwidth in GB/s for each transfer direction (32MB transfer size)
-
-### 3. STREAM Benchmark
+### 2. STREAM Benchmark
 
 Standard STREAM benchmark with 4 operations:
 
@@ -140,7 +126,7 @@ Standard STREAM benchmark with 4 operations:
 
 **Output**: Bandwidth in GB/s for each operation
 
-### 4. Cache Performance Tests
+### 3. Cache Performance Tests
 
 Tests L1 and L2 cache bandwidth by varying working set sizes
 
@@ -162,7 +148,6 @@ cuda-memory-benchmark/
 │   ├── performance_test.h           # Base testing framework
 │   ├── cuda_utils.h                 # CUDA utilities (RAII wrappers)
 │   ├── memory_bandwidth_test.h      # Memory copy tests
-│   ├── bandwidth_test.h             # Device bandwidth tests
 │   ├── stream_benchmark.h           # STREAM benchmark
 │   └── cache_benchmark.h            # Cache tests
 ├── src/

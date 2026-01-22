@@ -105,8 +105,8 @@ void run_measurement() {
 
     cudaDeviceProp props;
     int dev_id;
-    cudaGetDevice(&dev_id);
-    cudaGetDeviceProperties(&props, dev_id);
+    CUDA_CHECK(cudaGetDevice(&dev_id));
+    CUDA_CHECK(cudaGetDeviceProperties(&props, dev_id));
     int grid_count = props.multiProcessorCount * 1;
 
     ExecutionTimer timer;
@@ -114,33 +114,33 @@ void run_measurement() {
     for (int sample = 0; sample < 15; sample++) {
         size_t buffer_elems = 2 * ARRAY_N + sample * 1282;
 
-        cudaMalloc(&device_array_A, buffer_elems * sizeof(data_type));
+        CUDA_CHECK(cudaMalloc(&device_array_A, buffer_elems * sizeof(data_type)));
         data_initializer<<<52, 256>>>(device_array_A, buffer_elems);
-        cudaMalloc(&device_array_B, buffer_elems * sizeof(data_type));
+        CUDA_CHECK(cudaMalloc(&device_array_B, buffer_elems * sizeof(data_type)));
         data_initializer<<<52, 256>>>(device_array_B, buffer_elems);
 
         device_array_A += sample;
         device_array_B += sample;
 
-        cudaDeviceSynchronize();
+        CUDA_CHECK(cudaDeviceSynchronize());
 
         cudaEvent_t start_ev, stop_ev;
-        cudaEventCreate(&start_ev);
-        cudaEventCreate(&stop_ev);
+        CUDA_CHECK(cudaEventCreate(&start_ev));
+        CUDA_CHECK(cudaEventCreate(&stop_ev));
 
-        cudaEventRecord(start_ev);
+        CUDA_CHECK(cudaEventRecord(start_ev));
         launch_kernel<ARRAY_N, repeat_count, BLOCK_SIZE>(grid_count);
-        cudaEventRecord(stop_ev);
-        cudaEventSynchronize(stop_ev);
+        CUDA_CHECK(cudaEventRecord(stop_ev));
+        CUDA_CHECK(cudaEventSynchronize(stop_ev));
 
         float ms = 0;
-        cudaEventElapsedTime(&ms, start_ev, stop_ev);
+        CUDA_CHECK(cudaEventElapsedTime(&ms, start_ev, stop_ev));
         timer.add_sample(ms / 1000.0);
 
-        cudaEventDestroy(start_ev);
-        cudaEventDestroy(stop_ev);
-        cudaFree(device_array_A - sample);
-        cudaFree(device_array_B - sample);
+        CUDA_CHECK(cudaEventDestroy(start_ev));
+        CUDA_CHECK(cudaEventDestroy(stop_ev));
+        CUDA_CHECK(cudaFree(device_array_A - sample));
+        CUDA_CHECK(cudaFree(device_array_B - sample));
     }
 
     double data_volume = 2.0 * ARRAY_N * sizeof(data_type);
@@ -252,31 +252,31 @@ void run_l2_measurement(int block_multiplier) {
     for (int sample = 0; sample < 11; sample++) {
         size_t buf_elems = block_multiplier * BLOCK_DIM * ARRAY_N + sample * 128;
 
-        cudaMalloc(&device_buffer_X, buf_elems * sizeof(data_type));
+        CUDA_CHECK(cudaMalloc(&device_buffer_X, buf_elems * sizeof(data_type)));
         data_init_double<<<52, 256>>>(device_buffer_X, buf_elems);
-        cudaMalloc(&device_buffer_Y, buf_elems * sizeof(data_type));
+        CUDA_CHECK(cudaMalloc(&device_buffer_Y, buf_elems * sizeof(data_type)));
         data_init_double<<<52, 256>>>(device_buffer_Y, buf_elems);
 
-        cudaDeviceSynchronize();
+        CUDA_CHECK(cudaDeviceSynchronize());
 
         cudaEvent_t start_ev, stop_ev;
-        cudaEventCreate(&start_ev);
-        cudaEventCreate(&stop_ev);
+        CUDA_CHECK(cudaEventCreate(&start_ev));
+        CUDA_CHECK(cudaEventCreate(&stop_ev));
 
-        cudaEventRecord(start_ev);
+        CUDA_CHECK(cudaEventRecord(start_ev));
         l2_computation_kernel<ARRAY_N, BLOCK_DIM><<<GRID_COUNT, BLOCK_DIM>>>(
             device_buffer_X, device_buffer_Y, block_multiplier);
-        cudaEventRecord(stop_ev);
-        cudaEventSynchronize(stop_ev);
+        CUDA_CHECK(cudaEventRecord(stop_ev));
+        CUDA_CHECK(cudaEventSynchronize(stop_ev));
 
         float ms = 0;
-        cudaEventElapsedTime(&ms, start_ev, stop_ev);
+        CUDA_CHECK(cudaEventElapsedTime(&ms, start_ev, stop_ev));
         timer.add_sample(ms / 1000.0);
 
-        cudaEventDestroy(start_ev);
-        cudaEventDestroy(stop_ev);
-        cudaFree(device_buffer_X);
-        cudaFree(device_buffer_Y);
+        CUDA_CHECK(cudaEventDestroy(start_ev));
+        CUDA_CHECK(cudaEventDestroy(stop_ev));
+        CUDA_CHECK(cudaFree(device_buffer_X));
+        CUDA_CHECK(cudaFree(device_buffer_Y));
     }
 
     double data_vol = ARRAY_N * BLOCK_DIM * sizeof(data_type);

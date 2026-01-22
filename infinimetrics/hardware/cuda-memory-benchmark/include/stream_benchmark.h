@@ -234,6 +234,23 @@ public:
             StreamOperation::TRIAD
         };
 
+        // Phase 1: Extended warmup for all operations to stabilize GPU state
+        // This is critical when running after other tests (bandwidth, cache)
+        const size_t EXTENDED_WARMUP = 10;  // Extra warmup iterations
+        for (auto op : ops) {
+            StreamBenchmark warmup_test(array_size, op);
+            if (warmup_test.initialize()) {
+                for (size_t i = 0; i < EXTENDED_WARMUP; ++i) {
+                    warmup_test.run_warmup();
+                }
+                warmup_test.cleanup();
+            }
+        }
+
+        // Small delay to let GPU frequency stabilize
+        CUDA_CHECK(cudaDeviceSynchronize());
+
+        // Phase 2: Actual measurements
         for (auto op : ops) {
             StreamBenchmark test(array_size, op);
             TestConfig test_config = config;
@@ -244,6 +261,7 @@ public:
                 continue;
             }
 
+            // Standard warmup before measurement
             for (size_t i = 0; i < test_config.warmup_iterations; ++i) {
                 test.run_warmup();
             }
