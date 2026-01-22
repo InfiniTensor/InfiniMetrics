@@ -5,6 +5,7 @@ import logging
 import copy
 import json
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, Union
 
 from infinicore.test.framework import TestManager
@@ -112,18 +113,31 @@ class InfiniCoreAdapter(BaseAdapter):
         for device in self.DEVICE_NAMES:
             run_args[device.lower()] = device in device_str
 
+        # Get base directory for relative path resolution
+        data_base_dir = config.get("data_base_dir", ".")
+
         # Build inputs
-        infinicore_inputs = [
-            {
+        infinicore_inputs = []
+        for inp in config.get(OperatorConfig.INPUTS, []):
+            base_spec = {
                 k: inp[k]
-                for k in (TensorSpec.NAME, TensorSpec.SHAPE, TensorSpec.DTYPE)
+                for k in (
+                    TensorSpec.NAME,
+                    TensorSpec.DTYPE,
+                    TensorSpec.SHAPE,
+                    TensorSpec.STRIDES,
+                    TensorSpec.INIT_MODE,
+                )
                 if k in inp
             }
-            for inp in config.get(OperatorConfig.INPUTS, [])
-        ]
-        for inp, spec in zip(config.get(OperatorConfig.INPUTS, []), infinicore_inputs):
-            if TensorSpec.STRIDES in inp:
-                spec[TensorSpec.STRIDES] = inp[TensorSpec.STRIDES]
+
+            if TensorSpec.FILE_PATH in inp:
+                file_path = Path(inp[TensorSpec.FILE_PATH])
+                if not file_path.is_absolute():
+                    file_path = Path(data_base_dir) / file_path
+                base_spec[TensorSpec.FILE_PATH] = str(file_path)
+
+            infinicore_inputs.append(base_spec)
 
         # Build kwargs
         infinicore_kwargs = {
@@ -151,7 +165,7 @@ class InfiniCoreAdapter(BaseAdapter):
         if "op_kwargs" in config:
             infinicore_kwargs.update(config["op_kwargs"])
 
-        return [
+        request = [
             {
                 InfiniCoreRequest.OPERATOR: operator,
                 InfiniCoreRequest.DEVICE: device_str,
@@ -171,6 +185,8 @@ class InfiniCoreAdapter(BaseAdapter):
                 ],
             }
         ]
+
+        return request
 
     def _parse_runtime_args(self, config: dict) -> dict:
         """Parse runtime arguments from config."""
