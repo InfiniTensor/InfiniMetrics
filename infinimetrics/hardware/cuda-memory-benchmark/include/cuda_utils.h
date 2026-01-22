@@ -178,6 +178,41 @@ private:
     cudaStream_t stream_;
 };
 
+// RAII wrapper for CUDA event
+class CudaEvent {
+public:
+    CudaEvent() {
+        CUDA_CHECK(cudaEventCreate(&event_));
+    }
+
+    ~CudaEvent() {
+        cudaEventDestroy(event_);
+    }
+
+    // Disable copy
+    CudaEvent(const CudaEvent&) = delete;
+    CudaEvent& operator=(const CudaEvent&) = delete;
+
+    void record(cudaStream_t stream = 0) {
+        CUDA_CHECK(cudaEventRecord(event_, stream));
+    }
+
+    void synchronize() {
+        CUDA_CHECK(cudaEventSynchronize(event_));
+    }
+
+    float elapsed_time(const CudaEvent& start) const {
+        float ms;
+        CUDA_CHECK(cudaEventElapsedTime(&ms, start.event_, event_));
+        return ms;
+    }
+
+    cudaEvent_t get() const { return event_; }
+
+private:
+    cudaEvent_t event_;
+};
+
 // CUDA device information
 struct CudaDeviceInfo {
     int device_id;
@@ -206,7 +241,13 @@ struct CudaDeviceInfo {
         info.shared_mem_per_block = prop.sharedMemPerBlock;
         info.max_threads_per_block = prop.maxThreadsPerBlock;
         info.multi_processor_count = prop.multiProcessorCount;
+#if CUDART_VERSION >= 11000
+        // clockRate was removed in CUDA 11.0+
+        // Set to 0 as it's no longer available
+        info.clock_rate = 0;
+#else
         info.clock_rate = prop.clockRate;
+#endif
         info.l2_cache_size = prop.l2CacheSize;
         info.max_threads_per_multiprocessor = prop.maxThreadsPerMultiProcessor;
 

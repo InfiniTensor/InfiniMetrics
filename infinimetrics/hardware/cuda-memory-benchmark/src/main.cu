@@ -9,7 +9,6 @@
 #include "memory_bandwidth_test.h"
 #include "stream_benchmark.h"
 #include "cache_benchmark.h"
-#include "bandwidth_test.h"
 
 using namespace cuda_perf;
 
@@ -32,7 +31,6 @@ void print_usage(const char* program_name) {
     std::cout << "  --memory                 Run memory bandwidth tests only\n";
     std::cout << "  --stream                 Run STREAM benchmark only\n";
     std::cout << "  --cache                  Run cache benchmarks only\n";
-    std::cout << "  --bandwidth              Run bandwidth test (dtod/dtoh/htod)\n";
     std::cout << "  --device <id>            Specify CUDA device ID (default: 0)\n";
     std::cout << "  --iterations <n>         Number of measurement iterations (default: 10)\n";
     std::cout << "  --array-size <size>      Array size for STREAM test (default: 67108864)\n";
@@ -44,7 +42,6 @@ void print_usage(const char* program_name) {
     std::cout << "  " << program_name << " --stream --array-size 134217728\n";
     std::cout << "  " << program_name << " --memory --buffer-size 512\n";
     std::cout << "  " << program_name << " --cache\n";
-    std::cout << "  " << program_name << " --bandwidth\n";
 }
 
 struct Config {
@@ -52,7 +49,6 @@ struct Config {
     bool run_memory = false;
     bool run_stream = false;
     bool run_cache = false;
-    bool run_bandwidth = false;
     int device_id = 0;
     int iterations = 10;
     size_t array_size = 67108864;  // 64M elements (512 MB for double)
@@ -84,10 +80,6 @@ Config parse_arguments(int argc, char* argv[]) {
         else if (arg == "--cache") {
             config.run_all = false;
             config.run_cache = true;
-        }
-        else if (arg == "--bandwidth") {
-            config.run_all = false;
-            config.run_bandwidth = true;
         }
         else if (arg == "--device" && i + 1 < argc) {
             config.device_id = std::atoi(argv[++i]);
@@ -192,6 +184,10 @@ int main(int argc, char* argv[]) {
             // Device to Device
             MemoryCopySweepTest d2d(CopyDirection::DEVICE_TO_DEVICE, true);
             d2d.execute(test_config);
+
+            // Bidirectional (H2D + D2H concurrently)
+            MemoryCopySweepTest bidi(CopyDirection::BIDIRECTIONAL, true);
+            bidi.execute(test_config);
         }
 
         if (config.run_all || config.run_stream) {
@@ -217,16 +213,6 @@ int main(int argc, char* argv[]) {
             // L2 Cache test
             CacheBenchmarkSuite l2_test(CacheTarget::L2);
             l2_test.execute(test_config);
-        }
-
-        if (config.run_all || config.run_bandwidth) {
-            std::cout << "\n";
-            std::cout << "██████████████████████████████████████████████████████\n";
-            std::cout << "█           BANDWIDTH TEST                           █\n";
-            std::cout << "██████████████████████████████████████████████████████\n";
-
-            BandwidthTestSuite bandwidth_test(true, true, true);
-            bandwidth_test.execute(test_config);
         }
 
         // Final summary
