@@ -125,8 +125,3 @@ for result in summary['results']:
             print(f"测试 {result['run_id']}: {metrics}")
 ```
 
-## 故障排除
-
-如果测试失败，请检查测试特定输出目录中的 log.txt 文件以获取详细错误消息。
-
-更多帮助，请参阅[故障排除](./troubleshooting.md)。

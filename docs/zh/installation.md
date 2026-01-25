@@ -63,7 +63,3 @@ export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 
 ### 其他加速器
 请参阅加速器供应商的文档以了解驱动和工具包安装。
-
-## 故障排除
-
-有关常见安装问题，请参阅[故障排除](./troubleshooting.md)。

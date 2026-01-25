@@ -125,8 +125,3 @@ for result in summary['results']:
             print(f"Test {result['run_id']}: {metrics}")
 ```
 
-## Troubleshooting
-
-If tests fail, check the log.txt file in the test-specific output directory for detailed error messages.
-
-For more help, see [Troubleshooting](./troubleshooting.md).

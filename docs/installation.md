@@ -58,12 +58,5 @@ export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 ```
 
-### AMD GPUs
-Install ROCm and set appropriate environment variables.
-
 ### Other Accelerators
 Refer to your accelerator vendor's documentation for driver and toolkit installation.
-
-## Troubleshooting
-
-See [Troubleshooting](./troubleshooting.md) for common installation issues.

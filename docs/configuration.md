@@ -24,7 +24,7 @@ Test specifications are provided in JSON format. A typical configuration file lo
 }
 ```
 
-## Configuration Parameters
+## Configuration Parameters (Just some examples)
 
 | Parameter | Type | Description | Default |
 |-----------|------|-------------|---------|
@@ -123,5 +123,3 @@ python main.py input.json --output ./results
     ]
 }
 ```
-
-For more examples, see [Examples](./examples/README.md).

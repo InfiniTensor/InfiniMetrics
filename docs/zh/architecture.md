@@ -52,45 +52,46 @@ InfiniMetrics/
 
 ## 架构图
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                          InfiniMetrics                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│  ┌──────────┐    ┌─────────────┐    ┌──────────────────┐        │
-│  │  输入    │───▶│  调度器    │───▶│    执行器        │    │
-│  │  文件    │    │             │    │                  │    │
-│  └──────────┘    └─────────────┘    └────────┬─────────┘    │
-│                                              │                   │
-│                                    ┌─────────▼─────────┐    │
-│                                    │                   │    │
-│                       ┌──────────────┴──────────────┐    │
-│                       │                              │    │
-│  ┌────────────────────▼──────────────────────┐    │
-│  │          适配器注册表                │    │
-│  │  ┌─────────┐  ┌──────────┐  ┌──────────┐  │    │
-│  │  │ 硬件    │  │  算子     │  │  推理    │  │    │
-│  │  │ 测试    │  │  测试     │  │  测试    │  │    │
-│  │  └────┬────┘  └────┬─────┘  └────┬─────┘  │    │
-│  └───────┼────────────┼─────────────┼──────────┘    │
-│          │            │             │                   │
-│  ┌───────▼───────────▼─────┬───────▼───────┐    │
-│  │           具体适配器                   │    │
-│  │  ┌─────────┐  ┌──────────┐  ┌──────┐  │    │
-│  │  │ CUDA    │  │InfiniCore│  │vLLM  │  │    │
-│  │  │ 内存    │  │  适配器  │  │适配器│  │    │
-│  │  │ 基准    │  │          │  │      │  │    │
-│  │  └─────────┘  └──────────┘  └──────┘  │    │
-│  └────────────────────────────────────┘    │
-│                                           │    │
-│  ┌────────────────────────────────────┐    │
-│  │         指标系统                    │    │
-│  │  • 标量指标                        │    │
-│  │  • 时间序列指标                    │    │
-│  │  • 自定义指标定义                   │    │
-│  └────────────────────────────────────┘    │
-│                                           │    │
-└───────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph InfiniMetrics["InfiniMetrics"]
+        Input[输入文件] --> Dispatcher[调度器]
+        Dispatcher --> Executor[执行器]
+        Executor --> AdapterRegistry["适配器注册表"]
+
+        subgraph Adapters["适配器注册表"]
+            Hardware["硬件测试"]
+            Operator["算子测试"]
+            Inference["推理测试"]
+        end
+
+        AdapterRegistry --> HWAdapter["硬件适配器"]
+        AdapterRegistry --> OpAdapter["算子适配器"]
+        AdapterRegistry --> InfAdapter["推理适配器"]
+
+        subgraph Concrete["具体适配器"]
+            HWAdapter["CUDA 内存<br/>基准"]
+            OpAdapter["InfiniCore<br/>适配器"]
+            InfAdapter["vLLM<br/>适配器"]
+        end
+
+        Concrete --> Metrics["指标系统"]
+
+        Metrics --> Output[(输出目录)]
+
+        style Hardware fill:#e1f5ff
+        style Operator fill:#f3f9ff
+        style Inference fill:#fafcff
+        style HWAdapter fill:#bbdefb
+        style OpAdapter fill:#c3e6f5
+        style InfAdapter fill:#cce5ff
+        style Metrics fill:#e3f2fd
+        style Input fill:#fff3e0
+        style Dispatcher fill:#ffe0b2
+        style Executor fill:#ffccbc
+        style AdapterRegistry fill:#ffecb3
+        style Output fill:#ffe0b2
+    end
 ```
 
 ## 组件概述

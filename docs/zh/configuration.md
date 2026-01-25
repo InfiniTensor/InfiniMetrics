@@ -24,7 +24,7 @@
 }
 ```
 
-## 配置参数
+## 配置参数(实例)
 
 | 参数 | 类型 | 描述 | 默认值 |
 |------|------|------|--------|
@@ -79,12 +79,6 @@ python main.py ./test_configs/
 python main.py input.json --verbose
 ```
 
-### 自定义输出目录
-
-```bash
-python main.py input.json --output ./results
-```
-
 ## 配置示例
 
 ### 硬件基准测试
@@ -123,5 +117,3 @@ python main.py input.json --output ./results
     ]
 }
 ```
-
-更多示例，请参阅[使用示例](./examples_overview.md)。
