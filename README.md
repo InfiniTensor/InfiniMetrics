@@ -26,11 +26,11 @@ A unified, modular testing framework for comprehensive performance evaluation of
 
 ### Key Features
 
-**Unified Adapter Interface** - Consistent API across all test types and frameworks
-**Extensible Architecture** - Easy to add new test types, frameworks, and metrics
-**Comprehensive Metrics** - Scalar values, time-series data, custom measurements
-**Framework Agnostic** - Support for InfiniLM, vLLM, InfiniCore, and more
-**Production Ready** - Robust error handling, logging, and result aggregation
+- **Unified Adapter Interface** - Consistent API across all test types and frameworks
+- **Extensible Architecture** - Easy to add new test types, frameworks, and metrics
+- **Comprehensive Metrics** - Scalar values, time-series data, custom measurements
+- **Framework Agnostic** - Support for InfiniLM, vLLM, InfiniCore, and more
+- **Production Ready** - Robust error handling, logging, and result aggregation
 
 ---
 
