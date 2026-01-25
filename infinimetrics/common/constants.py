@@ -143,7 +143,6 @@ DEFAULT_TOLERANCE = {"atol": 1e-3, "rtol": 1e-3}
 # Test type mappings
 TEST_TYPE_MAP = {
     "MemSweep": "memory",
-    "MemBw": "bandwidth",
     "Stream": "stream",
     "Cache": "cache",
     "Comprehensive": "all",
@@ -176,4 +175,3 @@ DEFAULT_TEST_TIMEOUT = 600
 
 # Metric prefixes
 METRIC_PREFIX_MEM_SWEEP = "hardware.mem_sweep"
-METRIC_PREFIX_MEM_BW = "hardware.mem_bw"

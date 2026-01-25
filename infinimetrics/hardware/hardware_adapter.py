@@ -22,7 +22,6 @@ from infinimetrics.common.constants import (
     CACHE_TEST_TIMEOUT,
     DEFAULT_TEST_TIMEOUT,
     METRIC_PREFIX_MEM_SWEEP,
-    METRIC_PREFIX_MEM_BW,
     InfiniMetricsJson,
 )
 from infinimetrics.utils.time_utils import get_timestamp
@@ -171,7 +170,6 @@ class HardwareTestAdapter(BaseAdapter):
         if test_type == "Comprehensive":
             return (
                 self._parse_memory_bandwidth(output, run_id, METRIC_PREFIX_MEM_SWEEP)
-                + self._parse_memory_bandwidth(output, run_id, METRIC_PREFIX_MEM_BW)
                 + self._parse_stream_benchmark(output)
                 + self._parse_cache_bandwidth(output, run_id)
             )
@@ -179,7 +177,6 @@ class HardwareTestAdapter(BaseAdapter):
         # Single test type
         metric_map = {
             "MemSweep": (METRIC_PREFIX_MEM_SWEEP, self._parse_memory_bandwidth),
-            "MemBw": (METRIC_PREFIX_MEM_BW, self._parse_memory_bandwidth),
             "Stream": (None, self._parse_stream_benchmark),
             "Cache": (None, self._parse_cache_bandwidth),
         }
