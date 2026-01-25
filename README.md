@@ -26,24 +26,11 @@ A unified, modular testing framework for comprehensive performance evaluation of
 
 ### Key Features
 
-✨ **Unified Adapter Interface** - Consistent API across all test types and frameworks
-🔧 **Extensible Architecture** - Easy to add new test types, frameworks, and metrics
-📊 **Comprehensive Metrics** - Scalar values, time-series data, custom measurements
-🎛️ **Framework Agnostic** - Support for InfiniLM, vLLM, InfiniCore, and more
-🚀 **Production Ready** - Robust error handling, logging, and result aggregation
-
----
-
-## 🚀 Quick Start
-
-```bash
-git clone https://github.com/InfiniTensor/InfiniMetrics.git
-cd InfiniMetrics
-git submodule update --init --recursive
-
-# Run hardware benchmark
-python main.py format_input_comprehensive_hardware.json
-```
+**Unified Adapter Interface** - Consistent API across all test types and frameworks
+**Extensible Architecture** - Easy to add new test types, frameworks, and metrics
+**Comprehensive Metrics** - Scalar values, time-series data, custom measurements
+**Framework Agnostic** - Support for InfiniLM, vLLM, InfiniCore, and more
+**Production Ready** - Robust error handling, logging, and result aggregation
 
 ---
 
@@ -54,9 +41,7 @@ For detailed guides, configuration, and examples, see the [full documentation](.
 ### Quick Links
 
 - [Installation Guide](./docs/installation.md) - Prerequisites and dependencies
-- [Test Types](./docs/test_types/README.md) - Available benchmarks and tests
 - [Configuration](./docs/configuration.md) - Input format and parameters
-- [Examples](./docs/examples/README.md) - Usage examples and tutorials
 
 ---
 

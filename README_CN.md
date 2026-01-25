@@ -26,24 +26,11 @@
 
 ### 核心特性
 
-✨ **统一适配器接口** - 所有测试类型和框架的一致 API
-🔧 **可扩展架构** - 易于添加新的测试类型、框架和指标
-📊 **全面的指标系统** - 标量值、时间序列数据、自定义测量
-🎛️ **框架无关** - 支持 InfiniLM、vLLM、InfiniCore 等
-🚀 **生产就绪** - 健壮的错误处理、日志记录和结果聚合
-
----
-
-## 🚀 快速开始
-
-```bash
-git clone https://github.com/InfiniTensor/InfiniMetrics.git
-cd InfiniMetrics
-git submodule update --init --recursive
-
-# 运行硬件基准测试
-python main.py format_input_comprehensive_hardware.json
-```
+**统一适配器接口** - 所有测试类型和框架的一致 API
+**可扩展架构** - 易于添加新的测试类型、框架和指标
+**全面的指标系统** - 标量值、时间序列数据、自定义测量
+**框架无关** - 支持 InfiniLM、vLLM、InfiniCore 等
+**生产就绪** - 健壮的错误处理、日志记录和结果聚合
 
 ---
 
@@ -54,9 +41,7 @@ python main.py format_input_comprehensive_hardware.json
 ### 快速链接
 
 - [安装指南](./docs/zh/installation.md) - 前置要求和依赖
-- [测试类型](./docs/zh/hardware_tests.md) - 可用的基准测试
 - [配置指南](./docs/zh/configuration.md) - 输入格式和参数
-- [使用示例](./docs/zh/examples_overview.md) - 使用示例和教程
 
 ---
 
