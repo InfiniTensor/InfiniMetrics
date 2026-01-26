@@ -157,7 +157,6 @@ DEFAULT_TOLERANCE = {"atol": 1e-3, "rtol": 1e-3}
 # Test type mappings
 TEST_TYPE_MAP = {
     "MemSweep": "memory",
-    "MemBw": "bandwidth",
     "Stream": "stream",
     "Cache": "cache",
     "Comprehensive": "all",
@@ -168,6 +167,7 @@ MEMORY_DIRECTIONS = [
     ("Host to Device", "h2d"),
     ("Device to Host", "d2h"),
     ("Device to Device", "d2d"),
+    ("Bidirectional", "bidirectional"),
 ]
 
 # STREAM operations
@@ -190,4 +190,3 @@ DEFAULT_TEST_TIMEOUT = 600
 
 # Metric prefixes
 METRIC_PREFIX_MEM_SWEEP = "hardware.mem_sweep"
-METRIC_PREFIX_MEM_BW = "hardware.mem_bw"

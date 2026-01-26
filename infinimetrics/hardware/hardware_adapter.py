@@ -22,7 +22,6 @@ from infinimetrics.common.constants import (
     CACHE_TEST_TIMEOUT,
     DEFAULT_TEST_TIMEOUT,
     METRIC_PREFIX_MEM_SWEEP,
-    METRIC_PREFIX_MEM_BW,
     InfiniMetricsJson,
 )
 from infinimetrics.utils.time_utils import get_timestamp
@@ -147,7 +146,6 @@ class HardwareTestAdapter(BaseAdapter):
             ("device_id", "--device"),
             ("iterations", "--iterations"),
             ("array_size", "--array-size"),
-            ("buffer_size_mb", "--buffer-size"),
         ]
 
         return build_command_from_config(base_command, config, param_mappings)
@@ -171,7 +169,6 @@ class HardwareTestAdapter(BaseAdapter):
         if test_type == "Comprehensive":
             return (
                 self._parse_memory_bandwidth(output, run_id, METRIC_PREFIX_MEM_SWEEP)
-                + self._parse_memory_bandwidth(output, run_id, METRIC_PREFIX_MEM_BW)
                 + self._parse_stream_benchmark(output)
                 + self._parse_cache_bandwidth(output, run_id)
             )
@@ -179,7 +176,6 @@ class HardwareTestAdapter(BaseAdapter):
         # Single test type
         metric_map = {
             "MemSweep": (METRIC_PREFIX_MEM_SWEEP, self._parse_memory_bandwidth),
-            "MemBw": (METRIC_PREFIX_MEM_BW, self._parse_memory_bandwidth),
             "Stream": (None, self._parse_stream_benchmark),
             "Cache": (None, self._parse_cache_bandwidth),
         }
@@ -230,30 +226,17 @@ class HardwareTestAdapter(BaseAdapter):
         """Parse bandwidth data for a specific direction."""
         csv_data = []
 
-        # Try sweep format - match from direction header to next section
+        # Sweep format - match from direction header to next section
         # The pattern stops at: ==== (next section), Direction:, STREAM:, or end of string
         sweep_pattern = rf"{direction}.*?Size \(MB\)\s+Time \(ms\)Bandwidth \(GB/s\)\s+CV \(%\)\s*-+\s*(.*?)\s*(?=\n=+|Direction:|STREAM:|\Z)"
         sweep_match = re.search(sweep_pattern, output, re.DOTALL)
 
-        # Try bandwidth test format
-        bw_pattern = rf"{direction}.*?Bandwidth Test.*?Transfer Size \(Bytes\)\s+Bandwidth\(GB/s\)\s*-+\s*(.*?)\s*(?=\n=+|Direction:|Device to Device|STREAM:|\Z)"
-        bw_match = re.search(bw_pattern, output, re.DOTALL)
-
-        data_block = None
-        parser = None
-
         if sweep_match:
             data_block = sweep_match.group(1)
-            parser = self._parse_sweep_line
-        elif bw_match:
-            data_block = bw_match.group(1)
-            parser = self._parse_bw_line
-
-        if data_block and parser:
             for line in data_block.strip().split("\n"):
                 line = line.strip()
                 if line and not line.startswith("-"):
-                    result = parser(line)
+                    result = self._parse_sweep_line(line)
                     if result:
                         csv_data.append(result)
 
@@ -266,21 +249,6 @@ class HardwareTestAdapter(BaseAdapter):
         if len(parts) >= 3:
             try:
                 return {"size_mb": float(parts[0]), "bandwidth_gbps": float(parts[2])}
-            except (ValueError, IndexError):
-                pass
-        return None
-
-    @staticmethod
-    def _parse_bw_line(line: str) -> Optional[Dict]:
-        """Parse a line from bandwidth test format output."""
-        parts = line.split()
-        if len(parts) >= 2:
-            try:
-                size_bytes = float(parts[0])
-                return {
-                    "size_mb": size_bytes / (1024 * 1024),
-                    "bandwidth_gbps": float(parts[1]),
-                }
             except (ValueError, IndexError):
                 pass
         return None
