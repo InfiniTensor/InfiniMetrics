@@ -11,10 +11,10 @@ import string
 import json
 from pathlib import Path
 from typing import Callable, Optional, Dict, Any, List, Union
-from common.prompt_data import get_template_names, get_topic_names
+from infinimetrics.common.prompt_data import get_template_names, get_topic_names
 import logging
 
-from common.prompt_data import (
+from infinimetrics.common.prompt_data import (
     PRESET_TEMPLATES,
     PRESET_TOPICS,
     DEFAULT_TEMPLATE_NAME,
@@ -229,7 +229,6 @@ class PromptGenerator:
     def _generate_unique_suffix(self) -> str:
         """Generate unique identifier suffix"""
         return ''.join(random.choices(string.ascii_letters + string.digits, k=6))
-
 
 # ==================== Original Functions ====================
 

@@ -23,6 +23,17 @@ NVIDIA_SMI_GPU_QUERY = [
     "--format=csv,noheader",
 ]
 
+def _sanitize_filename(name: str) -> str:
+    """
+    Make name safe to be used as a filename.
+    Keep letters/numbers/_/./- ; replace others with '_'.
+    """
+    if not name:
+        return "unknown"
+    name = re.sub(r"[^\w\-.]+", "_", str(name))
+    name = re.sub(r"_+", "_", name)
+    return name.strip("_") or "unknown"
+
 def _which(cmd: str) -> Optional[str]:
     try:
         from shutil import which
@@ -98,9 +109,14 @@ class Executor:
         """
         config = self.payload.get("config", {})
 
-        # Convert payload to TestInput object
-        self.test_input = TestInput.from_dict(self.payload)
-
+        # Inject testcase, run_id, and other metadata into config
+        config["_testcase"] = self.payload.get("testcase", "")
+        config["_run_id"] = self.payload.get("run_id", "")
+        config["_time"] = self.payload.get("time", None)
+        
+        # Also inject the full payload for adapters that need the complete structure
+        config["_full_payload"] = self.payload
+        
         self.adapter.setup(config)
 
         logger.debug(f"Executor: Setup complete for {self.testcase}")
@@ -175,10 +191,11 @@ class Executor:
 
                 # rebuild ordered dict (py3.7+ preserves insertion order)
                 ordered = {}
-                for k in ["run_id", "time", "testcase", "success"]:
-                    if k in response:
+                for k in ["run_id", "time", "testcase", "success", "environment", "result_code", "config", "metrics"]:
+                    if k == "environment":
+                        ordered["environment"] = env
+                    elif k in response:
                         ordered[k] = response[k]
-                ordered["environment"] = env
 
                 # append remaining keys in original order (skip those already set)
                 for k, v in response.items():
@@ -462,12 +479,34 @@ class Executor:
             Absolute path to saved file
         """
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        safe_name = self.testcase.replace(".", "_").replace("/", "_")
-        filename = f"{safe_name}_{timestamp}_results.json"
-        output_file = self.output_dir / filename
+
+        # 1) Prefer run_id in result (adapter may generate a richer run_id)
+        run_id = None
+        if isinstance(result, dict):
+            run_id = result.get("run_id") or result.get("raw_result", {}).get("run_id")
+
+        # 2) Fallback to payload run_id
+        if not run_id:
+            run_id = self.payload.get("run_id") or self.run_id
+
+        if run_id:
+            safe_run_id = _sanitize_filename(run_id)
+
+            # Put final JSON next to timeseries csv files under infer/
+            infer_dir = self.output_dir / "infer"
+            infer_dir.mkdir(parents=True, exist_ok=True)
+
+            filename = f"{safe_run_id}_results.json"
+            output_file = infer_dir / filename
+        else:
+            # Final fallback to old naming
+            safe_name = self.testcase.replace(".", "_").replace("/", "_")
+            filename = f"{safe_name}_{timestamp}_results.json"
+            output_file = self.output_dir / filename
 
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2, ensure_ascii=False)
 
         logger.debug(f"Executor: Results saved to {output_file}")
         return str(output_file)
+

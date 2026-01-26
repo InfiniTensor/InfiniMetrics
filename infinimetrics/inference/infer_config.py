@@ -12,16 +12,16 @@ from enum import Enum
 from pathlib import Path
 from datetime import datetime
 
-from common.testcase_utils import generate_run_id
+from infinimetrics.common.testcase_utils import generate_run_id
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 
-from common.testcase_utils import (
+from infinimetrics.common.testcase_utils import (
     generate_run_id_from_config,
     parse_testcase, 
     validate_testcase_format
 )
-from common.constants import (
+from infinimetrics.common.constants import (
     ProcessorType,
     AcceleratorType,
     DEFAULT_WARMUP_ITERATIONS,
@@ -376,6 +376,29 @@ class InferConfigManager:
     """Inference Configuration Manager"""
 
     @staticmethod
+    def load_config_from_dict(config_dict: Dict[str, Any]) -> InferConfig:
+        """Load configuration from dictionary (not file)"""
+        # single configuration or list of configurations supported
+        if isinstance(config_dict, dict):
+            config_data = config_dict
+        elif isinstance(config_dict, list) and len(config_dict) > 0:
+            config_data = config_dict[0]
+        else:
+            raise ValueError(f"Invalid config format: {type(config_dict)}")
+        
+        # create a configuration object
+        config = InferConfig.from_dict(config_data)
+        
+        # Verify the configuration
+        errors = InferConfigManager.validate_config(config)
+        if errors:
+            error_msg = "Configuration validation errors:\n" + "\n".join(f"  - {e}" for e in errors)
+            logger.error(error_msg)
+            raise ValueError(error_msg)
+        
+        return config
+
+    @staticmethod
     def load_config(config_file: str) -> InferConfig:
         """Load configuration from config file"""
         try:
@@ -481,5 +504,5 @@ class InferConfigManager:
         Returns:
             Generated run_id
         """
-        from common.testcase_utils import generate_auto_run_id as common_generate_run_id
+        from infinimetrics.common.testcase_utils import generate_auto_run_id as common_generate_run_id
         return common_generate_run_id(testcase)

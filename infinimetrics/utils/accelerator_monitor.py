@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 import logging
 from enum import Enum
 from typing import Dict, List, Optional, Union
-from common.constants import ProcessorType, AcceleratorType
+from infinimetrics.common.constants import ProcessorType, AcceleratorType
 
 logger = logging.getLogger(__name__)
 

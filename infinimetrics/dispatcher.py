@@ -16,8 +16,14 @@ logger = logging.getLogger(__name__)
 _ADAPTER_REGISTRY = {
     ("operator", "infinicore"): lambda: _create_infinicore_adapter(),
     ("comm", "nccltest"): lambda: _create_nccltests_adapter(),
+    ("infer", "infinilm"): lambda: _create_inference_adapter(),
+    ("infer", "vllm"): lambda: _create_inference_adapter(),
 }
 
+def _create_inference_adapter():
+    """Create inference adapter"""
+    from infinimetrics.inference.adapter import InferenceAdapter
+    return InferenceAdapter()
 
 def _create_infinicore_adapter():
     """Create InfiniCore adapter (lazy import)."""

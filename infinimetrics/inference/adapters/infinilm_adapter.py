@@ -12,12 +12,11 @@ import logging
 import random
 from pathlib import Path
 from typing import List, Tuple, Optional, Dict, Any
-from adapter_base import InferAdapter
-from infer_config import InferConfig
+from infinimetrics.inference.infer_config import InferConfig
 import subprocess
 import threading
 
-from common.constants import (
+from infinimetrics.common.constants import (
     DEFAULT_TEMPERATURE,
     DEFAULT_TOP_P,
     DEFAULT_TOP_K,
@@ -107,17 +106,16 @@ except ImportError as e:
     logger.error(f"Failed to import InfiniLM modules: {e}")
 
 
-
-class InfiniLMAdapter(InferAdapter):
+class InfiniLMAdapter:
     """InfiniLM adapter implementation"""
 
-    def __init__(self, config: InferConfig):
-        super().__init__(config)
-
+    def __init__(self, config):
+        self.config = config
+        
         # InfiniLM specific attributes
         self.model_instance: Optional[JiugeForCauslLM] = None
-
-        # Record the path
+        self.model_loaded = False  
+        self.tokenizer = None
         self.eos_token_id = None
 
         logger.info(f"InfiniLMAdapter created for model: {config.model}")
@@ -135,16 +133,37 @@ class InfiniLMAdapter(InferAdapter):
             # Determine device type
             device_type = self._get_device_type()
 
-            # Get tp size (from infer_args.parallel)
-            tp_size = self.config.infer_args.parallel.tp
+            # Get tp size 
+            tp_size = 1
+            infer_args = self.config.infer_args
+            
+            if isinstance(infer_args, dict):
+                # processing dictionary format
+                parallel_config = infer_args.get('parallel', {})
+                if isinstance(parallel_config, dict):
+                    tp_size = parallel_config.get('tp', 1)
+                elif hasattr(parallel_config, 'tp'):
+                    tp_size = parallel_config.tp
+            else:
+                # processing object format
+                if hasattr(infer_args, 'parallel') and hasattr(infer_args.parallel, 'tp'):
+                    tp_size = infer_args.parallel.tp
+            
+            # Get max_seq_len
+            max_seq_len = DEFAULT_MAX_SEQ_LEN
+            if isinstance(infer_args, dict):
+                max_seq_len = infer_args.get('max_seq_len', DEFAULT_MAX_SEQ_LEN)
+            elif hasattr(infer_args, 'max_seq_len'):
+                max_seq_len = infer_args.max_seq_len
+            
+            logger.info(f"Using tp_size={tp_size}, max_seq_len={max_seq_len}")
 
             # Correctly call JiugeForCauslLM constructor
-            # Original API: JiugeForCauslLM(model_dir_path, device, ndev, max_tokens=None)
             self.model_instance = JiugeForCauslLM(
                 self.config.model_path,
                 device_type, 
                 tp_size,
-                max_tokens=self.config.infer_args.max_seq_len  # This parameter is optional
+                max_tokens=max_seq_len  # optional
             )
 
             # Get tokenizer
@@ -157,6 +176,86 @@ class InfiniLMAdapter(InferAdapter):
         except Exception as e:
             logger.error(f"Failed to load InfiniLM model: {e}", exc_info=True)
             raise
+    
+    def get_vocab_size(self) -> int:
+        """Get vocabulary size"""
+        if self.tokenizer is None:
+            raise ValueError("Tokenizer not loaded")
+        return len(self.tokenizer)
+    
+    def get_special_token_ids(self) -> set:
+        """Get a set of special token IDs that should be excluded"""
+        if self.tokenizer is None:
+            return set()
+
+        special_ids = set()
+        token_attrs = ['bos_token', 'eos_token', 'pad_token', 'unk_token']
+        
+        for attr in token_attrs:
+            token = getattr(self.tokenizer, attr, None)
+            if token and isinstance(token, str):
+                try:
+                    token_id = self.tokenizer.convert_tokens_to_ids(token)
+                    if token_id is not None:
+                        special_ids.add(token_id)
+                except:
+                    pass
+        
+        logger.debug(f"Found {len(special_ids)} special token IDs")
+        return special_ids
+    
+    def generate_random_tokens(self, num_tokens: int, exclude_special: bool = True) -> List[int]:
+        """
+        Generate a sequence of random token IDs
+        """
+        if self.tokenizer is None:
+            raise ValueError("Tokenizer not loaded")
+
+        vocab_size = self.get_vocab_size()
+
+        if exclude_special:
+            special_ids = self.get_special_token_ids()
+            all_ids = set(range(vocab_size))
+            valid_ids = sorted(list(all_ids - special_ids))
+
+            if not valid_ids:
+                logger.warning("No valid tokens after excluding special tokens, using all tokens")
+                valid_ids = list(range(vocab_size))
+        else:
+            valid_ids = list(range(vocab_size))
+
+        tokens = random.choices(valid_ids, k=num_tokens)
+
+        logger.debug(f"Generated {num_tokens} random tokens (vocab_size={vocab_size}, "
+                     f"exclude_special={exclude_special})")
+
+        return tokens
+    
+    def tokens_to_text(self, tokens: List[int]) -> str:
+        """Convert token IDs to text (for debugging)"""
+        if self.tokenizer is None:
+            raise ValueError("Tokenizer not loaded")
+        return self.tokenizer.decode(tokens, skip_special_tokens=True)
+    
+    def validate_config(self) -> List[str]:
+        """Validate adapter configuration"""
+        errors = []
+        import os
+        
+        if not INFINILM_AVAILABLE:
+            errors.append("InfiniLM modules are not available")
+        
+        # Check model directory
+        if not os.path.exists(self.config.model_path):
+            errors.append(f"Model path does not exist: {self.config.model_path}")
+        
+        # Check TP configuration
+        if hasattr(self.config.infer_args, 'parallel'):
+            if self.config.infer_args.parallel.tp <= 0:
+                errors.append("Tensor parallel size (tp) must be positive")
+        
+        return errors
+
     def _cleanup_framework_resources(self) -> None:
         """InfiniLM-specific resource cleanup"""
         try:
@@ -196,7 +295,7 @@ class InfiniLMAdapter(InferAdapter):
         logger.info(f"InfiniLM batch inference for {len(prompts)} prompts")
         logger.info(f"Max tokens: {max_tokens}, Temperature: {temperature}")
 
-        # 1. Encode prompts
+        # Encode prompts
         token_lists = []
         for i, prompt in enumerate(prompts):
             tokens = self.tokenizer.encode(prompt)
@@ -230,7 +329,7 @@ class InfiniLMAdapter(InferAdapter):
             logger.info(f"Processing batch {batch_idx + 1}/{len(batch_prompts)}")
 
             # Check batch size to avoid OOM
-            max_batch_size = 8  # Safe value, can adjust based on GPU memory
+            max_batch_size = 8  
             if len(prompts) > max_batch_size:
                 logger.warning(f"Batch size {len(prompts)} too large, splitting")
                 results = self._split_and_generate(
@@ -254,9 +353,14 @@ class InfiniLMAdapter(InferAdapter):
         logger.info(f"Calculating perplexity for {len(test_data)} test samples")
 
         try:
+            if hasattr(self.config.infer_args, 'max_seq_len'):
+                max_seq_len = self.config.infer_args.max_seq_len
+            else:
+                max_seq_len = DEFAULT_MAX_SEQ_LEN
+
             # Convert text to token sequences
             test_sequences = [
-                self.tokenizer.encode(text)[:self.config.infer_args.max_seq_len]
+                self.tokenizer.encode(text)[:max_seq_len]
                 for text in test_data
             ]
 
@@ -277,7 +381,13 @@ class InfiniLMAdapter(InferAdapter):
         if DeviceType is None:
             return None
         
-        accelerator = self.config.device.accelerator.value.lower()
+        if hasattr(self.config, 'device'):
+            if hasattr(self.config.device, 'accelerator'):
+                accelerator = self.config.device.accelerator.value.lower()
+            else:
+                accelerator = "nvidia"
+        else:
+            accelerator = "nvidia"
         
         if accelerator == "nvidia":
             return DeviceType.DEVICE_TYPE_NVIDIA
@@ -295,6 +405,11 @@ class InfiniLMAdapter(InferAdapter):
         """Create inference tasks"""
         tasks = []
         
+        if hasattr(self.config.infer_args, 'max_seq_len'):
+            config_max_seq_len = self.config.infer_args.max_seq_len
+        else:
+            config_max_seq_len = DEFAULT_MAX_SEQ_LEN
+        
         for i, tokens in enumerate(token_lists):
             try:
                 # End tokens
@@ -305,9 +420,9 @@ class InfiniLMAdapter(InferAdapter):
                 
                 # Maximum sequence length
                 max_seq_len = min(
-                    self.config.infer_args.max_seq_len,
+                    config_max_seq_len,
                     self.model_instance.max_context_len() if hasattr(self.model_instance, 'max_context_len') 
-                    else self.config.infer_args.max_seq_len
+                    else config_max_seq_len
                 )
                 
                 # Create task
@@ -462,26 +577,21 @@ class InfiniLMAdapter(InferAdapter):
             all_ttfts.append(ttfts)
         
         return all_texts, all_latencies, all_ttfts
+    
+    def get_peak_memory_usage(self) -> Optional[float]:
+        """Get peak accelerator memory usage (GB)"""
+        try:
+            import torch
+            if hasattr(torch, 'cuda') and torch.cuda.is_available():
+                max_memory = 0
+                for i in range(torch.cuda.device_count()):
+                    max_memory = max(max_memory, torch.cuda.max_memory_allocated(i))
+                return max_memory / (1024 ** 3)
+        except ImportError:
+            logger.warning("PyTorch not available, cannot get GPU memory usage")
+        return None
 
     def _validate_framework_config(self) -> List[str]:
-        """Validate configuration"""
-        errors = []
-        
-        if not INFINILM_AVAILABLE:
-            errors.append("InfiniLM modules are not available")
-        
-        # Check model directory
-        model_dir = Path(self.config.model_path)
-        if not model_dir.exists():
-            errors.append(f"Model directory does not exist: {model_dir}")
-        
-        # Check TP configuration
-        if self.config.infer_args.parallel.tp <= 0:
-            errors.append("Tensor parallel size (tp) must be positive")
-        
-        return errors
-    
-        """Get service URL"""
-        port = getattr(self, 'server_port', 8000)
-        return f"http://localhost:{port}"
+        """Validate framework-specific configuration"""
+        return self.validate_config()
 

@@ -17,7 +17,7 @@ from typing import Dict, List, Optional, Tuple, Any
 from dataclasses import dataclass
 import numpy as np
 
-from common.constants import (
+from infinimetrics.common.constants import (
     DEFAULT_TIMEOUT_MS,
     DEFAULT_TEMPERATURE,
     DEFAULT_TOP_P
@@ -385,7 +385,14 @@ class TraceClient:
         
         # Compute statistics
         stats = self._calculate_statistics(processed_traces, total_test_duration)
-        
+
+        stats.setdefault("total_requests", len(processed_traces))
+        stats.setdefault("successful_requests", 0)
+        stats.setdefault("failed_requests", len(processed_traces))
+        stats.setdefault("success_rate", 0.0)
+        stats.setdefault("avg_ttft", 0.0)
+        stats.setdefault("avg_e2e_latency", 0.0)
+                
         # Log summary
         logger.info(f"Trace run completed: "
                    f"{stats['success_rate']:.2%} success rate, "
