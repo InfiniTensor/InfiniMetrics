@@ -1,0 +1,16 @@
+{
+    "run_id": "hardware.cudaUnified.Stream.fadfsdf",
+    "testcase": "hardware.cudaUnified.Stream",
+    "config": {
+        "test_type": "Stream",
+        "device": "nvidia",
+        "array_size": 67108864,
+        "output_dir": "./output"
+    },
+    "metrics": [
+        {"name": "hardware.stream_copy"},
+        {"name": "hardware.stream_scale"},
+        {"name": "hardware.stream_add"},
+        {"name": "hardware.stream_triad"}
+    ]
+}
