@@ -23,7 +23,7 @@ class InferenceResultWriter:
         self.output_dir.mkdir(parents=True, exist_ok=True)
         
     def generate_result(self) -> Dict[str, Any]:
-         """Generate results in standard format"""
+        """Generate results in standard format"""
         # Save time series data
         self._save_timeseries_data()
         

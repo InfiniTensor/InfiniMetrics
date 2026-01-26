@@ -143,7 +143,7 @@ class ServiceInferenceExecutor(AcceleratorMonitorMixin):
 
         self.result_data["throughput_data"] = [overall_rps]
     
-     def _create_prompt_generator(self):
+    def _create_prompt_generator(self):
         """Create prompt generator - returns a callable"""
         from infinimetrics.utils.prompt_generator import PromptGenerator
         
