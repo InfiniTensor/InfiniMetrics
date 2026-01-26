@@ -17,19 +17,12 @@ from infer_config import InferConfig, ServiceInferArgs
 from utils.trace_client import TraceClient, TraceClientConfig, RequestTrace
 from utils.prompt_generator import create_prompt_generator
 
-try:
-    from service_manager import InfiniLMServiceManager
-    SERVICE_MANAGER_AVAILABLE = True
-except ImportError:
-    SERVICE_MANAGER_AVAILABLE = False
-
 logger = logging.getLogger(__name__)
 
 # default value
 DEFAULT_SERVICE_PORT = 8000
 DEFAULT_MAX_WAIT_TIME = 120
 DEFAULT_WAIT_INTERVAL = 3
-
 
 class ServiceInferRunner(InferRunnerBase):
     """Service Inference Runner"""
@@ -48,9 +41,30 @@ class ServiceInferRunner(InferRunnerBase):
         # Service manager
         self.service_manager = None
 
+        # select ServiceManager from the framework
+        self.service_manager_class = self._get_service_manager_class()
+
         logger.info(f"ServiceInferRunner created for trace: {self.infer_args.request_trace}")
         logger.info(f"Concurrency: {self.infer_args.concurrency}")
         logger.info(f"Max sequence length: {self.infer_args.max_seq_len}")
+    
+    def _get_service_manager_class(self):
+        """Get the corresponding ServiceManager class according to framework"""
+        framework = self.config.framework.value
+        
+        try:
+            if framework == "infinilm":
+                from service_manager import InfiniLMServiceManager
+                return InfiniLMServiceManager
+            elif framework == "vllm":
+                from service_manager import VLLMServiceManager
+                return VLLMServiceManager
+            else:
+                 raise ValueError(f"Unsupported framework for service mode: {framework}")
+
+        except (ImportError, ValueError) as e:
+            logger.warning(f"Cannot get ServiceManager for {framework}: {e}")
+            return None
 
     def setup(self) -> None:
         """Set up service inference environment"""
@@ -73,13 +87,14 @@ class ServiceInferRunner(InferRunnerBase):
             logger.info(f"accelerator monitoring started for devices: {device_ids}")
 
         # Create and start the service manager
-        if SERVICE_MANAGER_AVAILABLE:
-            self.service_manager = InfiniLMServiceManager(self.config)
+        if self.service_manager_class:
+            self.service_manager = self.service_manager_class(self.config)
             self.service_manager.start_service(port=DEFAULT_SERVICE_PORT)
         else:
-            logger.warning("Service manager not available, assuming service is already running")
+            logger.warning(f"Service manager for {self.config.framework.value} not available, "
+                          f"assuming service is already running")
             
-            # Check that the service is ready
+            # check service readiness
             if not self._check_service_ready():
                 raise RuntimeError("Inference service is not ready")
 
