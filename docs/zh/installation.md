@@ -58,8 +58,5 @@ export PATH=$CUDA_HOME/bin:$PATH
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$LD_LIBRARY_PATH
 ```
 
-### AMD GPU
-安装 ROCm 并设置相应的环境变量。
-
 ### 其他加速器
 请参阅加速器供应商的文档以了解驱动和工具包安装。
