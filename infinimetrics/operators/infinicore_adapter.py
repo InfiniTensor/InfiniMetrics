@@ -51,12 +51,11 @@ class InfiniCoreAdapter(BaseAdapter):
 
     def process(self, test_input: Union[Dict[str, Any], Any]) -> Dict[str, Any]:
         """Execute the operator test."""
-        if hasattr(test_input, "to_dict"):
-            test_input = test_input.to_dict()
-        elif not isinstance(test_input, dict):
+        # Normalize test input to dict format
+        test_input = self._normalize_test_input(test_input)
+        if not test_input:
             return self._create_error_response(
-                test_input if isinstance(test_input, dict) else {},
-                f"Invalid test_input type: {type(test_input)}",
+                f"Invalid test_input type: {type(test_input)}"
             )
 
         testcase = test_input.get(InfiniMetricsJson.TESTCASE, "unknown")
@@ -71,21 +70,7 @@ class InfiniCoreAdapter(BaseAdapter):
             logger.error(
                 f"InfiniCoreAdapter: Error processing {testcase}", exc_info=True
             )
-            return self._create_error_response(test_input, str(e))
-
-    def _create_error_response(
-        self, test_input: Dict[str, Any], error_msg: str
-    ) -> Dict[str, Any]:
-        """Create error response with full context."""
-        return {
-            InfiniMetricsJson.RESULT_CODE: 1,
-            InfiniMetricsJson.TIME: datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            InfiniMetricsJson.ERROR_MSG: error_msg,
-            InfiniMetricsJson.METRICS: [],
-            InfiniMetricsJson.RUN_ID: test_input.get(InfiniMetricsJson.RUN_ID, ""),
-            InfiniMetricsJson.TESTCASE: test_input.get(InfiniMetricsJson.TESTCASE, ""),
-            InfiniMetricsJson.CONFIG: test_input.get(InfiniMetricsJson.CONFIG, {}),
-        }
+            return self._create_error_response(str(e), test_input)
 
     def _convert_to_request(self, legacy_json: dict) -> list:
         """Convert legacy JSON format to InfiniCore request format."""

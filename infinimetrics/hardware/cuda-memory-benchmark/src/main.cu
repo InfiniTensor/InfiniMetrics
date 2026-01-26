@@ -34,13 +34,12 @@ void print_usage(const char* program_name) {
     std::cout << "  --device <id>            Specify CUDA device ID (default: 0)\n";
     std::cout << "  --iterations <n>         Number of measurement iterations (default: 10)\n";
     std::cout << "  --array-size <size>      Array size for STREAM test (default: 67108864)\n";
-    std::cout << "  --buffer-size <size>     Buffer size in MB (default: 256)\n";
     std::cout << "  --quiet                  Reduce output verbosity\n";
     std::cout << "  --help                   Show this help message\n\n";
     std::cout << "Examples:\n";
     std::cout << "  " << program_name << " --all\n";
     std::cout << "  " << program_name << " --stream --array-size 134217728\n";
-    std::cout << "  " << program_name << " --memory --buffer-size 512\n";
+    std::cout << "  " << program_name << " --memory\n";
     std::cout << "  " << program_name << " --cache\n";
 }
 
@@ -52,7 +51,6 @@ struct Config {
     int device_id = 0;
     int iterations = 10;
     size_t array_size = 67108864;  // 64M elements (512 MB for double)
-    size_t buffer_size_mb = 256;
     bool verbose = true;
 };
 
@@ -89,9 +87,6 @@ Config parse_arguments(int argc, char* argv[]) {
         }
         else if (arg == "--array-size" && i + 1 < argc) {
             config.array_size = static_cast<size_t>(std::atoll(argv[++i]));
-        }
-        else if (arg == "--buffer-size" && i + 1 < argc) {
-            config.buffer_size_mb = static_cast<size_t>(std::atoll(argv[++i]));
         }
         else if (arg == "--quiet") {
             config.verbose = false;
@@ -153,16 +148,13 @@ int main(int argc, char* argv[]) {
 
         // Configure test settings
         TestConfig test_config;
-        test_config.warmup_iterations = 2;
+        test_config.warmup_iterations = 5;  
         test_config.measurement_iterations = config.iterations;
         test_config.verbose = config.verbose;
-
-        size_t buffer_size_bytes = config.buffer_size_mb * 1024 * 1024;
 
         std::cout << "\n=== Test Configuration ===\n";
         std::cout << "Device ID:         " << config.device_id << "\n";
         std::cout << "Iterations:        " << config.iterations << "\n";
-        std::cout << "Buffer size:       " << config.buffer_size_mb << " MB\n";
         std::cout << "Stream array size: " << config.array_size << " elements ("
                   << (config.array_size * sizeof(double) / 1024.0 / 1024.0) << " MB)\n";
 

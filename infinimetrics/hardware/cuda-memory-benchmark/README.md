@@ -82,7 +82,6 @@ Options:
   --device <id>            Specify CUDA device ID (default: 0)
   --iterations <n>         Number of measurement iterations (default: 10)
   --array-size <size>      Array size for STREAM test (default: 67108864)
-  --buffer-size <size>     Buffer size in MB (default: 256)
   --quiet                  Reduce output verbosity
   --help                   Show help message
 ```

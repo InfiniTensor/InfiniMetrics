@@ -46,11 +46,6 @@ Tests L1 and L2 cache performance with varying working set sizes.
 ./build/cuda_perf_suite --stream --iterations 50
 ```
 
-### Large Buffer Memory Test
-```bash
-./build/cuda_perf_suite --memory --buffer-size 1024
-```
-
 ### Test Specific GPU
 ```bash
 ./build/cuda_perf_suite --all --device 1
