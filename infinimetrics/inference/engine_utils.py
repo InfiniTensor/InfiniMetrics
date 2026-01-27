@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Shared executor utilities for inference executors
+Shared engine utilities for inference engines.
 """
 
 from typing import Any
@@ -8,7 +8,7 @@ from typing import Any
 
 class AcceleratorMonitorMixin:
     """
-    Mixin for accelerator monitoring lifecycle.
+    Mixin for accelerator monitoring lifecycle used by inference engines.
 
     Requires:
       - self.config
@@ -49,4 +49,3 @@ class AcceleratorMonitorMixin:
 
         if hasattr(self, "result_data") and isinstance(self.result_data, dict):
             self.result_data["peak_memory_usage"] = peak_gb
-

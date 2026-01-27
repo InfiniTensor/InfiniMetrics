@@ -14,6 +14,7 @@ from dataclasses import dataclass
 
 from infinimetrics.adapter import BaseAdapter
 from infinimetrics.input import TestInput
+from infinimetrics.utils.path_utils import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
@@ -23,23 +24,15 @@ NVIDIA_SMI_GPU_QUERY = [
     "--format=csv,noheader",
 ]
 
-def _sanitize_filename(name: str) -> str:
-    """
-    Make name safe to be used as a filename.
-    Keep letters/numbers/_/./- ; replace others with '_'.
-    """
-    if not name:
-        return "unknown"
-    name = re.sub(r"[^\w\-.]+", "_", str(name))
-    name = re.sub(r"_+", "_", name)
-    return name.strip("_") or "unknown"
 
 def _which(cmd: str) -> Optional[str]:
     try:
         from shutil import which
+
         return which(cmd)
     except Exception:
         return None
+
 
 @dataclass
 class TestResult:
@@ -113,10 +106,10 @@ class Executor:
         config["_testcase"] = self.payload.get("testcase", "")
         config["_run_id"] = self.payload.get("run_id", "")
         config["_time"] = self.payload.get("time", None)
-        
+
         # Also inject the full payload for adapters that need the complete structure
         config["_full_payload"] = self.payload
-        
+
         self.adapter.setup(config)
 
         logger.debug(f"Executor: Setup complete for {self.testcase}")
@@ -181,17 +174,30 @@ class Executor:
             response = self.adapter.process(self.test_input)
 
             # Process response (0 = success, non-zero = error code)
-            test_result.result_code = int(response.get("result_code", 1)) if isinstance(response, dict) else 1
+            test_result.result_code = (
+                int(response.get("result_code", 1)) if isinstance(response, dict) else 1
+            )
             if test_result.result_code != 0:
-                logger.warning(f"Executor: Adapter failed with error code {test_result.result_code}")
-            
+                logger.warning(
+                    f"Executor: Adapter failed with error code {test_result.result_code}"
+                )
+
             # Enrich environment ONLY if missing
             if isinstance(response, dict) and "environment" not in response:
                 env = self._build_environment(response)
 
                 # rebuild ordered dict (py3.7+ preserves insertion order)
                 ordered = {}
-                for k in ["run_id", "time", "testcase", "success", "environment", "result_code", "config", "metrics"]:
+                for k in [
+                    "run_id",
+                    "time",
+                    "testcase",
+                    "success",
+                    "environment",
+                    "result_code",
+                    "config",
+                    "metrics",
+                ]:
                     if k == "environment":
                         ordered["environment"] = env
                     elif k in response:
@@ -222,7 +228,7 @@ class Executor:
             test_result.result_code = 1  # Failure
 
             return test_result
-    
+
     def _build_environment(self, response: Dict[str, Any]) -> Dict[str, Any]:
         """
         Build a unified environment block
@@ -233,9 +239,13 @@ class Executor:
         gpn = int(resolved.get("gpus_per_node", 0) or 0)
 
         # Fallback to config hints if adapter didn't provide
-        cfg = (self.payload.get("config", {}) or {})
+        cfg = self.payload.get("config", {}) or {}
 
-        accel_type = (cfg.get("accelerator_type") or cfg.get("device_type") or "").strip().lower()  # optional
+        accel_type = (
+            (cfg.get("accelerator_type") or cfg.get("device_type") or "")
+            .strip()
+            .lower()
+        )  # optional
         device_ids = cfg.get("device_ids")
 
         if device_ids is None and isinstance(cfg.get("single_node"), dict):
@@ -279,7 +289,9 @@ class Executor:
             ],
         }
 
-    def _collect_static_hw(self, accel_type: str = "", device_ids: Any = None) -> Dict[str, Any]:
+    def _collect_static_hw(
+        self, accel_type: str = "", device_ids: Any = None
+    ) -> Dict[str, Any]:
         """
         Best-effort static HW collector (CPU/mem/GPU model/driver/CUDA).
         """
@@ -314,7 +326,7 @@ class Executor:
                         break
         except Exception:
             pass
-        
+
         hint = (accel_type or "").lower().strip()
 
         probes: List[str] = []
@@ -334,7 +346,7 @@ class Executor:
             probes.append("cambricon")
         if "generic" not in probes:
             probes.append("generic")
-        
+
         for p in probes:
             if p == "nvidia" and self._probe_nvidia(hw):
                 hw["accelerator_type"] = "nvidia"
@@ -358,9 +370,12 @@ class Executor:
                 return hw
 
         return hw
+
     def _probe_nvidia(self, hw: Dict[str, Any]) -> bool:
         try:
-            r = subprocess.run(NVIDIA_SMI_GPU_QUERY, capture_output=True, text=True, timeout=5)
+            r = subprocess.run(
+                NVIDIA_SMI_GPU_QUERY, capture_output=True, text=True, timeout=5
+            )
             if r.returncode != 0 or not r.stdout.strip():
                 return False
 
@@ -377,7 +392,6 @@ class Executor:
             return True
         except Exception:
             return False
-
 
     def _probe_amd(self, hw: Dict[str, Any]) -> bool:
         """
@@ -407,13 +421,18 @@ class Executor:
             # Minimal parse: count devices by "GPU" markers
             txt = r.stdout
             # heuristic: count lines containing "GPU" and an index
-            lines = [x for x in txt.splitlines() if re.search(r"\bGPU\b", x, re.IGNORECASE)]
-            hw["gpu_count"] = max(hw["gpu_count"], len(lines)) if lines else hw["gpu_count"]
-            hw["gpu_model"] = hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "AMD GPU"
+            lines = [
+                x for x in txt.splitlines() if re.search(r"\bGPU\b", x, re.IGNORECASE)
+            ]
+            hw["gpu_count"] = (
+                max(hw["gpu_count"], len(lines)) if lines else hw["gpu_count"]
+            )
+            hw["gpu_model"] = (
+                hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "AMD GPU"
+            )
             return True
         except Exception:
             return False
-
 
     def _probe_ascend(self, hw: Dict[str, Any]) -> bool:
         """
@@ -422,19 +441,24 @@ class Executor:
         try:
             if not _which("npu-smi"):
                 return False
-            r = subprocess.run(["npu-smi", "info"], capture_output=True, text=True, timeout=5)
+            r = subprocess.run(
+                ["npu-smi", "info"], capture_output=True, text=True, timeout=5
+            )
             if r.returncode != 0 or not r.stdout.strip():
                 return False
 
             txt = r.stdout
             # heuristic: count device lines with "NPU" or "Device"
-            cnt = len([x for x in txt.splitlines() if re.search(r"\bNPU\b|\bDevice\b", x)])
+            cnt = len(
+                [x for x in txt.splitlines() if re.search(r"\bNPU\b|\bDevice\b", x)]
+            )
             hw["gpu_count"] = max(hw["gpu_count"], cnt) if cnt else hw["gpu_count"]
-            hw["gpu_model"] = hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Ascend NPU"
+            hw["gpu_model"] = (
+                hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Ascend NPU"
+            )
             return True
         except Exception:
             return False
-
 
     def _probe_cambricon(self, hw: Dict[str, Any]) -> bool:
         """
@@ -443,21 +467,29 @@ class Executor:
         try:
             if not _which("cnmon"):
                 return False
-            r = subprocess.run(["cnmon", "info"], capture_output=True, text=True, timeout=5)
+            r = subprocess.run(
+                ["cnmon", "info"], capture_output=True, text=True, timeout=5
+            )
             if r.returncode != 0 or not r.stdout.strip():
                 return False
 
             txt = r.stdout
-            cnt = len([x for x in txt.splitlines() if re.search(r"\bMLU\b|\bDevice\b", x)])
+            cnt = len(
+                [x for x in txt.splitlines() if re.search(r"\bMLU\b|\bDevice\b", x)]
+            )
             hw["gpu_count"] = max(hw["gpu_count"], cnt) if cnt else hw["gpu_count"]
-            hw["gpu_model"] = hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Cambricon MLU"
+            hw["gpu_model"] = (
+                hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Cambricon MLU"
+            )
             return True
         except Exception:
             return False
 
     def _collect_cuda_version(self) -> Optional[str]:
         try:
-            r = subprocess.run(["nvcc", "--version"], capture_output=True, text=True, timeout=2)
+            r = subprocess.run(
+                ["nvcc", "--version"], capture_output=True, text=True, timeout=2
+            )
             if r.returncode == 0:
                 for line in r.stdout.splitlines():
                     if "release" in line:
@@ -490,7 +522,7 @@ class Executor:
             run_id = self.payload.get("run_id") or self.run_id
 
         if run_id:
-            safe_run_id = _sanitize_filename(run_id)
+            safe_run_id = sanitize_filename(run_id)
 
             # Put final JSON next to timeseries csv files under infer/
             infer_dir = self.output_dir / "infer"
@@ -509,4 +541,3 @@ class Executor:
 
         logger.debug(f"Executor: Results saved to {output_file}")
         return str(output_file)
-

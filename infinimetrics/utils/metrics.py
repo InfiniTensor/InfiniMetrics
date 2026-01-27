@@ -6,6 +6,7 @@ Defines common metric types used by both inference and training modules
 
 from typing import Dict, Any, Optional
 
+
 class Metric:
     """Metric base class"""
 
@@ -18,11 +19,7 @@ class Metric:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary"""
-        result = {
-            "name": self.name,
-            "type": self.type,
-            "unit": self.unit
-        }
+        result = {"name": self.name, "type": self.type, "unit": self.unit}
 
         if self.type == "scalar":
             result["value"] = self.value
@@ -38,6 +35,7 @@ class ScalarMetric(Metric):
     def __init__(self, name: str, value: Any, unit: Optional[str] = None):
         super().__init__(name, "scalar", unit)
         self.value = value
+
 
 class TimeseriesMetric(Metric):
     """Time-series metric"""

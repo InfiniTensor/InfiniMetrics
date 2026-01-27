@@ -4,16 +4,18 @@ Factory helpers for inference framework components
 """
 
 
-def create_framework_adapter(config):
+def create_framework_impl(config):
     """
     Create model adapter for direct inference.
     """
     if config.framework == "infinilm":
-        from .adapters.infinilm_adapter import InfiniLMAdapter
-        return InfiniLMAdapter(config)
+        from .frameworks.infinilm_impl import InfiniLMImpl
+
+        return InfiniLMImpl(config)
     else:
-        from .adapters.vllm_adapter import VLLMAdapter
-        return VLLMAdapter(config)
+        from .frameworks.vllm_impl import VLLMImpl
+
+        return VLLMImpl(config)
 
 
 def create_service_manager(config):
@@ -22,8 +24,9 @@ def create_service_manager(config):
     """
     if config.framework == "infinilm":
         from .service_manager import InfiniLMServiceManager
+
         return InfiniLMServiceManager(config)
     else:
         from .service_manager import VLLMServiceManager
-        return VLLMServiceManager(config)
 
+        return VLLMServiceManager(config)

@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""Direct inference executor - migrated from DirectInferRunner"""
+"""Direct inference engine"""
 
 import logging
 import time
 from typing import List
 from pathlib import Path
-from .executor_utils import AcceleratorMonitorMixin
-from .factory import create_framework_adapter
+from .engine_utils import AcceleratorMonitorMixin
+from .factory import create_framework_impl
 from infinimetrics.utils.accelerator_monitor import create_accelerator_monitor
 
 logger = logging.getLogger(__name__)
 
 
-class DirectInferenceExecutor(AcceleratorMonitorMixin):
-    """Direct inference executor"""
-    
+class DirectInferenceEngine(AcceleratorMonitorMixin):
+    """Direct inference engine"""
+
     def __init__(self, config):
         self.config = config
         self.adapter = None
@@ -25,15 +25,15 @@ class DirectInferenceExecutor(AcceleratorMonitorMixin):
             "throughput_data": [],
             "peak_memory_usage": 0.0,
             "total_tokens": 0,
-            "success_rate": 1.0
+            "success_rate": 1.0,
         }
-        
+
     def execute(self):
         logger.info(f"Starting direct inference: {self.config.run_id}")
         try:
             # load model
             self.adapter = self._load_framework_adapter()
-            
+
             # start accelerator monitor
             self._start_accelerator_monitor()
 
@@ -57,33 +57,43 @@ class DirectInferenceExecutor(AcceleratorMonitorMixin):
             raise
         finally:
             self._unload_model()
-    
+
     def _load_framework_adapter(self):
         """Load the frame adapter"""
-        adapter = create_framework_adapter(self.config)
-        
+        adapter = create_framework_impl(self.config)
+
         # load model
-        logger.info("Loading model...") 
-        adapter.load_model() 
-        logger.info("Model loaded successfully") 
+        logger.info("Loading model...")
+        adapter.load_model()
+        logger.info("Model loaded successfully")
         return adapter
-    
+
     def _generate_prompts(self) -> List[str]:
         """Generate test prompts"""
         from infinimetrics.utils.prompt_generator import PromptGenerator
-        
-        ia = self.config.infer_args
-        batch_size = ia.get("static_batch_size", 1) if isinstance(ia, dict) else getattr(ia, "static_batch_size", 1)
-        prompt_tokens = ia.get("prompt_token_num", 128) if isinstance(ia, dict) else getattr(ia, "prompt_token_num", 128)
 
-        total_needed = (self.config.warmup_iterations + self.config.measured_iterations) * batch_size
+        ia = self.config.infer_args
+        batch_size = (
+            ia.get("static_batch_size", 1)
+            if isinstance(ia, dict)
+            else getattr(ia, "static_batch_size", 1)
+        )
+        prompt_tokens = (
+            ia.get("prompt_token_num", 128)
+            if isinstance(ia, dict)
+            else getattr(ia, "prompt_token_num", 128)
+        )
+
+        total_needed = (
+            self.config.warmup_iterations + self.config.measured_iterations
+        ) * batch_size
         tokenizer = getattr(self.adapter, "tokenizer", None)
 
         generator = PromptGenerator(method="template", tokenizer=tokenizer)
         prompts = generator.generate_prompts(total_needed, prompt_tokens)
         logger.info(f"Generated {len(prompts)} prompts")
         return prompts
-    
+
     def _warmup(self, prompts: List[str]):
         logger.info(f"Warmup: {self.config.warmup_iterations} iterations")
 
@@ -116,7 +126,7 @@ class DirectInferenceExecutor(AcceleratorMonitorMixin):
                 top_p=top_p,
                 top_k=top_k,
             )
-    
+
     def _run_measurements(self, prompts: List[str]):
         """Perform measurement phase"""
         logger.info(f"Measurement: {self.config.measured_iterations} iterations")
@@ -158,18 +168,30 @@ class DirectInferenceExecutor(AcceleratorMonitorMixin):
                 self.result_data["latency_data"].append(avg_latency)
 
                 total_tokens = len(batch_prompts) * output_tokens
-                throughput = (total_tokens * 1000) / avg_latency if avg_latency > 0 else 0
+                throughput = (
+                    (total_tokens * 1000) / avg_latency if avg_latency > 0 else 0
+                )
                 self.result_data["throughput_data"].append(throughput)
 
             if ttfts:
                 avg_ttft = sum(ttfts) / len(ttfts)
                 self.result_data["ttft_data"].append(avg_ttft)
-    
+
     def _collect_total_tokens(self):
         ia = self.config.infer_args
-        batch_size = ia.get("static_batch_size", 1) if isinstance(ia, dict) else getattr(ia, "static_batch_size", 1)
-        output_tokens = ia.get("output_token_num", 128) if isinstance(ia, dict) else getattr(ia, "output_token_num", 128)
-        self.result_data["total_tokens"] = self.config.measured_iterations * batch_size * output_tokens
+        batch_size = (
+            ia.get("static_batch_size", 1)
+            if isinstance(ia, dict)
+            else getattr(ia, "static_batch_size", 1)
+        )
+        output_tokens = (
+            ia.get("output_token_num", 128)
+            if isinstance(ia, dict)
+            else getattr(ia, "output_token_num", 128)
+        )
+        self.result_data["total_tokens"] = (
+            self.config.measured_iterations * batch_size * output_tokens
+        )
 
     def _collect_peak_memory(self):
         if self.result_data.get("peak_memory_usage", 0) > 0:
@@ -190,4 +212,3 @@ class DirectInferenceExecutor(AcceleratorMonitorMixin):
                 logger.info("Model unloaded")
             except Exception as e:
                 logger.warning(f"Error unloading model: {e}")
-                

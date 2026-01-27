@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Service inference executor - migrated from ServiceInferRunner"""
+"""Service inference engine"""
 
 import asyncio
 import logging
-from .executor_utils import AcceleratorMonitorMixin
+from .engine_utils import AcceleratorMonitorMixin
 from .factory import create_service_manager
 
 logger = logging.getLogger(__name__)
 
 
-class ServiceInferenceExecutor(AcceleratorMonitorMixin):
-    """Service inference executor - replaces ServiceInferRunner"""
-    
+class ServiceInferenceEngine(AcceleratorMonitorMixin):
+    """Service inference engine"""
+
     def _ia(self, key, default=None):
         ia = getattr(self.config, "infer_args", {})
         if isinstance(ia, dict):
@@ -27,16 +27,16 @@ class ServiceInferenceExecutor(AcceleratorMonitorMixin):
             "ttft_data": [],
             "throughput_data": [],
             "peak_memory_usage": 0.0,
-            "success_rate": 1.0
+            "success_rate": 1.0,
         }
-        
+
     def execute(self):
         """Execute service inference test"""
         logger.info(f"Starting service inference: {self.config.run_id}")
-        
+
         # Run asynchronous trace test
         return asyncio.run(self._execute_async())
-    
+
     async def _execute_async(self):
         """Execute trace test asynchronously"""
         try:
@@ -65,40 +65,38 @@ class ServiceInferenceExecutor(AcceleratorMonitorMixin):
                     self.service_manager.stop_service()
             except Exception as e:
                 logger.warning(f"Failed to stop service: {e}")
-   
+
     def _start_service(self):
         """Start inference service"""
         manager = create_service_manager(self.config)
-        
+
         manager.start_service()
         return manager
-    
+
     async def _run_trace_test(self, service_manager):
         """Run trace test"""
         from infinimetrics.utils.trace_client import TraceClient, TraceClientConfig
-        
+
         # Create trace client
         client_config = TraceClientConfig(
             api_url=service_manager.get_service_url(),
             model_name=self.config.model,
-            timeout_ms = self._ia("timeout_ms", 30000)
+            timeout_ms=self._ia("timeout_ms", 30000),
         )
-        
+
         async with TraceClient(client_config) as client:
             # Load trace file
             traces = client.load_trace_file(
-                self._ia("request_trace", ""),
-                self._create_prompt_generator()
+                self._ia("request_trace", ""), self._create_prompt_generator()
             )
-            
+
             # Run trace
             processed_traces, stats = await client.run_trace(
-                traces,
-                concurrency = self._ia("concurrency", 32)
+                traces, concurrency=self._ia("concurrency", 32)
             )
-            
+
             return processed_traces, stats
-    
+
     def _process_trace_results(self, trace_results):
         processed_traces, stats = trace_results
 
@@ -142,30 +140,30 @@ class ServiceInferenceExecutor(AcceleratorMonitorMixin):
             overall_rps = 0.0
 
         self.result_data["throughput_data"] = [overall_rps]
-    
+
     def _create_prompt_generator(self):
         """Create prompt generator - returns a callable"""
         from infinimetrics.utils.prompt_generator import PromptGenerator
-        
+
         # Create PromptGenerator instance
         pg_instance = PromptGenerator(method="random")
-        
+
         # Return a wrapper function to make it callable
         def generate_prompt(token_num: int) -> str:
             """Wrapper function that calls pg_instance's generate method"""
             # Try different generation methods
-            if hasattr(pg_instance, 'generate_prompt'):
+            if hasattr(pg_instance, "generate_prompt"):
                 return pg_instance.generate_prompt(token_num)
-            elif hasattr(pg_instance, 'generate'):
+            elif hasattr(pg_instance, "generate"):
                 return pg_instance.generate(token_num)
             else:
                 # Fallback to simple random generation
                 import random
                 import string
+
                 chars_per_token = 4
                 total_chars = token_num * chars_per_token
-                chars = string.ascii_letters + string.digits + ' .,!?;:\n'
-                return ''.join(random.choices(chars, k=total_chars))
-        
+                chars = string.ascii_letters + string.digits + " .,!?;:\n"
+                return "".join(random.choices(chars, k=total_chars))
+
         return generate_prompt
-        

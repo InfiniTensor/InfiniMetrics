@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-infinimetrics inference package 
+infinimetrics inference package
 """
 
 __version__ = "1.0.0"
 __author__ = "InfiniTensor Team"
 
-from .adapter import InferenceAdapter
+from .inference_adapter import InferenceAdapter
 
 __all__ = ["InferenceAdapter"]

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Inference adapter for new architecture"""
+"""Inference adapter"""
 
+import os
 import logging
 import json
 from pathlib import Path
@@ -16,52 +17,58 @@ logger = logging.getLogger(__name__)
 
 class InferenceAdapter(BaseAdapter):
     """Main adapter for inference tests"""
-    
+
     def __init__(self):
         super().__init__()
         self.config = None
         self.mode = "direct"
         self.framework = "infinilm"
-        self.direct_executor = None
-        self.service_executor = None
-        
+        self._full_payload = None
+
     def setup(self, config: Dict[str, Any]) -> None:
         """Initialize inference resources"""
         # Get testcase and run_id from injected fields
         testcase = config.get("_testcase", "")
         run_id = config.get("_run_id", "")
-        
+
         # Parse mode and framework
         if "service" in testcase.lower():
             self.mode = "service"
         if "direct" in testcase.lower():
             self.mode = "direct"
-            
+
         if "vllm" in testcase.lower():
             self.framework = "vllm"
         elif "infinilm" in testcase.lower():
             self.framework = "infinilm"
-        
+
+        self._full_payload = config.get("_full_payload", None)
+
         # Create configuration object
         self.config = self._create_inference_config(config)
-        
-        logger.info(f"Inference adapter setup: mode={self.mode}, framework={self.framework}")
-    
+
+        logger.info(
+            f"Inference adapter setup: mode={self.mode}, framework={self.framework}"
+        )
+
     def process(self, test_input) -> Dict[str, Any]:
         """Execute inference test"""
         try:
             # Execute inference
             if self.mode == "direct":
-                from .direct import DirectInferenceExecutor
-                executor = DirectInferenceExecutor(self.config)
-            else:
-                from .service import ServiceInferenceExecutor
-                executor = ServiceInferenceExecutor(self.config)
+                from .direct import DirectInferenceEngine
 
-            result_data = executor.execute()
+                engine = DirectInferenceEngine(self.config)
+            else:
+                from .service import ServiceInferenceEngine
+
+                engine = ServiceInferenceEngine(self.config)
+
+            result_data = engine.execute()
 
             # Write results
             from .result_writer import InferenceResultWriter
+
             writer = InferenceResultWriter(self.config, result_data)
             result_payload = writer.generate_result()
 
@@ -75,17 +82,9 @@ class InferenceAdapter(BaseAdapter):
 
             # Optional fallback
             if not device_ids:
-                import os
                 cvd = os.environ.get("CUDA_VISIBLE_DEVICES", "").strip()
                 if cvd:
                     device_ids = [x for x in cvd.split(",") if x.strip() != ""]
-                else:
-                    try:
-                        import torch
-                        if torch.cuda.is_available():
-                            device_ids = list(range(torch.cuda.device_count()))
-                    except Exception:
-                        pass
 
             resolved = {
                 "nodes": 1,
@@ -94,34 +93,37 @@ class InferenceAdapter(BaseAdapter):
             }
 
             # Return result
-            success = 1 if result_payload.get("success", 0) == 1 else 0
-
             return {
-                "result_code": 0 if success == 1 else 1,
+                "result_code": 0,
+                "success": 0,
                 "metrics": result_payload.get("metrics", []),
                 "run_id": result_payload.get("run_id", ""),
                 "testcase": result_payload.get("testcase", ""),
-                "success": success,
-                "time": result_payload.get("time", datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
+                "time": result_payload.get(
+                    "time", datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                ),
                 "config": result_payload.get("config", {}),
-                
                 "resolved": resolved,
             }
 
         except Exception as e:
             logger.error(f"Inference test failed: {e}", exc_info=True)
-            return {
-                "result_code": 1,
-                "error": str(e),
-                "metrics": [],
-                "run_id": getattr(self.config, "run_id", "unknown"),
-                "testcase": getattr(self.config, "testcase", "unknown"),
-            }
-    
+
+            err = self._create_error_response(
+                error_msg=str(e),
+                test_input=(
+                    self._full_payload if isinstance(self._full_payload, dict) else None
+                ),
+                result_code=1,
+            )
+            err["success"] = 1
+            err["resolved"] = {"nodes": 1, "gpus_per_node": 0, "device_used": 0}
+            return err
+
     def teardown(self) -> None:
         """Cleanup resources"""
         logger.info("Inference adapter teardown complete")
-    
+
     def _create_inference_config(self, config: Dict[str, Any]):
         """Create inference configuration object"""
         # Get information from injected fields
@@ -129,7 +131,7 @@ class InferenceAdapter(BaseAdapter):
         user_run_id = config.get("_run_id", "")
 
         final_run_id = generate_run_id(testcase, user_run_id)
-        
+
         # Parse mode and framework
         mode = "direct"
         framework = "infinilm"
@@ -137,7 +139,7 @@ class InferenceAdapter(BaseAdapter):
             mode = "service"
         if "direct" in testcase.lower():
             mode = "direct"
-            
+
         if "vllm" in testcase.lower():
             framework = "vllm"
         elif "infinilm" in testcase.lower():
@@ -149,18 +151,18 @@ class InferenceAdapter(BaseAdapter):
                 self.run_id = run_id
                 self.mode = mode
                 self.framework = framework
-                
+
                 # Basic configuration
                 self.model = config_dict.get("model", "")
                 self.model_path = config_dict.get("model_path", "")
                 self.output_dir = config_dict.get("output_dir", "./output")
-                
+
                 # Device configuration
                 self.device = config_dict.get("device", {})
-                
+
                 # infer_args - get from config or create default dict
                 self.infer_args = config_dict.get("infer_args", {})
-                
+
                 # Ensure infer_args contains all required fields
                 defaults = {
                     "static_batch_size": 1,
@@ -170,16 +172,16 @@ class InferenceAdapter(BaseAdapter):
                     "temperature": 0.7,
                     "top_p": 0.9,
                     "top_k": 50,
-                    "parallel": {"dp": 1, "tp": 1, "pp": 1, "sp": 1}
+                    "parallel": {"dp": 1, "tp": 1, "pp": 1, "sp": 1},
                 }
-                
+
                 # Merge default values with user configuration
                 for key, default_value in defaults.items():
                     if key not in self.infer_args:
                         self.infer_args[key] = default_value
-                
+
                 # Execution parameters
                 self.warmup_iterations = config_dict.get("warmup_iterations", 10)
                 self.measured_iterations = config_dict.get("measured_iterations", 100)
-            
+
         return SimpleInferenceConfig(config, testcase, final_run_id, mode, framework)

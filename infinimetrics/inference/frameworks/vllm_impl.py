@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
+import vllm
 import logging, os, time
 from typing import List, Tuple, Dict, Any
-
-import vllm
 from vllm import LLM, SamplingParams
+
+from infinimetrics.common.constants import (
+    DEFAULT_TEMPERATURE,
+    DEFAULT_TOP_P,
+    DEFAULT_TOP_K,
+    DEFAULT_MAX_SEQ_LEN,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +21,7 @@ def _get(obj, key, default=None):
         return obj.get(key, default)
     return getattr(obj, key, default)
 
+
 def _get_nested(obj, path, default=None):
     cur = obj
     for p in path.split("."):
@@ -24,7 +31,7 @@ def _get_nested(obj, path, default=None):
     return cur
 
 
-class VLLMAdapter:
+class VLLMImpl:
     def __init__(self, config):
         self.config = config
         self.model = None
@@ -60,7 +67,9 @@ class VLLMAdapter:
 
         ia = getattr(self.config, "infer_args", {}) or {}
         tp = int(_get_nested(ia, "parallel.tp", 1) or 1)
-        max_seq_len = int(_get(ia, "max_seq_len", 4096) or 4096)
+        max_seq_len = int(
+            _get(ia, "max_seq_len", DEFAULT_MAX_SEQ_LEN) or DEFAULT_MAX_SEQ_LEN
+        )
 
         framework_kwargs = _get(ia, "framework_kwargs", {}) or {}
         if not isinstance(framework_kwargs, dict):
@@ -73,7 +82,7 @@ class VLLMAdapter:
             "max_model_len": max_seq_len,
         }
 
-        # Common optional arguments 
+        # Common optional arguments
         # dtype / trust_remote_code / seed / gpu_memory_utilization / swap_space etc.
         # are all allowed to be overridden via framework_kwargs
         allow = {
@@ -105,6 +114,7 @@ class VLLMAdapter:
         self.model_loaded = False
         try:
             import torch
+
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
         except Exception:
@@ -115,9 +125,9 @@ class VLLMAdapter:
         self,
         prompts: List[str],
         max_tokens: int,
-        temperature: float = 0.7,
-        top_p: float = 0.9,
-        top_k: int = 50
+        temperature: float = DEFAULT_TEMPERATURE,
+        top_p: float = DEFAULT_TOP_P,
+        top_k: int = DEFAULT_TOP_K,
     ) -> Tuple[List[str], List[float], List[float]]:
         if not self.model_loaded:
             raise RuntimeError("Model not loaded")
@@ -142,7 +152,7 @@ class VLLMAdapter:
                 latency = (time.perf_counter() - start) * 1000.0
                 lat_ms.append(latency)
 
-                 # Compatible with metrics fields across different vLLM versions
+                # Compatible with metrics fields across different vLLM versions
                 ttft = None
                 m = getattr(out, "metrics", None)
                 if m is not None:
@@ -165,4 +175,3 @@ class VLLMAdapter:
                 ttft_ms.append(0.0)
 
         return texts, lat_ms, ttft_ms
-        
