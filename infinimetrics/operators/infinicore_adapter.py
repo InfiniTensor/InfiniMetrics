@@ -54,9 +54,7 @@ class InfiniCoreAdapter(BaseAdapter):
         # Normalize test input to dict format
         test_input = self._normalize_test_input(test_input)
         if not test_input:
-            return self._create_error_response(
-                f"Invalid test_input type: {type(test_input)}"
-            )
+            raise ValueError(f"Invalid test_input type: {type(test_input)}")
 
         testcase = test_input.get(InfiniMetricsJson.TESTCASE, "unknown")
         logger.info(f"InfiniCoreAdapter: Processing {testcase}")
@@ -66,11 +64,21 @@ class InfiniCoreAdapter(BaseAdapter):
             core_resp = self._execute_backend(core_req)
             result = self._convert_from_response(core_resp, test_input)
             return result
+
         except Exception as e:
+            # Log error with context, then re-raise for Executor to handle
+            config = test_input.get(InfiniMetricsJson.CONFIG, {})
+            operator = config.get("operator", "unknown")
+            device = config.get("device", "unknown")
+
             logger.error(
-                f"InfiniCoreAdapter: Error processing {testcase}", exc_info=True
+                f"InfiniCoreAdapter: Operator test failed for {testcase}\n"
+                f"  Operator: {operator}\n"
+                f"  Device: {device}\n"
+                f"  Error: {str(e)}",
+                exc_info=True
             )
-            return self._create_error_response(str(e), test_input)
+            raise
 
     def _convert_to_request(self, legacy_json: dict) -> list:
         """Convert legacy JSON format to InfiniCore request format."""
