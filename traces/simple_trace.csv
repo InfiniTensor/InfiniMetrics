@@ -1,0 +1,7 @@
+request_id,arrival_timestamp_ms,input_token_num,output_token_num
+req-0001,0,128,50
+req-0002,0,128,50
+req-0003,0,128,50
+req-0004,0,128,50
+req-0005,0,128,50
+
