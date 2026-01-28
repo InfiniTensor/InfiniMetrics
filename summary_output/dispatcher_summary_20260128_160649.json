@@ -1,0 +1,15 @@
+{
+  "total_tests": 1,
+  "successful_tests": 1,
+  "failed_tests": 0,
+  "results": [
+    {
+      "run_id": "test.matmul.perf.2048",
+      "testcase": "operator.InfiniCore.Matmul.Performance",
+      "result_code": 0,
+      "result_file": "output/operator_InfiniCore_Matmul_Performance_20260128_160649_results.json",
+      "skipped": false
+    }
+  ],
+  "timestamp": "2026-01-28T16:06:49.489996"
+}
