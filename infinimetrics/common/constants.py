@@ -190,3 +190,16 @@ DEFAULT_TEST_TIMEOUT = 600
 
 # Metric prefixes
 METRIC_PREFIX_MEM_SWEEP = "hardware.mem_sweep"
+
+# ============================================================
+# Stability Check Constants
+# ============================================================
+
+class StabilityIssueType:
+    """Result code values for different stability issue types"""
+    SUCCESS = 0              # Test succeeded
+    GENERIC_ERROR = 1        # Generic error (default)
+    TIMEOUT_ERROR = 2        # Timeout (possible hardware hang)
+    HARDWARE_ERROR = 3       # Hardware health check failed
+    CRITICAL_ERROR = 4       # Critical system error (segfault, etc.)
+    CONFIG_ERROR = 5         # Configuration or input error

@@ -64,9 +64,7 @@ class HardwareTestAdapter(BaseAdapter):
         # Normalize test input to dict format
         test_input = self._normalize_test_input(test_input)
         if not test_input:
-            return self._create_error_response(
-                f"Invalid test_input type: {type(test_input)}"
-            )
+            raise ValueError(f"Invalid test_input type: {type(test_input)}")
 
         testcase = test_input.get(InfiniMetricsJson.TESTCASE, "unknown")
         config = test_input.get(InfiniMetricsJson.CONFIG, {})
@@ -107,9 +105,17 @@ class HardwareTestAdapter(BaseAdapter):
                 InfiniMetricsJson.CONFIG: result_config,
                 InfiniMetricsJson.METRICS: metrics,
             }
+
         except Exception as e:
-            logger.error(f"Hardware test failed: {e}", exc_info=True)
-            return self._create_error_response(str(e), test_input)
+            # Log error with context, then re-raise for Executor to handle
+            logger.error(
+                f"HardwareTestAdapter: Test failed for {testcase}\n"
+                f"  Device: {device}\n"
+                f"  Test Type: {test_type}\n"
+                f"  Error: {str(e)}",
+                exc_info=True
+            )
+            raise
 
     def _build_cuda_project(self) -> None:
         """Build CUDA project if needed."""
