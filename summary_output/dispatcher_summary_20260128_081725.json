@@ -1,0 +1,15 @@
+{
+  "total_tests": 1,
+  "successful_tests": 1,
+  "failed_tests": 0,
+  "results": [
+    {
+      "run_id": "test.infinilm.service",
+      "testcase": "infer.InfiniLM.Service",
+      "result_code": 0,
+      "result_file": "test_output/infer/test.infinilm.service.20260128_081717.q5cjjjgf_results.json",
+      "skipped": false
+    }
+  ],
+  "timestamp": "2026-01-28T08:17:25.644230"
+}

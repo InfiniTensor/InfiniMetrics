@@ -1,0 +1,93 @@
+{
+  "run_id": "comm.nccltest.allreduce.single_node",
+  "time": "2026-01-14 08:56:07",
+  "testcase": "comm.NcclTest.AllReduce",
+  "success": 0,
+  "environment": {
+    "cluster_scale": 1,
+    "topology": "2x1 ring mesh",
+    "cluster": [
+      {
+        "machine": {
+          "cpu_model": "Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz",
+          "memory_gb": 2015,
+          "accelerators": [
+            {
+              "model": "NVIDIA A100-SXM4-80GB",
+              "count": 2,
+              "memory_gb_per_card": 80,
+              "driver": "580.105.08",
+              "cuda": "13.0"
+            }
+          ]
+        },
+        "framework": [
+          {
+            "name": "nccl-test",
+            "version": "unknown"
+          }
+        ]
+      }
+    ]
+  },
+  "config": {
+    "operator": "AllReduce",
+    "attributes": [
+      {
+        "name": "op",
+        "value": "SUM"
+      },
+      {
+        "name": "group",
+        "value": "WORLD"
+      }
+    ],
+    "inputs": [
+      {
+        "name": "input_tensor",
+        "dtype": "float32",
+        "shape": [
+          512,
+          512
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "output_tensor",
+        "dtype": "float32",
+        "shape": [
+          512,
+          512
+        ]
+      }
+    ],
+    "timeout_ms": 180000,
+    "device_involved": 2,
+    "device_used": 2,
+    "warmup_iterations": 20,
+    "measured_iterations": 200,
+    "command": "/home/sunjinge/InfiniMetrics/submodules/nccl-tests/build/all_reduce_perf -b 1M -e 1G -f 2 -g 2 -c 1 -w 20 -n 200"
+  },
+  "metrics": [
+    {
+      "name": "comm.latency",
+      "type": "timeseries",
+      "raw_data_url": "./comm/comm.nccltest.allreduce.single_node_20260114_085607_latency.csv",
+      "unit": "us"
+    },
+    {
+      "name": "comm.duration",
+      "type": "scalar",
+      "value": 8305.975559167564,
+      "unit": "ms"
+    },
+    {
+      "name": "comm.bandwidth",
+      "type": "timeseries",
+      "raw_data_url": "./comm/comm.nccltest.allreduce.single_node_20260114_085607_bandwidth.csv",
+      "unit": "GB/s"
+    }
+  ],
+  "result_code": 0
+}

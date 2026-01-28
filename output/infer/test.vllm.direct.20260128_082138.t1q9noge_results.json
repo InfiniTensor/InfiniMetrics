@@ -1,0 +1,109 @@
+{
+  "run_id": "test.vllm.direct.20260128_082138.t1q9noge",
+  "time": "2026-01-28 08:22:08",
+  "testcase": "infer.vLLM.Direct",
+  "success": 0,
+  "environment": {
+    "cluster_scale": 1,
+    "topology": "2x1 ring mesh",
+    "cluster": [
+      {
+        "machine": {
+          "cpu_model": "Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz",
+          "memory_gb": 2015,
+          "accelerators": [
+            {
+              "model": "NVIDIA A100-SXM4-80GB",
+              "count": 2,
+              "memory_gb_per_card": 80,
+              "driver": "580.105.08",
+              "cuda": "13.0",
+              "type": "nvidia"
+            }
+          ]
+        },
+        "framework": [
+          {
+            "name": "unknown",
+            "version": "unknown"
+          }
+        ]
+      }
+    ]
+  },
+  "result_code": 0,
+  "config": {
+    "framework": "vllm",
+    "model": "Qwen3-1.7B",
+    "model_path": "/home/sunjinge/model/Qwen3-1.7B",
+    "infer_args": {
+      "static_batch_size": 2,
+      "prompt_token_num": 100,
+      "output_token_num": 50,
+      "max_seq_len": 2048,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "top_k": 50,
+      "parallel": {
+        "dp": 1,
+        "tp": 2,
+        "pp": 1,
+        "sp": 1
+      },
+      "framework_kwargs": {
+        "dtype": "auto",
+        "trust_remote_code": true,
+        "disable_log_stats": true,
+        "seed": 1,
+        "gpu_memory_utilization": 0.45,
+        "swap_space": 4
+      }
+    },
+    "warmup_iterations": 2,
+    "measured_iterations": 5,
+    "command": "python -m vllm.benchmarks.benchmark_throughput --model /home/sunjinge/model/Qwen3-1.7B"
+  },
+  "metrics": [
+    {
+      "name": "infer.ppl",
+      "type": "scalar",
+      "unit": "placeholder",
+      "value": 0.0
+    },
+    {
+      "name": "infer.accuracy",
+      "type": "scalar",
+      "unit": "placeholder",
+      "value": 0.0
+    },
+    {
+      "name": "infer.peak_memory_usage",
+      "type": "scalar",
+      "unit": "GB",
+      "value": 37.867188
+    },
+    {
+      "name": "infer.compute_latency",
+      "type": "timeseries",
+      "raw_data_url": "./infer/test.vllm.direct.20260128_082138.t1q9noge_infer_latency.csv",
+      "unit": "ms"
+    },
+    {
+      "name": "infer.ttft",
+      "type": "timeseries",
+      "raw_data_url": "./infer/test.vllm.direct.20260128_082138.t1q9noge_infer_ttft.csv",
+      "unit": "ms"
+    },
+    {
+      "name": "infer.direct_throughput_tps",
+      "type": "timeseries",
+      "raw_data_url": "./infer/test.vllm.direct.20260128_082138.t1q9noge_infer_throughput.csv",
+      "unit": "tokens/s/gpu"
+    }
+  ],
+  "resolved": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "device_used": 2
+  }
+}

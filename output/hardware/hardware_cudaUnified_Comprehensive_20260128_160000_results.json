@@ -1,0 +1,103 @@
+{
+  "run_id": "hardware.cudaUnified.Comprehensive.fadfsdf",
+  "time": "2026-01-28 16:00:00",
+  "testcase": "hardware.cudaUnified.Comprehensive",
+  "environment": {
+    "cluster_scale": 1,
+    "topology": "0x1 ring mesh",
+    "cluster": [
+      {
+        "machine": {
+          "cpu_model": "13th Gen Intel(R) Core(TM) i7-13700F",
+          "memory_gb": 23,
+          "accelerators": [
+            {
+              "model": "NVIDIA GeForce RTX 4070",
+              "count": 0,
+              "memory_gb_per_card": 11,
+              "driver": "581.63",
+              "cuda": "12.4",
+              "type": "nvidia"
+            }
+          ]
+        },
+        "framework": [
+          {
+            "name": "unknown",
+            "version": "unknown"
+          }
+        ]
+      }
+    ]
+  },
+  "result_code": 0,
+  "config": {
+    "test_type": "Comprehensive",
+    "device": "nvidia",
+    "array_size": 67108864,
+    "output_dir": "./output",
+    "command": "/home/baoming/workplace/InfiniMetrics/infinimetrics/hardware/cuda-memory-benchmark/build/cuda_perf_suite --all --array-size 67108864"
+  },
+  "metrics": [
+    {
+      "name": "hardware.mem_sweep_h2d",
+      "type": "timeseries",
+      "raw_data_url": "./mem_sweep_h2d_hardware.cudaUnified.Comprehensive.fadfsdf_20260128_160000.csv",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.mem_sweep_d2h",
+      "type": "timeseries",
+      "raw_data_url": "./mem_sweep_d2h_hardware.cudaUnified.Comprehensive.fadfsdf_20260128_160000.csv",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.mem_sweep_d2d",
+      "type": "timeseries",
+      "raw_data_url": "./mem_sweep_d2d_hardware.cudaUnified.Comprehensive.fadfsdf_20260128_160000.csv",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.mem_sweep_bidirectional",
+      "type": "timeseries",
+      "raw_data_url": "./mem_sweep_bidirectional_hardware.cudaUnified.Comprehensive.fadfsdf_20260128_160000.csv",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.stream_copy",
+      "value": 432.87,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.stream_scale",
+      "value": 432.54,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.stream_add",
+      "value": 438.92,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.stream_triad",
+      "value": 438.85,
+      "type": "scalar",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.gpu_cache_l1",
+      "type": "timeseries",
+      "raw_data_url": "./cache_l1_bandwidth_hardware.cudaUnified.Comprehensive.fadfsdf_20260128_160000.csv",
+      "unit": "GB/s"
+    },
+    {
+      "name": "hardware.gpu_cache_l2",
+      "type": "timeseries",
+      "raw_data_url": "./cache_l2_bandwidth_hardware.cudaUnified.Comprehensive.fadfsdf_20260128_160000.csv",
+      "unit": "GB/s"
+    }
+  ]
+}

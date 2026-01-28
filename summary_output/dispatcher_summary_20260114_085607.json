@@ -1,0 +1,15 @@
+{
+    "total_tests": 1,
+    "successful_tests": 1,
+    "failed_tests": 0,
+    "results": [
+      {
+        "run_id": "comm.nccltest.allreduce.single_node",
+        "testcase": "comm.NcclTest.AllReduce",
+        "result_code": 0,
+        "result_file": "test_output/comm/comm_NcclTest_AllReduce_20260114_085607_results.json",
+        "skipped": false
+      }
+    ],
+    "timestamp": "2026-01-14T08:56:07.442337"
+}
