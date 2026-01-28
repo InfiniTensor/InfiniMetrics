@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 # Adapter registry: maps (test_type, framework) -> adapter factory
 _ADAPTER_REGISTRY = {
     ("operator", "infinicore"): lambda: _create_infinicore_adapter(),
+    ("hardware", "cudaunified"): lambda: _create_hardware_adapter(),
     ("comm", "nccltest"): lambda: _create_nccltests_adapter(),
     ("infer", "infinilm"): lambda: _create_inference_adapter(),
     ("infer", "vllm"): lambda: _create_inference_adapter(),
@@ -40,6 +41,12 @@ def _create_nccltests_adapter():
     from infinimetrics.communication.nccl_adapter import NcclTestsAdapter
 
     return NcclTestsAdapter()
+
+def _create_hardware_adapter():
+    """Create Hardware adapter (lazy import)."""
+    from infinimetrics.hardware.hardware_adapter import HardwareTestAdapter
+
+    return HardwareTestAdapter()
 
 
 class Dispatcher:

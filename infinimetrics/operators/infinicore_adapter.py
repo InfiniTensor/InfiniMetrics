@@ -5,6 +5,7 @@ import logging
 import copy
 import json
 from datetime import datetime
+from pathlib import Path
 from typing import Any, Dict, Union
 
 from infinicore.test.framework import TestManager
@@ -50,12 +51,11 @@ class InfiniCoreAdapter(BaseAdapter):
 
     def process(self, test_input: Union[Dict[str, Any], Any]) -> Dict[str, Any]:
         """Execute the operator test."""
-        if hasattr(test_input, "to_dict"):
-            test_input = test_input.to_dict()
-        elif not isinstance(test_input, dict):
+        # Normalize test input to dict format
+        test_input = self._normalize_test_input(test_input)
+        if not test_input:
             return self._create_error_response(
-                test_input if isinstance(test_input, dict) else {},
-                f"Invalid test_input type: {type(test_input)}",
+                f"Invalid test_input type: {type(test_input)}"
             )
 
         testcase = test_input.get(InfiniMetricsJson.TESTCASE, "unknown")
@@ -70,21 +70,7 @@ class InfiniCoreAdapter(BaseAdapter):
             logger.error(
                 f"InfiniCoreAdapter: Error processing {testcase}", exc_info=True
             )
-            return self._create_error_response(test_input, str(e))
-
-    def _create_error_response(
-        self, test_input: Dict[str, Any], error_msg: str
-    ) -> Dict[str, Any]:
-        """Create error response with full context."""
-        return {
-            InfiniMetricsJson.RESULT_CODE: 1,
-            InfiniMetricsJson.TIME: datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            InfiniMetricsJson.ERROR_MSG: error_msg,
-            InfiniMetricsJson.METRICS: [],
-            InfiniMetricsJson.RUN_ID: test_input.get(InfiniMetricsJson.RUN_ID, ""),
-            InfiniMetricsJson.TESTCASE: test_input.get(InfiniMetricsJson.TESTCASE, ""),
-            InfiniMetricsJson.CONFIG: test_input.get(InfiniMetricsJson.CONFIG, {}),
-        }
+            return self._create_error_response(str(e), test_input)
 
     def _convert_to_request(self, legacy_json: dict) -> list:
         """Convert legacy JSON format to InfiniCore request format."""
@@ -112,18 +98,31 @@ class InfiniCoreAdapter(BaseAdapter):
         for device in self.DEVICE_NAMES:
             run_args[device.lower()] = device in device_str
 
+        # Get base directory for relative path resolution
+        data_base_dir = config.get("data_base_dir", ".")
+
         # Build inputs
-        infinicore_inputs = [
-            {
+        infinicore_inputs = []
+        for inp in config.get(OperatorConfig.INPUTS, []):
+            base_spec = {
                 k: inp[k]
-                for k in (TensorSpec.NAME, TensorSpec.SHAPE, TensorSpec.DTYPE)
+                for k in (
+                    TensorSpec.NAME,
+                    TensorSpec.DTYPE,
+                    TensorSpec.SHAPE,
+                    TensorSpec.STRIDES,
+                    TensorSpec.INIT_MODE,
+                )
                 if k in inp
             }
-            for inp in config.get(OperatorConfig.INPUTS, [])
-        ]
-        for inp, spec in zip(config.get(OperatorConfig.INPUTS, []), infinicore_inputs):
-            if TensorSpec.STRIDES in inp:
-                spec[TensorSpec.STRIDES] = inp[TensorSpec.STRIDES]
+
+            if TensorSpec.FILE_PATH in inp:
+                file_path = Path(inp[TensorSpec.FILE_PATH])
+                if not file_path.is_absolute():
+                    file_path = Path(data_base_dir) / file_path
+                base_spec[TensorSpec.FILE_PATH] = str(file_path)
+
+            infinicore_inputs.append(base_spec)
 
         # Build kwargs
         infinicore_kwargs = {
@@ -151,7 +150,7 @@ class InfiniCoreAdapter(BaseAdapter):
         if "op_kwargs" in config:
             infinicore_kwargs.update(config["op_kwargs"])
 
-        return [
+        request = [
             {
                 InfiniCoreRequest.OPERATOR: operator,
                 InfiniCoreRequest.DEVICE: device_str,
@@ -171,6 +170,8 @@ class InfiniCoreAdapter(BaseAdapter):
                 ],
             }
         ]
+
+        return request
 
     def _parse_runtime_args(self, config: dict) -> dict:
         """Parse runtime arguments from config."""
