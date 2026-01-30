@@ -23,13 +23,16 @@ class InferenceAdapter(BaseAdapter):
         self.config = None
         self.mode = "direct"
         self.framework = "infinilm"
-        self._full_payload = None
+        self._testcase = None
 
     def setup(self, config: Dict[str, Any]) -> None:
         """Initialize inference resources"""
         # Get testcase and run_id from injected fields
         testcase = config.get("_testcase", "")
         run_id = config.get("_run_id", "")
+
+        # Store testcase for error reporting
+        self._testcase = testcase
 
         # Parse mode and framework
         if "service" in testcase.lower():
@@ -41,8 +44,6 @@ class InferenceAdapter(BaseAdapter):
             self.framework = "vllm"
         elif "infinilm" in testcase.lower():
             self.framework = "infinilm"
-
-        self._full_payload = config.get("_full_payload", None)
 
         # Create configuration object
         self.config = self._create_inference_config(config)
@@ -107,18 +108,15 @@ class InferenceAdapter(BaseAdapter):
             }
 
         except Exception as e:
-            logger.error(f"Inference test failed: {e}", exc_info=True)
-
-            err = self._create_error_response(
-                error_msg=str(e),
-                test_input=(
-                    self._full_payload if isinstance(self._full_payload, dict) else None
-                ),
-                result_code=1,
+            # Log error with context, then re-raise for Executor to handle
+            logger.error(
+                f"InferenceAdapter: Test failed for {self._testcase}\n"
+                f"  Mode: {self.mode}\n"
+                f"  Framework: {self.framework}\n"
+                f"  Error: {str(e)}",
+                exc_info=True
             )
-            err["success"] = 1
-            err["resolved"] = {"nodes": 1, "gpus_per_node": 0, "device_used": 0}
-            return err
+            raise
 
     def teardown(self) -> None:
         """Cleanup resources"""

@@ -98,7 +98,7 @@ class NcclTestsAdapter(BaseAdapter):
         self.run_id = input_dict.get("run_id") or self._gen_run_id(testcase)
         self.test_spec = self._parse_test_spec(testcase)
         if not self.test_spec:
-            return self._err(input_dict, f"Unknown operation in testcase: {testcase}")
+            raise ValueError(f"Unknown operation in testcase: {testcase}")
 
         try:
             cmd = self._build_command(config)
@@ -114,7 +114,7 @@ class NcclTestsAdapter(BaseAdapter):
                 msg = f"No performance data parsed. returncode={rc}"
                 if stderr:
                     msg += "\nStderr(last 20 lines):\n" + "\n".join(stderr.splitlines()[-20:])
-                return self._err(input_dict, msg)
+                raise RuntimeError(msg)
 
             raw_files = self._save_raw_csv(results)
             metrics = self._build_metrics(wall_ms, raw_files)
@@ -137,8 +137,17 @@ class NcclTestsAdapter(BaseAdapter):
             }
 
         except Exception as e:
-            logger.error(f"Test failed: {e}", exc_info=True)
-            return self._err(input_dict, str(e))
+            # Log error with context, then re-raise for Executor to handle
+            operation = self.test_spec.get("op", "unknown") if self.test_spec else "unknown"
+            logger.error(
+                f"NCCLAdapter: Test failed for {testcase}\n"
+                f"  Operation: {operation}\n"
+                f"  Nodes: {self.resolved.nodes}\n"
+                f"  GPUs per node: {self.resolved.gpus_per_node}\n"
+                f"  Error: {str(e)}",
+                exc_info=True
+            )
+            raise
 
     # -----------------------------
     # Config helpers
