@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from infinimetrics.adapter import BaseAdapter
 from infinimetrics.input import TestInput
 from infinimetrics.utils.path_utils import sanitize_filename
-from infinimetrics.common.constants import StabilityIssueType
+from infinimetrics.common.constants import ErrorCode
 
 
 logger = logging.getLogger(__name__)
@@ -230,9 +230,9 @@ class Executor:
                 f"  Analysis: Test timed out. Hardware may be hung or overloaded.\n"
                 f"  Error: {str(e)[:300]}"
             )
-            test_result.result_code = StabilityIssueType.TIMEOUT_ERROR
+            test_result.result_code = ErrorCode.TIMEOUT
             # Build error response for saving
-            response = self._build_error_response(str(e), StabilityIssueType.TIMEOUT_ERROR)
+            response = self._build_error_response(str(e), ErrorCode.TIMEOUT)
 
         except ValueError as e:
             # Configuration or input validation errors
@@ -241,9 +241,9 @@ class Executor:
                 f"  Issue Type: configuration_error\n"
                 f"  Error: {str(e)[:300]}"
             )
-            test_result.result_code = StabilityIssueType.CONFIG_ERROR
+            test_result.result_code = ErrorCode.CONFIG
             # Build error response for saving
-            response = self._build_error_response(str(e), StabilityIssueType.CONFIG_ERROR)
+            response = self._build_error_response(str(e), ErrorCode.CONFIG)
 
         except RuntimeError as e:
             # RuntimeError: analyze error message for specific patterns
@@ -262,9 +262,9 @@ class Executor:
                     f"  Analysis: Memory allocation failed. Possible causes: insufficient memory, memory leak, or test data too large.\n"
                     f"  Error: {str(e)[:300]}"
                 )
-                test_result.result_code = StabilityIssueType.CRITICAL_ERROR
+                test_result.result_code = ErrorCode.SYSTEM
                 # Build error response for saving
-                response = self._build_error_response(str(e), StabilityIssueType.CRITICAL_ERROR)
+                response = self._build_error_response(str(e), ErrorCode.SYSTEM)
             else:
                 # Other RuntimeError
                 logger.warning(
@@ -272,9 +272,9 @@ class Executor:
                     f"  Issue Type: runtime_error\n"
                     f"  Error: {str(e)[:300]}"
                 )
-                test_result.result_code = StabilityIssueType.GENERIC_ERROR
+                test_result.result_code = ErrorCode.GENERIC
                 # Build error response for saving
-                response = self._build_error_response(str(e), StabilityIssueType.GENERIC_ERROR)
+                response = self._build_error_response(str(e), ErrorCode.GENERIC)
 
         except Exception as e:
             # Unexpected exceptions
@@ -282,9 +282,9 @@ class Executor:
                 f"Executor: {self.testcase} failed with unexpected exception: {e}",
                 exc_info=True
             )
-            test_result.result_code = StabilityIssueType.GENERIC_ERROR
+            test_result.result_code = ErrorCode.GENERIC
             # Build error response for saving
-            response = self._build_error_response(str(e), StabilityIssueType.GENERIC_ERROR)
+            response = self._build_error_response(str(e), ErrorCode.GENERIC)
 
         finally:
             # Always save result (even on failure)
