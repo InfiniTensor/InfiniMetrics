@@ -190,3 +190,30 @@ DEFAULT_TEST_TIMEOUT = 600
 
 # Metric prefixes
 METRIC_PREFIX_MEM_SWEEP = "hardware.mem_sweep"
+
+# ============================================================
+# Error Code Constants
+# ============================================================
+
+class ErrorCode:
+    """Error code values for different types of failures, organized by severity layer"""
+    # Success
+    SUCCESS = 0              # Test succeeded
+
+    # Layer 1: Input/Configuration issues (not stability issues)
+    CONFIG = 1               # Invalid configuration or input (user error)
+
+    # Layer 2: Framework internal errors (tested framework's fault)
+    INTERNAL = 2             # InfiniLM/InfiniCore internal error or non-zero return
+
+    # Layer 3: Incompatibility issues
+    INCOMPAT = 3             # Compilation errors, version incompatibility
+
+    # Layer 4: System resource issues
+    SYSTEM = 4               # OS/Hardware issues (OOM, disk full, GPU driver)
+
+    # Layer 5: Test framework issues (our fault)
+    GENERIC = 5              # Test framework logic error
+
+    # Layer 6: Timeout issues
+    TIMEOUT = 6              # Test started but hung/timeout

@@ -15,6 +15,8 @@ from dataclasses import dataclass
 from infinimetrics.adapter import BaseAdapter
 from infinimetrics.input import TestInput
 from infinimetrics.utils.path_utils import sanitize_filename
+from infinimetrics.common.constants import ErrorCode
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +25,8 @@ NVIDIA_SMI_GPU_QUERY = [
     "--query-gpu=name,memory.total,driver_version",
     "--format=csv,noheader",
 ]
+
+AMD_SMI_CANDIDATES = ["amd-smi", "rocm-smi"]
 
 
 def _which(cmd: str) -> Optional[str]:
@@ -50,6 +54,7 @@ class TestResult:
     result_code: int  # 0 = success, non-zero = error code
     result_file: Optional[str] = None
     skipped: bool = False
+    config: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to lightweight dictionary format for Dispatcher aggregation."""
@@ -59,6 +64,7 @@ class TestResult:
             "result_code": self.result_code,
             "result_file": self.result_file,
             "skipped": self.skipped,
+            "config": self.config,
         }
 
 
@@ -107,8 +113,8 @@ class Executor:
         config["_run_id"] = self.payload.get("run_id", "")
         config["_time"] = self.payload.get("time", None)
 
-        # Also inject the full payload for adapters that need the complete structure
-        config["_full_payload"] = self.payload
+        # Initialize test_input from payload
+        self.test_input = self.payload
 
         self.adapter.setup(config)
 
@@ -158,12 +164,16 @@ class Executor:
         logger.info(f"Executor: Running {self.testcase}")
 
         # Initialize TestResult directly (default: result_code=0)
+        config = self.payload.get("config", {})
         test_result = TestResult(
             run_id=self.run_id,
             testcase=self.testcase,
             result_code=0,  # Default to success
             result_file=None,
+            config=config,
         )
+
+        response = {}
 
         try:
             # Phase 1: Setup
@@ -172,15 +182,6 @@ class Executor:
             # Phase 2: Process
             logger.debug(f"Executor: Calling adapter.process()")
             response = self.adapter.process(self.test_input)
-
-            # Process response (0 = success, non-zero = error code)
-            test_result.result_code = (
-                int(response.get("result_code", 1)) if isinstance(response, dict) else 1
-            )
-            if test_result.result_code != 0:
-                logger.warning(
-                    f"Executor: Adapter failed with error code {test_result.result_code}"
-                )
 
             # Enrich environment ONLY if missing
             if isinstance(response, dict) and "environment" not in response:
@@ -220,14 +221,150 @@ class Executor:
 
             return test_result
 
+        except subprocess.TimeoutExpired as e:
+            # Timeout errors (possible hardware hang)
+            logger.error(
+                f"Executor: STABILITY CHECK FAILED for {self.testcase}\n"
+                f"  Issue Type: timeout\n"
+                f"  Severity: CRITICAL\n"
+                f"  Analysis: Test timed out. Hardware may be hung or overloaded.\n"
+                f"  Error: {str(e)[:300]}"
+            )
+            test_result.result_code = ErrorCode.TIMEOUT
+            # Build error response for saving
+            response = self._build_error_response(str(e), ErrorCode.TIMEOUT)
+
+        except ValueError as e:
+            # Configuration or input validation errors
+            logger.warning(
+                f"Executor: Test failed for {self.testcase}\n"
+                f"  Issue Type: configuration_error\n"
+                f"  Error: {str(e)[:300]}"
+            )
+            test_result.result_code = ErrorCode.CONFIG
+            # Build error response for saving
+            response = self._build_error_response(str(e), ErrorCode.CONFIG)
+
+        except RuntimeError as e:
+            # RuntimeError: analyze error message for specific patterns
+            error_msg = str(e).lower()
+
+            # Check for memory insufficient errors
+            memory_keywords = [
+                "out of memory", "oom", "memory", "memory leak",
+                "allocate", "allocation failed", "insufficient memory"
+            ]
+            if any(kw in error_msg for kw in memory_keywords):
+                logger.error(
+                    f"Executor: STABILITY CHECK FAILED for {self.testcase}\n"
+                    f"  Issue Type: memory\n"
+                    f"  Severity: CRITICAL\n"
+                    f"  Analysis: Memory allocation failed. Possible causes: insufficient memory, memory leak, or test data too large.\n"
+                    f"  Error: {str(e)[:300]}"
+                )
+                test_result.result_code = ErrorCode.SYSTEM
+                # Build error response for saving
+                response = self._build_error_response(str(e), ErrorCode.SYSTEM)
+            else:
+                # Other RuntimeError
+                logger.warning(
+                    f"Executor: Test failed for {self.testcase}\n"
+                    f"  Issue Type: runtime_error\n"
+                    f"  Error: {str(e)[:300]}"
+                )
+                test_result.result_code = ErrorCode.GENERIC
+                # Build error response for saving
+                response = self._build_error_response(str(e), ErrorCode.GENERIC)
+
         except Exception as e:
-            logger.error(f"Executor: {self.testcase} failed: {e}", exc_info=True)
+            # Unexpected exceptions
+            logger.error(
+                f"Executor: {self.testcase} failed with unexpected exception: {e}",
+                exc_info=True
+            )
+            test_result.result_code = ErrorCode.GENERIC
+            # Build error response for saving
+            response = self._build_error_response(str(e), ErrorCode.GENERIC)
 
-            # Still run teardown on failure
-            self._save_result(None)
-            test_result.result_code = 1  # Failure
+        finally:
+            # Always save result (even on failure)
+            try:
+                if not test_result.result_file:
+                    result_file = self._save_result(response)
+                    test_result.result_file = result_file
+            except Exception as teardown_error:
+                logger.error(f"Executor: Failed to save result: {teardown_error}")
 
-            return test_result
+        return test_result
+
+    def _build_error_response(self, error_msg: str, result_code: int) -> Dict[str, Any]:
+        """
+        Build a response dict containing error information for saving to disk.
+
+        Args:
+            error_msg: Error message string
+            result_code: Error result code
+
+        Returns:
+            Dictionary with basic test info and error details
+        """
+        config = self.payload.get("config", {})
+
+        # Create a cleaned config without injected metadata
+        cleaned_config = {
+            k: v for k, v in config.items()
+            if not k.startswith("_")  # Skip _testcase, _run_id, _time
+        }
+
+        # Extract device information
+        resolved = self._extract_device_info(config)
+
+        return {
+            "run_id": self.run_id,
+            "testcase": self.testcase,
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "result_code": result_code,
+            "error_msg": error_msg,
+            "success": 1,  # 1 = failure
+            "config": cleaned_config,
+            "resolved": resolved,
+        }
+
+    def _extract_device_info(self, config: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract device information from config."""
+        device_used = 0
+        gpus_per_node = 0
+        nodes = 1
+
+        # Try device_involved
+        if "device_involved" in config:
+            try:
+                device_used = int(config.get("device_involved", 0) or 0)
+            except (ValueError, TypeError):
+                device_used = 0
+
+        # Try single_node config
+        if isinstance(config.get("single_node"), dict):
+            single_node = config["single_node"]
+            device_ids = single_node.get("device_ids", [])
+            if device_ids:
+                device_used = len(device_ids)
+            gpus_per_node = device_used
+        else:
+            gpus_per_node = device_used
+
+        # Try multi_node config
+        if "multi_node" in config:
+            try:
+                nodes = int(config.get("multi_node", {}).get("num_nodes", 1) or 1)
+            except (ValueError, TypeError):
+                nodes = 1
+
+        return {
+            "nodes": nodes,
+            "gpus_per_node": gpus_per_node,
+            "device_used": device_used,
+        }
 
     def _build_environment(self, response: Dict[str, Any]) -> Dict[str, Any]:
         """
