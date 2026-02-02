@@ -305,7 +305,6 @@ class TraceClient:
                     json=payload,
                     headers={"Content-Type": "application/json"},
                 ) as response:
-
                     if response.status != 200:
                         error_msg = f"HTTP {response.status}: {await response.text()}"
                         self._handle_request_error(trace, "error", error_msg)

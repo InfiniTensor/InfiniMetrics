@@ -91,6 +91,7 @@ def _sort_data(data: List[Dict[str, Any]], sort_by: str) -> List[Dict[str, Any]]
     Returns:
         Sorted list of dictionaries
     """
+
     def sort_key(x: Dict[str, Any]) -> float:
         # Handle explicit sort key
         if "_sort_key" in x:

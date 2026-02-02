@@ -104,9 +104,15 @@ class BaseAdapter(abc.ABC):
         if test_input:
             response.update(
                 {
-                    InfiniMetricsJson.RUN_ID: test_input.get(InfiniMetricsJson.RUN_ID, ""),
-                    InfiniMetricsJson.TESTCASE: test_input.get(InfiniMetricsJson.TESTCASE, ""),
-                    InfiniMetricsJson.CONFIG: test_input.get(InfiniMetricsJson.CONFIG, {}),
+                    InfiniMetricsJson.RUN_ID: test_input.get(
+                        InfiniMetricsJson.RUN_ID, ""
+                    ),
+                    InfiniMetricsJson.TESTCASE: test_input.get(
+                        InfiniMetricsJson.TESTCASE, ""
+                    ),
+                    InfiniMetricsJson.CONFIG: test_input.get(
+                        InfiniMetricsJson.CONFIG, {}
+                    ),
                 }
             )
 

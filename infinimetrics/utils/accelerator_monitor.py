@@ -2,6 +2,7 @@
 Accelerator Monitoring Module
 """
 
+import random
 import subprocess
 import threading
 import time
@@ -275,8 +276,6 @@ class MockAcceleratorMonitor(AcceleratorMonitor):
 
     def get_current_memory_usage(self) -> List[int]:
         """Return mock memory usage data"""
-        import random
-
         if self.device_ids:
             return [random.randint(100, 1000) for _ in self.device_ids]
         else:
@@ -285,6 +284,33 @@ class MockAcceleratorMonitor(AcceleratorMonitor):
     def get_peak_memory_allocated(self) -> Optional[int]:
         """Return mock peak memory"""
         return random.randint(512 * 1024 * 1024, 2048 * 1024 * 1024)  # 512MB-2GB
+
+
+class GenericAcceleratorMonitor(AcceleratorMonitor):
+    """Generic accelerator monitor for unsupported/unknown accelerator types"""
+
+    def __init__(self, device_ids=None, accel_type="generic"):
+        # Use GENERIC enum value for generic monitors
+        super().__init__(device_ids, AcceleratorType.GENERIC)
+        self.accel_type = accel_type
+
+    def get_current_memory_usage(self) -> List[int]:
+        """Return generic/placeholder memory usage data"""
+        logger.warning(
+            f"GenericAcceleratorMonitor ({self.accel_type}): "
+            "Returning placeholder memory usage data"
+        )
+        if self.device_ids:
+            return [0] * len(self.device_ids)
+        return [0]
+
+    def get_peak_memory_allocated(self) -> Optional[int]:
+        """Return generic/placeholder peak memory"""
+        logger.warning(
+            f"GenericAcceleratorMonitor ({self.accel_type}): "
+            "Returning placeholder peak memory"
+        )
+        return 0
 
 
 def create_accelerator_monitor(

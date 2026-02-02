@@ -114,7 +114,7 @@ class InferenceAdapter(BaseAdapter):
                 f"  Mode: {self.mode}\n"
                 f"  Framework: {self.framework}\n"
                 f"  Error: {str(e)}",
-                exc_info=True
+                exc_info=True,
             )
             raise
 

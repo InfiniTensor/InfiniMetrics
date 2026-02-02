@@ -42,6 +42,7 @@ def _create_nccltests_adapter():
 
     return NcclTestsAdapter()
 
+
 def _create_hardware_adapter():
     """Create Hardware adapter (lazy import)."""
     from infinimetrics.hardware.hardware_adapter import HardwareTestAdapter

@@ -7,3 +7,4 @@ repos:
     rev: 6.1.0
     hooks:
     -   id: flake8
+        args: ['--exit-zero', '--show-source', '--statistics']  # Show all warnings with details

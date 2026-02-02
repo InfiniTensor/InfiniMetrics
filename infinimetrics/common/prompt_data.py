@@ -15,25 +15,23 @@ PRESET_TEMPLATES = {
         "What are the ethical considerations surrounding {topic}?",
         "How does {topic} impact our daily lives?",
         "What are the future trends in {topic}?",
-        "What are the key challenges in {topic} research?"
+        "What are the key challenges in {topic} research?",
     ],
-    
     "general_qa": [
         "Tell me about {topic}.",
         "What is {topic}?",
         "Can you explain {topic}?",
         "I need information about {topic}.",
         "Please provide details about {topic}.",
-        "Help me understand {topic}."
+        "Help me understand {topic}.",
     ],
-    
     "technical": [
         "Discuss the technical implementation of {topic}.",
         "What are the algorithms used in {topic}?",
         "Explain the architecture of {topic} systems.",
         "What are the performance considerations for {topic}?",
-        "Describe the scalability challenges in {topic}."
-    ]
+        "Describe the scalability challenges in {topic}.",
+    ],
 }
 
 # ==================== Preset Topic Library ====================
@@ -48,9 +46,8 @@ PRESET_TOPICS = {
         "neural networks",
         "transformers",
         "large language models",
-        "generative AI"
+        "generative AI",
     ],
-    
     "tech": [
         "cloud computing",
         "blockchain technology",
@@ -60,9 +57,8 @@ PRESET_TOPICS = {
         "distributed systems",
         "cybersecurity",
         "databases",
-        "software engineering"
+        "software engineering",
     ],
-    
     "science": [
         "climate change",
         "genetic engineering",
@@ -70,8 +66,8 @@ PRESET_TOPICS = {
         "renewable energy",
         "quantum physics",
         "biotechnology",
-        "nanotechnology"
-    ]
+        "nanotechnology",
+    ],
 }
 
 # ==================== Default Configuration ====================
@@ -79,18 +75,22 @@ DEFAULT_TEMPLATE_NAME = "ai_qa"
 DEFAULT_TOPIC_NAME = "ai_ml"
 DEFAULT_CHARS_PER_TOKEN = 4
 
+
 # ==================== Helper Functions ====================
 def get_template_names() -> list:
     """Get all available template names"""
     return list(PRESET_TEMPLATES.keys())
 
+
 def get_topic_names() -> list:
     """Get all available topic names"""
     return list(PRESET_TOPICS.keys())
 
+
 def get_template(template_name: str, fallback_name: str = "ai_qa") -> list:
     """Get the template list for the specified name"""
     return PRESET_TEMPLATES.get(template_name, PRESET_TEMPLATES.get(fallback_name, []))
+
 
 def get_topics(topic_name: str, fallback_name: str = "ai_ml") -> list:
     """Get the topic list for the specified name"""

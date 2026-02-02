@@ -76,7 +76,7 @@ class InfiniCoreAdapter(BaseAdapter):
                 f"  Operator: {operator}\n"
                 f"  Device: {device}\n"
                 f"  Error: {str(e)}",
-                exc_info=True
+                exc_info=True,
             )
             raise
 
