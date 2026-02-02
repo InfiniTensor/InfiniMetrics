@@ -1,42 +1,73 @@
+<div align="center">
+
 # InfiniMetrics
-An InfiniTensor-featured comprehensive accelerator evaluation framework
 
-## Pre-commit Setup Guide
+**An InfiniTensor-Featured Comprehensive Accelerator Evaluation Framework**
 
-This project uses **pre-commit** to automatically enforce code style (Black) and linting (Flake8) before every commit.
+[![Format Check](https://img.shields.io/badge/Format_Check-passing-success)](https://github.com/InfiniTensor/InfiniMetrics)
+[![Issues](https://img.shields.io/github/issues/InfiniTensor/InfiniMetrics)](https://github.com/InfiniTensor/InfiniMetrics/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/InfiniTensor/InfiniMetrics)](https://github.com/InfiniTensor/InfiniMetrics/pulls)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/InfiniTensor/InfiniMetrics/blob/master/LICENSE)
 
-### 1\. Installation
+A unified, modular testing framework for comprehensive performance evaluation of accelerator hardware and software stacks.
 
-Install the pre-commit package via pip:
+</div>
 
-```bash
-pip install pre-commit
-```
+---
 
-### 2\. Setup (Run Once)
+## 🎯 Overview
 
-Run the following command in the project root directory to activate the git hooks:
+**InfiniMetrics** provides standardized interfaces for benchmarking across multiple layers:
 
-```bash
-pre-commit install
-```
+- **Hardware-Level**: GPU memory bandwidth, cache performance, compute capabilities
+- **Operator-Level**: Individual operation performance (FLOPS, latency)
+- **Inference-Level**: End-to-end model inference throughput and latency
+- **Communication-Level**: NCCL collective operations and inter-GPU communication
 
-*Output should be: `pre-commit installed at .git/hooks/pre-commit`*
+### Key Features
 
-### 3\. Usage
+- **Unified Adapter Interface** - Consistent API across all test types and frameworks
+- **Extensible Architecture** - Easy to add new test types, frameworks, and metrics
+- **Comprehensive Metrics** - Scalar values, time-series data, custom measurements
+- **Framework Agnostic** - Support for InfiniLM, vLLM, InfiniCore, and more
+- **Production Ready** - Robust error handling, logging, and result aggregation
 
-  * **Automatic:** Just run `git commit` as usual.
-      * If **Black** modifies your files: Run `git add .` again and re-commit.
-      * If **Flake8** reports errors: Fix the errors, `git add`, and re-commit.
-  * **Manual:** To check all files in the repository without committing:
-    ```bash
-    pre-commit run --all-files
-    ```
+---
 
-### 4\. Skip Checks (Emergency Only)
+## 📚 Documentation
 
-If you need to bypass the checks for a specific commit:
+For detailed guides, configuration, and examples, see the [full documentation](./docs).
 
-```bash
-git commit -m "your message" --no-verify
-```
+### Quick Links
+
+- [Installation Guide](./docs/installation.md) - Prerequisites and dependencies
+- [Configuration](./docs/configuration.md) - Input format and parameters
+- [Development Guide](./docs/development.md) - Development setup and extending the framework
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please see our [Contributing Guide](./docs/development.md) for details.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+<div align="center">
+
+**Built with ❤️ by the InfiniTensor Team**
+
+[Website](https://infinitensor.org) | [Documentation](./docs) | [GitHub](https://github.com/InfiniTensor)
+
+</div>
