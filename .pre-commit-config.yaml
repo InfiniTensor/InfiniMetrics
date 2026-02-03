@@ -3,6 +3,8 @@ repos:
     rev: 23.9.1
     hooks:
     -   id: black
+        # Use pyproject.toml for configuration (ensures consistency)
+        args: ['--config', 'pyproject.toml']
 -   repo: https://github.com/pycqa/flake8
     rev: 6.1.0
     hooks:

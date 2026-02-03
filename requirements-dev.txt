@@ -1,0 +1,22 @@
+# Development dependencies for InfiniMetrics
+# Install with: pip install -r requirements-dev.txt
+
+# ============================================================
+# Code Quality Tools (exact versions for consistency)
+# ============================================================
+black==23.9.1          # Code formatter
+flake8==7.3.0          # Linter (syntax and style checker)
+pre-commit==3.6.0      # Pre-commit hooks framework
+
+# ============================================================
+# Testing Tools (for future use)
+# ============================================================
+pytest>=7.0.0          # Testing framework
+pytest-cov>=4.0.0      # Coverage plugin
+pytest-mock>=3.10.0    # Mock support
+
+# ============================================================
+# Type Checking (optional but recommended)
+# ============================================================
+mypy>=1.0.0            # Static type checker
+types-setuptools      # Type stubs for setuptools
