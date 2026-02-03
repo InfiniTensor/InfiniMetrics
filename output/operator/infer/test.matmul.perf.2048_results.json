@@ -1,0 +1,107 @@
+{
+  "run_id": "test.matmul.perf.2048",
+  "time": "2026-02-03 15:02:36",
+  "testcase": "operator.InfiniCore.Matmul.Performance",
+  "environment": {
+    "cluster_scale": 1,
+    "topology": "0x1 ring mesh",
+    "cluster": [
+      {
+        "machine": {
+          "cpu_model": "13th Gen Intel(R) Core(TM) i7-13700F",
+          "memory_gb": 23,
+          "accelerators": [
+            {
+              "model": "NVIDIA GeForce RTX 4070",
+              "count": 0,
+              "memory_gb_per_card": 11,
+              "driver": "581.63",
+              "cuda": "12.4",
+              "type": "nvidia"
+            }
+          ]
+        },
+        "framework": [
+          {
+            "name": "unknown",
+            "version": "unknown"
+          }
+        ]
+      }
+    ]
+  },
+  "result_code": 0,
+  "config": {
+    "operator": "matmul",
+    "device": "nvidia",
+    "torch_op": "torch.matmul",
+    "infinicore_op": "infinicore.matmul",
+    "inputs": [
+      {
+        "name": "in_0",
+        "shape": [
+          2048,
+          2048
+        ],
+        "dtype": "float16"
+      },
+      {
+        "name": "in_1",
+        "shape": [
+          2048,
+          2048
+        ],
+        "dtype": "float16"
+      }
+    ],
+    "attributes": [],
+    "outputs": [
+      {
+        "name": "output",
+        "shape": [
+          2048,
+          2048
+        ],
+        "dtype": "float16"
+      }
+    ],
+    "warmup_iterations": 10,
+    "measured_iterations": 100,
+    "tolerance": {
+      "atol": 0.001,
+      "rtol": 0.001
+    },
+    "output_dir": "./output/operator/",
+    "_testcase": "operator.InfiniCore.Matmul.Performance",
+    "_run_id": "test.matmul.perf.2048",
+    "_time": null
+  },
+  "metrics": [
+    {
+      "name": "operator.latency",
+      "value": 32.7396,
+      "type": "scalar",
+      "raw_data_url": "",
+      "unit": "ms"
+    },
+    {
+      "name": "operator.tensor_accuracy",
+      "value": "PASS",
+      "unit": ""
+    },
+    {
+      "name": "operator.flops",
+      "value": 0.5247,
+      "type": "scalar",
+      "raw_data_url": "",
+      "unit": "TFLOPS"
+    },
+    {
+      "name": "operator.bandwidth",
+      "value": 0.7687,
+      "type": "scalar",
+      "raw_data_url": "",
+      "unit": "GB/s"
+    }
+  ]
+}

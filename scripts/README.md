@@ -1,127 +1,155 @@
 # Testing Scripts
 
-Collection of automated testing scripts for InfiniMetrics.
+Unified test execution scripts for InfiniMetrics.
 
 ## 🚀 Quick Start
 
 ```bash
-# Run all tests
-./scripts/run_all_tests.sh
+# Run tests with input file(s)
+./scripts/run_tests.sh test.json
 
-# Run specific test suite
-./scripts/test_hardware.sh
-./scripts/test_operator.sh
-./scripts/test_inference.sh
-./scripts/test_communication.sh
+# Run tests in a directory
+./scripts/run_tests.sh test_dir/
 
-# Run specific test with input file
-./scripts/test_hardware.sh format_input_hardware.json
-./scripts/run_all_tests.sh format_input_comprehensive.json
+# Run multiple input files
+./scripts/run_tests.sh test1.json test2.json test3.json
 ```
 
 ## 📁 Structure
 
 ```
 scripts/
-├── run_all_tests.sh           # Main entry: run all test suites
-├── test_hardware.sh           # Hardware testing (CUDA, memory bandwidth)
-├── test_operator.sh           # Operator testing (InfiniCore operators)
-├── test_inference.sh         # Inference testing (vLLM, InfiniLM)
-└── common/                   # Shared utilities
-    ├── check_deps.sh         # Dependency checking functions
-    └── prepare_env.sh        # Environment preparation functions
+├── run_tests.sh               # Unified test execution script
+└── common/                    # Shared utilities
+    ├── install_deps.sh        # Dependency management (check + install)
+    └── prepare_env.sh         # Environment preparation functions
 ```
 
 ## 📝 Script Organization
 
-### Each Test Script Contains
+### Main Script: `run_tests.sh`
 
-1. **Dependencies Check** - Verify required tools/packages are installed
-   - Example: `check_cuda`, `check_infinicore`, `check_vllm`
+Unified test execution script with automatic dependency management.
 
-2. **Test Execution** - Run tests with proper error handling
-   - Automatic output directory creation
-   - Timestamp logging
-   - JSON validation
+**Usage:**
+```bash
+./scripts/run_tests.sh [OPTIONS] <input_paths...>
+
+# Options:
+#   --check <types>   Check specific dependencies before running (comma-separated)
+#                     Types: hardware, operator, all
+#   --no-check        Skip dependency checking
+#   --help, -h        Show help message
+
+# Input paths:
+#   Can be JSON files or directories
+```
+
+**Examples:**
+```bash
+# Run tests with auto dependency check
+./scripts/run_tests.sh test.json
+
+# Run tests in directory
+./scripts/run_tests.sh test_dir/
+
+# Run multiple input files
+./scripts/run_tests.sh test1.json test2.json
+
+# Check specific dependencies only
+./scripts/run_tests.sh --check hardware test.json
+./scripts/run_tests.sh --check hardware,operator test.json
+
+# Skip dependency check
+./scripts/run_tests.sh --no-check test.json
+```
 
 ### Common Functions (`common/`)
 
-**`check_deps.sh`**: Check if dependencies are installed
+**`install_deps.sh`**: Unified dependency management (check + install)
+
+Can be used standalone or sourced by other scripts.
+
+**Standalone usage:**
+```bash
+# Install specific component
+export INFINICORE_PATH="/path/to/InfiniCore"
+./scripts/common/install_deps.sh operator   # Install InfiniCore
+./scripts/common/install_deps.sh hardware   # Build CUDA benchmark
+./scripts/common/install_deps.sh all        # Install everything
+```
+
+**Components:**
+- `operator` - InfiniCore (operator testing)
+- `hardware` - CUDA memory benchmark (hardware testing)
+
+**Checking functions** (available when sourced):
 - `check_cuda` - Check NVIDIA CUDA toolkit
-- `check_nvml` - Check NVIDIA management library
 - `check_infinicore` - Check InfiniCore package
-- `check_vllm` - Check vLLM package
-- `check_infinilm` - Check InfiniLM package
 
-**`prepare_env.sh`**: Environment setup utilities
-- `prepare_output_dir` - Create test output directories
-- `log_test_start/end` - Logging functions
-- `validate_json` - Validate JSON input files
+**Installation functions** (available when sourced):
+- `install_infinicore` - Install InfiniCore from source
+- `install_hardware` - Build CUDA memory benchmark
 
-## 🎯 Usage Examples
-
-### Run All Tests
-```bash
-# Auto-discover and run all test files
-./scripts/run_all_tests.sh
-```
-
-### Run Specific Test Suite
-```bash
-# Hardware tests
-./scripts/test_hardware.sh
-
-# Operator tests
-./scripts/test_operator.sh
-
-# Inference tests
-./scripts/test_inference.sh
-
-# Communication tests
-./scripts/test_communication.sh
-```
-
-### Run Specific Test File
-```bash
-# Test with specific input
-./scripts/test_hardware.py format_input_hardware.json
-
-# All tests with same input
-./scripts/run_all_tests.sh my_test.json
-```
+**`prepare_env.sh`**: Environment preparation functions
+- `log_test_start` - Log test start message with timestamp
+- `log_test_end` - Log test completion with exit code
+- `cleanup_on_error` - Error trap handler
+- `get_timestamp` - Get current timestamp
 
 ## 📊 Output
 
 All test results are saved to:
 ```
 output/
-├── hardware/
-├── operator/
-├── inference/
-└── communication/
+└── all/
 ```
 
-## 🔧 Adding New Test Scripts
+## ⚙️ Dependency Management
 
-1. Create new test script in `scripts/`
-2. Source common functions:
-   ```bash
-   source scripts/common/check_deps.sh
-   source scripts/common/prepare_env.sh
-   ```
-3. Follow the template:
-   ```bash
-   check_xxx_deps() { ... }
-   run_xxx_tests() { ... }
-   ```
-4. Add to `run_all_tests.sh` TESTS array
-5. Update this README
+### Automatic Checking and Installation
+
+By default, dependencies are automatically checked before running tests. If missing, you'll be prompted to install them.
+
+**Check specific dependencies:**
+```bash
+./scripts/run_tests.sh --check hardware test.json
+./scripts/run_tests.sh --check operator test.json
+./scripts/run_tests.sh --check hardware,operator test.json
+```
+
+**Skip dependency check:**
+```bash
+./scripts/run_tests.sh --no-check test.json
+```
+
+### Manual Installation
+
+```bash
+# Install InfiniCore
+export INFINICORE_PATH="/path/to/InfiniCore"
+./scripts/common/install_deps.sh operator
+
+# Build CUDA benchmark
+./scripts/common/install_deps.sh hardware
+
+# Install everything
+./scripts/common/install_deps.sh all
+```
 
 ## ⚠️ Requirements
 
 - Python 3.10+
 - Bash 4.0+
-- Appropriate test dependencies (CUDA, InfiniCore, etc.)
+- CUDA toolkit (for hardware tests)
+- InfiniCore source (for operator tests)
+
+### Environment Variables
+
+- `INFINICORE_PATH` - Path to InfiniCore source (required for operator tests)
+  ```bash
+  export INFINICORE_PATH="/path/to/InfiniCore"
+  ```
 
 ## 🛠️ Troubleshooting
 
@@ -132,14 +160,16 @@ chmod +x scripts/*.sh scripts/common/*.sh
 
 **Permission denied?**
 ```bash
-bash scripts/run_all_tests.sh
+bash scripts/run_tests.sh test.json
 ```
 
-**Test file not found?**
+**INFINICORE_PATH not set?**
 ```bash
-# Scripts will search for matching patterns:
-# Hardware: *hardware*.json, *mem*.json
-# Operator: *operator*.json, *infinicore*.json
-# Inference: *inference*.json, *vllm*.json, *infinilm*.json
-# Communication: *nccl*.json, *communication*.json
+export INFINICORE_PATH="/path/to/InfiniCore"
+./scripts/run_tests.sh --check operator test.json
+```
+
+**Skip dependency check?**
+```bash
+./scripts/run_tests.sh --no-check test.json
 ```
