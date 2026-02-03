@@ -9,4 +9,6 @@ repos:
     rev: 6.1.0
     hooks:
     -   id: flake8
-        args: ['--exit-zero', '--show-source', '--statistics']  # Show all warnings with details
+        # Use .flake8 for configuration (separate file to avoid TOML parsing issues)
+        # --exit-zero: show warnings but don't fail pre-commit
+        args: ['--config', '.flake8', '--exit-zero']
