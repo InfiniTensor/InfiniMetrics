@@ -369,7 +369,7 @@ class InferConfig:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary (for JSON output)"""
-        return {
+        result = {
             "run_id": self.run_id,
             "testcase": self.testcase,
             "mode": self.mode.value,

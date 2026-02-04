@@ -1,0 +1,14 @@
+repos:
+-   repo: https://github.com/psf/black
+    rev: 23.9.1
+    hooks:
+    -   id: black
+        # Use pyproject.toml for configuration (ensures consistency)
+        args: ['--config', 'pyproject.toml']
+-   repo: https://github.com/pycqa/flake8
+    rev: 6.1.0
+    hooks:
+    -   id: flake8
+        # Use .flake8 for configuration (separate file to avoid TOML parsing issues)
+        # --exit-zero: show warnings but don't fail pre-commit
+        args: ['--config', '.flake8', '--exit-zero']

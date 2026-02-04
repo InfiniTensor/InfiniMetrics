@@ -113,7 +113,7 @@ class HardwareTestAdapter(BaseAdapter):
                 f"  Device: {device}\n"
                 f"  Test Type: {test_type}\n"
                 f"  Error: {str(e)}",
-                exc_info=True
+                exc_info=True,
             )
             raise
 
@@ -260,7 +260,12 @@ class HardwareTestAdapter(BaseAdapter):
         return None
 
     def _create_timeseries_metric(
-        self, name: str, data: List[Dict], base_filename: str, fields: List[str], unit: str = "GB/s"
+        self,
+        name: str,
+        data: List[Dict],
+        base_filename: str,
+        fields: List[str],
+        unit: str = "GB/s",
     ) -> Dict:
         """Create a timeseries metric with CSV file."""
         return create_timeseries_metric(

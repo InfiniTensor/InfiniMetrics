@@ -1,6 +1,6 @@
-# InfiniMetrics
-
 <div align="center">
+
+# InfiniMetrics
 
 **An InfiniTensor-Featured Comprehensive Accelerator Evaluation Framework**
 
@@ -42,6 +42,7 @@ For detailed guides, configuration, and examples, see the [full documentation](.
 
 - [Installation Guide](./docs/installation.md) - Prerequisites and dependencies
 - [Configuration](./docs/configuration.md) - Input format and parameters
+- [Development Guide](./docs/development.md) - Development setup and extending the framework
 
 ---
 

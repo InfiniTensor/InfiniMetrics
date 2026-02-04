@@ -212,6 +212,7 @@ def calculate_bandwidth(
         These are theoretical memory transfer sizes.
         Actual bandwidth may vary due to caching, memory alignment, and hardware optimizations.
     """
+
     def get_tensor_bytes(tensor: Dict) -> int:
         dtype = tensor.get("dtype", "float32").lower()
         bytes_per_element = DTYPE_BYTES_MAP.get(dtype, 4)

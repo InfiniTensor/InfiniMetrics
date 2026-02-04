@@ -251,8 +251,13 @@ class Executor:
 
             # Check for memory insufficient errors
             memory_keywords = [
-                "out of memory", "oom", "memory", "memory leak",
-                "allocate", "allocation failed", "insufficient memory"
+                "out of memory",
+                "oom",
+                "memory",
+                "memory leak",
+                "allocate",
+                "allocation failed",
+                "insufficient memory",
             ]
             if any(kw in error_msg for kw in memory_keywords):
                 logger.error(
@@ -280,7 +285,7 @@ class Executor:
             # Unexpected exceptions
             logger.error(
                 f"Executor: {self.testcase} failed with unexpected exception: {e}",
-                exc_info=True
+                exc_info=True,
             )
             test_result.result_code = ErrorCode.GENERIC
             # Build error response for saving
@@ -312,7 +317,8 @@ class Executor:
 
         # Create a cleaned config without injected metadata
         cleaned_config = {
-            k: v for k, v in config.items()
+            k: v
+            for k, v in config.items()
             if not k.startswith("_")  # Skip _testcase, _run_id, _time
         }
 

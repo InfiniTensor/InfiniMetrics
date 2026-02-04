@@ -7,8 +7,29 @@ name = "infinimetrics"
 version = "0.1.0"
 description = "An InfiniTensor-featured comprehensive accelerator evaluation framework"
 dependencies = [
-    
+
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
+[tool.black]
+target-version = ['py310']
+line-length = 88
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | __pycache__
+)/
+'''
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
