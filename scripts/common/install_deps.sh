@@ -59,10 +59,10 @@ check_cuda() {
     echo -n "  CUDA... "
     if check_command nvcc; then
         local version=$(nvcc --version | grep -oP 'release \K[0-9]+(\.[0-9]+)+' || echo "unknown")
-        echo -e "${GREEN}✓${NC} (nvcc $version)"
+        echo -e "${GREEN}[OK]${NC} (nvcc $version)"
         return 0
     else
-        echo -e "${RED}✗${NC} not found"
+        echo -e "${RED}[FAIL]${NC} not found"
         return 1
     fi
 }
@@ -71,10 +71,10 @@ check_cuda() {
 check_infinicore() {
     echo -n "  InfiniCore... "
     if check_python_package infinicore; then
-        echo -e "${GREEN}✓${NC}"
+        echo -e "${GREEN}[OK]${NC}"
         return 0
     else
-        echo -e "${YELLOW}⚠${NC} not installed"
+        echo -e "${YELLOW}[WARNING]${NC} not installed"
         return 1
     fi
 }
@@ -91,7 +91,7 @@ install_infinicore() {
 
     # 1. Check if INFINICORE_PATH is set
     if [ -z "$INFINICORE_PATH" ]; then
-        echo -e "${RED}❌ INFINICORE_PATH environment variable not set${NC}"
+        echo -e "${RED}[ERROR] INFINICORE_PATH environment variable not set${NC}"
         echo ""
         echo "Please set INFINICORE_PATH environment variable:"
         echo "  export INFINICORE_PATH=/path/to/InfiniCore"
@@ -111,16 +111,16 @@ install_infinicore() {
     # 3. Check if InfiniCore is installed
     echo -e "${BLUE}Checking InfiniCore...${NC}"
     if python -c "import infinicore" 2>/dev/null; then
-        echo -e "${GREEN}✓ InfiniCore already installed${NC}"
+        echo -e "${GREEN}[OK] InfiniCore already installed${NC}"
         return 0
     fi
 
-    echo -e "${YELLOW}⚠ InfiniCore not found, installing...${NC}"
+    echo -e "${YELLOW}[WARNING] InfiniCore not found, installing...${NC}"
     echo ""
 
     # 4. Install InfiniCore
     if [ ! -d "$INFINICORE_PATH" ]; then
-        echo -e "${RED}❌ InfiniCore not found at: $INFINICORE_PATH${NC}"
+        echo -e "${RED}[ERROR] InfiniCore not found at: $INFINICORE_PATH${NC}"
         return 1
     fi
 
@@ -128,34 +128,34 @@ install_infinicore() {
     echo ""
 
     cd "$INFINICORE_PATH" || {
-        echo -e "${RED}❌ Failed to change directory to $INFINICORE_PATH${NC}"
+        echo -e "${RED}[ERROR] Failed to change directory to $INFINICORE_PATH${NC}"
         return 1
     }
 
     echo -e "${BLUE}Step 1: Installing Python dependencies...${NC}"
     if ! python scripts/install.py --nv-gpu=y; then
-        echo -e "${RED}❌ Failed to install Python dependencies${NC}"
+        echo -e "${RED}[ERROR] Failed to install Python dependencies${NC}"
         return 1
     fi
     echo ""
 
     echo -e "${BLUE}Step 2: Building InfiniCore...${NC}"
     if ! xmake build _infinicore; then
-        echo -e "${RED}❌ Failed to build InfiniCore${NC}"
+        echo -e "${RED}[ERROR] Failed to build InfiniCore${NC}"
         return 1
     fi
     echo ""
 
     echo -e "${BLUE}Step 3: Installing InfiniCore...${NC}"
     if ! xmake install _infinicore; then
-        echo -e "${RED}❌ Failed to install InfiniCore${NC}"
+        echo -e "${RED}[ERROR] Failed to install InfiniCore${NC}"
         return 1
     fi
     echo ""
 
     echo -e "${BLUE}Step 4: Installing Python package...${NC}"
     if ! pip install -e .; then
-        echo -e "${RED}❌ Failed to install Python package${NC}"
+        echo -e "${RED}[ERROR] Failed to install Python package${NC}"
         return 1
     fi
     echo ""
@@ -165,10 +165,10 @@ install_infinicore() {
     echo "INFINI_ROOT: $INFINI_ROOT"
     echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
     if python -c "import infinicore" 2>/dev/null; then
-        echo -e "${GREEN}✅ InfiniCore installation completed successfully!${NC}"
+        echo -e "${GREEN}[OK] InfiniCore installation completed successfully!${NC}"
         return 0
     else
-        echo -e "${RED}❌ InfiniCore installation verification failed${NC}"
+        echo -e "${RED}[ERROR] InfiniCore installation verification failed${NC}"
         return 1
     fi
 }
@@ -195,16 +195,16 @@ install_hardware() {
     # 2. Check if already built
     echo -e "${BLUE}Checking CUDA memory benchmark...${NC}"
     if [ -f "$BENCHMARK_PATH/build/cuda_perf_suite" ]; then
-        echo -e "${GREEN}✓ CUDA memory benchmark already built${NC}"
+        echo -e "${GREEN}[OK] CUDA memory benchmark already built${NC}"
         return 0
     fi
 
-    echo -e "${YELLOW}⚠ CUDA memory benchmark not found, building...${NC}"
+    echo -e "${YELLOW}[WARNING] CUDA memory benchmark not found, building...${NC}"
     echo ""
 
     # 3. Build
     if [ ! -d "$BENCHMARK_PATH" ]; then
-        echo -e "${RED}❌ CUDA memory benchmark not found at: $BENCHMARK_PATH${NC}"
+        echo -e "${RED}[ERROR] CUDA memory benchmark not found at: $BENCHMARK_PATH${NC}"
         return 1
     fi
 
@@ -212,7 +212,7 @@ install_hardware() {
     echo ""
 
     cd "$BENCHMARK_PATH" || {
-        echo -e "${RED}❌ Failed to change directory to $BENCHMARK_PATH${NC}"
+        echo -e "${RED}[ERROR] Failed to change directory to $BENCHMARK_PATH${NC}"
         return 1
     }
 
@@ -222,17 +222,17 @@ install_hardware() {
 
     echo -e "${BLUE}Step 2: Building benchmark...${NC}"
     if ! bash build.sh; then
-        echo -e "${RED}❌ Build script failed${NC}"
+        echo -e "${RED}[ERROR] Build script failed${NC}"
         return 1
     fi
     echo ""
 
     # 4. Verify
     if [ -f "$BENCHMARK_PATH/build/cuda_perf_suite" ]; then
-        echo -e "${GREEN}✅ CUDA memory benchmark built successfully!${NC}"
+        echo -e "${GREEN}[OK] CUDA memory benchmark built successfully!${NC}"
         return 0
     else
-        echo -e "${RED}❌ CUDA memory benchmark build failed${NC}"
+        echo -e "${RED}[ERROR] CUDA memory benchmark build failed${NC}"
         return 1
     fi
 }
@@ -281,7 +281,7 @@ main() {
             install_infinicore
             exit_code=$?
             if [ $exit_code -ne 0 ]; then
-                echo -e "${YELLOW}⚠ InfiniCore installation failed, skipping hardware${NC}"
+                echo -e "${YELLOW}[WARNING] InfiniCore installation failed, skipping hardware${NC}"
                 return $exit_code
             fi
             
@@ -293,7 +293,7 @@ main() {
             return 0
             ;;
         *)
-            echo -e "${RED}❌ Unknown component: $COMPONENT${NC}"
+            echo -e "${RED}[ERROR] Unknown component: $COMPONENT${NC}"
             echo ""
             show_usage
             return 1
@@ -303,7 +303,7 @@ main() {
     if [ $exit_code -eq 0 ]; then
         echo ""
         echo "=========================================="
-        echo -e "${GREEN}✅ All operations completed successfully!${NC}"
+        echo -e "${GREEN}[OK] All operations completed successfully!${NC}"
         echo "=========================================="
     fi
 

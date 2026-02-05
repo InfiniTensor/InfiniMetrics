@@ -9,7 +9,7 @@ cleanup_on_error() {
     local test_name="$1"
     echo ""
     echo "=========================================="
-    echo "❌ Test failed: $test_name"
+    echo "[ERROR] Test failed: $test_name"
     echo "=========================================="
 }
 
@@ -36,9 +36,9 @@ log_test_end() {
     echo ""
     echo "=========================================="
     if [ $exit_code -eq 0 ]; then
-        echo "✅ Test completed: $test_name"
+        echo "[OK] Test completed: $test_name"
     else
-        echo "❌ Test failed: $test_name (exit code: $exit_code)"
+        echo "[ERROR] Test failed: $test_name (exit code: $exit_code)"
     fi
     echo "Time: $(get_timestamp)"
     echo "=========================================="

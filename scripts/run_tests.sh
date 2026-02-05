@@ -69,7 +69,7 @@ INPUT_PATHS=("$@")
 
 # Require at least one input path
 if [ ${#INPUT_PATHS[@]} -eq 0 ]; then
-    echo "❌ Error: At least one input path (file or directory) is required"
+    echo "[ERROR] Error: At least one input path (file or directory) is required"
     echo ""
     echo "Usage: $0 [OPTIONS] <input_paths...>"
     echo ""
@@ -112,7 +112,7 @@ check_all_deps() {
                 check_infinicore
                 ;;
             *)
-                echo "⚠️  Unknown dependency type: $dtype"
+                echo "[WARNING] Unknown dependency type: $dtype"
                 ;;
         esac
     done

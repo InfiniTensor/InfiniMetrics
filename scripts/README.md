@@ -2,7 +2,7 @@
 
 Unified test execution scripts for InfiniMetrics.
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Run tests with input file(s)
@@ -15,7 +15,7 @@ Unified test execution scripts for InfiniMetrics.
 ./scripts/run_tests.sh test1.json test2.json test3.json
 ```
 
-## 📁 Structure
+## Structure
 
 ```
 scripts/
@@ -25,7 +25,7 @@ scripts/
     └── prepare_env.sh         # Environment preparation functions
 ```
 
-## 📝 Script Organization
+## Script Organization
 
 ### Main Script: `run_tests.sh`
 
@@ -100,14 +100,14 @@ source scripts/common/install_deps.sh all        # Install everything
 - `cleanup_on_error` - Error trap handler
 - `get_timestamp` - Get current timestamp
 
-## 📊 Output
+## Output
 
 All test results are saved to:
 ```
 output/
 ```
 
-## ⚠️ Requirements
+## Requirements
 
 - Python 3.10+
 - Bash 4.0+
