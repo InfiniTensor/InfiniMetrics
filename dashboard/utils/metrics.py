@@ -28,4 +28,3 @@ def extract_core_metrics(run: dict) -> dict:
             out["throughput"] = val
 
     return out
-    

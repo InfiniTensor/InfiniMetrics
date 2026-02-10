@@ -6,7 +6,8 @@ import streamlit as st
 
 def render_header():
     """Render the dashboard header."""
-    st.markdown("""
+    st.markdown(
+        """
         <style>
         .main-header {
             font-size: 2.5rem;
@@ -22,7 +23,15 @@ def render_header():
             margin-bottom: 2rem;
         }
         </style>
-    """, unsafe_allow_html=True)
-    
-    st.markdown('<div class="main-header">🏭 InfiniMetrics 测试结果展示平台</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sub-header">AI加速卡通信、算力、推理性能一站式分析与可视化</div>', unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        '<div class="main-header">🏭 InfiniMetrics 测试结果展示平台</div>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<div class="sub-header">AI加速卡通信、算力、推理性能一站式分析与可视化</div>',
+        unsafe_allow_html=True,
+    )

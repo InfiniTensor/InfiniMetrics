@@ -19,7 +19,7 @@ st.set_page_config(
     page_title="InfiniMetrics Dashboard",
     page_icon="🏭",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="expanded",
 )
 
 # Initialize session state
@@ -35,14 +35,12 @@ def main():
     # =========================
     # Sidebar
     # =========================
-    
+
     with st.sidebar:
         st.markdown("## ⚙️ 设置")
 
         results_dir = st.text_input(
-            "测试结果目录",
-            value="./test_output",
-            help="包含 JSON/CSV 测试结果的目录"
+            "测试结果目录", value="./test_output", help="包含 JSON/CSV 测试结果的目录"
         )
 
         if results_dir != str(st.session_state.data_loader.results_dir):
@@ -84,7 +82,7 @@ def render_dashboard(run_id_filter: str):
             📊 综合仪表板
         </h1>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     st.markdown(
@@ -107,7 +105,7 @@ def render_dashboard(run_id_filter: str):
             Dashboard 自动加载并支持多次运行的对比分析与可视化。
         </div>
         """,
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     try:
@@ -117,7 +115,8 @@ def render_dashboard(run_id_filter: str):
         selected_accs = st.session_state.get("selected_accelerators", [])
         if selected_accs:
             runs = [
-                r for r in runs
+                r
+                for r in runs
                 if set(r.get("accelerator_types", [])) & set(selected_accs)
             ]
 
@@ -210,16 +209,18 @@ def render_dashboard(run_id_filter: str):
 
         # ========== Recent runs table ==========
         st.markdown("### 🕒 最近测试运行")
-        df = pd.DataFrame([
-            {
-                "类型": (r.get("testcase", "").split(".")[0] or "UNKNOWN").upper(),
-                "加速卡": ", ".join(r.get("accelerator_types", [])),
-                "时间": r.get("time", ""),
-                "状态": "✅" if r.get("success") else "❌",
-                "run_id": r.get("run_id", "")[:32],
-            }
-            for r in runs[:15]
-        ])
+        df = pd.DataFrame(
+            [
+                {
+                    "类型": (r.get("testcase", "").split(".")[0] or "UNKNOWN").upper(),
+                    "加速卡": ", ".join(r.get("accelerator_types", [])),
+                    "时间": r.get("time", ""),
+                    "状态": "✅" if r.get("success") else "❌",
+                    "run_id": r.get("run_id", "")[:32],
+                }
+                for r in runs[:15]
+            ]
+        )
         st.dataframe(df, use_container_width=True, hide_index=True)
 
         # ========== Dispatcher summary ==========
@@ -233,17 +234,20 @@ def render_dashboard(run_id_filter: str):
 
         rows = []
         for s in summaries:
-            rows.append({
-                "时间": s.get("timestamp"),
-                "总测试数": s.get("total_tests"),
-                "成功": s.get("successful_tests"),
-                "失败": s.get("failed_tests"),
-                "成功率": (
-                    f"{s['successful_tests'] / s['total_tests'] * 100:.1f}%"
-                    if s.get("total_tests") else "-"
-                ),
-                "文件": s.get("file"),
-            })
+            rows.append(
+                {
+                    "时间": s.get("timestamp"),
+                    "总测试数": s.get("total_tests"),
+                    "成功": s.get("successful_tests"),
+                    "失败": s.get("failed_tests"),
+                    "成功率": (
+                        f"{s['successful_tests'] / s['total_tests'] * 100:.1f}%"
+                        if s.get("total_tests")
+                        else "-"
+                    ),
+                    "文件": s.get("file"),
+                }
+            )
 
         df = pd.DataFrame(rows).sort_values("时间", ascending=False)
 

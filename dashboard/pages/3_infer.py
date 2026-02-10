@@ -17,9 +17,7 @@ from utils.visualizations import (
 )
 
 st.set_page_config(
-    page_title="推理测试分析 | InfiniMetrics",
-    page_icon="🤖",
-    layout="wide"
+    page_title="推理测试分析 | InfiniMetrics", page_icon="🤖", layout="wide"
 )
 
 if "data_loader" not in st.session_state:
@@ -41,7 +39,9 @@ def main():
     with st.sidebar:
         st.markdown("### 🔍 筛选条件")
 
-        frameworks = sorted(set((r.get("config", {}).get("framework") or "unknown") for r in runs))
+        frameworks = sorted(
+            set((r.get("config", {}).get("framework") or "unknown") for r in runs)
+        )
         selected_fw = st.multiselect("框架", frameworks, default=frameworks)
 
         modes = []
@@ -62,12 +62,16 @@ def main():
         y_log = st.checkbox("Y轴对数刻度（部分曲线更清晰）", value=False)
 
     def _mode_of(r):
-        tc = (r.get("testcase") or "")
+        tc = r.get("testcase") or ""
         return "service" if ("Service" in tc or "service" in tc.lower()) else "direct"
 
     filtered = [
-        r for r in runs
-        if (not selected_fw or (r.get("config", {}).get("framework") or "unknown") in selected_fw)
+        r
+        for r in runs
+        if (
+            not selected_fw
+            or (r.get("config", {}).get("framework") or "unknown") in selected_fw
+        )
         and (not selected_modes or _mode_of(r) in selected_modes)
         and (not selected_dev or r.get("device_used", 1) in selected_dev)
         and (not only_success or r.get("success"))
@@ -88,7 +92,7 @@ def main():
     selected = st.multiselect(
         "选择要分析的测试运行（可多选对比）",
         list(options.keys()),
-        default=list(options.keys())[:1]
+        default=list(options.keys())[:1],
     )
     if not selected:
         return
@@ -115,10 +119,22 @@ def main():
                 if len(selected_runs) == 1:
                     run = selected_runs[0]
                     metrics = run["data"].get("metrics", [])
-                    hit = next((m for m in metrics if metric_name_contains in (m.get("name","")) and m.get("data") is not None), None)
+                    hit = next(
+                        (
+                            m
+                            for m in metrics
+                            if metric_name_contains in (m.get("name", ""))
+                            and m.get("data") is not None
+                        ),
+                        None,
+                    )
                     if hit:
                         df = hit["data"]
-                        fig = plot_timeseries_auto(df, title=f"{hit['name']} - {run.get('config',{}).get('framework','')}", y_log_scale=y_log)
+                        fig = plot_timeseries_auto(
+                            df,
+                            title=f"{hit['name']} - {run.get('config',{}).get('framework','')}",
+                            y_log_scale=y_log,
+                        )
                         st.plotly_chart(fig, use_container_width=True)
                     else:
                         st.info(f"未找到 {metric_name_contains} 对应的 CSV")
@@ -127,7 +143,15 @@ def main():
                     st.markdown(f"**对比：{metric_name_contains}**")
                     lines = []
                     for run in selected_runs:
-                        hit = next((m for m in run["data"].get("metrics", []) if metric_name_contains in (m.get("name","")) and m.get("data") is not None), None)
+                        hit = next(
+                            (
+                                m
+                                for m in run["data"].get("metrics", [])
+                                if metric_name_contains in (m.get("name", ""))
+                                and m.get("data") is not None
+                            ),
+                            None,
+                        )
                         if not hit:
                             continue
                         lines.append((run, hit))
@@ -136,6 +160,7 @@ def main():
                         return
 
                     import plotly.graph_objects as go
+
                     fig = go.Figure()
                     for run, hit in lines:
                         df = hit["data"]
@@ -144,13 +169,17 @@ def main():
                         if ycol is None:
                             continue
                         label = f"{run.get('config',{}).get('framework','unknown')}|{_mode_of(run)}|{run.get('device_used','?')}GPU"
-                        fig.add_trace(go.Scatter(x=df[xcol], y=df[ycol], mode="lines+markers", name=label))
+                        fig.add_trace(
+                            go.Scatter(
+                                x=df[xcol], y=df[ycol], mode="lines+markers", name=label
+                            )
+                        )
                     fig.update_layout(
                         title=f"{metric_name_contains} 对比",
                         xaxis_title="step",
                         yaxis_title=metric_name_contains,
                         template="plotly_white",
-                        height=420
+                        height=420,
                     )
                     if y_log:
                         fig.update_yaxes(type="log")
@@ -186,4 +215,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

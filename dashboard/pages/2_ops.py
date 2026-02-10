@@ -17,9 +17,7 @@ from utils.visualizations import (
 )
 
 st.set_page_config(
-    page_title="算子测试分析 | InfiniMetrics",
-    page_icon="⚡",
-    layout="wide"
+    page_title="算子测试分析 | InfiniMetrics", page_icon="⚡", layout="wide"
 )
 
 if "data_loader" not in st.session_state:
@@ -32,13 +30,18 @@ def main():
 
     dl = st.session_state.data_loader
 
-    runs = dl.list_test_runs()   # Load all test runs first
+    runs = dl.list_test_runs()  # Load all test runs first
     # Identify operator runs by checking "operators" in path or testcase starting with operator/ops
     ops_runs = []
     for r in runs:
         p = str(r.get("path", ""))
         tc = (r.get("testcase") or "").lower()
-        if ("/operators/" in p.replace("\\", "/")) or tc.startswith("operator") or tc.startswith("operators") or tc.startswith("ops"):
+        if (
+            ("/operators/" in p.replace("\\", "/"))
+            or tc.startswith("operator")
+            or tc.startswith("operators")
+            or tc.startswith("ops")
+        ):
             ops_runs.append(r)
 
     if not ops_runs:
@@ -61,7 +64,7 @@ def main():
     selected = st.multiselect(
         "选择要分析的测试运行（可多选）",
         list(options.keys()),
-        default=list(options.keys())[:1]
+        default=list(options.keys())[:1],
     )
     if not selected:
         return
@@ -79,7 +82,11 @@ def main():
     with tab1:
         for run in selected_runs:
             with st.expander(f"{run.get('run_id')} - 概览"):
-                st.dataframe(create_summary_table_ops(run["data"]), use_container_width=True, hide_index=True)
+                st.dataframe(
+                    create_summary_table_ops(run["data"]),
+                    use_container_width=True,
+                    hide_index=True,
+                )
                 st.markdown("**config**")
                 st.json(run["data"].get("config", {}))
 
@@ -90,14 +97,17 @@ def main():
                 for m in run["data"].get("metrics", []):
                     df = m.get("data")
                     if df is not None and len(df.columns) >= 2:
-                        fig = plot_timeseries_auto(df, title=m.get("name","metric"), y_log_scale=y_log)
+                        fig = plot_timeseries_auto(
+                            df, title=m.get("name", "metric"), y_log_scale=y_log
+                        )
                         st.plotly_chart(fig, use_container_width=True)
                     else:
                         # scalar
                         if m.get("type") == "scalar":
-                            st.write(f"- {m.get('name')}: {m.get('value')} {m.get('unit','')}")
+                            st.write(
+                                f"- {m.get('name')}: {m.get('value')} {m.get('unit','')}"
+                            )
 
 
 if __name__ == "__main__":
     main()
-
