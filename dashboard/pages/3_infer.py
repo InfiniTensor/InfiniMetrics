@@ -16,9 +16,7 @@ from utils.visualizations import (
     create_summary_table_infer,
 )
 
-st.set_page_config(
-    page_title="推理测试分析 | InfiniMetrics", page_icon="🤖", layout="wide"
-)
+st.set_page_config(page_title="推理测试分析 | InfiniMetrics", page_icon="🤖", layout="wide")
 
 if "data_loader" not in st.session_state:
     st.session_state.data_loader = InfiniMetricsDataLoader()

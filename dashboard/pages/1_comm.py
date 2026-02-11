@@ -22,9 +22,7 @@ from utils.visualizations import (
 )
 
 # Page configuration
-st.set_page_config(
-    page_title="通信测试分析 | InfiniMetrics", page_icon="🔗", layout="wide"
-)
+st.set_page_config(page_title="通信测试分析 | InfiniMetrics", page_icon="🔗", layout="wide")
 
 # Initialize session state
 if "data_loader" not in st.session_state:
