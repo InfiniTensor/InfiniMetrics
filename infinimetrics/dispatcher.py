@@ -9,16 +9,18 @@ from datetime import datetime
 
 from infinimetrics.adapter import BaseAdapter
 from infinimetrics.executor import Executor, TestResult
+from infinimetrics.common.constants import TestCategory
 
 logger = logging.getLogger(__name__)
 
 # Adapter registry: maps (test_type, framework) -> adapter factory
+# test_type must use TestCategory enum (not string literals)
 _ADAPTER_REGISTRY = {
-    ("operator", "infinicore"): lambda: _create_infinicore_adapter(),
-    ("hardware", "cudaunified"): lambda: _create_hardware_adapter(),
-    ("comm", "nccltest"): lambda: _create_nccltests_adapter(),
-    ("infer", "infinilm"): lambda: _create_inference_adapter(),
-    ("infer", "vllm"): lambda: _create_inference_adapter(),
+    (TestCategory.OPERATOR, "infinicore"): lambda: _create_infinicore_adapter(),
+    (TestCategory.HARDWARE, "cudaunified"): lambda: _create_hardware_adapter(),
+    (TestCategory.COMM, "nccltest"): lambda: _create_nccltests_adapter(),
+    (TestCategory.INFER, "infinilm"): lambda: _create_inference_adapter(),
+    (TestCategory.INFER, "vllm"): lambda: _create_inference_adapter(),
 }
 
 
@@ -99,9 +101,9 @@ class Dispatcher:
 
         for test_input in valid_test_inputs:
             testcase = test_input["testcase"]
-            test_type, framework = self._parse_testcase(testcase)
 
             try:
+                test_type, framework = self._parse_testcase(testcase)
                 adapter = self._create_adapter(test_type, framework)
                 valid_executions.append((test_input, adapter))
                 logger.debug(f"Validated {testcase} - adapter ready")
@@ -168,14 +170,23 @@ class Dispatcher:
 
         if len(parts) < 2:
             logger.warning(f"Invalid testcase format: {testcase}, using defaults")
-            return "operator", "infinicore"
+            return TestCategory.OPERATOR.value, "infinicore"
 
-        # First part is test_type
-        test_type = parts[0].lower()
+        # First part is test_type - validate against TestCategory enum
+        test_type_str = parts[0].lower()
+        try:
+            test_type = TestCategory(test_type_str)
+        except ValueError:
+            valid_types = ", ".join(c.value for c in TestCategory)
+            raise ValueError(
+                f"Invalid test_type '{test_type_str}' in '{testcase}'. "
+                f"Must be one of: {valid_types}"
+            )
+
         # Second part is framework
         framework = parts[1].lower()
 
-        return test_type, framework
+        return test_type.value, framework
 
     def _aggregate_results(self, results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Aggregate results from executors."""

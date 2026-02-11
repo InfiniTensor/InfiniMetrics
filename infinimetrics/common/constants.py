@@ -22,6 +22,21 @@ class AcceleratorType(str, Enum):
     GENERIC = "generic"
 
 
+class TestCategory(str, Enum):
+    """Test category classifications - single source of truth for test type categorization"""
+
+    HARDWARE = "hardware"
+    OPERATOR = "operator"
+    INFER = "infer"
+    COMM = "comm"
+    TRAIN = "train"
+
+
+# Valid test categories (derived from TestCategory enum)
+# Used for testcase prefix matching and output directory organization
+TEST_CATEGORIES = {cat.value: cat.value for cat in TestCategory}
+
+
 # Common execution defaults
 DEFAULT_WARMUP_ITERATIONS = 10
 DEFAULT_MEASURED_ITERATIONS = 100

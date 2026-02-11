@@ -15,7 +15,7 @@ from dataclasses import dataclass
 from infinimetrics.adapter import BaseAdapter
 from infinimetrics.input import TestInput
 from infinimetrics.utils.path_utils import sanitize_filename
-from infinimetrics.common.constants import ErrorCode
+from infinimetrics.common.constants import ErrorCode, TEST_CATEGORIES
 
 
 logger = logging.getLogger(__name__)
@@ -664,17 +664,27 @@ class Executor:
         if not run_id:
             run_id = self.payload.get("run_id") or self.run_id
 
+        # 3) Determine output subdirectory based on testcase
+        testcase = self.payload.get("testcase", "")
+
+        # Extract category from testcase (e.g., "hardware.cudaUnified.Comprehensive" -> "hardware")
+        category = "other"  # default fallback
+        for prefix, subdir in TEST_CATEGORIES.items():
+            if testcase.startswith(prefix):
+                category = subdir
+                break
+
         if run_id:
             safe_run_id = sanitize_filename(run_id)
 
-            # Put final JSON next to timeseries csv files under infer/
-            infer_dir = self.output_dir / "infer"
-            infer_dir.mkdir(parents=True, exist_ok=True)
+            # Put results in category-specific subdirectory
+            category_dir = self.output_dir / category
+            category_dir.mkdir(parents=True, exist_ok=True)
 
             filename = f"{safe_run_id}_results.json"
-            output_file = infer_dir / filename
+            output_file = category_dir / filename
         else:
-            # Final fallback to old naming
+            # Final fallback to old naming (in root output_dir)
             safe_name = self.testcase.replace(".", "_").replace("/", "_")
             filename = f"{safe_name}_{timestamp}_results.json"
             output_file = self.output_dir / filename
