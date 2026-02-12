@@ -17,7 +17,16 @@ _ADAPTER_REGISTRY = {
     ("operator", "infinicore"): lambda: _create_infinicore_adapter(),
     ("hardware", "cudaunified"): lambda: _create_hardware_adapter(),
     ("comm", "nccltest"): lambda: _create_nccltests_adapter(),
+    ("infer", "infinilm"): lambda: _create_inference_adapter(),
+    ("infer", "vllm"): lambda: _create_inference_adapter(),
 }
+
+
+def _create_inference_adapter():
+    """Create inference adapter"""
+    from infinimetrics.inference.inference_adapter import InferenceAdapter
+
+    return InferenceAdapter()
 
 
 def _create_infinicore_adapter():
@@ -26,10 +35,13 @@ def _create_infinicore_adapter():
 
     return InfiniCoreAdapter()
 
+
 def _create_nccltests_adapter():
     """Create NCCL communication adapter."""
     from infinimetrics.communication.nccl_adapter import NcclTestsAdapter
+
     return NcclTestsAdapter()
+
 
 def _create_hardware_adapter():
     """Create Hardware adapter (lazy import)."""
@@ -200,4 +212,3 @@ class Dispatcher:
             json.dump(aggregated, f, indent=2, ensure_ascii=False)
 
         logger.info(f"Summary saved to {summary_dir / filename}")
-        

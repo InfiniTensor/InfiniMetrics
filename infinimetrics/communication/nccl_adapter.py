@@ -26,7 +26,7 @@ DEFAULTS = {
     "timeout_ms": 300000,
     "warmup_iterations": 10,
     "measured_iterations": 100,
-    "device_involved": 8,  
+    "device_involved": 8,
     "output_dir": "./output/comm",
     "nccl_env_defaults": {
         "NCCL_DEBUG": "INFO",
@@ -41,6 +41,7 @@ class NCCLTestsSpec:
     binary_name: str
     display_name: str
 
+
 OPERATION_MAP: Dict[str, NCCLTestsSpec] = {
     "allreduce": NCCLTestsSpec("allreduce", "all_reduce_perf", "AllReduce"),
     "allgather": NCCLTestsSpec("allgather", "all_gather_perf", "AllGather"),
@@ -52,10 +53,10 @@ OPERATION_MAP: Dict[str, NCCLTestsSpec] = {
 
 @dataclass
 class ResolvedRun:
-    mode: str = "single_node"   # "single_node" | "multi_node"
-    device_used: int = 0        # Actual number of GPUs used（single node ：-g n）
-    gpus_per_node: int = 0      # Number of GPUs used per node in multi-node mode
-    nodes: int = 1              # Number of nodes in multi-node mode
+    mode: str = "single_node"  # "single_node" | "multi_node"
+    device_used: int = 0  # Actual number of GPUs used（single node ：-g n）
+    gpus_per_node: int = 0  # Number of GPUs used per node in multi-node mode
+    nodes: int = 1  # Number of nodes in multi-node mode
     command: str = ""
 
 
@@ -69,6 +70,7 @@ class NcclTestsAdapter(BaseAdapter):
 
         self.resolved = ResolvedRun()
         self._orig_env: Dict[str, str] = {}
+
     # -----------------------------
     # BaseAdapter hooks
     # -----------------------------
@@ -77,7 +79,9 @@ class NcclTestsAdapter(BaseAdapter):
 
         self.nccl_test_dir = self._find_nccl_test_dir()
         if not self.nccl_test_dir:
-            raise FileNotFoundError("NCCL tests directory not found (expected submodules/nccl-tests).")
+            raise FileNotFoundError(
+                "NCCL tests directory not found (expected submodules/nccl-tests)."
+            )
 
         out_dir = config.get("output_dir", DEFAULTS["output_dir"])
         self.result_dir = Path(out_dir)
@@ -91,14 +95,16 @@ class NcclTestsAdapter(BaseAdapter):
         logger.info("NCCL adapter teardown complete")
 
     def process(self, test_input: Dict[str, Any]) -> Dict[str, Any]:
-        input_dict = test_input.to_dict() if hasattr(test_input, "to_dict") else test_input
+        input_dict = (
+            test_input.to_dict() if hasattr(test_input, "to_dict") else test_input
+        )
         config = input_dict.get("config", {}) or {}
         testcase = input_dict.get("testcase", "") or ""
 
         self.run_id = input_dict.get("run_id") or self._gen_run_id(testcase)
         self.test_spec = self._parse_test_spec(testcase)
         if not self.test_spec:
-            return self._err(input_dict, f"Unknown operation in testcase: {testcase}")
+            raise ValueError(f"Unknown operation in testcase: {testcase}")
 
         try:
             cmd = self._build_command(config)
@@ -113,8 +119,10 @@ class NcclTestsAdapter(BaseAdapter):
             if not results["latency"]:
                 msg = f"No performance data parsed. returncode={rc}"
                 if stderr:
-                    msg += "\nStderr(last 20 lines):\n" + "\n".join(stderr.splitlines()[-20:])
-                return self._err(input_dict, msg)
+                    msg += "\nStderr(last 20 lines):\n" + "\n".join(
+                        stderr.splitlines()[-20:]
+                    )
+                raise RuntimeError(msg)
 
             raw_files = self._save_raw_csv(results)
             metrics = self._build_metrics(wall_ms, raw_files)
@@ -137,8 +145,19 @@ class NcclTestsAdapter(BaseAdapter):
             }
 
         except Exception as e:
-            logger.error(f"Test failed: {e}", exc_info=True)
-            return self._err(input_dict, str(e))
+            # Log error with context, then re-raise for Executor to handle
+            operation = (
+                self.test_spec.get("op", "unknown") if self.test_spec else "unknown"
+            )
+            logger.error(
+                f"NCCLAdapter: Test failed for {testcase}\n"
+                f"  Operation: {operation}\n"
+                f"  Nodes: {self.resolved.nodes}\n"
+                f"  GPUs per node: {self.resolved.gpus_per_node}\n"
+                f"  Error: {str(e)}",
+                exc_info=True,
+            )
+            raise
 
     # -----------------------------
     # Config helpers
@@ -182,7 +201,9 @@ class NcclTestsAdapter(BaseAdapter):
 
         if isinstance(device_ids, list) and device_ids:
             os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(str(x) for x in device_ids)
-            logger.info(f"Set CUDA_VISIBLE_DEVICES={os.environ['CUDA_VISIBLE_DEVICES']}")
+            logger.info(
+                f"Set CUDA_VISIBLE_DEVICES={os.environ['CUDA_VISIBLE_DEVICES']}"
+            )
 
         env_vars: Dict[str, Any] = {}
         env_vars.update(DEFAULTS["nccl_env_defaults"])
@@ -236,8 +257,12 @@ class NcclTestsAdapter(BaseAdapter):
         min_size = self._cfg(config, "min_size", DEFAULTS["min_size"])
         max_size = self._cfg(config, "max_size", DEFAULTS["max_size"])
         step = self._cfg(config, "step_factor", DEFAULTS["step_factor"])
-        warm = int(self._cfg(config, "warmup_iterations", DEFAULTS["warmup_iterations"]))
-        meas = int(self._cfg(config, "measured_iterations", DEFAULTS["measured_iterations"]))
+        warm = int(
+            self._cfg(config, "warmup_iterations", DEFAULTS["warmup_iterations"])
+        )
+        meas = int(
+            self._cfg(config, "measured_iterations", DEFAULTS["measured_iterations"])
+        )
 
         if self._is_multi_node(config):
             mn = config.get("multi_node") or {}
@@ -255,28 +280,40 @@ class NcclTestsAdapter(BaseAdapter):
             self.resolved.mode = "multi_node"
             self.resolved.nodes = len(hosts)
             self.resolved.gpus_per_node = gpn
-            self.resolved.device_used = len(hosts) * gpn 
+            self.resolved.device_used = len(hosts) * gpn
             # NCCL tests: USE-G to control the number of gpus per node when there is one process per node
             return [
                 mpirun,
-                "-H", host_arg,
-                "-np", str(len(hosts)),
+                "-H",
+                host_arg,
+                "-np",
+                str(len(hosts)),
                 *[str(x) for x in extra_mpi],
                 str(binary),
-                "-b", str(min_size),
-                "-e", str(max_size),
-                "-f", str(step),
-                "-g", str(gpn),
+                "-b",
+                str(min_size),
+                "-e",
+                str(max_size),
+                "-f",
+                str(step),
+                "-g",
+                str(gpn),
                 *self._op_extra_args(),
-                "-w", str(warm),
-                "-n", str(meas),
+                "-w",
+                str(warm),
+                "-n",
+                str(meas),
                 *self._extra_nccl_args(config),
             ]
 
         # single node
-        device_involved = int(self._cfg(config, "device_involved", DEFAULTS["device_involved"]))
+        device_involved = int(
+            self._cfg(config, "device_involved", DEFAULTS["device_involved"])
+        )
         visible = os.environ.get("CUDA_VISIBLE_DEVICES", "").strip()
-        visible_cnt = len([x for x in visible.split(",") if x.strip()]) if visible else 0
+        visible_cnt = (
+            len([x for x in visible.split(",") if x.strip()]) if visible else 0
+        )
         g_used = min(device_involved, visible_cnt or device_involved)
 
         self.resolved.mode = "single_node"
@@ -286,13 +323,19 @@ class NcclTestsAdapter(BaseAdapter):
 
         return [
             str(binary),
-            "-b", str(min_size),
-            "-e", str(max_size),
-            "-f", str(step),
-            "-g", str(g_used),
+            "-b",
+            str(min_size),
+            "-e",
+            str(max_size),
+            "-f",
+            str(step),
+            "-g",
+            str(g_used),
             *self._op_extra_args(),
-            "-w", str(warm),
-            "-n", str(meas),
+            "-w",
+            str(warm),
+            "-n",
+            str(meas),
             *self._extra_nccl_args(config),
         ]
 
@@ -409,45 +452,70 @@ class NcclTestsAdapter(BaseAdapter):
 
         return raw
 
-    def _build_metrics(self, duration_ms: float, raw_files: Dict[str, str]) -> List[Dict[str, Any]]:
+    def _build_metrics(
+        self, duration_ms: float, raw_files: Dict[str, str]
+    ) -> List[Dict[str, Any]]:
         metrics: List[Dict[str, Any]] = []
         if raw_files.get("latency"):
-            metrics.append({
-                "name": "comm.latency",
-                "type": "timeseries",
-                "raw_data_url": raw_files["latency"],
-                "unit": "us",
-            })
-        metrics.append({
-            "name": "comm.duration",
-            "type": "scalar",
-            "value": duration_ms,
-            "unit": "ms",
-        })
+            metrics.append(
+                {
+                    "name": "comm.latency",
+                    "type": "timeseries",
+                    "raw_data_url": raw_files["latency"],
+                    "unit": "us",
+                }
+            )
+        metrics.append(
+            {
+                "name": "comm.duration",
+                "type": "scalar",
+                "value": duration_ms,
+                "unit": "ms",
+            }
+        )
         if raw_files.get("bandwidth"):
-            metrics.append({
-                "name": "comm.bandwidth",
-                "type": "timeseries",
-                "raw_data_url": raw_files["bandwidth"],
-                "unit": "GB/s",
-            })
+            metrics.append(
+                {
+                    "name": "comm.bandwidth",
+                    "type": "timeseries",
+                    "raw_data_url": raw_files["bandwidth"],
+                    "unit": "GB/s",
+                }
+            )
         return metrics
 
-    def _build_config_section(self, config: Dict[str, Any], command: str) -> Dict[str, Any]:
+    def _build_config_section(
+        self, config: Dict[str, Any], command: str
+    ) -> Dict[str, Any]:
         assert self.test_spec is not None
         core = {
             "command": command,
-
             "operator": config.get("operator", self.test_spec.display_name),
-            "attributes": config.get("attributes", [{"name": "op", "value": "SUM"}, {"name": "group", "value": "WORLD"}]),
-            "inputs": config.get("inputs", [{"name": "input_tensor", "dtype": "float32", "shape": [512, 512]}]),
-            "outputs": config.get("outputs", [{"name": "output_tensor", "dtype": "float32", "shape": [512, 512]}]),
-
+            "attributes": config.get(
+                "attributes",
+                [{"name": "op", "value": "SUM"}, {"name": "group", "value": "WORLD"}],
+            ),
+            "inputs": config.get(
+                "inputs",
+                [{"name": "input_tensor", "dtype": "float32", "shape": [512, 512]}],
+            ),
+            "outputs": config.get(
+                "outputs",
+                [{"name": "output_tensor", "dtype": "float32", "shape": [512, 512]}],
+            ),
             "timeout_ms": self._cfg(config, "timeout_ms", DEFAULTS["timeout_ms"]),
-            "device_involved": int(self._cfg(config, "device_involved", DEFAULTS["device_involved"])),
+            "device_involved": int(
+                self._cfg(config, "device_involved", DEFAULTS["device_involved"])
+            ),
             "device_used": int(self.resolved.device_used or 0),
-            "warmup_iterations": int(self._cfg(config, "warmup_iterations", DEFAULTS["warmup_iterations"])),
-            "measured_iterations": int(self._cfg(config, "measured_iterations", DEFAULTS["measured_iterations"])),          
+            "warmup_iterations": int(
+                self._cfg(config, "warmup_iterations", DEFAULTS["warmup_iterations"])
+            ),
+            "measured_iterations": int(
+                self._cfg(
+                    config, "measured_iterations", DEFAULTS["measured_iterations"]
+                )
+            ),
         }
 
         extras = dict(config) if isinstance(config, dict) else {}

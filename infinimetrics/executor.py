@@ -14,6 +14,9 @@ from dataclasses import dataclass
 
 from infinimetrics.adapter import BaseAdapter
 from infinimetrics.input import TestInput
+from infinimetrics.utils.path_utils import sanitize_filename
+from infinimetrics.common.constants import ErrorCode
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +26,17 @@ NVIDIA_SMI_GPU_QUERY = [
     "--format=csv,noheader",
 ]
 
+AMD_SMI_CANDIDATES = ["amd-smi", "rocm-smi"]
+
+
 def _which(cmd: str) -> Optional[str]:
     try:
         from shutil import which
+
         return which(cmd)
     except Exception:
         return None
+
 
 @dataclass
 class TestResult:
@@ -46,6 +54,7 @@ class TestResult:
     result_code: int  # 0 = success, non-zero = error code
     result_file: Optional[str] = None
     skipped: bool = False
+    config: Optional[Dict[str, Any]] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to lightweight dictionary format for Dispatcher aggregation."""
@@ -55,6 +64,7 @@ class TestResult:
             "result_code": self.result_code,
             "result_file": self.result_file,
             "skipped": self.skipped,
+            "config": self.config,
         }
 
 
@@ -98,8 +108,13 @@ class Executor:
         """
         config = self.payload.get("config", {})
 
-        # Convert payload to TestInput object
-        self.test_input = TestInput.from_dict(self.payload)
+        # Inject testcase, run_id, and other metadata into config
+        config["_testcase"] = self.payload.get("testcase", "")
+        config["_run_id"] = self.payload.get("run_id", "")
+        config["_time"] = self.payload.get("time", None)
+
+        # Initialize test_input from payload
+        self.test_input = self.payload
 
         self.adapter.setup(config)
 
@@ -149,12 +164,16 @@ class Executor:
         logger.info(f"Executor: Running {self.testcase}")
 
         # Initialize TestResult directly (default: result_code=0)
+        config = self.payload.get("config", {})
         test_result = TestResult(
             run_id=self.run_id,
             testcase=self.testcase,
             result_code=0,  # Default to success
             result_file=None,
+            config=config,
         )
+
+        response = {}
 
         try:
             # Phase 1: Setup
@@ -164,21 +183,26 @@ class Executor:
             logger.debug(f"Executor: Calling adapter.process()")
             response = self.adapter.process(self.test_input)
 
-            # Process response (0 = success, non-zero = error code)
-            test_result.result_code = int(response.get("result_code", 1)) if isinstance(response, dict) else 1
-            if test_result.result_code != 0:
-                logger.warning(f"Executor: Adapter failed with error code {test_result.result_code}")
-            
             # Enrich environment ONLY if missing
             if isinstance(response, dict) and "environment" not in response:
                 env = self._build_environment(response)
 
                 # rebuild ordered dict (py3.7+ preserves insertion order)
                 ordered = {}
-                for k in ["run_id", "time", "testcase", "success"]:
-                    if k in response:
+                for k in [
+                    "run_id",
+                    "time",
+                    "testcase",
+                    "success",
+                    "environment",
+                    "result_code",
+                    "config",
+                    "metrics",
+                ]:
+                    if k == "environment":
+                        ordered["environment"] = env
+                    elif k in response:
                         ordered[k] = response[k]
-                ordered["environment"] = env
 
                 # append remaining keys in original order (skip those already set)
                 for k, v in response.items():
@@ -197,15 +221,157 @@ class Executor:
 
             return test_result
 
+        except subprocess.TimeoutExpired as e:
+            # Timeout errors (possible hardware hang)
+            logger.error(
+                f"Executor: STABILITY CHECK FAILED for {self.testcase}\n"
+                f"  Issue Type: timeout\n"
+                f"  Severity: CRITICAL\n"
+                f"  Analysis: Test timed out. Hardware may be hung or overloaded.\n"
+                f"  Error: {str(e)[:300]}"
+            )
+            test_result.result_code = ErrorCode.TIMEOUT
+            # Build error response for saving
+            response = self._build_error_response(str(e), ErrorCode.TIMEOUT)
+
+        except ValueError as e:
+            # Configuration or input validation errors
+            logger.warning(
+                f"Executor: Test failed for {self.testcase}\n"
+                f"  Issue Type: configuration_error\n"
+                f"  Error: {str(e)[:300]}"
+            )
+            test_result.result_code = ErrorCode.CONFIG
+            # Build error response for saving
+            response = self._build_error_response(str(e), ErrorCode.CONFIG)
+
+        except RuntimeError as e:
+            # RuntimeError: analyze error message for specific patterns
+            error_msg = str(e).lower()
+
+            # Check for memory insufficient errors
+            memory_keywords = [
+                "out of memory",
+                "oom",
+                "memory",
+                "memory leak",
+                "allocate",
+                "allocation failed",
+                "insufficient memory",
+            ]
+            if any(kw in error_msg for kw in memory_keywords):
+                logger.error(
+                    f"Executor: STABILITY CHECK FAILED for {self.testcase}\n"
+                    f"  Issue Type: memory\n"
+                    f"  Severity: CRITICAL\n"
+                    f"  Analysis: Memory allocation failed. Possible causes: insufficient memory, memory leak, or test data too large.\n"
+                    f"  Error: {str(e)[:300]}"
+                )
+                test_result.result_code = ErrorCode.SYSTEM
+                # Build error response for saving
+                response = self._build_error_response(str(e), ErrorCode.SYSTEM)
+            else:
+                # Other RuntimeError
+                logger.warning(
+                    f"Executor: Test failed for {self.testcase}\n"
+                    f"  Issue Type: runtime_error\n"
+                    f"  Error: {str(e)[:300]}"
+                )
+                test_result.result_code = ErrorCode.GENERIC
+                # Build error response for saving
+                response = self._build_error_response(str(e), ErrorCode.GENERIC)
+
         except Exception as e:
-            logger.error(f"Executor: {self.testcase} failed: {e}", exc_info=True)
+            # Unexpected exceptions
+            logger.error(
+                f"Executor: {self.testcase} failed with unexpected exception: {e}",
+                exc_info=True,
+            )
+            test_result.result_code = ErrorCode.GENERIC
+            # Build error response for saving
+            response = self._build_error_response(str(e), ErrorCode.GENERIC)
 
-            # Still run teardown on failure
-            self._save_result(None)
-            test_result.result_code = 1  # Failure
+        finally:
+            # Always save result (even on failure)
+            try:
+                if not test_result.result_file:
+                    result_file = self._save_result(response)
+                    test_result.result_file = result_file
+            except Exception as teardown_error:
+                logger.error(f"Executor: Failed to save result: {teardown_error}")
 
-            return test_result
-    
+        return test_result
+
+    def _build_error_response(self, error_msg: str, result_code: int) -> Dict[str, Any]:
+        """
+        Build a response dict containing error information for saving to disk.
+
+        Args:
+            error_msg: Error message string
+            result_code: Error result code
+
+        Returns:
+            Dictionary with basic test info and error details
+        """
+        config = self.payload.get("config", {})
+
+        # Create a cleaned config without injected metadata
+        cleaned_config = {
+            k: v
+            for k, v in config.items()
+            if not k.startswith("_")  # Skip _testcase, _run_id, _time
+        }
+
+        # Extract device information
+        resolved = self._extract_device_info(config)
+
+        return {
+            "run_id": self.run_id,
+            "testcase": self.testcase,
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "result_code": result_code,
+            "error_msg": error_msg,
+            "success": 1,  # 1 = failure
+            "config": cleaned_config,
+            "resolved": resolved,
+        }
+
+    def _extract_device_info(self, config: Dict[str, Any]) -> Dict[str, Any]:
+        """Extract device information from config."""
+        device_used = 0
+        gpus_per_node = 0
+        nodes = 1
+
+        # Try device_involved
+        if "device_involved" in config:
+            try:
+                device_used = int(config.get("device_involved", 0) or 0)
+            except (ValueError, TypeError):
+                device_used = 0
+
+        # Try single_node config
+        if isinstance(config.get("single_node"), dict):
+            single_node = config["single_node"]
+            device_ids = single_node.get("device_ids", [])
+            if device_ids:
+                device_used = len(device_ids)
+            gpus_per_node = device_used
+        else:
+            gpus_per_node = device_used
+
+        # Try multi_node config
+        if "multi_node" in config:
+            try:
+                nodes = int(config.get("multi_node", {}).get("num_nodes", 1) or 1)
+            except (ValueError, TypeError):
+                nodes = 1
+
+        return {
+            "nodes": nodes,
+            "gpus_per_node": gpus_per_node,
+            "device_used": device_used,
+        }
+
     def _build_environment(self, response: Dict[str, Any]) -> Dict[str, Any]:
         """
         Build a unified environment block
@@ -216,9 +382,13 @@ class Executor:
         gpn = int(resolved.get("gpus_per_node", 0) or 0)
 
         # Fallback to config hints if adapter didn't provide
-        cfg = (self.payload.get("config", {}) or {})
+        cfg = self.payload.get("config", {}) or {}
 
-        accel_type = (cfg.get("accelerator_type") or cfg.get("device_type") or "").strip().lower()  # optional
+        accel_type = (
+            (cfg.get("accelerator_type") or cfg.get("device_type") or "")
+            .strip()
+            .lower()
+        )  # optional
         device_ids = cfg.get("device_ids")
 
         if device_ids is None and isinstance(cfg.get("single_node"), dict):
@@ -262,7 +432,9 @@ class Executor:
             ],
         }
 
-    def _collect_static_hw(self, accel_type: str = "", device_ids: Any = None) -> Dict[str, Any]:
+    def _collect_static_hw(
+        self, accel_type: str = "", device_ids: Any = None
+    ) -> Dict[str, Any]:
         """
         Best-effort static HW collector (CPU/mem/GPU model/driver/CUDA).
         """
@@ -297,7 +469,7 @@ class Executor:
                         break
         except Exception:
             pass
-        
+
         hint = (accel_type or "").lower().strip()
 
         probes: List[str] = []
@@ -317,7 +489,7 @@ class Executor:
             probes.append("cambricon")
         if "generic" not in probes:
             probes.append("generic")
-        
+
         for p in probes:
             if p == "nvidia" and self._probe_nvidia(hw):
                 hw["accelerator_type"] = "nvidia"
@@ -341,9 +513,12 @@ class Executor:
                 return hw
 
         return hw
+
     def _probe_nvidia(self, hw: Dict[str, Any]) -> bool:
         try:
-            r = subprocess.run(NVIDIA_SMI_GPU_QUERY, capture_output=True, text=True, timeout=5)
+            r = subprocess.run(
+                NVIDIA_SMI_GPU_QUERY, capture_output=True, text=True, timeout=5
+            )
             if r.returncode != 0 or not r.stdout.strip():
                 return False
 
@@ -360,7 +535,6 @@ class Executor:
             return True
         except Exception:
             return False
-
 
     def _probe_amd(self, hw: Dict[str, Any]) -> bool:
         """
@@ -390,13 +564,18 @@ class Executor:
             # Minimal parse: count devices by "GPU" markers
             txt = r.stdout
             # heuristic: count lines containing "GPU" and an index
-            lines = [x for x in txt.splitlines() if re.search(r"\bGPU\b", x, re.IGNORECASE)]
-            hw["gpu_count"] = max(hw["gpu_count"], len(lines)) if lines else hw["gpu_count"]
-            hw["gpu_model"] = hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "AMD GPU"
+            lines = [
+                x for x in txt.splitlines() if re.search(r"\bGPU\b", x, re.IGNORECASE)
+            ]
+            hw["gpu_count"] = (
+                max(hw["gpu_count"], len(lines)) if lines else hw["gpu_count"]
+            )
+            hw["gpu_model"] = (
+                hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "AMD GPU"
+            )
             return True
         except Exception:
             return False
-
 
     def _probe_ascend(self, hw: Dict[str, Any]) -> bool:
         """
@@ -405,19 +584,24 @@ class Executor:
         try:
             if not _which("npu-smi"):
                 return False
-            r = subprocess.run(["npu-smi", "info"], capture_output=True, text=True, timeout=5)
+            r = subprocess.run(
+                ["npu-smi", "info"], capture_output=True, text=True, timeout=5
+            )
             if r.returncode != 0 or not r.stdout.strip():
                 return False
 
             txt = r.stdout
             # heuristic: count device lines with "NPU" or "Device"
-            cnt = len([x for x in txt.splitlines() if re.search(r"\bNPU\b|\bDevice\b", x)])
+            cnt = len(
+                [x for x in txt.splitlines() if re.search(r"\bNPU\b|\bDevice\b", x)]
+            )
             hw["gpu_count"] = max(hw["gpu_count"], cnt) if cnt else hw["gpu_count"]
-            hw["gpu_model"] = hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Ascend NPU"
+            hw["gpu_model"] = (
+                hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Ascend NPU"
+            )
             return True
         except Exception:
             return False
-
 
     def _probe_cambricon(self, hw: Dict[str, Any]) -> bool:
         """
@@ -426,21 +610,29 @@ class Executor:
         try:
             if not _which("cnmon"):
                 return False
-            r = subprocess.run(["cnmon", "info"], capture_output=True, text=True, timeout=5)
+            r = subprocess.run(
+                ["cnmon", "info"], capture_output=True, text=True, timeout=5
+            )
             if r.returncode != 0 or not r.stdout.strip():
                 return False
 
             txt = r.stdout
-            cnt = len([x for x in txt.splitlines() if re.search(r"\bMLU\b|\bDevice\b", x)])
+            cnt = len(
+                [x for x in txt.splitlines() if re.search(r"\bMLU\b|\bDevice\b", x)]
+            )
             hw["gpu_count"] = max(hw["gpu_count"], cnt) if cnt else hw["gpu_count"]
-            hw["gpu_model"] = hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Cambricon MLU"
+            hw["gpu_model"] = (
+                hw["gpu_model"] if hw["gpu_model"] != "Unknown" else "Cambricon MLU"
+            )
             return True
         except Exception:
             return False
 
     def _collect_cuda_version(self) -> Optional[str]:
         try:
-            r = subprocess.run(["nvcc", "--version"], capture_output=True, text=True, timeout=2)
+            r = subprocess.run(
+                ["nvcc", "--version"], capture_output=True, text=True, timeout=2
+            )
             if r.returncode == 0:
                 for line in r.stdout.splitlines():
                     if "release" in line:
@@ -462,9 +654,30 @@ class Executor:
             Absolute path to saved file
         """
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        safe_name = self.testcase.replace(".", "_").replace("/", "_")
-        filename = f"{safe_name}_{timestamp}_results.json"
-        output_file = self.output_dir / filename
+
+        # 1) Prefer run_id in result (adapter may generate a richer run_id)
+        run_id = None
+        if isinstance(result, dict):
+            run_id = result.get("run_id") or result.get("raw_result", {}).get("run_id")
+
+        # 2) Fallback to payload run_id
+        if not run_id:
+            run_id = self.payload.get("run_id") or self.run_id
+
+        if run_id:
+            safe_run_id = sanitize_filename(run_id)
+
+            # Put final JSON next to timeseries csv files under infer/
+            infer_dir = self.output_dir / "infer"
+            infer_dir.mkdir(parents=True, exist_ok=True)
+
+            filename = f"{safe_run_id}_results.json"
+            output_file = infer_dir / filename
+        else:
+            # Final fallback to old naming
+            safe_name = self.testcase.replace(".", "_").replace("/", "_")
+            filename = f"{safe_name}_{timestamp}_results.json"
+            output_file = self.output_dir / filename
 
         with open(output_file, "w", encoding="utf-8") as f:
             json.dump(result, f, indent=2, ensure_ascii=False)

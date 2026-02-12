@@ -174,7 +174,9 @@ MEMORY_DIRECTIONS = [
 STREAM_OPERATIONS = ["copy", "scale", "add", "triad"]
 
 # Regex patterns for parsing hardware test output
-L1_CACHE_PATTERN = r"L1 Cache Bandwidth Sweep Test.*?Eff\. bw\s*-+\s*\n(.*?)(?=L2 Cache|\Z)"
+L1_CACHE_PATTERN = (
+    r"L1 Cache Bandwidth Sweep Test.*?Eff\. bw\s*-+\s*\n(.*?)(?=L2 Cache|\Z)"
+)
 L2_CACHE_PATTERN = r"L2 Cache Bandwidth Sweep Test.*?Eff\. bw\s*-+\s*\n(.*?)(?=\Z)"
 
 STREAM_PATTERN_TEMPLATE = r"STREAM_{op}\s+(\d+\.\d+)"
@@ -190,3 +192,32 @@ DEFAULT_TEST_TIMEOUT = 600
 
 # Metric prefixes
 METRIC_PREFIX_MEM_SWEEP = "hardware.mem_sweep"
+
+# ============================================================
+# Error Code Constants
+# ============================================================
+
+
+class ErrorCode:
+    """Error code values for different types of failures, organized by severity layer"""
+
+    # Success
+    SUCCESS = 0  # Test succeeded
+
+    # Layer 1: Input/Configuration issues (not stability issues)
+    CONFIG = 1  # Invalid configuration or input (user error)
+
+    # Layer 2: Framework internal errors (tested framework's fault)
+    INTERNAL = 2  # InfiniLM/InfiniCore internal error or non-zero return
+
+    # Layer 3: Incompatibility issues
+    INCOMPAT = 3  # Compilation errors, version incompatibility
+
+    # Layer 4: System resource issues
+    SYSTEM = 4  # OS/Hardware issues (OOM, disk full, GPU driver)
+
+    # Layer 5: Test framework issues (our fault)
+    GENERIC = 5  # Test framework logic error
+
+    # Layer 6: Timeout issues
+    TIMEOUT = 6  # Test started but hung/timeout
