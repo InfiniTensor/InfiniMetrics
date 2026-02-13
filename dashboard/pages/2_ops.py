@@ -21,12 +21,21 @@ st.set_page_config(page_title="算子测试分析 | InfiniMetrics", page_icon="�
 if "data_loader" not in st.session_state:
     st.session_state.data_loader = InfiniMetricsDataLoader()
 
+# Sync MongoDB setting from main page
+if "use_mongodb" not in st.session_state:
+    st.session_state.use_mongodb = False
+
 
 def main():
     render_header()
     st.markdown("## ⚡ 算子测试分析")
 
+    # Show current data source
     dl = st.session_state.data_loader
+    if dl.source_type == "mongodb":
+        st.caption("🟢 数据源: MongoDB")
+    else:
+        st.caption("📁 数据源: 文件系统")
 
     runs = dl.list_test_runs()  # Load all test runs first
     # Identify operator runs by checking "operators" in path or testcase starting with operator/ops
@@ -70,7 +79,9 @@ def main():
     selected_runs = []
     for k in selected:
         ri = filtered[options[k]]
-        data = dl.load_test_result(ri["path"])
+        # Use run_id for MongoDB, path for file system
+        identifier = ri.get("run_id") if dl.source_type == "mongodb" else ri.get("path")
+        data = dl.load_test_result(identifier)
         ri = dict(ri)
         ri["data"] = data
         selected_runs.append(ri)

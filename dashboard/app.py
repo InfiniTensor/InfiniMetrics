@@ -27,6 +27,8 @@ if "data_loader" not in st.session_state:
     st.session_state.data_loader = InfiniMetricsDataLoader()
 if "selected_accelerators" not in st.session_state:
     st.session_state.selected_accelerators = []
+if "use_mongodb" not in st.session_state:
+    st.session_state.use_mongodb = False
 
 
 def main():
@@ -39,11 +41,36 @@ def main():
     with st.sidebar:
         st.markdown("## ⚙️ 设置")
 
+        # Data source selection
+        use_mongodb = st.toggle(
+            "使用 MongoDB",
+            value=st.session_state.use_mongodb,
+            help="切换到 MongoDB 数据源（需要 MongoDB 服务运行中）",
+        )
+
+        if use_mongodb != st.session_state.use_mongodb:
+            st.session_state.use_mongodb = use_mongodb
+            if use_mongodb:
+                st.session_state.data_loader = InfiniMetricsDataLoader(
+                    use_mongodb=True, fallback_to_files=True
+                )
+            else:
+                st.session_state.data_loader = InfiniMetricsDataLoader()
+
+        # Show current data source
+        source_type = st.session_state.data_loader.source_type
+        if source_type == "mongodb":
+            st.success("🟢 数据源: MongoDB")
+        else:
+            st.info(f"📁 数据源: 文件系统")
+
+        st.markdown("---")
+
         results_dir = st.text_input(
             "测试结果目录", value="./test_output", help="包含 JSON/CSV 测试结果的目录"
         )
 
-        if results_dir != str(st.session_state.data_loader.results_dir):
+        if not use_mongodb and results_dir != str(st.session_state.data_loader.results_dir):
             st.session_state.data_loader = InfiniMetricsDataLoader(results_dir)
 
         auto_refresh = st.toggle("自动刷新", value=False)
