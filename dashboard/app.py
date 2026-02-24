@@ -6,6 +6,7 @@ import pandas as pd
 from pathlib import Path
 import sys
 from datetime import datetime
+from infinimetrics.common.constants import AcceleratorType
 
 # Add project root to path
 project_root = Path(__file__).parent
@@ -53,18 +54,23 @@ def main():
         st.markdown("---")
         st.markdown("## 🧠 筛选条件")
 
+        # Base accelerator types from constants.py
+        ACCELERATOR_OPTIONS = ["cpu"] + [a.value for a in AcceleratorType]
+
+        # UI display names (only labels live here)
         ACCELERATOR_LABELS = {
-            "nvidia": "NVIDIA",
             "cpu": "CPU",
-            "mlu": "寒武纪 MLU",
-            "npu": "昇腾 NPU",
-            "musa": "摩尔线程 MUSA",
+            AcceleratorType.NVIDIA.value: "NVIDIA",
+            AcceleratorType.AMD.value: "AMD",
+            AcceleratorType.ASCEND.value: "昇腾 NPU",
+            AcceleratorType.CAMBRICON.value: "寒武纪 MLU",
+            AcceleratorType.GENERIC.value: "Generic",
         }
 
         selected_accs = st.multiselect(
             "加速卡类型",
-            options=list(ACCELERATOR_LABELS.keys()),
-            default=list(ACCELERATOR_LABELS.keys()),
+            options=ACCELERATOR_OPTIONS,
+            default=ACCELERATOR_OPTIONS,
             format_func=lambda x: ACCELERATOR_LABELS.get(x, x),
         )
         st.session_state.selected_accelerators = selected_accs
@@ -263,11 +269,11 @@ def render_dashboard(run_id_filter: str):
 
         col1, col2, col3 = st.columns(3)
         if col1.button("🔗 通信测试分析", use_container_width=True):
-            st.switch_page("pages/1_comm.py")
+            st.switch_page("pages/communication.py")
         if col2.button("⚡ 算子测试分析", use_container_width=True):
-            st.switch_page("pages/2_ops.py")
+            st.switch_page("pages/operator.py")
         if col3.button("🤖 推理测试分析", use_container_width=True):
-            st.switch_page("pages/3_infer.py")
+            st.switch_page("pages/inference.py")
 
     except Exception as e:
         st.error(f"Dashboard 加载失败: {e}")

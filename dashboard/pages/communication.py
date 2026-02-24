@@ -1,32 +1,23 @@
 #!/usr/bin/env python3
 """Communication tests analysis page."""
 
-import sys
 import streamlit as st
 import pandas as pd
-from pathlib import Path
-from utils.metrics import extract_core_metrics
 
-# Add parent directory to path
-project_root = Path(__file__).parent.parent
-sys.path.append(str(project_root))
-
+from common import init_page
 from components.header import render_header
-from utils.data_loader import InfiniMetricsDataLoader, get_friendly_size
+from utils.data_loader import get_friendly_size
+from utils.metrics import extract_core_metrics
 from utils.visualizations import (
-    plot_bandwidth_vs_size,
-    plot_latency_vs_size,
+    plot_metric_vs_size,
     plot_comparison_matrix,
-    create_summary_table,
     create_gauge_chart,
+    create_summary_table,
+    plot_timeseries_auto,
+    create_summary_table_infer,
 )
 
-# Page configuration
-st.set_page_config(page_title="通信测试分析 | InfiniMetrics", page_icon="🔗", layout="wide")
-
-# Initialize session state
-if "data_loader" not in st.session_state:
-    st.session_state.data_loader = InfiniMetricsDataLoader()
+init_page("推理测试分析 | InfiniMetrics", "🔗")
 
 
 def main():
@@ -90,7 +81,7 @@ def main():
         # Run selector
         st.markdown("### 选择测试运行")
 
-        # ✅ Run ID 模糊搜索（真正生效）
+        # Run ID Fuzzy search (really works)
         run_id_kw = st.text_input(
             "🔎 Run ID 模糊搜索（支持前缀 / 子串）",
             placeholder="例如：20240109 / abcd1234",
@@ -149,8 +140,11 @@ def main():
                             and metric.get("data") is not None
                         ):
                             df = metric["data"]
-                            fig = plot_bandwidth_vs_size(
-                                df, f"带宽分析 - {run['operation']}", y_log_scale
+                            fig = plot_metric_vs_size(
+                                df=df,
+                                metric_type="bandwidth",
+                                title=f"带宽分析 - {run['operation']}",
+                                y_log_scale=y_log_scale,
                             )
                             st.plotly_chart(fig, use_container_width=True)
                             break
@@ -172,8 +166,11 @@ def main():
                             and metric.get("data") is not None
                         ):
                             df = metric["data"]
-                            fig = plot_latency_vs_size(
-                                df, f"延迟分析 - {run['operation']}", y_log_scale
+                            fig = plot_metric_vs_size(
+                                df=df,
+                                metric_type="latency",
+                                title=f"延迟分析 - {run['operation']}",
+                                y_log_scale=y_log_scale,
                             )
                             st.plotly_chart(fig, use_container_width=True)
                             break
@@ -201,9 +198,9 @@ def main():
                     f"{core['latency_us']:.2f} μs" if core["latency_us"] else "-",
                 )
                 c3.metric(
-                    "TTFT", f"{core['ttft_ms']:.2f} ms" if core["ttft_ms"] else "-"
+                    "测试耗时",
+                    f"{core['duration_ms']:.2f} ms" if core["duration_ms"] else "-",
                 )
-
             # Gauge charts for key metrics
             if len(selected_runs) == 1:
                 st.markdown("#### 关键指标")

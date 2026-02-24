@@ -5,83 +5,62 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 import numpy as np
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Literal
 import streamlit as st
 
 from .data_loader import get_friendly_size
 
 
-def plot_bandwidth_vs_size(
-    df: pd.DataFrame, title: str = "带宽 vs 数据大小", y_log_scale: bool = False
+def plot_metric_vs_size(
+    df: pd.DataFrame,
+    metric_type: Literal["bandwidth", "latency"],
+    title: Optional[str] = None,
+    y_log_scale: bool = False,
 ) -> go.Figure:
-    """Plot bandwidth vs size with log scale on x-axis."""
+    """Generic plot for metric vs message size."""
+
     fig = go.Figure()
 
-    # Add friendly size column for hover
-    df = df.copy()
-    df["size_friendly"] = df["size_bytes"].apply(get_friendly_size)
-
-    # Add bandwidth line
-    fig.add_trace(
-        go.Scatter(
-            x=df["size_bytes"],
-            y=df["bandwidth_gbs"],
-            mode="lines+markers",
-            name="Bandwidth (GB/s)",
-            line=dict(color="royalblue", width=3),
-            marker=dict(size=8),
-            hovertext=df["size_friendly"],
-            hoverinfo="text+y+x",
-        )
-    )
-
-    # Update layout
-    layout = {
-        "title": title,
-        "xaxis_title": "Data Size",
-        "yaxis_title": "Bandwidth (GB/s)",
-        "xaxis_type": "log",
-        "template": "plotly_white",
-        "hovermode": "x unified",
-        "height": 500,
+    # Define metric-specific configurations
+    metric_configs = {
+        "bandwidth": {
+            "y_column": "bandwidth_gbs",
+            "y_title": "Bandwidth (GB/s)",
+            "line_color": "royalblue",
+            "name": "Bandwidth",
+            "default_title": "带宽 vs 数据大小",
+        },
+        "latency": {
+            "y_column": "latency_us",
+            "y_title": "Latency (microseconds)",
+            "line_color": "firebrick",
+            "name": "Latency",
+            "default_title": "延迟 vs 数据大小",
+        },
     }
 
-    if y_log_scale:
-        layout["yaxis_type"] = "log"
+    config = metric_configs.get(metric_type)
+    if not config:
+        raise ValueError(f"Unsupported metric_type: {metric_type}")
 
-    fig.update_layout(**layout)
-
-    # Add grid
-    fig.update_xaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor="LightGray",
-        tickvals=df["size_bytes"].tolist(),
-        ticktext=df["size_friendly"].tolist(),
-    )
-    fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor="LightGray")
-
-    return fig
-
-
-def plot_latency_vs_size(
-    df: pd.DataFrame, title: str = "延迟 vs 数据大小", y_log_scale: bool = False
-) -> go.Figure:
-    """Plot latency vs size with optional log scale."""
-    fig = go.Figure()
+    # Check if required columns exist
+    if config["y_column"] not in df.columns:
+        st.warning(f"DataFrame missing required column: {config['y_column']}")
+        fig.update_layout(title=f"{title or config['default_title']} (no data)")
+        return fig
 
     # Add friendly size column for hover
     df = df.copy()
     df["size_friendly"] = df["size_bytes"].apply(get_friendly_size)
 
-    # Add latency line
+    # Add metric line
     fig.add_trace(
         go.Scatter(
             x=df["size_bytes"],
-            y=df["latency_us"],
+            y=df[config["y_column"]],
             mode="lines+markers",
-            name="Latency (µs)",
-            line=dict(color="firebrick", width=3),
+            name=config["name"],
+            line=dict(color=config["line_color"], width=3),
             marker=dict(size=8),
             hovertext=df["size_friendly"],
             hoverinfo="text+y+x",
@@ -90,9 +69,9 @@ def plot_latency_vs_size(
 
     # Update layout
     layout = {
-        "title": title,
+        "title": title or config["default_title"],
         "xaxis_title": "Data Size",
-        "yaxis_title": "Latency (microseconds)",
+        "yaxis_title": config["y_title"],
         "xaxis_type": "log",
         "template": "plotly_white",
         "hovermode": "x unified",
@@ -303,9 +282,9 @@ def create_gauge_chart(
         go.Indicator(
             mode="gauge+number",
             value=value,
-            domain={"x": [0, 1], "y": [0, 1]},
-            title={"text": f"{title}<br>{unit}"},
-            number={"suffix": f" {unit}"},
+            domain={"x": [0, 1], "y": [0.05, 0.85]},
+            title={"text": title, "font": {"size": 18}},
+            number={"suffix": f" {unit}", "font": {"size": 36}},
             gauge={
                 "axis": {"range": [0, max_value]},
                 "bar": {"color": color},
@@ -323,7 +302,7 @@ def create_gauge_chart(
         )
     )
 
-    fig.update_layout(height=300, margin=dict(t=50, b=10, l=10, r=10))
+    fig.update_layout(height=260, margin=dict(t=20, b=0, l=10, r=10))
     return fig
 
 

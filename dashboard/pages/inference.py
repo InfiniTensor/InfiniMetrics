@@ -3,12 +3,8 @@
 
 import streamlit as st
 import pandas as pd
-from pathlib import Path
-import sys
 
-project_root = Path(__file__).parent.parent
-sys.path.append(str(project_root))
-
+from common import init_page
 from components.header import render_header
 from utils.data_loader import InfiniMetricsDataLoader, get_friendly_size
 from utils.visualizations import (
@@ -16,10 +12,7 @@ from utils.visualizations import (
     create_summary_table_infer,
 )
 
-st.set_page_config(page_title="推理测试分析 | InfiniMetrics", page_icon="🤖", layout="wide")
-
-if "data_loader" not in st.session_state:
-    st.session_state.data_loader = InfiniMetricsDataLoader()
+init_page("推理测试分析 | InfiniMetrics", "🤖")
 
 
 def main():
