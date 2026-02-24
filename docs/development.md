@@ -208,6 +208,8 @@ infinimetrics/
 
 ## Testing Your Changes
 
+### Running Tests
+
 1. Create a test configuration file
 2. Run with `--verbose` flag for detailed output
 3. Check output directory for metrics.json
@@ -215,6 +217,69 @@ infinimetrics/
 
 ```bash
 python main.py test_config.json --verbose
+```
+
+### Unit Tests
+
+The project uses **pytest** for unit testing. Test files are located in the `tests/` directory.
+
+#### Run All Tests
+
+```bash
+# Run all tests
+python -m pytest tests/ -v
+
+# Run specific test file
+python -m pytest tests/test_utils.py -v
+
+# Run specific test class
+python -m pytest tests/test_utils.py::TestSanitizeFilename -v
+
+# Run specific test
+python -m pytest tests/test_utils.py::TestSanitizeFilename::test_special_characters_replaced -v
+```
+
+#### Run with Coverage
+
+```bash
+# Install coverage plugin
+pip install pytest-cov
+
+# Run with coverage report
+python -m pytest tests/ --cov=infinimetrics --cov-report=html
+```
+
+#### Test Structure
+
+```
+tests/
+├── test_utils.py        # Utility functions tests
+├── test_input.py        # TestInput dataclass tests
+└── test_dispatcher.py   # Dispatcher logic tests
+```
+
+#### Writing New Tests
+
+When adding new features, include corresponding unit tests:
+
+```python
+import pytest
+from infinimetrics.my_module import my_function
+
+class TestMyFunction:
+    """Tests for my_function."""
+
+    def test_basic_case(self):
+        """Test basic functionality."""
+        assert my_function("input") == "expected"
+
+    @pytest.mark.parametrize("input,expected", [
+        ("case1", "result1"),
+        ("case2", "result2"),
+    ])
+    def test_multiple_cases(self, input, expected):
+        """Test multiple cases using parametrize."""
+        assert my_function(input) == expected
 ```
 
 ## Contributing
