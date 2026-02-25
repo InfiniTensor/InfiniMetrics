@@ -70,11 +70,16 @@ check_cuda() {
 # Check InfiniCore
 check_infinicore() {
     echo -n "  InfiniCore... "
-    if check_python_package infinicore; then
+
+    # Try to import and capture error details
+    error_msg=$(python -c "import infinicore" 2>&1)
+    if [ $? -eq 0 ]; then
         echo -e "${GREEN}[OK]${NC}"
         return 0
     else
-        echo -e "${YELLOW}[WARNING]${NC} not installed"
+        echo -e "${YELLOW}[WARNING]${NC}"
+        echo "    Failed to import infinicore:"
+        echo "    ${error_msg}" | head -n 15 | sed 's/^/    /'
         return 1
     fi
 }
@@ -164,11 +169,20 @@ install_infinicore() {
     echo -e "${BLUE}Verifying installation...${NC}"
     echo "INFINI_ROOT: $INFINI_ROOT"
     echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
-    if python -c "import infinicore" 2>/dev/null; then
+
+    error_msg=$(python -c "import infinicore" 2>&1)
+    if [ $? -eq 0 ]; then
         echo -e "${GREEN}[OK] InfiniCore installation completed successfully!${NC}"
         return 0
     else
         echo -e "${RED}[ERROR] InfiniCore installation verification failed${NC}"
+        echo "    Import error:"
+        echo "    ${error_msg}" | head -n 15 | sed 's/^/    /'
+        echo ""
+        echo "    Possible causes:"
+        echo "    - Dependencies not installed (run: python scripts/install.py --nv-gpu=y)"
+        echo "    - Library not built (run: xmake build _infinicore)"
+        echo "    - LD_LIBRARY_PATH not set correctly"
         return 1
     fi
 }
