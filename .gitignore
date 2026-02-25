@@ -211,3 +211,5 @@ summary_output/
 test_output/
 traces/
 test_*.json
+.claude/
+format*.json
