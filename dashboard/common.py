@@ -8,12 +8,11 @@ from pathlib import Path
 
 def init_page(page_title: str, page_icon: str):
     """
-    通用页面初始化：
-    - 设置 Streamlit 页面配置
-    - 初始化 DataLoader
-    - 设置项目路径
+    Common page initialization:
+    - -Set Streamlit page configuration
+    - initialize DataLoader
+    - set project path
     """
-
     # Add project root to Python path
     project_root = Path(__file__).parent.parent
     if str(project_root) not in sys.path:
