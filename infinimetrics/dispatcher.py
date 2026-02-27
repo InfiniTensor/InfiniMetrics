@@ -21,6 +21,8 @@ _ADAPTER_REGISTRY = {
     (TestCategory.COMM, "nccltest"): lambda: _create_nccltests_adapter(),
     (TestCategory.INFER, "infinilm"): lambda: _create_inference_adapter(),
     (TestCategory.INFER, "vllm"): lambda: _create_inference_adapter(),
+    (TestCategory.TRAIN, "megatron"): lambda: _create_training_adapter(),
+    (TestCategory.TRAIN, "infinitrain"): lambda: _create_training_adapter(),
 }
 
 
@@ -50,6 +52,13 @@ def _create_hardware_adapter():
     from infinimetrics.hardware.hardware_adapter import HardwareTestAdapter
 
     return HardwareTestAdapter()
+
+
+def _create_training_adapter():
+    """Create training adapter (lazy import)."""
+    from infinimetrics.training.training_adapter import TrainingAdapter
+
+    return TrainingAdapter()
 
 
 class Dispatcher:

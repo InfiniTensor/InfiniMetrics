@@ -1,4 +1,3 @@
-# utils/prompt_generator.py
 #!/usr/bin/env python3
 """
 Prompt Generator
