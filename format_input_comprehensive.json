@@ -1,0 +1,22 @@
+{
+    "run_id": "hardware.cudaUnified.Comprehensive.fadfsdf",
+    "testcase": "hardware.cudaUnified.Comprehensive",
+    "config": {
+        "test_type": "Comprehensive",
+        "device": "nvidia",
+        "array_size": 67108864,
+        "output_dir": "./output"
+    },
+    "metrics": [
+        {"name": "hardware.mem_sweep_h2d"},
+        {"name": "hardware.mem_sweep_d2h"},
+        {"name": "hardware.mem_sweep_d2d"},
+        {"name": "hardware.mem_sweep_bidirectional"},
+        {"name": "hardware.stream_copy"},
+        {"name": "hardware.stream_scale"},
+        {"name": "hardware.stream_add"},
+        {"name": "hardware.stream_triad"},
+        {"name": "hardware.gpu_cache_l1"},
+        {"name": "hardware.gpu_cache_l2"}
+    ]
+}

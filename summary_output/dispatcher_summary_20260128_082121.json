@@ -1,0 +1,15 @@
+{
+  "total_tests": 1,
+  "successful_tests": 1,
+  "failed_tests": 0,
+  "results": [
+    {
+      "run_id": "test.vllm.service.manual",
+      "testcase": "infer.vLLM.Service",
+      "result_code": 0,
+      "result_file": "test_output/infer/test.vllm.service.manual.20260128_082038.2gel3k5s_results.json",
+      "skipped": false
+    }
+  ],
+  "timestamp": "2026-01-28T08:21:21.704483"
+}

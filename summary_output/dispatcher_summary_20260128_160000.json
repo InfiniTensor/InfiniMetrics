@@ -1,0 +1,15 @@
+{
+  "total_tests": 1,
+  "successful_tests": 1,
+  "failed_tests": 0,
+  "results": [
+    {
+      "run_id": "hardware.cudaUnified.Comprehensive.fadfsdf",
+      "testcase": "hardware.cudaUnified.Comprehensive",
+      "result_code": 0,
+      "result_file": "output/hardware_cudaUnified_Comprehensive_20260128_160000_results.json",
+      "skipped": false
+    }
+  ],
+  "timestamp": "2026-01-28T16:00:00.636753"
+}

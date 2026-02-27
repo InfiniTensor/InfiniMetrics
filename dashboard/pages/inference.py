@@ -14,12 +14,23 @@ from utils.visualizations import (
 
 init_page("推理测试分析 | InfiniMetrics", "🤖")
 
+# Sync MongoDB setting from main page
+if "use_mongodb" not in st.session_state:
+    st.session_state.use_mongodb = False
+
 
 def main():
     render_header()
     st.markdown("## 🚀 推理性能测试分析")
 
     dl = st.session_state.data_loader
+
+    # Show current data source
+    if dl.source_type == "mongodb":
+        st.caption("🟢 数据源: MongoDB")
+    else:
+        st.caption("📁 数据源: 文件系统")
+
     runs = dl.list_test_runs("infer")
 
     if not runs:
@@ -91,7 +102,9 @@ def main():
     selected_runs = []
     for k in selected:
         ri = filtered[options[k]]
-        data = dl.load_test_result(ri["path"])
+        # Use run_id for MongoDB, path for file system
+        identifier = ri.get("run_id") if dl.source_type == "mongodb" else ri.get("path")
+        data = dl.load_test_result(identifier)
         ri = dict(ri)
         ri["data"] = data
         selected_runs.append(ri)

@@ -7,7 +7,8 @@ name = "infinimetrics"
 version = "0.1.0"
 description = "An InfiniTensor-featured comprehensive accelerator evaluation framework"
 dependencies = [
-
+    "pymongo>=4.0.0",
+    "watchdog>=3.0.0",
 ]
 
 [tool.black]
@@ -27,6 +28,9 @@ exclude = '''
   | __pycache__
 )/
 '''
+
+[tool.setuptools.packages.find]
+include = ["infinimetrics*", "dashboard*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

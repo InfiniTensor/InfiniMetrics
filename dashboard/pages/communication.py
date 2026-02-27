@@ -19,15 +19,26 @@ from utils.visualizations import (
 
 init_page("推理测试分析 | InfiniMetrics", "🔗")
 
+# Sync MongoDB setting from main page
+if "use_mongodb" not in st.session_state:
+    st.session_state.use_mongodb = False
+
 
 def main():
     """Main function for communication tests page."""
     render_header()
     st.markdown("## 🔗 通信性能测试分析")
 
+    # Show current data source
+    dl = st.session_state.data_loader
+    if dl.source_type == "mongodb":
+        st.caption("🟢 数据源: MongoDB")
+    else:
+        st.caption("📁 数据源: 文件系统")
+
     try:
         # Load communication test results
-        comm_runs = st.session_state.data_loader.list_test_runs("comm")
+        comm_runs = dl.list_test_runs("comm")
 
         if not comm_runs:
             st.info("未找到通信测试结果")
@@ -117,7 +128,9 @@ def main():
         for name in selected_indices:
             idx = run_options[name]
             run_info = filtered_runs[idx]
-            result = st.session_state.data_loader.load_test_result(run_info["path"])
+            # Use run_id for MongoDB, path for file system
+            identifier = run_info.get("run_id") if dl.source_type == "mongodb" else run_info.get("path")
+            result = dl.load_test_result(identifier)
             run_info["data"] = result
             selected_runs.append(run_info)
 
