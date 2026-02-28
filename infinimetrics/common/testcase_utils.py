@@ -117,8 +117,13 @@ def generate_run_id_from_config(config_dict: Dict[str, Any]) -> str:
             f"Found: '{inner_run_id}' inside 'config'."
         )
 
-    # Generate run_id using the existing function
-    return generate_run_id(outer_testcase, outer_run_id)
+    # If user provided a run_id, use it directly (no enhancement)
+    if outer_run_id:
+        logger.info(f"Using user-provided run_id: {outer_run_id}")
+        return outer_run_id
+
+    # Otherwise auto-generate
+    return generate_auto_run_id(outer_testcase)
 
 
 def enhance_user_run_id(user_run_id: str) -> str:
@@ -165,16 +170,33 @@ def generate_auto_run_id(testcase: str) -> str:
 
 
 def validate_testcase_format(testcase: str) -> bool:
-    """Validate testcase format"""
-    # Basic validation: should contain at least 2 parts separated by dots
+    """Validate testcase format based on test type"""
     parts = testcase.split(".")
     if len(parts) < 2:
         return False
 
-    # Should contain valid mode
-    testcase_lower = testcase.lower()
-    if not ("direct" in testcase_lower or "service" in testcase_lower):
-        return False
+    # Get test type from first part
+    test_type = parts[0].lower()
+
+    # For inference tests, require direct/service
+    if test_type == "infer":
+        testcase_lower = testcase.lower()
+        if not ("direct" in testcase_lower or "service" in testcase_lower):
+            return False
+
+    # For training tests, just need framework in second part
+    elif test_type == "train":
+        if len(parts) < 2:
+            return False
+        # Optionally validate framework
+        valid_frameworks = ["megatron", "infinitrain"]
+        if parts[1].lower() not in valid_frameworks:
+            logger.warning(f"Unknown training framework: {parts[1]}")
+        return True
+
+    # For other test types (hardware, operator, comm), no special validation
+    else:
+        return True
 
     return True
 
@@ -183,12 +205,22 @@ def extract_testcase_components(testcase: str) -> dict:
     """Extract components from testcase string"""
     parts = testcase.split(".")
 
+    # Get test type
+    test_type = parts[0].lower() if len(parts) > 0 else ""
+
+    # Determine mode based on test type
+    if test_type == "infer":
+        mode = "service" if "service" in testcase.lower() else "direct"
+    else:
+        mode = "none"  # For non-inference tests
+
     result = {
         "full": testcase,
         "parts": parts,
-        "domain": parts[0] if len(parts) > 0 else "",
+        "domain": test_type,
+        "test_type": test_type,
         "framework": parts[1] if len(parts) > 1 else "",
-        "mode": "service" if "service" in testcase.lower() else "direct",
+        "mode": mode,
     }
 
     return result
