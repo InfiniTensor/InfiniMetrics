@@ -9,7 +9,7 @@ This module provides:
 - File system watcher for auto-import
 
 Usage:
-    from infinimetrics.db import MongoDBClient, TestRunRepository, DataImporter, FileWatcher
+    from db import MongoDBClient, TestRunRepository, DataImporter, FileWatcher
 
     # Connect to MongoDB
     client = MongoDBClient()

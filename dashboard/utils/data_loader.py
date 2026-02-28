@@ -234,7 +234,7 @@ class MongoDataSource(DataSource):
             return self._connected
 
         try:
-            from infinimetrics.db import MongoDBClient, TestRunRepository
+            from db import MongoDBClient, TestRunRepository
 
             if self._config:
                 self._client = MongoDBClient(self._config)
@@ -242,7 +242,7 @@ class MongoDataSource(DataSource):
                 self._client = MongoDBClient()
 
             if self._client.health_check():
-                from infinimetrics.db.config import DatabaseConfig
+                from db.config import DatabaseConfig
 
                 config = self._config or DatabaseConfig.from_env()
                 self._repository = TestRunRepository(

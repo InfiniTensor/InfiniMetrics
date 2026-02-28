@@ -28,22 +28,22 @@ def create_parser() -> argparse.ArgumentParser:
         epilog="""
 Examples:
   # Import from both output and summary directories (recommended)
-  python -m infinimetrics.db.cli import --output-dir ./output --summary-dir ./summary_output
+  python -m db.cli import --output-dir ./output --summary-dir ./summary_output
 
   # Import from a single directory
-  python -m infinimetrics.db.cli import ./output
+  python -m db.cli import ./output
 
   # Start file watcher daemon
-  python -m infinimetrics.db.cli watch start
+  python -m db.cli watch start
 
   # One-time scan
-  python -m infinimetrics.db.cli watch scan
+  python -m db.cli watch scan
 
   # List all test runs
-  python -m infinimetrics.db.cli list
+  python -m db.cli list
 
   # Show detailed info
-  python -m infinimetrics.db.cli info <run_id>
+  python -m db.cli info <run_id>
         """,
     )
 

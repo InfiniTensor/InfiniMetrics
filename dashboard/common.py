@@ -21,8 +21,15 @@ def init_page(page_title: str, page_icon: str):
     # Page configuration
     st.set_page_config(page_title=page_title, page_icon=page_icon, layout="wide")
 
-    # Initialize DataLoader
+    # Initialize use_mongodb setting if not exists
+    if "use_mongodb" not in st.session_state:
+        st.session_state.use_mongodb = False
+
+    # Initialize DataLoader (respect MongoDB setting)
     if "data_loader" not in st.session_state:
         from utils.data_loader import InfiniMetricsDataLoader
 
-        st.session_state.data_loader = InfiniMetricsDataLoader()
+        st.session_state.data_loader = InfiniMetricsDataLoader(
+            use_mongodb=st.session_state.use_mongodb,
+            fallback_to_files=True,
+        )

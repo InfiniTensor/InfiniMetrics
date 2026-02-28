@@ -17,7 +17,7 @@ from utils.visualizations import (
     create_summary_table_infer,
 )
 
-init_page("推理测试分析 | InfiniMetrics", "🔗")
+init_page("通信测试分析 | InfiniMetrics", "🔗")
 
 # Sync MongoDB setting from main page
 if "use_mongodb" not in st.session_state:
