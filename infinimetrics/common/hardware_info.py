@@ -118,8 +118,8 @@ class HardwareCollector:
                     if "model name" in line:
                         hw["cpu_model"] = line.split(":", 1)[1].strip()
                         break
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Failed to collect CPU info: {e}")
 
     def _collect_memory_info(self, hw: Dict[str, Any]) -> None:
         """Collect total memory information."""
@@ -130,8 +130,8 @@ class HardwareCollector:
                         mem_kb = int(line.split()[1])
                         hw["memory_gb"] = mem_kb // (1024 * 1024)
                         break
-        except Exception:
-            pass
+        except Exception as e:
+            logger.warning(f"Failed to collect memory info: {e}")
 
     def _probe(self, probe_type: str, hw: Dict[str, Any]) -> ProbeResult:
         """Generic probe dispatcher."""
@@ -224,8 +224,8 @@ class HardwareCollector:
                         match = re.search(r"release\s+(\d+\.\d+)", line)
                         if match:
                             return match.group(1)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.debug(f"Failed to collect CUDA version: {e}")
         return None
 
 
