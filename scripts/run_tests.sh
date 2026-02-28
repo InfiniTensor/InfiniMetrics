@@ -20,8 +20,11 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/common/install_deps.sh"
-source "${SCRIPT_DIR}/common/prepare_env.sh"
+COMMON_DIR="${SCRIPT_DIR}/common"
+
+# Source common scripts
+source "${COMMON_DIR}/install_deps.sh"
+source "${COMMON_DIR}/prepare_env.sh"
 
 # Default values
 CHECK_DEPS="false"
@@ -120,13 +123,11 @@ check_all_deps() {
                 ;;
             comm)              
                 echo "Checking communication dependencies:"
-                check_nccl
                 check_nccl_tests
                 ;;
             all)
                 echo "Checking all dependencies:"
                 check_cuda
-                check_nccl
                 check_infinicore
                 check_vllm
                 check_infinilm
@@ -163,7 +164,6 @@ main() {
 
     # Display environment
     echo "Environment: INFINI_ROOT=$INFINI_ROOT"
-    echo "NCCL_ROOT=$NCCL_ROOT"
     echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-not set}"
     echo ""
 

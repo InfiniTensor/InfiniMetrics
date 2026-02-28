@@ -26,11 +26,11 @@ NC='\033[0m'
 # ========================================
 # Environment Variables (always exported)
 # ========================================
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 export INFINI_ROOT="$HOME/.infini"
 export LD_LIBRARY_PATH="$INFINI_ROOT/lib:$LD_LIBRARY_PATH"
-export NCCL_ROOT="$INFINI_ROOT/nccl"
-export PATH="$NCCL_ROOT/bin:$PATH"
-export LD_LIBRARY_PATH="$NCCL_ROOT/lib:$LD_LIBRARY_PATH"
 
 # Safe exit function that uses return when sourced, exit when executed directly
 safe_exit() {
@@ -69,18 +69,6 @@ check_cuda() {
         return 0
     else
         echo -e "${RED}[FAIL]${NC} not found"
-        return 1
-    fi
-}
-
-# Check NCCL
-check_nccl() {
-    echo -n "  NCCL... "
-    if [ -d "$NCCL_ROOT" ] || ldconfig -p 2>/dev/null | grep -q libnccl; then
-        echo -e "${GREEN}[OK]${NC}"
-        return 0
-    else
-        echo -e "${YELLOW}[WARNING]${NC} not found"
         return 1
     fi
 }
@@ -129,26 +117,29 @@ check_infinilm() {
     fi
 }
 
-# Check Megatron-LM
+# TODO: Megatron-LM check - currently assumes submodule usage
 check_megatron() {
     echo -n "  Megatron-LM... "
     if check_python_package megatron; then
-        echo -e "${GREEN}[OK]${NC}"
+        echo -e "${GREEN}[OK]${NC} (installed as package)"
+        return 0
+    elif [ -d "$PROJECT_ROOT/submodules/Megatron-LM" ]; then
+        echo -e "${GREEN}[OK]${NC} (found as submodule)"
         return 0
     else
-        echo -e "${YELLOW}[WARNING]${NC} not installed"
+        echo -e "${YELLOW}[WARNING]${NC} not found (expected as submodule or Python package)"
         return 1
     fi
 }
 
-# Check InfiniTrain
+# TODO: InfiniTrain check - currently not available as Python package
 check_infinitrain() {
     echo -n "  InfiniTrain... "
-    if check_python_package infinitrain; then
-        echo -e "${GREEN}[OK]${NC}"
+    if [ -d "$PROJECT_ROOT/submodules/InfiniTrain" ]; then
+        echo -e "${GREEN}[OK]${NC} (found as submodule)"
         return 0
     else
-        echo -e "${YELLOW}[WARNING]${NC} not installed"
+        echo -e "${YELLOW}[WARNING]${NC} not found (expected as submodule)"
         return 1
     fi
 }
@@ -397,10 +388,16 @@ install_inference() {
     echo ""
 
     local exit_code=0
-    local SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    local PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-    # 1. Install vLLM
+    # 1. Check InfiniCore dependency (required for InfiniLM)
+    echo -e "${BLUE}Checking InfiniCore (required for InfiniLM)...${NC}"
+    if ! check_infinicore; then
+        echo -e "${YELLOW}[WARNING] InfiniCore not found, InfiniLM may not work${NC}"
+        echo "Consider running: $0 operator"
+    fi
+    echo ""
+
+    # 2. Install vLLM
     echo -e "${BLUE}Installing vLLM...${NC}"
     if check_python_package vllm; then
         echo -e "${GREEN}[OK] vLLM already installed${NC}"
@@ -414,17 +411,17 @@ install_inference() {
     fi
     echo ""
 
-    # 2. Install InfiniLM
+    # 3. Install InfiniLM
     echo -e "${BLUE}Installing InfiniLM...${NC}"
     
     # Check if already installed
     if python -c "import infinilm" 2>/dev/null; then
         echo -e "${GREEN}[OK] InfiniLM already installed${NC}"
-        return 0
+        return $exit_code
     fi
 
     # Determine InfiniLM path
-    local INFINILM_PATH=""
+    local INFINILM_PATH="${INFINILM_PATH:-}"
     
     # Priority 1: Environment variable
     if [ -n "$INFINILM_PATH" ] && [ -d "$INFINILM_PATH" ]; then
@@ -441,7 +438,7 @@ install_inference() {
         echo -e "${YELLOW}[WARNING] InfiniLM directory not found${NC}"
         echo ""
         echo "Please set INFINILM_PATH environment variable:"
-        echo "  export INFINILM_PATH=/home/sunjinge/InfiniLM"
+        echo "export INFINILM_PATH=/home/sunjinge/InfiniLM"
         echo ""
         echo "Then run this script again"
         return $exit_code
@@ -459,12 +456,11 @@ install_inference() {
         export PYTHONPATH="$PYTHON_PACKAGE_PATH:$PYTHONPATH"
         
         # Add to .bashrc for future sessions
-        if ! grep -q "INFINILM_PATH" ~/.bashrc; then
-            echo "# InfiniLM configuration" >> ~/.bashrc
-            echo "export INFINILM_PATH=\"$INFINILM_PATH\"" >> ~/.bashrc
-            echo "export PYTHONPATH=\"$PYTHON_PACKAGE_PATH:\$PYTHONPATH\"" >> ~/.bashrc
-            echo -e "${GREEN}[OK] Added InfiniLM paths to ~/.bashrc${NC}"
-        fi
+        echo ""
+        echo -e "${YELLOW}To make InfiniLM permanently available, add these lines to your ~/.bashrc:${NC}"
+        echo "  export INFINILM_PATH=\"$INFINILM_PATH\""
+        echo "  export PYTHONPATH=\"$PYTHON_PACKAGE_PATH:\$PYTHONPATH\""
+        echo ""
         
         # Check if we can import now
         if python -c "import infinilm" 2>/dev/null; then
@@ -495,36 +491,38 @@ install_training() {
 
     local exit_code=0
 
-    # 1. Install Megatron-LM
-    echo -e "${BLUE}Installing Megatron-LM...${NC}"
-    local MEGATRON_PATH="${MEGATRON_PATH:-$PROJECT_ROOT/submodules/Megatron-LM}"
-    if [ -d "$MEGATRON_PATH" ]; then
-        cd "$MEGATRON_PATH"
-        if pip install -e .; then
-            echo -e "${GREEN}[OK] Megatron-LM installed${NC}"
-        else
-            echo -e "${RED}[ERROR] Failed to install Megatron-LM${NC}"
-            exit_code=1
-        fi
-    else
-        echo -e "${YELLOW}[WARNING] Megatron-LM not found at $MEGATRON_PATH${NC}"
+    # TODO: Megatron-LM installation - currently assumes submodule usage
+    echo -e "${BLUE}Setting up Megatron-LM...${NC}"
+
+    local MEGATRON_PATH=""
+
+    if [ -n "$MEGATRON_PATH" ] && [ -d "$MEGATRON_PATH" ]; then
+        MEGATRON_PATH="$MEGATRON_PATH"
+
+    elif [ -d "$HOME/Megatron-LM" ]; then
+        MEGATRON_PATH="$HOME/Megatron-LM"
+
+    elif [ -d "$PROJECT_ROOT/submodules/Megatron-LM" ]; then
+        MEGATRON_PATH="$PROJECT_ROOT/submodules/Megatron-LM"
+
     fi
+
+    if [ -z "$MEGATRON_PATH" ]; then
+        echo -e "${YELLOW}[WARNING] Megatron-LM not found${NC}"
+        echo ""
+        echo "Supported locations:"
+        echo "  \$MEGATRON_PATH"
+        echo "  \$HOME/Megatron-LM"
+        echo "  submodules/Megatron-LM"
+    else
+        echo -e "${GREEN}[OK] Megatron-LM found at $MEGATRON_PATH${NC}"
+    fi
+
     echo ""
 
-    # 2. Install InfiniTrain
-    echo -e "${BLUE}Installing InfiniTrain...${NC}"
-    local INFINITRAIN_PATH="${INFINITRAIN_PATH:-$PROJECT_ROOT/submodules/InfiniTrain}"
-    if [ -d "$INFINITRAIN_PATH" ]; then
-        cd "$INFINITRAIN_PATH"
-        if pip install -e .; then
-            echo -e "${GREEN}[OK] InfiniTrain installed${NC}"
-        else
-            echo -e "${RED}[ERROR] Failed to install InfiniTrain${NC}"
-            exit_code=1
-        fi
-    else
-        echo -e "${YELLOW}[WARNING] InfiniTrain not found at $INFINITRAIN_PATH${NC}"
-    fi
+    # TODO: InfiniTrain setup - to be implemented
+    echo -e "${BLUE}Setting up InfiniTrain...${NC}"
+    echo -e "${YELLOW}[INFO] InfiniTrain setup not yet implemented${NC}"
     echo ""
 
     return $exit_code
