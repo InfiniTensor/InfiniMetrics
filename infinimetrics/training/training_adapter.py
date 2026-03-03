@@ -83,14 +83,7 @@ class TrainingAdapter(BaseAdapter):
             )
 
         elif framework == "infinitrain":
-            from infinimetrics.training.frameworks.infinitrain_impl import (
-                InfinitrainImpl,
-            )
-
-            self.runner = InfinitrainImpl(config, resolved_device_count, self.run_id)
-            logger.info(
-                f"Created InfiniTrain implementation (placeholder) with {resolved_device_count} devices"
-            )
+            raise NotImplementedError("InfiniTrain implementation is not ready yet")
 
         else:
             raise ValueError(f"Unsupported training framework: {framework}")
@@ -144,6 +137,23 @@ class TrainingAdapter(BaseAdapter):
             # Build resolved info
             resolved = self._build_resolved_info()
 
+            # Get framework from testcase
+            testcase_info = extract_testcase_components(testcase)
+            framework = testcase_info.get("framework", "megatron")
+
+            # create an ordered configuration
+            cleaned_config = self._clean_config(self.config)
+            ordered_config = {}
+
+            if hasattr(self.runner, "get_command"):
+                command = self.runner.get_command()
+                if command:
+                    ordered_config["command"] = command
+
+            for k, v in cleaned_config.items():
+                if k != "command":
+                    ordered_config[k] = v
+
             # Return standardized response
             response = {
                 InfiniMetricsJson.RUN_ID: run_id,
@@ -151,7 +161,7 @@ class TrainingAdapter(BaseAdapter):
                 InfiniMetricsJson.TIME: datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 InfiniMetricsJson.RESULT_CODE: 0,
                 "success": 0,  # 0 = success (backward compatibility)
-                InfiniMetricsJson.CONFIG: self._clean_config(self.config),
+                InfiniMetricsJson.CONFIG: cleaned_config,
                 "resolved": resolved,
                 InfiniMetricsJson.METRICS: metrics,
             }
@@ -160,10 +170,13 @@ class TrainingAdapter(BaseAdapter):
             return response
 
         except Exception as e:
-            logger.error(f"Training failed: {e}", exc_info=True)
-            return self._create_error_response(
-                str(e), test_input=test_dict, result_code=1
+            logger.error(
+                f"TrainingAdapter: Test failed for {testcase}\n"
+                f"  Run ID: {run_id}\n"
+                f"  Error: {str(e)}",
+                exc_info=True,
             )
+            raise
 
         finally:
             # Always stop monitoring, even on failure
@@ -228,8 +241,21 @@ class TrainingAdapter(BaseAdapter):
 
     def _build_resolved_info(self) -> Dict[str, Any]:
         """Build resolved hardware information using monitor's capabilities."""
+        testcase_info = extract_testcase_components(self._testcase)
+        framework_name = testcase_info.get(
+            "framework", self.config.get("framework", "unknown")
+        )
+
         if not self.accelerator_monitor:
-            return {"nodes": 1, "gpus_per_node": 0, "device_used": 0}
+            return {
+                "nodes": 1,
+                "gpus_per_node": 0,
+                "device_used": 0,
+                "framework": {
+                    "name": framework_name,
+                    "version": self._get_framework_version(framework_name),
+                },
+            }
 
         # Get device count
         device_count = self.accelerator_monitor.get_device_count()
@@ -242,7 +268,21 @@ class TrainingAdapter(BaseAdapter):
             "gpus_per_node": device_count,
             "device_used": device_count,
             "accelerator_type": self.accelerator_monitor.accelerator_type.value,
+            "framework": {
+                "name": framework_name,
+                "version": self._get_framework_version(framework_name),
+            },
         }
+
+    def _get_framework_version(self, framework: str) -> str:
+        """Get framework version if possible."""
+        if framework == "megatron":
+            megatron_path = self.config.get("megatron_path", "")
+            if megatron_path:
+                pass
+        elif framework == "infinitrain":
+            pass
+        return "unknown"
 
     def _clean_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Remove internal fields from config."""

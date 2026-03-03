@@ -6,7 +6,6 @@ import logging
 import math
 from pathlib import Path
 from typing import Dict, Any, Optional
-from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -14,9 +13,6 @@ logger = logging.getLogger(__name__)
 class MegatronImpl:
     """
     Megatron-LM training executor.
-
-    Pure execution - no monitoring responsibilities.
-    Receives resolved device count from adapter.
     """
 
     MODEL_SCRIPT_MAP = {
@@ -33,17 +29,20 @@ class MegatronImpl:
         "vlm": "pretrain_vlm.py",
     }
 
+    DEFAULT_MODEL_CONFIG = {
+        "num_layers": 12,
+        "hidden_size": 768,
+        "num_attention_heads": 12,
+        "seq_len": 1024,
+        "vocab_size": 32000,
+    }
+
     def __init__(
         self,
         config: Dict[str, Any],
         resolved_device_count: int,
         run_id: Optional[str] = None,
     ):
-        """
-        Args:
-            config: Full configuration dict
-            resolved_device_count: Number of available devices (from monitor)
-        """
         self.config = config
         self.resolved_device_count = resolved_device_count
         self.logger = logger
@@ -56,53 +55,27 @@ class MegatronImpl:
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         # Training args
-        train_args = config.get("train_args", {})
-        self.model_name = config.get("model", "gpt")
+        self.train_args = config.get("train_args", {})
+        self.base_model = config.get("model", "gpt")
         self.megatron_path = config.get("megatron_path", "")
 
+        # Training mode
+        self.training_mode = self._detect_training_mode(config)
+        self.logger.info(
+            f"Training mode: {self.training_mode}, base model: {self.base_model}"
+        )
+
         # Parallel config
-        parallel = train_args.get("parallel", {})
+        parallel = self.train_args.get("parallel", {})
         self.tp = parallel.get("tp", 1)
         self.pp = parallel.get("pp", 1)
         self.dp = parallel.get("dp", 1)
         self.sp = parallel.get("sp", 0)
 
-        # Model config
-        self.num_layers = train_args.get("num_layers", 12)
-        self.hidden_size = train_args.get("hidden_size", 768)
-        self.num_attention_heads = train_args.get("num_attention_heads", 12)
-        self.seq_len = train_args.get("seq_len", 1024)
-        self.vocab_size = train_args.get("vocab_size", 32000)
-        self.max_position_embeddings = train_args.get(
-            "max_position_embeddings", self.seq_len
-        )
-
-        # Training hyperparams
-        self.mbs = train_args.get("mbs", 1)
-        self.gbs = train_args.get("gbs", self.mbs)
-        self.train_iters = train_args.get("train_iters", 10)
-        self.lr = train_args.get("lr", 1e-4)
-        self.precision = train_args.get("precision", "fp16")
-        self.optimizer = train_args.get("optimizer", "adam")
-        self.weight_decay = train_args.get("weight_decay", 0.0)
-        self.clip_grad = train_args.get("clip_grad", 1.0)
-        self.beta1 = train_args.get("beta1", 0.9)
-        self.beta2 = train_args.get("beta2", 0.999)
-        self.lr_scheduler = train_args.get("lr_scheduler", "cosine")
-        self.min_lr = train_args.get("min_lr", 0.0)
-        self.warmup_iterations = train_args.get("warmup_iterations", 0)
-
-        # Dataset
-        self.train_dataset = config.get("train_dataset", "mock")
-        self.validation_dataset = config.get("validation_dataset")
-        self.test_dataset = config.get("test_dataset")
-
-        # Evaluation
-        self.eval_interval = train_args.get("eval_interval", 100)
-        self.eval_iters = train_args.get("eval_iters", 10)
-
-        # Checkpoint
-        self.save_interval = train_args.get("save_interval", 1000)
+        # Basic training parameters
+        self.mbs = self.train_args.get("mbs", 1)
+        self.seq_len = self.train_args.get("seq_len", 1024)
+        self.warmup_iterations = self.train_args.get("warmup_iterations", 0)
 
         # Calculate nproc_per_node
         self.nproc_per_node = self._calculate_nproc_per_node()
@@ -123,13 +96,26 @@ class MegatronImpl:
         self.ppl_csv = self.output_dir / f"{self.run_id}_train_ppl.csv"
         self.throughput_csv = self.output_dir / f"{self.run_id}_train_throughput.csv"
 
+        # Save the generated command
+        self._last_command = None
+
+    def _detect_training_mode(self, config: Dict[str, Any]) -> str:
+        """Detect training mode from testcase or config."""
+        testcase = self.config.get("_testcase", "").lower()
+        if "lora" in testcase or self.config.get("use_lora"):
+            return "lora"
+        if "sft" in testcase or self.config.get("use_sft"):
+            return "sft"
+        if "pretrain" in testcase:
+            return "pretrain"
+
+        return "pretrain"
+
     def run(self) -> Dict[str, Any]:
         """Execute Megatron training."""
         cmd = self._build_command()
-        self.logger.info(f"Launching: {' '.join(cmd)}")
-
-        # Setup environment (CUDA_VISIBLE_DEVICES)
-        env = self._get_env()
+        self._last_command = " ".join(cmd)
+        self.logger.info(f"Launching: {self._last_command}")
 
         # Metrics collection
         metrics = {
@@ -145,7 +131,7 @@ class MegatronImpl:
             stderr=subprocess.STDOUT,
             text=True,
             bufsize=1,
-            env=env,
+            env=self._get_env(),
         )
 
         # Process output
@@ -158,7 +144,12 @@ class MegatronImpl:
 
         proc.wait()
 
-        # Save results
+        if proc.returncode != 0:
+            self._create_empty_csv_files()
+            raise RuntimeError(
+                f"Training failed (code {proc.returncode}). Log: {self.log_file}"
+            )
+
         self._save_results(metrics)
 
         return {
@@ -169,84 +160,252 @@ class MegatronImpl:
             "metrics": metrics,
         }
 
-    def _build_command(self) -> list:
-        """Build torchrun command."""
-        train_script = self.MODEL_SCRIPT_MAP.get(self.model_name, "pretrain_gpt.py")
+    def _create_empty_csv_files(self):
+        """Creates an empty CSV file"""
+        with open(self.loss_csv, "w") as f:
+            f.write("iteration,loss\n")
+        with open(self.ppl_csv, "w") as f:
+            f.write("iteration,ppl\n")
+        with open(self.throughput_csv, "w") as f:
+            f.write("iteration,throughput\n")
+        self.logger.warning(f"Created empty CSV files due to training failure")
 
+    def get_command(self) -> str:
+        """Return the executed command."""
+        return self._last_command or ""
+
+    def _build_command(self) -> list:
+        """Build torchrun command with all parameters."""
+        train_script = self.MODEL_SCRIPT_MAP.get(self.base_model, "pretrain_gpt.py")
         if self.megatron_path:
             train_script = f"{self.megatron_path}/{train_script}"
 
-        torchrun_cmd = [
+        cmd = [
             "torchrun",
             f"--nproc_per_node={self.nproc_per_node}",
             f"--master_port={self.master_port}",
+            train_script,
         ]
 
-        megatron_args = [train_script]
+        # Add all argument groups
+        cmd += self._add_parallel_args()
+        cmd += self._add_model_args()
+        cmd += self._add_training_args()
+        cmd += self._add_precision_args()
+        cmd += self._add_optimizer_args()
+        cmd += self._add_lr_scheduler_args()
+        cmd += self._add_dataset_args()
+        cmd += self._add_training_mode_args()
+        cmd += self._add_common_args()
+        cmd += self._add_eval_checkpoint_args()
 
-        # Parallel config
-        megatron_args += [
+        extra_args = self.train_args.get("extra_args", [])
+        if extra_args:
+            cmd.extend(extra_args)
+
+        return cmd
+
+    def _add_parallel_args(self) -> list:
+        """Add parallel configuration arguments."""
+        args = [
             f"--tensor-model-parallel-size={self.tp}",
             f"--pipeline-model-parallel-size={self.pp}",
         ]
+        if self.sp == 1:
+            args.append("--sequence-parallel")
+        return args
 
-        # Model config
-        megatron_args += [
-            f"--num-layers={self.num_layers}",
-            f"--hidden-size={self.hidden_size}",
-            f"--num-attention-heads={self.num_attention_heads}",
-            f"--seq-length={self.seq_len}",
-            f"--max-position-embeddings={self.max_position_embeddings}",
-            f"--vocab-size={self.vocab_size}",
-        ]
+    def _add_model_args(self) -> list:
+        """Add model configuration arguments from train_args."""
+        args = [f"--seq-length={self.seq_len}"]
 
-        # Training params
-        megatron_args += [
-            f"--micro-batch-size={self.mbs}",
-            f"--global-batch-size={self.gbs}",
-            f"--train-iters={self.train_iters}",
-            f"--lr={self.lr}",
-        ]
+        for param, default in self.DEFAULT_MODEL_CONFIG.items():
+            if param == "seq_len":
+                continue
+            value = self.train_args.get(param, default)
+            args.append(f"--{param.replace('_', '-')}={value}")
 
-        # Precision
-        if self.precision == "bf16":
-            megatron_args.append("--bf16")
-        elif self.precision == "fp16":
-            megatron_args.append("--fp16")
+        max_pos = self.train_args.get("max_position_embeddings", self.seq_len)
+        args.append(f"--max-position-embeddings={max_pos}")
 
-        # Optimizer
-        megatron_args.append(f"--optimizer={self.optimizer}")
-        if self.weight_decay > 0:
-            megatron_args.append(f"--weight-decay={self.weight_decay}")
-        if self.clip_grad > 0:
-            megatron_args.append(f"--clip-grad={self.clip_grad}")
-        if self.optimizer.lower() in ["adam", "adamw"]:
-            megatron_args.append(f"--adam-beta1={self.beta1}")
-            megatron_args.append(f"--adam-beta2={self.beta2}")
+        return args
 
-        # LR scheduler
-        megatron_args.append(f"--lr-decay-style={self.lr_scheduler}")
-        if self.min_lr > 0:
-            megatron_args.append(f"--min-lr={self.min_lr}")
+    def _add_precision_args(self) -> list:
+        """Add precision arguments."""
+        precision = self.train_args.get("precision", "fp16")
+        if precision == "bf16":
+            return ["--bf16"]
+        elif precision == "fp16":
+            return ["--fp16"]
+        return []
 
-        # Warmup (simplified - in real code would handle ratio/iters/samples)
+    def _add_optimizer_args(self) -> list:
+        """Add optimizer arguments."""
+        args = [f"--optimizer={self.train_args.get('optimizer', 'adam')}"]
+
+        weight_decay = self.train_args.get("weight_decay", 0.0)
+        if weight_decay > 0:
+            args.append(f"--weight-decay={weight_decay}")
+
+        clip_grad = self.train_args.get("clip_grad", 1.0)
+        if clip_grad > 0:
+            args.append(f"--clip-grad={clip_grad}")
+
+        optimizer = self.train_args.get("optimizer", "adam").lower()
+        if optimizer in ["adam", "adamw"]:
+            args.append(f"--adam-beta1={self.train_args.get('beta1', 0.9)}")
+            args.append(f"--adam-beta2={self.train_args.get('beta2', 0.999)}")
+
+        return args
+
+    def _add_lr_scheduler_args(self) -> list:
+        """Add learning rate scheduler arguments."""
+        args = [f"--lr-decay-style={self.train_args.get('lr_scheduler', 'cosine')}"]
+
+        min_lr = self.train_args.get("min_lr", 0.0)
+        if min_lr > 0:
+            args.append(f"--min-lr={min_lr}")
+
         if self.warmup_iterations > 0:
-            megatron_args.append(f"--lr-warmup-iters={self.warmup_iterations}")
+            args.append(f"--lr-warmup-iters={self.warmup_iterations}")
 
-        # Dataset
-        if self.train_dataset == "mock":
-            megatron_args += ["--mock-data", "--tokenizer-type", "NullTokenizer"]
-        else:
-            megatron_args.append(f"--data-path={self.train_dataset}")
-            if self.validation_dataset:
-                megatron_args.append(
-                    f"--validation-data-path={self.validation_dataset}"
+        return args
+
+    def _add_dataset_args(self) -> list:
+        """Add dataset arguments."""
+        train_dataset = self.config.get("train_dataset", "mock")
+        if train_dataset == "mock":
+            return ["--mock-data", "--tokenizer-type", "NullTokenizer"]
+
+        args = [f"--data-path={train_dataset}"]
+        if val := self.config.get("validation_dataset"):
+            args.append(f"--validation-data-path={val}")
+        if test := self.config.get("test_dataset"):
+            args.append(f"--test-data-path={test}")
+
+        return args
+
+    def _add_training_args(self) -> list:
+        """Add basic training hyperparameters from train_args."""
+        args = []
+
+        # Micro-batch size
+        mbs = self.train_args.get("mbs", 1)
+        args.append(f"--micro-batch-size={mbs}")
+
+        # Global batch size
+        gbs = self.train_args.get("gbs")
+        if gbs:
+            args.append(f"--global-batch-size={gbs}")
+
+        # Number of training iterations
+        train_iters = self.train_args.get("train_iters")
+        if train_iters:
+            args.append(f"--train-iters={train_iters}")
+
+        # Learning rate
+        lr = self.train_args.get("lr")
+        if lr:
+            args.append(f"--lr={lr}")
+
+        return args
+
+    def _add_training_mode_args(self) -> list:
+        """
+        Add training mode specific arguments (LoRA/SFT).
+        Dynamically detects if the current Megatron version supports these features.
+        """
+        args = []
+
+        if self.training_mode == "pretrain":
+            return args
+
+        if self.training_mode == "sft":
+            self.logger.info("SFT mode: adding --finetune flag")
+            args.append("--finetune")
+
+            pretrained_path = self.train_args.get("pretrained_path")
+            if pretrained_path:
+                args.append(f"--load={pretrained_path}")
+                self.logger.info(f"Loading pretrained weights from {pretrained_path}")
+
+            sft_lr = self.train_args.get("sft_lr")
+            if sft_lr:
+                args.append(f"--lr={sft_lr}")
+
+            return args
+
+        if self.training_mode == "lora":
+            if self._check_lora_support():
+                self.logger.info("LoRA mode: adding LoRA parameters")
+
+                # LoRA specific parameters
+                lora_rank = self.train_args.get("lora_rank", 8)
+                lora_alpha = self.train_args.get("lora_alpha", 16)
+                lora_dropout = self.train_args.get("lora_dropout", 0.1)
+                lora_target_modules = self.train_args.get(
+                    "lora_target_modules", ["q_proj", "v_proj"]
                 )
-            if self.test_dataset:
-                megatron_args.append(f"--test-data-path={self.test_dataset}")
 
-        # Common args
-        megatron_args += [
+                args.extend(
+                    [
+                        "--lora",
+                        f"--lora-rank={lora_rank}",
+                        f"--lora-alpha={lora_alpha}",
+                        f"--lora-dropout={lora_dropout}",
+                        f"--lora-target-modules={','.join(lora_target_modules)}",
+                    ]
+                )
+
+                pretrained_path = self.train_args.get("pretrained_path")
+                if pretrained_path:
+                    args.append(f"--load={pretrained_path}")
+            else:
+                fallback = self.config.get("lora_fallback_mode", "error")
+                if fallback == "finetune":
+                    self.logger.warning(
+                        f"LoRA not supported, falling back to --finetune as requested. "
+                        f"Set 'lora_fallback_mode': 'error' to fail instead."
+                    )
+                    args.append("--finetune")
+                    pretrained_path = self.train_args.get("pretrained_path")
+                    if pretrained_path:
+                        args.append(f"--load={pretrained_path}")
+                else:
+                    raise RuntimeError(
+                        f"LoRA training mode requested but current Megatron-LM does not support LoRA. "
+                        f"Megatron path: {self.megatron_path}"
+                    )
+
+        return args
+
+    def _check_lora_support(self) -> bool:
+        """
+        Check if the current Megatron-LM installation supports LoRA.
+        This can be extended based on actual LoRA support detection logic.
+        """
+        if self.config.get("force_lora_support", False):
+            return True
+
+        try:
+            if self.megatron_path:
+                lora_files = [
+                    os.path.join(self.megatron_path, "megatron", "core", "lora"),
+                    os.path.join(self.megatron_path, "megatron", "lora"),
+                    os.path.join(self.megatron_path, "lora"),
+                ]
+                for path in lora_files:
+                    if os.path.exists(path):
+                        self.logger.info(f"LoRA support detected at {path}")
+                        return True
+        except Exception as e:
+            self.logger.debug(f"Error checking LoRA support: {e}")
+
+        return False
+
+    def _add_common_args(self) -> list:
+        """Add common Megatron arguments."""
+        return [
             "--transformer-impl",
             "local",
             "--no-gradient-accumulation-fusion",
@@ -256,37 +415,22 @@ class MegatronImpl:
             "--log-throughput",
         ]
 
-        # Evaluation
-        if self.eval_interval > 0:
-            megatron_args.append(f"--eval-interval={self.eval_interval}")
-            megatron_args.append(f"--eval-iters={self.eval_iters}")
-
-        # Checkpoint
-        if self.save_interval > 0:
-            megatron_args.append(f"--save-interval={self.save_interval}")
-
-        # Sequence parallel
-        if self.sp == 1:
-            megatron_args.append("--sequence-parallel")
-
-        # Extra args
-        extra_args = self.config.get("train_args", {}).get("extra_args", [])
-        if extra_args:
-            megatron_args.extend(extra_args)
-
-        return torchrun_cmd + megatron_args
+    def _add_eval_checkpoint_args(self) -> list:
+        """Add evaluation and checkpoint arguments."""
+        args = []
+        if eval_interval := self.train_args.get("eval_interval", 100):
+            args.append(f"--eval-interval={eval_interval}")
+            args.append(f"--eval-iters={self.train_args.get('eval_iters', 10)}")
+        if save_interval := self.train_args.get("save_interval", 1000):
+            args.append(f"--save-interval={save_interval}")
+        return args
 
     def _get_env(self) -> Dict[str, str]:
         """Get environment variables for subprocess."""
         env = os.environ.copy()
-
-        # Set CUDA_VISIBLE_DEVICES if specified
-        device_config = self.config.get("device", {})
-        device_ids = device_config.get("device_ids")
-        if device_ids:
+        if device_ids := self.config.get("device", {}).get("device_ids"):
             env["CUDA_VISIBLE_DEVICES"] = ",".join(map(str, device_ids))
-            self.logger.info(f"Set CUDA_VISIBLE_DEVICES={env['CUDA_VISIBLE_DEVICES']}")
-
+            self.logger.info(f"CUDA_VISIBLE_DEVICES={env['CUDA_VISIBLE_DEVICES']}")
         return env
 
     def _parse_output(self, line: str, metrics: Dict[str, Any]) -> None:
@@ -332,13 +476,13 @@ class MegatronImpl:
         # Save loss
         with open(self.loss_csv, "w") as f:
             f.write("iteration,loss\n")
-            for it, val in sorted(metrics["losses_by_iter"].items()):
+            for it, val in metrics["losses_by_iter"].items():
                 f.write(f"{it},{val}\n")
 
         # Save PPL
         with open(self.ppl_csv, "w") as f:
             f.write("iteration,ppl\n")
-            for it, loss in sorted(metrics["losses_by_iter"].items()):
+            for it, loss in metrics["losses_by_iter"].items():
                 try:
                     ppl = float(math.exp(loss))
                 except Exception:
@@ -348,7 +492,7 @@ class MegatronImpl:
         # Save throughput
         with open(self.throughput_csv, "w") as f:
             f.write("iteration,throughput\n")
-            for it, val in sorted(metrics["throughput_by_iter"].items()):
+            for it, val in metrics["throughput_by_iter"].items():
                 f.write(f"{it},{val}\n")
 
         self.logger.info(f"Results saved to {self.output_dir}")

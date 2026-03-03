@@ -407,6 +407,10 @@ class Executor:
 
         hw = self._collect_static_hw(accel_type=accel_type, device_ids=device_ids)
 
+        framework_info = resolved.get("framework", {})
+        if not framework_info:
+            framework_info = {"name": "unknown", "version": "unknown"}
+
         return {
             "cluster_scale": nodes,
             "topology": topo,
@@ -427,7 +431,7 @@ class Executor:
                             }
                         ],
                     },
-                    "framework": [{"name": "unknown", "version": "unknown"}],
+                    "framework": [framework_info],
                 }
             ],
         }
