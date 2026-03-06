@@ -19,22 +19,19 @@ from utils.visualizations import (
 
 init_page("通信测试分析 | InfiniMetrics", "🔗")
 
-# Sync MongoDB setting from main page
-if "use_mongodb" not in st.session_state:
-    st.session_state.use_mongodb = False
-
 
 def main():
     """Main function for communication tests page."""
     render_header()
     st.markdown("## 🔗 通信性能测试分析")
 
-    # Show current data source
     dl = st.session_state.data_loader
+
+    # Debug info - show based on source type
     if dl.source_type == "mongodb":
-        st.caption("🟢 数据源: MongoDB")
+        st.caption("数据源: MongoDB")
     else:
-        st.caption("📁 数据源: 文件系统")
+        st.caption(f"数据源: 文件系统 ({dl.results_dir})")
 
     try:
         # Load communication test results
@@ -128,8 +125,8 @@ def main():
         for name in selected_indices:
             idx = run_options[name]
             run_info = filtered_runs[idx]
-            # Use run_id for MongoDB, path for file system
-            identifier = run_info.get("run_id") if dl.source_type == "mongodb" else run_info.get("path")
+            # Use path for file source, run_id for MongoDB
+            identifier = run_info.get("path") or run_info.get("run_id")
             result = dl.load_test_result(identifier)
             run_info["data"] = result
             selected_runs.append(run_info)

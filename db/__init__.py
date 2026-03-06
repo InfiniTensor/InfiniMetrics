@@ -27,7 +27,7 @@ Usage:
 from .client import MongoDBClient, MongoDBConnectionError
 from .config import DatabaseConfig
 from .importer import DataImporter
-from .repository import TestRunRepository
+from .repository import TestRunRepository, DispatcherSummaryRepository
 from .watcher import FileWatcher, MultiDirWatcher
 
 __all__ = [
@@ -35,6 +35,7 @@ __all__ = [
     "MongoDBClient",
     "MongoDBConnectionError",
     "TestRunRepository",
+    "DispatcherSummaryRepository",
     "DataImporter",
     "FileWatcher",
     "MultiDirWatcher",

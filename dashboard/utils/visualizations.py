@@ -420,3 +420,59 @@ def create_summary_table_ops(test_result: dict) -> pd.DataFrame:
             rows.append({"指标": k, "数值": cfg.get(k)})
 
     return pd.DataFrame(rows)
+
+
+def create_summary_table_hw(test_result: dict) -> pd.DataFrame:
+    """Create summary table for hardware test results."""
+    rows = []
+    cfg = test_result.get("config", {})
+
+    rows.append({"指标": "testcase", "数值": test_result.get("testcase", "")})
+    rows.append({"指标": "测试类型", "数值": cfg.get("test_type", "Unknown")})
+
+    # Environment info
+    env = test_result.get("environment", {})
+    try:
+        acc = env["cluster"][0]["machine"]["accelerators"][0]
+        rows += [
+            {"指标": "加速卡", "数值": acc.get("model", "Unknown")},
+            {"指标": "卡数", "数值": acc.get("count", "Unknown")},
+            {"指标": "显存/卡", "数值": f"{acc.get('memory_gb_per_card', '?')} GB"},
+        ]
+    except Exception:
+        pass
+
+    # Config fields
+    for k in ["device_id", "iterations", "array_size"]:
+        if k in cfg:
+            rows.append({"指标": k, "数值": cfg.get(k)})
+
+    # Scalar metrics (STREAM benchmark results)
+    scalars = [m for m in test_result.get("metrics", []) if m.get("type") == "scalar"]
+    for m in scalars:
+        name = m.get("name", "")
+        # Simplify metric name for display
+        display_name = name.replace("hardware.stream_", "STREAM ").upper()
+        rows.append({
+            "指标": display_name,
+            "数值": f"{m.get('value', 0):.2f} {m.get('unit', '')}"
+        })
+
+    # Timeseries metrics summary (memory, cache)
+    timeseries = [m for m in test_result.get("metrics", []) if m.get("type") == "timeseries"]
+    for m in timeseries:
+        df = m.get("data")
+        if df is not None and "bandwidth_gbps" in df.columns:
+            max_bw = df["bandwidth_gbps"].max()
+            avg_bw = df["bandwidth_gbps"].mean()
+            name = m.get("name", "")
+            rows.append({
+                "指标": f"{name} (峰值)",
+                "数值": f"{max_bw:.2f} GB/s"
+            })
+            rows.append({
+                "指标": f"{name} (平均)",
+                "数值": f"{avg_bw:.2f} GB/s"
+            })
+
+    return pd.DataFrame(rows)

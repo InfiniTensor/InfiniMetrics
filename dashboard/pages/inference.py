@@ -6,17 +6,12 @@ import pandas as pd
 
 from common import init_page
 from components.header import render_header
-from utils.data_loader import InfiniMetricsDataLoader, get_friendly_size
 from utils.visualizations import (
     plot_timeseries_auto,
     create_summary_table_infer,
 )
 
 init_page("推理测试分析 | InfiniMetrics", "🤖")
-
-# Sync MongoDB setting from main page
-if "use_mongodb" not in st.session_state:
-    st.session_state.use_mongodb = False
 
 
 def main():
@@ -25,11 +20,11 @@ def main():
 
     dl = st.session_state.data_loader
 
-    # Show current data source
+    # Debug info - show based on source type
     if dl.source_type == "mongodb":
-        st.caption("🟢 数据源: MongoDB")
+        st.caption("数据源: MongoDB")
     else:
-        st.caption("📁 数据源: 文件系统")
+        st.caption(f"数据源: 文件系统 ({dl.results_dir})")
 
     runs = dl.list_test_runs("infer")
 
@@ -102,8 +97,8 @@ def main():
     selected_runs = []
     for k in selected:
         ri = filtered[options[k]]
-        # Use run_id for MongoDB, path for file system
-        identifier = ri.get("run_id") if dl.source_type == "mongodb" else ri.get("path")
+        # Use path for file source, run_id for MongoDB
+        identifier = ri.get("path") or ri.get("run_id")
         data = dl.load_test_result(identifier)
         ri = dict(ri)
         ri["data"] = data

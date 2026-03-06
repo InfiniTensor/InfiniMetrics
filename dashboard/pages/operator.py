@@ -13,38 +13,29 @@ from utils.visualizations import (
 
 init_page("算子测试分析 | InfiniMetrics", "⚡")
 
-# Sync MongoDB setting from main page
-if "use_mongodb" not in st.session_state:
-    st.session_state.use_mongodb = False
-
 
 def main():
     render_header()
     st.markdown("## ⚡ 算子测试分析")
 
-    # Show current data source
     dl = st.session_state.data_loader
-    if dl.source_type == "mongodb":
-        st.caption("🟢 数据源: MongoDB")
-    else:
-        st.caption("📁 数据源: 文件系统")
 
-    runs = dl.list_test_runs()  # Load all test runs first
-    # Identify operator runs by checking "operators" in path or testcase starting with operator/ops
+    # Debug info - show based on source type
+    if dl.source_type == "mongodb":
+        st.caption("数据源: MongoDB")
+    else:
+        st.caption(f"数据源: 文件系统 ({dl.results_dir})")
+
+    runs = dl.list_test_runs()
+    # Identify operator runs by testcase starting with operator/ops
     ops_runs = []
     for r in runs:
-        p = str(r.get("path", ""))
         tc = (r.get("testcase") or "").lower()
-        if (
-            ("/operators/" in p.replace("\\", "/"))
-            or tc.startswith("operator")
-            or tc.startswith("operators")
-            or tc.startswith("ops")
-        ):
+        if tc.startswith(("operator", "operators", "ops")):
             ops_runs.append(r)
 
     if not ops_runs:
-        st.info("未找到算子测试结果（请确认 JSON 在 test_output/operators/ 下）。")
+        st.info("未找到算子测试结果（请确认 JSON 在 output/ 目录下）。")
         return
 
     with st.sidebar:
@@ -71,8 +62,8 @@ def main():
     selected_runs = []
     for k in selected:
         ri = filtered[options[k]]
-        # Use run_id for MongoDB, path for file system
-        identifier = ri.get("run_id") if dl.source_type == "mongodb" else ri.get("path")
+        # Use path for file source, run_id for MongoDB
+        identifier = ri.get("path") or ri.get("run_id")
         data = dl.load_test_result(identifier)
         ri = dict(ri)
         ri["data"] = data

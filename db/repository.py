@@ -221,3 +221,59 @@ class TestRunRepository:
             if tc and "." in tc:
                 types.add(tc.split(".")[0])
         return sorted(list(types))
+
+
+class DispatcherSummaryRepository:
+    """Repository for dispatcher_summaries collection operations."""
+
+    def __init__(self, collection: Collection):
+        self._collection = collection
+        self._ensure_indexes()
+
+    def _ensure_indexes(self) -> None:
+        """Create indexes if they don't exist."""
+        try:
+            self._collection.create_index("timestamp", unique=True)
+            self._collection.create_index([("timestamp", DESCENDING)])
+            logger.debug("Dispatcher summary indexes created/verified")
+        except Exception as e:
+            logger.warning(f"Failed to create indexes: {e}")
+
+    def insert(self, summary: Dict[str, Any]) -> str:
+        """Insert a dispatcher summary document."""
+        summary.setdefault("_metadata", {})
+        summary["_metadata"]["imported_at"] = datetime.utcnow().isoformat()
+        self._collection.insert_one(summary)
+        return summary.get("timestamp", "")
+
+    def upsert(self, summary: Dict[str, Any]) -> str:
+        """Insert or update a dispatcher summary document."""
+        timestamp = summary.get("timestamp")
+        if not timestamp:
+            raise ValueError("summary must have a timestamp")
+
+        summary.setdefault("_metadata", {})
+        summary["_metadata"]["imported_at"] = datetime.utcnow().isoformat()
+
+        self._collection.update_one(
+            {"timestamp": timestamp}, {"$set": summary}, upsert=True
+        )
+        return timestamp
+
+    def list_summaries(self, limit: int = 100) -> List[Dict[str, Any]]:
+        """List all dispatcher summaries, newest first."""
+        cursor = self._collection.find().sort("timestamp", DESCENDING).limit(limit)
+        return list(cursor)
+
+    def find_by_timestamp(self, timestamp: str) -> Optional[Dict[str, Any]]:
+        """Find a summary by timestamp."""
+        return self._collection.find_one({"timestamp": timestamp})
+
+    def exists(self, timestamp: str) -> bool:
+        """Check if a summary already exists."""
+        return self._collection.count_documents({"timestamp": timestamp}) > 0
+
+    def delete_by_timestamp(self, timestamp: str) -> bool:
+        """Delete a summary by timestamp."""
+        result = self._collection.delete_one({"timestamp": timestamp})
+        return result.deleted_count > 0

@@ -13,7 +13,7 @@ project_root = Path(__file__).parent
 sys.path.append(str(project_root))
 
 from components.header import render_header
-from utils.data_loader import InfiniMetricsDataLoader, load_summary_file
+from utils.data_loader import InfiniMetricsDataLoader
 
 # Page configuration
 st.set_page_config(
@@ -63,12 +63,12 @@ def main():
         if source_type == "mongodb":
             st.success("🟢 数据源: MongoDB")
         else:
-            st.info(f"📁 数据源: 文件系统")
+            st.info(f"📁 数据源: 文件系统 ({st.session_state.data_loader.results_dir})")
 
         st.markdown("---")
 
         results_dir = st.text_input(
-            "测试结果目录", value="./test_output", help="包含 JSON/CSV 测试结果的目录"
+            "测试结果目录", value="../output", help="包含 JSON/CSV 测试结果的目录"
         )
 
         if not use_mongodb and results_dir != str(st.session_state.data_loader.results_dir):
@@ -130,7 +130,8 @@ def render_dashboard(run_id_filter: str):
             <strong>InfiniMetrics Dashboard</strong> 用于统一展示
             <strong>通信（NCCL / 集合通信）</strong>、
             <strong>推理（Direct / Service）</strong>、
-            <strong>算子（核心算子性能）</strong>
+            <strong>算子（核心算子性能）</strong>、
+            <strong>硬件（内存带宽 / 缓存性能）</strong>
             等 AI 加速卡性能测试结果。
             <br/>
             测试框架输出 <code>JSON</code>（环境 / 配置 / 标量指标） +
@@ -208,8 +209,9 @@ def render_dashboard(run_id_filter: str):
         latest_comm = _latest(comm_runs)
         latest_infer = _latest(infer_runs)
         latest_ops = _latest(ops_runs)
+        latest_hw = _latest(hw_runs)
 
-        colA, colB, colC = st.columns(3)
+        colA, colB, colC, colD = st.columns(4)
 
         with colA:
             st.markdown("#### 🔗 通信（最新）")
@@ -238,6 +240,15 @@ def render_dashboard(run_id_filter: str):
                 st.write(f"- time: {latest_ops.get('time','')}")
                 st.write(f"- status: {'✅' if latest_ops.get('success') else '❌'}")
 
+        with colD:
+            st.markdown("#### 🔧 硬件（最新）")
+            if not latest_hw:
+                st.info("暂无硬件结果")
+            else:
+                st.write(f"- testcase: `{latest_hw.get('testcase','')}`")
+                st.write(f"- time: {latest_hw.get('time','')}")
+                st.write(f"- status: {'✅' if latest_hw.get('success') else '❌'}")
+
         st.divider()
 
         # ========== Recent runs table ==========
@@ -257,10 +268,10 @@ def render_dashboard(run_id_filter: str):
         st.dataframe(df, use_container_width=True, hide_index=True)
 
         # ========== Dispatcher summary ==========
-        summaries = load_summary_file()
+        summaries = st.session_state.data_loader.load_summaries()
 
         if not summaries:
-            st.info("No dispatcher_summary file found")
+            st.info("未找到 Dispatcher 汇总记录")
             return
 
         st.markdown("### 🧾 Dispatcher 汇总记录")
@@ -294,13 +305,15 @@ def render_dashboard(run_id_filter: str):
         st.markdown("---")
         st.markdown("### 🚀 快速导航")
 
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         if col1.button("🔗 通信测试分析", use_container_width=True):
             st.switch_page("pages/communication.py")
         if col2.button("⚡ 算子测试分析", use_container_width=True):
             st.switch_page("pages/operator.py")
         if col3.button("🤖 推理测试分析", use_container_width=True):
             st.switch_page("pages/inference.py")
+        if col4.button("🔧 硬件测试分析", use_container_width=True):
+            st.switch_page("pages/hardware.py")
 
     except Exception as e:
         st.error(f"Dashboard 加载失败: {e}")

@@ -25,6 +25,11 @@ class DataSource(ABC):
         """Load a single test result with full data."""
         pass
 
+    @abstractmethod
+    def load_summaries(self) -> List[Dict[str, Any]]:
+        """Load dispatcher summaries."""
+        pass
+
     @property
     @abstractmethod
     def source_type(self) -> str:
@@ -35,7 +40,7 @@ class DataSource(ABC):
 class FileDataSource(DataSource):
     """File-based data source (reads from JSON/CSV files)."""
 
-    def __init__(self, results_dir: str = "./test_output"):
+    def __init__(self, results_dir: str = "../output"):
         self.results_dir = Path(results_dir)
 
     @property
@@ -212,6 +217,26 @@ class FileDataSource(DataSource):
             return parts[2]
         return "unknown"
 
+    def load_summaries(self) -> List[Dict[str, Any]]:
+        """Load dispatcher summary files from summary_output directory."""
+        summaries = []
+        summary_dir = self.results_dir.parent / "summary_output"
+
+        if summary_dir.exists():
+            for json_file in sorted(
+                summary_dir.glob("dispatcher_summary_*.json"), reverse=True
+            ):
+                try:
+                    with open(json_file, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    data["file"] = json_file.name
+                    data["timestamp"] = json_file.stem.replace("dispatcher_summary_", "")
+                    summaries.append(data)
+                except Exception as e:
+                    logger.warning(f"Failed to load summary {json_file}: {e}")
+
+        return summaries
+
 
 class MongoDataSource(DataSource):
     """MongoDB-based data source."""
@@ -234,6 +259,13 @@ class MongoDataSource(DataSource):
             return self._connected
 
         try:
+            # Ensure project root is in path for db module
+            import sys
+            from pathlib import Path
+            project_root = Path(__file__).parent.parent.parent
+            if str(project_root) not in sys.path:
+                sys.path.insert(0, str(project_root))
+
             from db import MongoDBClient, TestRunRepository
 
             if self._config:
@@ -365,6 +397,33 @@ class MongoDataSource(DataSource):
             return parts[2]
         return "unknown"
 
+    def load_summaries(self) -> List[Dict[str, Any]]:
+        """Load dispatcher summaries from MongoDB."""
+        if not self._connect():
+            logger.warning("MongoDB not connected, returning empty list")
+            return []
+
+        try:
+            from db import DispatcherSummaryRepository
+            from db.config import DatabaseConfig
+
+            config = self._config or DatabaseConfig.from_env()
+            summary_collection = self._client.get_collection(
+                config.summary_collection_name
+            )
+            summary_repo = DispatcherSummaryRepository(summary_collection)
+            summaries = summary_repo.list_summaries()
+
+            # Remove MongoDB internal fields
+            for s in summaries:
+                s.pop("_id", None)
+                s.pop("_metadata", None)
+
+            return summaries
+        except Exception as e:
+            logger.warning(f"Failed to load summaries from MongoDB: {e}")
+            return []
+
 
 class InfiniMetricsDataLoader:
     """
@@ -378,7 +437,7 @@ class InfiniMetricsDataLoader:
 
     def __init__(
         self,
-        results_dir: str = "./test_output",
+        results_dir: str = "../output",
         use_mongodb: bool = False,
         mongo_config=None,
         fallback_to_files: bool = True,
@@ -422,6 +481,11 @@ class InfiniMetricsDataLoader:
     def source_type(self) -> str:
         """Get the current data source type."""
         return self._source.source_type if self._source else "none"
+
+    @property
+    def is_connected(self) -> bool:
+        """Check if data source is available."""
+        return self._source is not None
 
     @property
     def is_using_mongodb(self) -> bool:
@@ -475,6 +539,12 @@ class InfiniMetricsDataLoader:
             return {}
         return self._source.load_test_result(identifier)
 
+    def load_summaries(self) -> List[Dict[str, Any]]:
+        """Load dispatcher summaries from the current data source."""
+        if self._source is None:
+            return []
+        return self._source.load_summaries()
+
     # Keep backward compatibility methods
     def load_csv_data(
         self, csv_url: str, json_data: Dict[str, Any], json_path: Path
@@ -495,7 +565,7 @@ class InfiniMetricsDataLoader:
         return None
 
 
-def load_summary_file(summary_path: str = "./summary_output") -> List[Dict[str, Any]]:
+def load_summary_file(summary_path: str = "../summary_output") -> List[Dict[str, Any]]:
     """Load dispatcher summary files."""
     summaries = []
     summary_dir = Path(summary_path)
