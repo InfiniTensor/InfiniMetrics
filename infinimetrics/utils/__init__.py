@@ -1,4 +1,3 @@
-# infinimetrics/utils/__init__.py
 #!/usr/bin/env python3
 """Utilities package for InfiniMetrics."""
 

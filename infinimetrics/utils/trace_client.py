@@ -1,4 +1,3 @@
-# utils/trace_client.py
 #!/usr/bin/env python3
 """
 Trace client implementation
