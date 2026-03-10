@@ -198,10 +198,11 @@ class InfiniCoreAdapter(BaseAdapter):
 
     def _handle_latency(self, metric: dict, context: dict):
         """Handle latency metric."""
-        if context.get("latency_ms") is not None:
+        avg_latency_sec = context.get("avg_latency_sec")
+        if avg_latency_sec is not None and avg_latency_sec > 0:
             metric.update(
                 {
-                    "value": context["latency_ms"],
+                    "value": round(avg_latency_sec * 1000, 6),  # Convert to ms
                     "type": "scalar",
                     "raw_data_url": "",
                     "unit": "ms",
@@ -215,18 +216,17 @@ class InfiniCoreAdapter(BaseAdapter):
     def _handle_flops(self, metric: dict, context: dict, config: dict = None):
         """Handle FLOPS metric."""
         value = 0.0
+        avg_latency_sec = context.get("avg_latency_sec")
 
-        if context.get("latency_ms") and context.get("latency_ms", 0) > 0:
-            # Calculate FLOPS from input/output configuration
+        if avg_latency_sec and avg_latency_sec > 0:
             inputs = config.get(OperatorConfig.INPUTS, [])
             outputs = config.get(OperatorConfig.OUTPUTS, [])
             operator = config.get(OperatorConfig.OPERATOR, "").lower()
 
             flops = FLOPSCalculator.get_flops(operator, inputs, outputs)
-            latency_sec = context["latency_ms"] / 1000.0
 
-            if flops > 0 and latency_sec > 0:
-                tflops = (flops / latency_sec) / 1e12
+            if flops > 0:
+                tflops = (flops / avg_latency_sec) / 1e12
                 value = tflops if tflops < 0.0001 else round(tflops, 4)
 
         metric.update(
@@ -236,16 +236,16 @@ class InfiniCoreAdapter(BaseAdapter):
     def _handle_bandwidth(self, metric: dict, context: dict, config: dict = None):
         """Handle bandwidth metric."""
         value = 0.0
+        avg_latency_sec = context.get("avg_latency_sec")
 
-        if context.get("latency_ms") and context.get("latency_ms", 0) > 0:
+        if avg_latency_sec and avg_latency_sec > 0:
             inputs = config.get(OperatorConfig.INPUTS, [])
             outputs = config.get(OperatorConfig.OUTPUTS, [])
 
             bandwidth_info = calculate_bandwidth(inputs, outputs)
-            latency_sec = context["latency_ms"] / 1000.0
 
-            if bandwidth_info["total_bytes"] > 0 and latency_sec > 0:
-                bandwidth_gbs = (bandwidth_info["total_bytes"] / latency_sec) / 1e9
+            if bandwidth_info["total_bytes"] > 0:
+                bandwidth_gbs = (bandwidth_info["total_bytes"] / avg_latency_sec) / 1e9
                 value = (
                     bandwidth_gbs if bandwidth_gbs < 0.0001 else round(bandwidth_gbs, 4)
                 )
@@ -290,8 +290,18 @@ class InfiniCoreAdapter(BaseAdapter):
             device_type = saved_data[0].get("device", DEVICE_CPU).upper()
             latency_field = PERF_HOST if device_type == DEVICE_CPU else PERF_DEVICE
 
+            # Calculate average latency per iteration
+            # InfiniCore returns total time for all iterations
+            total_latency_ms = perf_data.get(latency_field)
+            args_data = saved_data[0].get("args", {})
+            num_iterations = max(args_data.get("num_iterations", 1), 1)
+
+            avg_latency_sec = None
+            if total_latency_ms and total_latency_ms > 0:
+                avg_latency_sec = (total_latency_ms / num_iterations) / 1000.0
+
             context = {
-                "latency_ms": perf_data.get(latency_field),
+                "avg_latency_sec": avg_latency_sec,
                 "tflops": tc_result.get(InfiniCoreResult.METRICS, {}).get("tflops"),
                 "bandwidth_gbs": tc_result.get(InfiniCoreResult.METRICS, {}).get(
                     "bandwidth_gbs"
