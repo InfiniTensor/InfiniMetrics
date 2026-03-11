@@ -50,6 +50,6 @@ def show_data_source_info(style: str = "caption"):
             st.caption("数据源: MongoDB")
     else:
         if style == "sidebar":
-                st.info(f"📁 数据源: 文件系统 ({dl.results_dir})")
-            else:
-                st.caption(f"数据源: 文件系统 ({dl.results_dir})")
+            st.info(f"📁 数据源: 文件系统 ({dl.results_dir})")
+        else:
+            st.caption(f"数据源: 文件系统 ({dl.results_dir})")
