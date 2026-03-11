@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-from .data_utils import extract_accelerator_types, extract_run_info
+from .data_utils import extract_accelerator_types, extract_run_info, load_summary_file
 from db.utils import get_csv_base_dir, resolve_csv_path
 
 logger = logging.getLogger(__name__)
@@ -116,25 +116,8 @@ class FileDataSource(DataSource):
 
     def load_summaries(self) -> List[Dict[str, Any]]:
         """Load dispatcher summary files from summary_output directory."""
-        summaries = []
         summary_dir = self.results_dir.parent / "summary_output"
-
-        if summary_dir.exists():
-            for json_file in sorted(
-                summary_dir.glob("dispatcher_summary_*.json"), reverse=True
-            ):
-                try:
-                    with open(json_file, "r", encoding="utf-8") as f:
-                        data = json.load(f)
-                    data["file"] = json_file.name
-                    data["timestamp"] = json_file.stem.replace(
-                        "dispatcher_summary_", ""
-                    )
-                    summaries.append(data)
-                except Exception as e:
-                    logger.warning(f"Failed to load summary {json_file}: {e}")
-
-        return summaries
+        return load_summary_file(str(summary_dir))
 
 
 class MongoDataSource(DataSource):

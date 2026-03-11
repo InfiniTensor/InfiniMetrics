@@ -58,7 +58,7 @@ def main():
         ri = filtered[options[k]]
         # Use path for file source, run_id for MongoDB
         identifier = ri.get("path") or ri.get("run_id")
-        data = dl.load_test_result(identifier)
+        data = st.session_state.data_loader.load_test_result(identifier)
         ri = dict(ri)
         ri["data"] = data
         selected_runs.append(ri)

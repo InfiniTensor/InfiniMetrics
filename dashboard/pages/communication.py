@@ -29,7 +29,7 @@ def main():
 
     try:
         # Load communication test results
-        comm_runs = dl.list_test_runs("comm")
+        comm_runs = st.session_state.data_loader.list_test_runs("comm")
 
         if not comm_runs:
             st.info("未找到通信测试结果")
@@ -121,7 +121,7 @@ def main():
             run_info = filtered_runs[idx]
             # Use path for file source, run_id for MongoDB
             identifier = run_info.get("path") or run_info.get("run_id")
-            result = dl.load_test_result(identifier)
+            result = st.session_state.data_loader.load_test_result(identifier)
             run_info["data"] = result
             selected_runs.append(run_info)
 
