@@ -4,7 +4,7 @@
 import streamlit as st
 import pandas as pd
 
-from common import init_page
+from common import init_page, show_data_source_info
 from components.header import render_header
 from utils.data_loader import get_friendly_size
 from utils.metrics import extract_core_metrics
@@ -17,7 +17,7 @@ from utils.visualizations import (
     create_summary_table_infer,
 )
 
-init_page("推理测试分析 | InfiniMetrics", "🔗")
+init_page("通信测试分析 | InfiniMetrics", "🔗")
 
 
 def main():
@@ -25,9 +25,11 @@ def main():
     render_header()
     st.markdown("## 🔗 通信性能测试分析")
 
+    show_data_source_info()
+
     try:
         # Load communication test results
-        comm_runs = st.session_state.data_loader.list_test_runs("comm")
+        comm_runs = dl.list_test_runs("comm")
 
         if not comm_runs:
             st.info("未找到通信测试结果")
@@ -117,7 +119,9 @@ def main():
         for name in selected_indices:
             idx = run_options[name]
             run_info = filtered_runs[idx]
-            result = st.session_state.data_loader.load_test_result(run_info["path"])
+            # Use path for file source, run_id for MongoDB
+            identifier = run_info.get("path") or run_info.get("run_id")
+            result = dl.load_test_result(identifier)
             run_info["data"] = result
             selected_runs.append(run_info)
 

@@ -4,9 +4,8 @@
 import streamlit as st
 import pandas as pd
 
-from common import init_page
+from common import init_page, show_data_source_info
 from components.header import render_header
-from utils.data_loader import InfiniMetricsDataLoader, get_friendly_size
 from utils.visualizations import (
     plot_timeseries_auto,
     create_summary_table_infer,
@@ -19,8 +18,9 @@ def main():
     render_header()
     st.markdown("## 🚀 推理性能测试分析")
 
-    dl = st.session_state.data_loader
-    runs = dl.list_test_runs("infer")
+    show_data_source_info()
+
+    runs = st.session_state.data_loader.list_test_runs("infer")
 
     if not runs:
         st.info("未找到推理测试结果（testcase 需以 infer.* 开头）。")
@@ -91,7 +91,9 @@ def main():
     selected_runs = []
     for k in selected:
         ri = filtered[options[k]]
-        data = dl.load_test_result(ri["path"])
+        # Use path for file source, run_id for MongoDB
+        identifier = ri.get("path") or ri.get("run_id")
+        data = dl.load_test_result(identifier)
         ri = dict(ri)
         ri["data"] = data
         selected_runs.append(ri)

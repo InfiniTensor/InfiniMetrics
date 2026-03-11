@@ -31,6 +31,9 @@ exclude = '''
 )/
 '''
 
+[tool.setuptools.packages.find]
+include = ["infinimetrics*", "dashboard*", "db*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

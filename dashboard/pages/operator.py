@@ -4,7 +4,7 @@
 import streamlit as st
 import pandas as pd
 
-from common import init_page
+from common import init_page, show_data_source_info
 from components.header import render_header
 from utils.visualizations import (
     create_summary_table_ops,
@@ -18,24 +18,18 @@ def main():
     render_header()
     st.markdown("## ⚡ 算子测试分析")
 
-    dl = st.session_state.data_loader
+    show_data_source_info()
 
-    runs = dl.list_test_runs()  # Load all test runs first
-    # Identify operator runs by checking "operators" in path or testcase starting with operator/ops
+    runs = st.session_state.data_loader.list_test_runs()
+    # Identify operator runs by testcase starting with operator/ops
     ops_runs = []
     for r in runs:
-        p = str(r.get("path", ""))
         tc = (r.get("testcase") or "").lower()
-        if (
-            ("/operators/" in p.replace("\\", "/"))
-            or tc.startswith("operator")
-            or tc.startswith("operators")
-            or tc.startswith("ops")
-        ):
+        if tc.startswith(("operator", "operators", "ops")):
             ops_runs.append(r)
 
     if not ops_runs:
-        st.info("未找到算子测试结果（请确认 JSON 在 test_output/operators/ 下）。")
+        st.info("未找到算子测试结果（请确认 JSON 在 output/operators 目录下）。")
         return
 
     with st.sidebar:
@@ -62,7 +56,9 @@ def main():
     selected_runs = []
     for k in selected:
         ri = filtered[options[k]]
-        data = dl.load_test_result(ri["path"])
+        # Use path for file source, run_id for MongoDB
+        identifier = ri.get("path") or ri.get("run_id")
+        data = dl.load_test_result(identifier)
         ri = dict(ri)
         ri["data"] = data
         selected_runs.append(ri)
