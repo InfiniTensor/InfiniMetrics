@@ -180,38 +180,31 @@ class InfiniMetricsDataLoader:
     def _resolve_csv_path(self, csv_url: str, base_dir: Path) -> Optional[Path]:
         """
         Resolve CSV path from raw_data_url and base_dir.
-
-        Handles cases like:
-        - base_dir/output/communication + "./comm/xxx.csv" but file is actually base_dir/"xxx.csv"
-        - base_dir/output/infer + "./infer/xxx.csv" but file is base_dir/"xxx.csv"
         """
         try:
             if not csv_url:
                 return None
 
-            # strip leading "./"
-            rel = csv_url[2:] if csv_url.startswith("./") else csv_url
-            rel_path = Path(rel)
+            # Clean the path
+            clean_path = csv_url[2:] if csv_url.startswith("./") else csv_url
+            rel_path = Path(clean_path)
 
-            candidates = []
+            # Project root
+            project_root = Path(__file__).parent.parent.parent
 
-            # 1) base_dir / rel
-            candidates.append(base_dir / rel_path)
+            # All possible paths to search for CSV files
+            # Adjust these based on your actual directory structure
+            candidates = [
+                base_dir / rel_path,
+                base_dir / rel_path.name,
+                base_dir.parent / rel_path,
+                base_dir.parent / rel_path.name,
+                project_root / "test_output" / rel_path,
+            ]
 
-            # 2) base_dir / basename (most common fallback for your current layout)
-            candidates.append(base_dir / rel_path.name)
+            # Returns the first existing path
+            return next((p for p in candidates if p.exists()), None)
 
-            # 3) base_dir.parent / rel (just in case)
-            candidates.append(base_dir.parent / rel_path)
-
-            # 4) base_dir.parent / basename
-            candidates.append(base_dir.parent / rel_path.name)
-
-            for p in candidates:
-                if p.exists():
-                    return p
-
-            return None
         except Exception:
             return None
 

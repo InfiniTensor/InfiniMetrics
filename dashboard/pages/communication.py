@@ -17,7 +17,7 @@ from utils.visualizations import (
     create_summary_table_infer,
 )
 
-init_page("推理测试分析 | InfiniMetrics", "🔗")
+init_page("通信测试分析 | InfiniMetrics", "🔗")
 
 
 def main():
@@ -58,7 +58,7 @@ def main():
             # Status filter
             show_success = st.checkbox("仅显示成功测试", value=True)
 
-            # Apply filters
+            # Apply filter
             filtered_runs = [
                 r
                 for r in comm_runs
@@ -119,6 +119,7 @@ def main():
             run_info = filtered_runs[idx]
             result = st.session_state.data_loader.load_test_result(run_info["path"])
             run_info["data"] = result
+
             selected_runs.append(run_info)
 
         # Tabs for different views
@@ -181,26 +182,53 @@ def main():
             if len(selected_runs) == 1:
                 st.markdown("#### 📌 核心指标（最新）")
                 run = selected_runs[0]
-                core = extract_core_metrics(run)
 
+                max_bw = None
+                avg_lat = None
+                duration = None
+
+                for metric in run.get("data", {}).get("metrics", []):
+                    metric_name = metric.get("name", "")
+
+                    # bandwidth
+                    if (
+                        metric_name == "comm.bandwidth"
+                        and metric.get("data") is not None
+                    ):
+                        df = metric["data"]
+                        if "bandwidth_gbs" in df.columns:
+                            max_bw = df["bandwidth_gbs"].max()
+
+                    # latency
+                    elif (
+                        metric_name == "comm.latency" and metric.get("data") is not None
+                    ):
+                        df = metric["data"]
+                        if "latency_us" in df.columns:
+                            avg_lat = df["latency_us"].mean()
+
+                    # duration
+                    elif metric_name == "comm.duration":
+                        duration = metric.get("value")
                 c1, c2, c3 = st.columns(3)
 
-                c1.metric(
-                    "峰值带宽",
-                    (
-                        f"{core['bandwidth_gbps']:.2f} GB/s"
-                        if core["bandwidth_gbps"]
-                        else "-"
-                    ),
-                )
-                c2.metric(
-                    "平均延迟",
-                    f"{core['latency_us']:.2f} μs" if core["latency_us"] else "-",
-                )
-                c3.metric(
-                    "测试耗时",
-                    f"{core['duration_ms']:.2f} ms" if core["duration_ms"] else "-",
-                )
+                with c1:
+                    if max_bw is not None and max_bw > 0:
+                        st.metric("峰值带宽", f"{max_bw:.2f} GB/s")
+                    else:
+                        st.metric("峰值带宽", "-")
+
+                with c2:
+                    if avg_lat is not None and avg_lat > 0:
+                        st.metric("平均延迟", f"{avg_lat:.2f} μs")
+                    else:
+                        st.metric("平均延迟", "-")
+
+                with c3:
+                    if duration is not None and duration > 0:
+                        st.metric("测试耗时", f"{duration:.2f} ms")
+                    else:
+                        st.metric("测试耗时", "-")
             # Gauge charts for key metrics
             if len(selected_runs) == 1:
                 st.markdown("#### 关键指标")
@@ -221,7 +249,7 @@ def main():
                                 max_bw = df["bandwidth_gbs"].max()
                                 fig = create_gauge_chart(
                                     max_bw,
-                                    300,  # Theoretical max for A100 NVLink
+                                    300,
                                     "峰值带宽",
                                     "blue",
                                     "GB/s",
@@ -242,7 +270,7 @@ def main():
                                 avg_lat = df["latency_us"].mean()
                                 fig = create_gauge_chart(
                                     avg_lat,
-                                    1000,  # Reference: 1000 µs
+                                    1000,
                                     "平均延迟",
                                     "red",
                                     "µs",
@@ -261,7 +289,7 @@ def main():
                     if duration > 0:
                         fig = create_gauge_chart(
                             duration,
-                            duration * 2,  # Scale to show progress
+                            duration * 2,
                             "测试耗时",
                             "green",
                             "ms",
