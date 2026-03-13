@@ -25,16 +25,22 @@ Usage:
     importer.import_directory(Path("./output"))
 """
 
-from .client import MongoDBClient, MongoDBConnectionError
-from .config import DatabaseConfig
-from .importer import DataImporter
-from .repository import DispatcherSummaryRepository, TestRunRepository
+# Conditionally import MongoDB-dependent modules
+# This allows db.utils to be imported without pymongo
+try:
+    from .client import MongoDBClient, MongoDBConnectionError
+    from .config import DatabaseConfig
+    from .importer import DataImporter
+    from .repository import DispatcherSummaryRepository, TestRunRepository
 
-__all__ = [
-    "DatabaseConfig",
-    "MongoDBClient",
-    "MongoDBConnectionError",
-    "TestRunRepository",
-    "DispatcherSummaryRepository",
-    "DataImporter",
-]
+    __all__ = [
+        "DatabaseConfig",
+        "MongoDBClient",
+        "MongoDBConnectionError",
+        "TestRunRepository",
+        "DispatcherSummaryRepository",
+        "DataImporter",
+    ]
+except ImportError:
+    # pymongo not installed - MongoDB features unavailable
+    __all__ = []

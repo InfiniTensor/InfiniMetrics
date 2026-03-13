@@ -5,9 +5,7 @@ import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-import pandas as pd
-
-from .data_sources import DataSource, FileDataSource, MongoDataSource
+from .data_sources import DataSource, FileDataSource
 from .data_utils import extract_accelerator_types, extract_run_info, get_friendly_size
 
 logger = logging.getLogger(__name__)
@@ -50,18 +48,42 @@ class InfiniMetricsDataLoader:
         else:
             self._source = FileDataSource(results_dir)
 
-    def _init_mongodb_source(self):
-        """Initialize MongoDB data source with optional fallback."""
-        mongo_source = MongoDataSource(self._mongo_config)
+    def _try_connect_mongo(self) -> Optional["MongoDataSource"]:
+        """
+        Try to connect to MongoDB.
 
-        if mongo_source.is_connected():
+        Returns:
+            MongoDataSource if connected, None otherwise
+        """
+        try:
+            from .mongo_data_source import MongoDataSource
+
+            mongo_source = MongoDataSource(self._mongo_config)
+            if mongo_source.is_connected():
+                return mongo_source
+        except ImportError as e:
+            logger.warning(f"MongoDB dependencies not installed ({e})")
+        return None
+
+    def _apply_mongo_or_fallback(self, mongo_source: Optional["MongoDataSource"]):
+        """Apply MongoDB source or fallback to files based on configuration."""
+        if mongo_source:
             self._source = mongo_source
+            self._use_mongodb = True
         elif self._fallback_to_files:
-            logger.warning("MongoDB unavailable, falling back to file-based loading")
+            logger.warning("MongoDB unavailable, using file-based loading")
             self._source = FileDataSource(str(self.results_dir))
             self._use_mongodb = False
         else:
-            raise RuntimeError("MongoDB connection failed and fallback is disabled")
+            raise RuntimeError(
+                "MongoDB connection failed and fallback is disabled. "
+                "Install pymongo to use MongoDB."
+            )
+
+    def _init_mongodb_source(self):
+        """Initialize MongoDB data source with optional fallback."""
+        mongo_source = self._try_connect_mongo()
+        self._apply_mongo_or_fallback(mongo_source)
 
     @property
     def source_type(self) -> str:
@@ -90,17 +112,14 @@ class InfiniMetricsDataLoader:
         if mongo_config:
             self._mongo_config = mongo_config
 
-        mongo_source = MongoDataSource(self._mongo_config)
-
-        if mongo_source.is_connected():
+        mongo_source = self._try_connect_mongo()
+        if mongo_source:
             self._source = mongo_source
             self._use_mongodb = True
             return True
-        elif self._fallback_to_files:
+        else:
             logger.warning("Failed to switch to MongoDB, keeping current source")
             return False
-        else:
-            raise RuntimeError("MongoDB connection failed")
 
     def switch_to_files(self, results_dir: str = None):
         """Switch to file-based data source."""
@@ -133,27 +152,9 @@ class InfiniMetricsDataLoader:
             return []
         return self._source.load_summaries()
 
-    def load_csv_data(
-        self, csv_url: str, json_data: Dict[str, Any], json_path: Path
-    ) -> Optional[pd.DataFrame]:
-        """Load CSV data file using proper path resolution (file source only)."""
-        if isinstance(self._source, FileDataSource):
-            try:
-                if csv_url.startswith("http"):
-                    return None
-
-                base_dir = self._source._get_csv_base_dir(json_data, json_path)
-                csv_path = self._source._resolve_csv_path(csv_url, base_dir)
-
-                if csv_path and csv_path.exists():
-                    return pd.read_csv(csv_path)
-            except Exception as e:
-                logger.error(f"Failed to load CSV {csv_url}: {e}")
-        return None
-
 
 # Re-export from sibling modules
-from .data_sources import DataSource, FileDataSource, MongoDataSource
+from .data_sources import DataSource, FileDataSource
 from .data_utils import (
     get_friendly_size,
     extract_accelerator_types,
@@ -162,6 +163,8 @@ from .data_utils import (
 
 __all__ = [
     "InfiniMetricsDataLoader",
+    "DataSource",
+    "FileDataSource",
     "get_friendly_size",
     "extract_accelerator_types",
     "extract_run_info",
