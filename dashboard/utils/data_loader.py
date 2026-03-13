@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 """Unified data loader for InfiniMetrics dashboard."""
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .mongo_data_source import MongoDataSource
 
 from .data_sources import DataSource, FileDataSource
 from .data_utils import extract_accelerator_types, extract_run_info, get_friendly_size
@@ -48,7 +53,7 @@ class InfiniMetricsDataLoader:
         else:
             self._source = FileDataSource(results_dir)
 
-    def _try_connect_mongo(self) -> Optional["MongoDataSource"]:
+    def _try_connect_mongo(self) -> Optional[MongoDataSource]:
         """
         Try to connect to MongoDB.
 
@@ -65,7 +70,7 @@ class InfiniMetricsDataLoader:
             logger.warning(f"MongoDB dependencies not installed ({e})")
         return None
 
-    def _apply_mongo_or_fallback(self, mongo_source: Optional["MongoDataSource"]):
+    def _apply_mongo_or_fallback(self, mongo_source: Optional[MongoDataSource]):
         """Apply MongoDB source or fallback to files based on configuration."""
         if mongo_source:
             self._source = mongo_source
