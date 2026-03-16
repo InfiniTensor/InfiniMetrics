@@ -180,63 +180,30 @@ def main():
                     st.plotly_chart(fig, use_container_width=True)
 
             if len(selected_runs) == 1:
-                st.markdown("#### 📌 核心指标（最新）")
-                run = selected_runs[0]
-
-                max_bw = None
-                avg_lat = None
-                duration = None
-
-                for metric in run.get("data", {}).get("metrics", []):
-                    metric_name = metric.get("name", "")
-
-                    # bandwidth
-                    if (
-                        metric_name == "comm.bandwidth"
-                        and metric.get("data") is not None
-                    ):
-                        df = metric["data"]
-                        if "bandwidth_gbs" in df.columns:
-                            max_bw = df["bandwidth_gbs"].max()
-
-                    # latency
-                    elif (
-                        metric_name == "comm.latency" and metric.get("data") is not None
-                    ):
-                        df = metric["data"]
-                        if "latency_us" in df.columns:
-                            avg_lat = df["latency_us"].mean()
-
-                    # duration
-                    elif metric_name == "comm.duration":
-                        duration = metric.get("value")
-                c1, c2, c3 = st.columns(3)
-
-                with c1:
-                    if max_bw is not None and max_bw > 0:
-                        st.metric("峰值带宽", f"{max_bw:.2f} GB/s")
-                    else:
-                        st.metric("峰值带宽", "-")
-
-                with c2:
-                    if avg_lat is not None and avg_lat > 0:
-                        st.metric("平均延迟", f"{avg_lat:.2f} μs")
-                    else:
-                        st.metric("平均延迟", "-")
-
-                with c3:
-                    if duration is not None and duration > 0:
-                        st.metric("测试耗时", f"{duration:.2f} ms")
-                    else:
-                        st.metric("测试耗时", "-")
-            # Gauge charts for key metrics
-            if len(selected_runs) == 1:
                 st.markdown("#### 关键指标")
                 run = selected_runs[0]
+                core = extract_core_metrics(run)
 
-                col1, col2, col3 = st.columns(3)
+                # First Line: numerical indicators
+                cols = st.columns(3)
+                cols[0].metric(
+                    "峰值带宽",
+                    f"{core['bandwidth_gbps']:.2f} GB/s"
+                    if core["bandwidth_gbps"]
+                    else "-",
+                )
+                cols[1].metric(
+                    "平均延迟",
+                    f"{core['latency_us']:.2f} μs" if core["latency_us"] else "-",
+                )
+                cols[2].metric(
+                    "测试耗时",
+                    f"{core['duration_ms']:.2f} ms" if core["duration_ms"] else "-",
+                )
 
-                with col1:
+                cols = st.columns(3)
+
+                with cols[0]:
                     # Find max bandwidth
                     max_bw = 0
                     for metric in run.get("data", {}).get("metrics", []):
@@ -249,7 +216,7 @@ def main():
                                 max_bw = df["bandwidth_gbs"].max()
                                 fig = create_gauge_chart(
                                     max_bw,
-                                    300,
+                                    300,  # Theoretical max for A100 NVLink
                                     "峰值带宽",
                                     "blue",
                                     "GB/s",
@@ -257,7 +224,7 @@ def main():
                                 st.plotly_chart(fig, use_container_width=True)
                                 break
 
-                with col2:
+                with cols[1]:
                     # Find average latency
                     avg_lat = 0
                     for metric in run.get("data", {}).get("metrics", []):
@@ -270,7 +237,7 @@ def main():
                                 avg_lat = df["latency_us"].mean()
                                 fig = create_gauge_chart(
                                     avg_lat,
-                                    1000,
+                                    1000,  # Reference: 1000 µs
                                     "平均延迟",
                                     "red",
                                     "µs",
@@ -278,7 +245,7 @@ def main():
                                 st.plotly_chart(fig, use_container_width=True)
                                 break
 
-                with col3:
+                with cols[2]:
                     # Extract duration
                     duration = 0
                     for metric in run.get("data", {}).get("metrics", []):
@@ -289,7 +256,7 @@ def main():
                     if duration > 0:
                         fig = create_gauge_chart(
                             duration,
-                            duration * 2,
+                            duration * 2,  # Scale to show progress
                             "测试耗时",
                             "green",
                             "ms",

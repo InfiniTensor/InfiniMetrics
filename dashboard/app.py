@@ -24,7 +24,7 @@ st.set_page_config(
 )
 
 # Initialize session state
-if "ni" not in st.session_state:
+if "data_loader" not in st.session_state:
     st.session_state.data_loader = InfiniMetricsDataLoader()
 if "selected_accelerators" not in st.session_state:
     st.session_state.selected_accelerators = []

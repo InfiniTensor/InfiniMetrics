@@ -195,9 +195,6 @@ class InfiniMetricsDataLoader:
             # All possible paths to search for CSV files
             # Adjust these based on your actual directory structure
             candidates = [
-                base_dir / rel_path,
-                base_dir / rel_path.name,
-                base_dir.parent / rel_path,
                 base_dir.parent / rel_path.name,
                 project_root / "test_output" / rel_path,
             ]
