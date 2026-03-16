@@ -13,7 +13,8 @@ project_root = Path(__file__).parent
 sys.path.append(str(project_root))
 
 from components.header import render_header
-from utils.data_loader import InfiniMetricsDataLoader, load_summary_file
+from utils.data_loader import InfiniMetricsDataLoader
+from common import show_data_source_info
 
 # Page configuration
 st.set_page_config(
@@ -28,6 +29,8 @@ if "data_loader" not in st.session_state:
     st.session_state.data_loader = InfiniMetricsDataLoader()
 if "selected_accelerators" not in st.session_state:
     st.session_state.selected_accelerators = []
+if "use_mongodb" not in st.session_state:
+    st.session_state.use_mongodb = False
 
 
 def main():
@@ -40,11 +43,34 @@ def main():
     with st.sidebar:
         st.markdown("## ⚙️ 设置")
 
-        results_dir = st.text_input(
-            "测试结果目录", value="./test_output", help="包含 JSON/CSV 测试结果的目录"
+        # Data source selection
+        use_mongodb = st.toggle(
+            "使用 MongoDB",
+            value=st.session_state.use_mongodb,
+            help="切换到 MongoDB 数据源（需要 MongoDB 服务运行中）",
         )
 
-        if results_dir != str(st.session_state.data_loader.results_dir):
+        if use_mongodb != st.session_state.use_mongodb:
+            st.session_state.use_mongodb = use_mongodb
+            if use_mongodb:
+                st.session_state.data_loader = InfiniMetricsDataLoader(
+                    use_mongodb=True, fallback_to_files=True
+                )
+            else:
+                st.session_state.data_loader = InfiniMetricsDataLoader()
+
+        # Show current data source
+        show_data_source_info(style="sidebar")
+
+        st.markdown("---")
+
+        results_dir = st.text_input(
+            "测试结果目录", value="../output", help="包含 JSON/CSV 测试结果的目录"
+        )
+
+        if not use_mongodb and results_dir != str(
+            st.session_state.data_loader.results_dir
+        ):
             st.session_state.data_loader = InfiniMetricsDataLoader(results_dir)
 
         auto_refresh = st.toggle("自动刷新", value=False)
@@ -103,8 +129,9 @@ def render_dashboard(run_id_filter: str):
             <strong>InfiniMetrics Dashboard</strong> 用于统一展示
             <strong>通信（NCCL / 集合通信）</strong>、
             <strong>训练（Training / 分布式训练）</strong>、
-            <strong>推理（Direct / Service 推理）</strong>、
-            <strong>算子（核心算子性能）</strong>
+            <strong>推理（直接推理 / 服务性能）</strong>、
+            <strong>算子（核心算子性能）</strong>、
+            <strong>硬件（内存带宽 / 缓存性能）</strong>
             等 AI 加速卡性能测试结果。
             <br/>
             测试框架输出 <code>JSON</code>（环境 / 配置 / 标量指标） +
@@ -247,10 +274,10 @@ def render_dashboard(run_id_filter: str):
         st.dataframe(df, use_container_width=True, hide_index=True)
 
         # ========== Dispatcher summary ==========
-        summaries = load_summary_file()
+        summaries = st.session_state.data_loader.load_summaries()
 
         if not summaries:
-            st.info("No dispatcher_summary file found")
+            st.info("未找到 Dispatcher 汇总记录")
             return
 
         st.markdown("### 🧾 Dispatcher 汇总记录")
