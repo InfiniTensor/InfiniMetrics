@@ -72,7 +72,8 @@ class HardwareTestAdapter(BaseAdapter):
 
         logger.info(f"HardwareTestAdapter: Processing {testcase}")
 
-        self.output_dir = Path(config.get("output_dir", "./output"))
+        # Put CSV files in hardware/ subdirectory to match JSON location
+        self.output_dir = Path(config.get("output_dir", "./output")) / "hardware"
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         device = config.get("device", "cuda").lower()

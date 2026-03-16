@@ -6,6 +6,7 @@ This module provides:
 - MongoDB connection management
 - Test result repository
 - Dispatcher summary repository
+- Data import from JSON/CSV files
 
 Usage:
     from db import MongoDBClient, DatabaseConfig, TestRunRepository
@@ -18,18 +19,28 @@ Usage:
     test_runs = TestRunRepository(client.get_collection("test_runs"))
     summaries = DispatcherSummaryRepository(client.get_collection("dispatcher_summaries"))
 
-    # Query test runs
-    runs = test_runs.find_all(limit=10)
+    # Import data
+    from db import DataImporter
+    importer = DataImporter(test_runs)
+    importer.import_directory(Path("./output"))
 """
 
-from .client import MongoDBClient, MongoDBConnectionError
-from .config import DatabaseConfig
-from .repository import DispatcherSummaryRepository, TestRunRepository
+# Conditionally import MongoDB-dependent modules
+# This allows db.utils to be imported without pymongo
+try:
+    from .client import MongoDBClient, MongoDBConnectionError
+    from .config import DatabaseConfig
+    from .importer import DataImporter
+    from .repository import DispatcherSummaryRepository, TestRunRepository
 
-__all__ = [
-    "DatabaseConfig",
-    "MongoDBClient",
-    "MongoDBConnectionError",
-    "TestRunRepository",
-    "DispatcherSummaryRepository",
-]
+    __all__ = [
+        "DatabaseConfig",
+        "MongoDBClient",
+        "MongoDBConnectionError",
+        "TestRunRepository",
+        "DispatcherSummaryRepository",
+        "DataImporter",
+    ]
+except ImportError:
+    # pymongo not installed - MongoDB features unavailable
+    __all__ = []
