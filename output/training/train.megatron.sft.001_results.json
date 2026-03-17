@@ -1,0 +1,117 @@
+{
+  "run_id": "train.megatron.sft.001",
+  "time": "2026-03-09 07:20:09",
+  "testcase": "train.megatron.sft",
+  "success": 0,
+  "environment": {
+    "cluster_scale": 1,
+    "topology": "2x1 ring mesh",
+    "cluster": [
+      {
+        "machine": {
+          "cpu_model": "Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz",
+          "memory_gb": 2015,
+          "accelerators": [
+            {
+              "model": "NVIDIA A100-SXM4-80GB",
+              "count": 2,
+              "memory_gb_per_card": 80,
+              "driver": "580.105.08",
+              "cuda": "13.0",
+              "type": "nvidia"
+            }
+          ]
+        },
+        "framework": [
+          {
+            "name": "megatron",
+            "version": "unknown"
+          }
+        ]
+      }
+    ]
+  },
+  "result_code": 0,
+  "config": {
+    "lora_fallback_mode": "finetune",
+    "output_dir": "./test_output",
+    "framework": "megatron",
+    "model": "gpt",
+    "megatron_path": "/home/sunjinge/Megatron-LM",
+    "device": {
+      "gpu_platform": "nvidia",
+      "device_ids": [
+        0,
+        1
+      ]
+    },
+    "train_dataset": "mock",
+    "warmup_iterations": 2,
+    "train_args": {
+      "parallel": {
+        "dp": 1,
+        "tp": 1,
+        "pp": 1,
+        "sp": 0
+      },
+      "mbs": 2,
+      "gbs": 8,
+      "seq_len": 128,
+      "lr": 0.00015,
+      "train_iters": 10,
+      "num_layers": 2,
+      "hidden_size": 512,
+      "num_attention_heads": 8,
+      "vocab_size": 128256,
+      "max_position_embeddings": 128,
+      "precision": "bf16",
+      "optimizer": "adam",
+      "weight_decay": 0.01,
+      "clip_grad": 1.0,
+      "beta1": 0.9,
+      "beta2": 0.95,
+      "lr_scheduler": "cosine",
+      "min_lr": 0.0,
+      "eval_interval": 100,
+      "eval_iters": 10,
+      "save_interval": 1000,
+      "extra_args": []
+    }
+  },
+  "metrics": [
+    {
+      "name": "train.throughput",
+      "type": "timeseries",
+      "raw_data_url": "test_output/training/train.megatron.sft.001_train_throughput.csv",
+      "unit": "tokens/s/gpu"
+    },
+    {
+      "name": "train.loss",
+      "type": "timeseries",
+      "raw_data_url": "test_output/training/train.megatron.sft.001_train_loss.csv",
+      "unit": ""
+    },
+    {
+      "name": "train.ppl",
+      "type": "timeseries",
+      "raw_data_url": "test_output/training/train.megatron.sft.001_train_ppl.csv",
+      "unit": null
+    },
+    {
+      "name": "train.peak_memory_usage",
+      "type": "scalar",
+      "value": 3.890625,
+      "unit": "GB"
+    }
+  ],
+  "resolved": {
+    "nodes": 1,
+    "gpus_per_node": 2,
+    "device_used": 2,
+    "accelerator_type": "nvidia",
+    "framework": {
+      "name": "megatron",
+      "version": "unknown"
+    }
+  }
+}
