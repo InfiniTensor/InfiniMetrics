@@ -51,7 +51,7 @@ class DataSource(ABC):
 class FileDataSource(DataSource):
     """File-based data source (reads from JSON/CSV files)."""
 
-    def __init__(self, results_dir: str = "../output"):
+    def __init__(self, results_dir: str = "./output"):
         self.results_dir = Path(results_dir)
 
     @property

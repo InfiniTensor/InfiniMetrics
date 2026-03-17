@@ -30,7 +30,7 @@ def main():
     runs = load_training_runs(dl)
 
     if not runs:
-        st.info("未找到训练测试结果\n请将训练测试结果放在 test_output/train/ 或 test_output/training/ 目录下")
+        st.info("未找到训练测试结果\n请将训练测试结果放在 output/train/ 或 output/training/ 目录下")
         return
 
     # Sidebar Filters

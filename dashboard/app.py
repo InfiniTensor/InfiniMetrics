@@ -65,7 +65,7 @@ def main():
         st.markdown("---")
 
         results_dir = st.text_input(
-            "测试结果目录", value="../output", help="包含 JSON/CSV 测试结果的目录"
+            "测试结果目录", value="./output", help="包含 JSON/CSV 测试结果的目录"
         )
 
         if not use_mongodb and results_dir != str(
