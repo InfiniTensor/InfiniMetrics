@@ -76,6 +76,8 @@ def plot_single_metric(run, metric_key, title, ylabel, unit, smoothing, y_log):
 
     if y_log:
         fig.update_yaxes(type="log")
+    else:
+        fig.update_yaxes(rangemode="tozero")
 
     st.plotly_chart(fig, use_container_width=True)
 
@@ -131,6 +133,8 @@ def plot_multi_metric_comparison(
 
     if y_log:
         fig.update_yaxes(type="log")
+    else:
+        fig.update_yaxes(rangemode="tozero")
 
     st.plotly_chart(fig, use_container_width=True)
 
