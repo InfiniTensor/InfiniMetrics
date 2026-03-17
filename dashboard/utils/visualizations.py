@@ -275,18 +275,36 @@ def create_summary_table(test_result: Dict[str, Any]) -> pd.DataFrame:
 
 
 def create_gauge_chart(
-    value: float, max_value: float, title: str, color: str = "blue", unit: str = ""
+    value: float,
+    max_value: float,
+    title: str,
+    color: str = "blue",
+    unit: str = "",
+    decimals: Optional[int] = None,  # optional
 ) -> go.Figure:
     """Create a gauge chart for single metric visualization."""
+
+    if decimals is None:
+        if value < 10:
+            decimals = 2
+        elif value < 100:
+            decimals = 1
+        else:
+            decimals = 0
+
     fig = go.Figure(
         go.Indicator(
             mode="gauge+number",
             value=value,
             domain={"x": [0, 1], "y": [0.05, 0.85]},
             title={"text": title, "font": {"size": 18}},
-            number={"suffix": f" {unit}", "font": {"size": 36}},
+            number={
+                "suffix": f" {unit}",
+                "font": {"size": 36},
+                "valueformat": f".{decimals}f",
+            },
             gauge={
-                "axis": {"range": [0, max_value]},
+                "axis": {"range": [0, max_value], "tickformat": f".{decimals}f"},
                 "bar": {"color": color},
                 "steps": [
                     {"range": [0, max_value * 0.6], "color": "lightgray"},

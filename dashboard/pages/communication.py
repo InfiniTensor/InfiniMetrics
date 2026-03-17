@@ -60,7 +60,7 @@ def main():
             # Status filter
             show_success = st.checkbox("仅显示成功测试", value=True)
 
-            # Apply filters
+            # Apply filter
             filtered_runs = [
                 r
                 for r in comm_runs
@@ -123,6 +123,7 @@ def main():
             identifier = run_info.get("path") or run_info.get("run_id")
             result = st.session_state.data_loader.load_test_result(identifier)
             run_info["data"] = result
+
             selected_runs.append(run_info)
 
         # Tabs for different views
@@ -183,36 +184,30 @@ def main():
                     st.plotly_chart(fig, use_container_width=True)
 
             if len(selected_runs) == 1:
-                st.markdown("#### 📌 核心指标（最新）")
+                st.markdown("#### 关键指标")
                 run = selected_runs[0]
                 core = extract_core_metrics(run)
 
-                c1, c2, c3 = st.columns(3)
-
-                c1.metric(
+                # First Line: numerical indicators
+                cols = st.columns(3)
+                cols[0].metric(
                     "峰值带宽",
-                    (
-                        f"{core['bandwidth_gbps']:.2f} GB/s"
-                        if core["bandwidth_gbps"]
-                        else "-"
-                    ),
+                    f"{core['bandwidth_gbps']:.2f} GB/s"
+                    if core["bandwidth_gbps"]
+                    else "-",
                 )
-                c2.metric(
+                cols[1].metric(
                     "平均延迟",
                     f"{core['latency_us']:.2f} μs" if core["latency_us"] else "-",
                 )
-                c3.metric(
+                cols[2].metric(
                     "测试耗时",
                     f"{core['duration_ms']:.2f} ms" if core["duration_ms"] else "-",
                 )
-            # Gauge charts for key metrics
-            if len(selected_runs) == 1:
-                st.markdown("#### 关键指标")
-                run = selected_runs[0]
 
-                col1, col2, col3 = st.columns(3)
+                cols = st.columns(3)
 
-                with col1:
+                with cols[0]:
                     # Find max bandwidth
                     max_bw = 0
                     for metric in run.get("data", {}).get("metrics", []):
@@ -233,7 +228,7 @@ def main():
                                 st.plotly_chart(fig, use_container_width=True)
                                 break
 
-                with col2:
+                with cols[1]:
                     # Find average latency
                     avg_lat = 0
                     for metric in run.get("data", {}).get("metrics", []):
@@ -254,7 +249,7 @@ def main():
                                 st.plotly_chart(fig, use_container_width=True)
                                 break
 
-                with col3:
+                with cols[2]:
                     # Extract duration
                     duration = 0
                     for metric in run.get("data", {}).get("metrics", []):

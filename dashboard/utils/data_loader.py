@@ -28,7 +28,7 @@ class InfiniMetricsDataLoader:
 
     def __init__(
         self,
-        results_dir: str = "../output",
+        results_dir: str = "./output",
         use_mongodb: bool = False,
         mongo_config=None,
         fallback_to_files: bool = True,

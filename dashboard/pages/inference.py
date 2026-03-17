@@ -11,7 +11,7 @@ from utils.visualizations import (
     create_summary_table_infer,
 )
 
-init_page("推理测试分析 | InfiniMetrics", "🤖")
+init_page("推理测试分析 | InfiniMetrics", "🚀")
 
 
 def main():
@@ -180,7 +180,7 @@ def main():
 
         _plot_metric("infer.compute_latency", c1)
         _plot_metric("infer.ttft", c2)
-        _plot_metric("infer.direct_throughput", c3)
+        _plot_metric("infer.direct_throughput_tps", c3)
 
     # ---------- Tables ----------
     with tab2:

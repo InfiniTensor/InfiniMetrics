@@ -65,7 +65,7 @@ def main():
         st.markdown("---")
 
         results_dir = st.text_input(
-            "测试结果目录", value="../output", help="包含 JSON/CSV 测试结果的目录"
+            "测试结果目录", value="./output", help="包含 JSON/CSV 测试结果的目录"
         )
 
         if not use_mongodb and results_dir != str(
@@ -122,12 +122,13 @@ def render_dashboard(run_id_filter: str):
         <div style="
             margin-top: 0.5em;
             margin-bottom: 1.5em;
-            max-width: 1100px;
-            font-size: 1.05em;
+            max-width: 80%;
+            font-size: 1.3em;
             line-height: 1.6;
         ">
             <strong>InfiniMetrics Dashboard</strong> 用于统一展示
             <strong>通信（NCCL / 集合通信）</strong>、
+            <strong>训练（Training / 分布式训练）</strong>、
             <strong>推理（直接推理 / 服务性能）</strong>、
             <strong>算子（核心算子性能）</strong>、
             <strong>硬件（内存带宽 / 缓存性能）</strong>
@@ -135,7 +136,9 @@ def render_dashboard(run_id_filter: str):
             <br/>
             测试框架输出 <code>JSON</code>（环境 / 配置 / 标量指标） +
             <code>CSV</code>（曲线 / 时序数据），
-            Dashboard 自动加载并支持多次运行的对比分析与可视化。
+            Dashboard 自动加载并支持多次运行的
+            <strong>性能对比</strong>、<strong>趋势分析</strong> 与
+            <strong>可视化展示</strong>。
         </div>
         """,
         unsafe_allow_html=True,
@@ -177,6 +180,7 @@ def render_dashboard(run_id_filter: str):
         # ========== Categorize runs ==========
         comm_runs = [r for r in runs if r.get("testcase", "").startswith("comm")]
         infer_runs = [r for r in runs if r.get("testcase", "").startswith("infer")]
+        train_runs = [r for r in runs if r.get("testcase", "").startswith("train")]
 
         ops_runs, hw_runs = [], []
         for r in runs:
@@ -188,13 +192,14 @@ def render_dashboard(run_id_filter: str):
                 hw_runs.append(r)
 
         # ========== KPI ==========
-        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        c1, c2, c3, c4, c5, c6, c7 = st.columns(7)
         c1.metric("总测试数", total)
         c2.metric("成功率", f"{(success/total*100):.1f}%")
         c3.metric("通信测试", len(comm_runs))
         c4.metric("推理测试", len(infer_runs))
-        c5.metric("算子测试", len(ops_runs))
-        c6.metric("硬件检测", len(hw_runs))
+        c5.metric("训练测试", len(train_runs))
+        c6.metric("算子测试", len(ops_runs))
+        c7.metric("硬件检测", len(hw_runs))
 
         st.caption(f"失败测试数：{fail}")
         st.caption(f"当前筛选：加速卡={','.join(selected_accs) or '全部'}")
@@ -208,8 +213,9 @@ def render_dashboard(run_id_filter: str):
         latest_comm = _latest(comm_runs)
         latest_infer = _latest(infer_runs)
         latest_ops = _latest(ops_runs)
+        latest_train = _latest(train_runs)
 
-        colA, colB, colC = st.columns(3)
+        colA, colB, colC, colD = st.columns(4)
 
         with colA:
             st.markdown("#### 🔗 通信（最新）")
@@ -237,6 +243,17 @@ def render_dashboard(run_id_filter: str):
                 st.write(f"- testcase: `{latest_ops.get('testcase','')}`")
                 st.write(f"- time: {latest_ops.get('time','')}")
                 st.write(f"- status: {'✅' if latest_ops.get('success') else '❌'}")
+
+        with colD:
+            st.markdown("#### 🏋️ 训练（最新）")
+            if not latest_train:
+                st.info("暂无训练结果")
+            else:
+                framework = latest_train.get("config", {}).get("framework", "unknown")
+                model = latest_train.get("config", {}).get("model", "unknown")
+                st.write(f"- 框架/模型: `{framework}/{model}`")
+                st.write(f"- time: {latest_train.get('time','')}")
+                st.write(f"- status: {'✅' if latest_train.get('success') else '❌'}")
 
         st.divider()
 
@@ -294,13 +311,15 @@ def render_dashboard(run_id_filter: str):
         st.markdown("---")
         st.markdown("### 🚀 快速导航")
 
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3, col4 = st.columns(4)
         if col1.button("🔗 通信测试分析", use_container_width=True):
             st.switch_page("pages/communication.py")
         if col2.button("⚡ 算子测试分析", use_container_width=True):
             st.switch_page("pages/operator.py")
-        if col3.button("🤖 推理测试分析", use_container_width=True):
+        if col3.button("🚀 推理测试分析", use_container_width=True):
             st.switch_page("pages/inference.py")
+        if col4.button("🏋️ 训练测试分析", use_container_width=True):
+            st.switch_page("pages/training.py")
 
     except Exception as e:
         st.error(f"Dashboard 加载失败: {e}")
