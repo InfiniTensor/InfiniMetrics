@@ -214,8 +214,9 @@ def render_dashboard(run_id_filter: str):
         latest_infer = _latest(infer_runs)
         latest_ops = _latest(ops_runs)
         latest_train = _latest(train_runs)
+        latest_hw = _latest(hw_runs)
 
-        colA, colB, colC, colD = st.columns(4)
+        colA, colB, colC, colD, colE = st.columns(5)
 
         with colA:
             st.markdown("#### 🔗 通信（最新）")
@@ -254,6 +255,15 @@ def render_dashboard(run_id_filter: str):
                 st.write(f"- 框架/模型: `{framework}/{model}`")
                 st.write(f"- time: {latest_train.get('time','')}")
                 st.write(f"- status: {'✅' if latest_train.get('success') else '❌'}")
+
+        with colE:
+            st.markdown("#### 🔧 硬件（最新）")
+            if not latest_hw:
+                st.info("暂无硬件结果")
+            else:
+                st.write(f"- testcase: `{latest_hw.get('testcase','')}`")
+                st.write(f"- time: {latest_hw.get('time','')}")
+                st.write(f"- status: {'✅' if latest_hw.get('success') else '❌'}")
 
         st.divider()
 
@@ -311,7 +321,7 @@ def render_dashboard(run_id_filter: str):
         st.markdown("---")
         st.markdown("### 🚀 快速导航")
 
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
         if col1.button("🔗 通信测试分析", use_container_width=True):
             st.switch_page("pages/communication.py")
         if col2.button("⚡ 算子测试分析", use_container_width=True):
@@ -320,6 +330,8 @@ def render_dashboard(run_id_filter: str):
             st.switch_page("pages/inference.py")
         if col4.button("🏋️ 训练测试分析", use_container_width=True):
             st.switch_page("pages/training.py")
+        if col5.button("🔧 硬件测试分析", use_container_width=True):
+            st.switch_page("pages/hardware.py")
 
     except Exception as e:
         st.error(f"Dashboard 加载失败: {e}")

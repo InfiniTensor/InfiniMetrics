@@ -8,7 +8,7 @@ import numpy as np
 from typing import Dict, List, Any, Optional, Literal
 import streamlit as st
 
-from .data_loader import get_friendly_size
+from utils.data_loader import get_friendly_size
 
 
 def plot_metric_vs_size(
@@ -209,15 +209,21 @@ def create_summary_table(test_result: Dict[str, Any]) -> pd.DataFrame:
             accelerators = machine.get("accelerators", [])
             if accelerators:
                 acc = accelerators[0]
-                summary_data.append({"指标": "GPU型号", "数值": acc.get("model", "Unknown")})
-                summary_data.append({"指标": "GPU数量", "数值": acc.get("count", "Unknown")})
+                summary_data.append(
+                    {"指标": "GPU型号", "数值": str(acc.get("model", "Unknown"))}
+                )
+                summary_data.append(
+                    {"指标": "GPU数量", "数值": str(acc.get("count", "Unknown"))}
+                )
                 summary_data.append(
                     {
                         "指标": "显存/卡",
                         "数值": f"{acc.get('memory_gb_per_card', 'Unknown')} GB",
                     }
                 )
-                summary_data.append({"指标": "CUDA版本", "数值": acc.get("cuda", "Unknown")})
+                summary_data.append(
+                    {"指标": "CUDA版本", "数值": str(acc.get("cuda", "Unknown"))}
+                )
 
     # Test config summary
     config = test_result.get("config", {})
@@ -231,14 +237,14 @@ def create_summary_table(test_result: Dict[str, Any]) -> pd.DataFrame:
     )
     nodes = resolved.get("nodes") or config.get("nodes", 1)
 
-    summary_data.append({"指标": "算子", "数值": config.get("operator", "Unknown")})
-    summary_data.append({"指标": "设备数", "数值": device_used})
-    summary_data.append({"指标": "节点数", "数值": nodes})
+    summary_data.append({"指标": "算子", "数值": str(config.get("operator", "Unknown"))})
+    summary_data.append({"指标": "设备数", "数值": str(device_used)})
+    summary_data.append({"指标": "节点数", "数值": str(nodes)})
     summary_data.append(
-        {"指标": "预热迭代", "数值": config.get("warmup_iterations", "Unknown")}
+        {"指标": "预热迭代", "数值": str(config.get("warmup_iterations", "Unknown"))}
     )
     summary_data.append(
-        {"指标": "测量迭代", "数值": config.get("measured_iterations", "Unknown")}
+        {"指标": "测量迭代", "数值": str(config.get("measured_iterations", "Unknown"))}
     )
 
     # Performance summary (extract from metrics if available)
@@ -363,40 +369,49 @@ def create_summary_table_infer(test_result: dict) -> pd.DataFrame:
     try:
         acc = env["cluster"][0]["machine"]["accelerators"][0]
         rows += [
-            {"指标": "加速卡", "数值": acc.get("model", "Unknown")},
-            {"指标": "卡数", "数值": acc.get("count", "Unknown")},
+            {"指标": "加速卡", "数值": str(acc.get("model", "Unknown"))},
+            {"指标": "卡数", "数值": str(acc.get("count", "Unknown"))},
             {"指标": "显存/卡", "数值": f"{acc.get('memory_gb_per_card','?')} GB"},
-            {"指标": "CUDA", "数值": acc.get("cuda", "Unknown")},
-            {"指标": "平台", "数值": acc.get("type", "nvidia")},
+            {"指标": "CUDA", "数值": str(acc.get("cuda", "Unknown"))},
+            {"指标": "平台", "数值": str(acc.get("type", "nvidia"))},
         ]
     except Exception:
         pass
 
     cfg = test_result.get("config", {})
     rows += [
-        {"指标": "框架", "数值": cfg.get("framework", "unknown")},
-        {"指标": "模型", "数值": cfg.get("model", "")},
+        {"指标": "框架", "数值": str(cfg.get("framework", "unknown"))},
+        {"指标": "模型", "数值": str(cfg.get("model", ""))},
         {
             "指标": "batch",
-            "数值": (cfg.get("infer_args", {}) or {}).get("static_batch_size", "unknown"),
+            "数值": str(
+                (cfg.get("infer_args", {}) or {}).get("static_batch_size", "unknown")
+            ),
         },
         {
             "指标": "prompt_tok",
-            "数值": (cfg.get("infer_args", {}) or {}).get("prompt_token_num", "unknown"),
+            "数值": str(
+                (cfg.get("infer_args", {}) or {}).get("prompt_token_num", "unknown")
+            ),
         },
         {
             "指标": "output_tok",
-            "数值": (cfg.get("infer_args", {}) or {}).get("output_token_num", "unknown"),
+            "数值": str(
+                (cfg.get("infer_args", {}) or {}).get("output_token_num", "unknown")
+            ),
         },
-        {"指标": "warmup", "数值": cfg.get("warmup_iterations", "unknown")},
-        {"指标": "measured", "数值": cfg.get("measured_iterations", "unknown")},
+        {"指标": "warmup", "数值": str(cfg.get("warmup_iterations", "unknown"))},
+        {"指标": "measured", "数值": str(cfg.get("measured_iterations", "unknown"))},
     ]
 
     # scalar metrics quick view
     for m in test_result.get("metrics", []):
         if m.get("type") == "scalar":
             rows.append(
-                {"指标": m.get("name"), "数值": f"{m.get('value')} {m.get('unit','')}"}
+                {
+                    "指标": str(m.get("name", "")),
+                    "数值": f"{m.get('value', '')} {m.get('unit', '')}".strip(),
+                }
             )
 
     return pd.DataFrame(rows)
@@ -406,17 +421,22 @@ def create_summary_table_ops(test_result: dict) -> pd.DataFrame:
     rows = []
     cfg = test_result.get("config", {})
 
-    rows.append({"指标": "testcase", "数值": test_result.get("testcase", "")})
+    rows.append({"指标": "testcase", "数值": str(test_result.get("testcase", ""))})
     # Try to get operator name from config
-    rows.append({"指标": "算子", "数值": cfg.get("operator", cfg.get("op_name", "Unknown"))})
+    rows.append(
+        {
+            "指标": "算子",
+            "数值": str(cfg.get("operator", cfg.get("op_name", "Unknown"))),
+        }
+    )
 
     # Environment info
     env = test_result.get("environment", {})
     try:
         acc = env["cluster"][0]["machine"]["accelerators"][0]
         rows += [
-            {"指标": "加速卡", "数值": acc.get("model", "Unknown")},
-            {"指标": "卡数", "数值": acc.get("count", "Unknown")},
+            {"指标": "加速卡", "数值": str(acc.get("model", "Unknown"))},
+            {"指标": "卡数", "数值": str(acc.get("count", "Unknown"))},
         ]
     except Exception:
         pass
@@ -424,7 +444,12 @@ def create_summary_table_ops(test_result: dict) -> pd.DataFrame:
     # Scalar metrics summary
     scalars = [m for m in test_result.get("metrics", []) if m.get("type") == "scalar"]
     for m in scalars:
-        rows.append({"指标": m.get("name"), "数值": f"{m.get('value')} {m.get('unit','')}"})
+        rows.append(
+            {
+                "指标": str(m.get("name", "")),
+                "数值": f"{m.get('value', '')} {m.get('unit', '')}".strip(),
+            }
+        )
 
     # Common config fields fallback
     for k in [
@@ -435,6 +460,6 @@ def create_summary_table_ops(test_result: dict) -> pd.DataFrame:
         "measured_iterations",
     ]:
         if k in cfg:
-            rows.append({"指标": k, "数值": cfg.get(k)})
+            rows.append({"指标": k, "数值": str(cfg.get(k))})
 
     return pd.DataFrame(rows)
