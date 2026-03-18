@@ -350,6 +350,7 @@ def plot_timeseries_auto(
         height=420,
         hovermode="x unified",
     )
+    fig.update_yaxes(rangemode="tozero")
     if y_log_scale:
         fig.update_yaxes(type="log")
     return fig
