@@ -3,26 +3,34 @@
 InfiniMetrics MongoDB integration module.
 
 This module provides:
-- MongoDB connection management
-- Test result repository
-- Dispatcher summary repository
-- Data import from JSON/CSV files
+- MongoDB connection management (client.py)
+- Database configuration (config.py)
+- Test result repository (repository.py)
+- Data import from JSON/CSV files (importer.py)
+- File watcher for auto-import (watcher.py)
 
 Usage:
-    from db import MongoDBClient, DatabaseConfig, TestRunRepository
+    from db import MongoDBClient, DataImporter
 
     # Connect to MongoDB
     client = MongoDBClient()
-    db = client.get_database()
+    repo = TestRunRepository(client.get_collection("test_runs"))
 
-    # Get repositories
-    test_runs = TestRunRepository(client.get_collection("test_runs"))
-    summaries = DispatcherSummaryRepository(client.get_collection("dispatcher_summaries"))
-
-    # Import data
-    from db import DataImporter
-    importer = DataImporter(test_runs)
+    # Import existing results
+    importer = DataImporter(repo)
     importer.import_directory(Path("./output"))
+
+    # Or use the watcher for auto-import
+    from db.watcher import Watcher
+    watcher = Watcher(output_dir=Path("./output"))
+    watcher.run_forever()
+
+CLI Usage:
+    # Start watching for new files
+    python -m db.watcher
+
+    # One-time scan
+    python -m db.watcher --scan
 """
 
 # Conditionally import MongoDB-dependent modules
