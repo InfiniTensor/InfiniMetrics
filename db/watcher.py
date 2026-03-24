@@ -45,7 +45,9 @@ class Watcher:
         mongo_uri: str = None,
     ):
         self.output_dir = Path(output_dir) if output_dir else Path("./output")
-        self.summary_dir = Path(summary_dir) if summary_dir else Path("./summary_output")
+        self.summary_dir = (
+            Path(summary_dir) if summary_dir else Path("./summary_output")
+        )
 
         # Initialize MongoDB connection
         config = DatabaseConfig.from_env()
@@ -101,7 +103,9 @@ class Watcher:
         # Store summary metadata (not re-import test results)
         if self.summary_dir.exists():
             logger.info(f"Scanning summaries: {self.summary_dir}")
-            for summary_file in sorted(self.summary_dir.glob("dispatcher_summary_*.json")):
+            for summary_file in sorted(
+                self.summary_dir.glob("dispatcher_summary_*.json")
+            ):
                 summary_result = self._import_summary_metadata(summary_file)
                 result["summary"]["imported"].extend(summary_result.get("imported", []))
                 result["summary"]["skipped"].extend(summary_result.get("skipped", []))
@@ -245,7 +249,9 @@ def main():
     )
     parser.add_argument("--scan", action="store_true", help="One-time scan only")
     parser.add_argument("--output-dir", default="./output", help="Output directory")
-    parser.add_argument("--summary-dir", default="./summary_output", help="Summary directory")
+    parser.add_argument(
+        "--summary-dir", default="./summary_output", help="Summary directory"
+    )
     parser.add_argument("--mongo-uri", help="MongoDB connection URI")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     args = parser.parse_args()
