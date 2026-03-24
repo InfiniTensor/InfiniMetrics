@@ -97,6 +97,58 @@ Results are saved in:
 }
 ```
 
+## MongoDB Integration (Optional)
+
+InfiniMetrics supports storing test results in MongoDB for persistent storage and dashboard visualization.
+
+### Prerequisites
+
+```bash
+# Install MongoDB dependencies
+pip install pymongo watchdog
+
+# Ensure MongoDB is running locally or set connection URL
+export MONGO_URI="mongodb://localhost:27017"
+```
+
+### CLI Usage
+
+```bash
+# Start file watcher (auto-import new results, runs forever)
+python -m db.watcher --output-dir ./output --summary-dir ./summary_output
+
+# One-time scan only (import existing files and exit)
+python -m db.watcher --scan
+```
+
+### Python API
+
+```python
+from pathlib import Path
+from db.watcher import Watcher
+
+# Create watcher and start monitoring
+watcher = Watcher(
+    output_dir=Path("./output"),
+    summary_dir=Path("./summary_output")
+)
+
+# One-time scan
+result = watcher.scan()
+print(f"Imported: {len(result['imported'])}")
+
+# Or run forever (auto-import new files)
+watcher.run_forever()  # Blocks until Ctrl+C
+```
+
+### Environment Variables
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MONGO_URI` | `mongodb://localhost:27017` | MongoDB connection URL |
+| `MONGO_DB_NAME` | `infinimetrics` | Database name |
+| `MONGO_COLLECTION` | `test_runs` | Test results collection |
+
 ## Next Steps
 
 - **Configure Tests**: See [Configuration Guide](./configuration.md) for customization
