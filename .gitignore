@@ -208,7 +208,7 @@ __marimo__/
 
 # local test outputs
 summary_output/
-test_output/
+output/
 traces/
 test_*.json
 format*.json

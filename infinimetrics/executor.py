@@ -5,18 +5,18 @@ Executor - Universal Test Execution Framework
 
 import json
 import logging
-import subprocess
+import time
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
+
+import subprocess
 
 from infinimetrics.adapter import BaseAdapter
-from infinimetrics.common.error_handler import ErrorHandler
-from infinimetrics.common.hardware_info import collect_hardware_info
-from infinimetrics.utils.path_utils import sanitize_filename
 from infinimetrics.common.constants import ErrorCode, TEST_CATEGORIES
-
+from infinimetrics.utils.hardware_detector import HardwareDetector
+from infinimetrics.utils.path_utils import sanitize_filename
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +38,7 @@ class TestResult:
     result_file: Optional[str] = None
     skipped: bool = False
     config: Optional[Dict[str, Any]] = None
+    duration: float = 0.0
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to lightweight dictionary format for Dispatcher aggregation."""
@@ -48,6 +49,7 @@ class TestResult:
             "result_file": self.result_file,
             "skipped": self.skipped,
             "config": self.config,
+            "duration": self.duration,
         }
 
 
@@ -75,9 +77,9 @@ class Executor:
         self.run_id = payload.get("run_id", "")
         self.test_input = None
 
+        # Setup output directory from config
         config = payload.get("config", {})
-        output_dir = config.get("output_dir", "./output")
-        self.output_dir = Path(output_dir)
+        self.output_dir = Path(config.get("output_dir", "./output"))
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
         logger.debug(f"Executor initialized: testcase={self.testcase}")
@@ -145,101 +147,107 @@ class Executor:
         """
         logger.info(f"Executor: Running {self.testcase}")
 
-        # Initialize TestResult directly (default: result_code=0)
+        start_time = time.time()
         config = self.payload.get("config", {})
         test_result = TestResult(
             run_id=self.run_id,
             testcase=self.testcase,
-            result_code=0,  # Default to success
+            result_code=0,
             result_file=None,
             config=config,
+            duration=0.0,
         )
 
-        response: Dict[str, Any] = {}
+        response = {}
 
         try:
-            # Phase 1: Setup
             self.setup()
-
-            # Phase 2: Process
-            logger.debug(f"Executor: Calling adapter.process()")
             response = self.adapter.process(self.test_input)
 
-            # Enrich environment ONLY if missing
+            # Enrich environment if missing
             if isinstance(response, dict) and "environment" not in response:
-                env = self._build_environment(response)
+                response = self._enrich_environment(response)
 
-                # rebuild ordered dict (py3.7+ preserves insertion order)
-                ordered: Dict[str, Any] = {}
-                for k in [
-                    "run_id",
-                    "time",
-                    "testcase",
-                    "success",
-                    "environment",
-                    "result_code",
-                    "config",
-                    "metrics",
-                ]:
-                    if k == "environment":
-                        ordered["environment"] = env
-                    elif k in response:
-                        ordered[k] = response[k]
-
-                # append remaining keys in original order (skip those already set)
-                for k, v in response.items():
-                    if k not in ordered:
-                        ordered[k] = v
-
-                response = ordered
-
-            # Phase 3: Teardown (cleanup, save result)
             result_file = self.teardown(response)
             test_result.result_file = result_file
+            test_result.duration = time.time() - start_time
 
             logger.info(
-                f"Executor: {self.testcase} completed with code={test_result.result_code}"
+                f"Executor: {self.testcase} completed in {test_result.duration:.2f}s"
             )
-
             return test_result
 
-        except subprocess.TimeoutExpired as e:
-            # Timeout errors (possible hardware hang)
-            test_result.result_code = ErrorCode.TIMEOUT
-            ErrorHandler.log_error(self.testcase, e, ErrorCode.TIMEOUT)
-            response = self._build_error_response(str(e), ErrorCode.TIMEOUT, config)
-
-        except ValueError as e:
-            # Configuration or input validation errors
-            test_result.result_code = ErrorCode.CONFIG
-            ErrorHandler.log_error(self.testcase, e, ErrorCode.CONFIG)
-            response = self._build_error_response(str(e), ErrorCode.CONFIG, config)
-
-        except RuntimeError as e:
-            # RuntimeError: analyze error message for specific patterns
-            error_code = ErrorHandler.classify_runtime_error(str(e).lower())
-            test_result.result_code = error_code
-            ErrorHandler.log_error(self.testcase, e, error_code)
-            response = self._build_error_response(str(e), error_code, config)
-
         except Exception as e:
-            # Unexpected exceptions
-            test_result.result_code = ErrorCode.GENERIC
-            logger.error(
-                f"Executor: {self.testcase} failed with unexpected exception: {e}",
-                exc_info=True,
-            )
-            response = self._build_error_response(str(e), ErrorCode.GENERIC, config)
+            return self._handle_error(e, start_time, test_result)
 
-        finally:
-            # Always save result (even on failure)
-            self._finalize_result(test_result, response)
+    def _enrich_environment(self, response: Dict[str, Any]) -> Dict[str, Any]:
+        """Enrich response with environment information."""
+        env = self._build_environment(response)
+
+        # Rebuild ordered dict
+        ordered = {}
+        for key in [
+            "run_id",
+            "time",
+            "testcase",
+            "success",
+            "environment",
+            "result_code",
+            "config",
+            "metrics",
+        ]:
+            if key == "environment":
+                ordered["environment"] = env
+            elif key in response:
+                ordered[key] = response[key]
+
+        for key, value in response.items():
+            if key not in ordered:
+                ordered[key] = value
+
+        return ordered
+
+    def _handle_error(
+        self, error: Exception, start_time: float, test_result: TestResult
+    ) -> TestResult:
+        """Handle different types of errors."""
+        duration = time.time() - start_time
+        test_result.duration = duration
+        error_msg = str(error)
+
+        # Determine error type and result code
+        if isinstance(error, subprocess.TimeoutExpired):
+            test_result.result_code = ErrorCode.TIMEOUT
+            logger.error(f"Executor: Timeout after {duration:.2f}s: {error_msg[:300]}")
+        elif isinstance(error, ValueError):
+            test_result.result_code = ErrorCode.CONFIG
+            logger.warning(f"Executor: Configuration error: {error_msg[:300]}")
+        elif isinstance(error, RuntimeError):
+            if any(
+                kw in error_msg.lower() for kw in ["memory", "oom", "out of memory"]
+            ):
+                test_result.result_code = ErrorCode.SYSTEM
+                logger.error(f"Executor: Memory error: {error_msg[:300]}")
+            else:
+                test_result.result_code = ErrorCode.GENERIC
+                logger.warning(f"Executor: Runtime error: {error_msg[:300]}")
+        else:
+            test_result.result_code = ErrorCode.GENERIC
+            logger.error(f"Executor: Unexpected error: {error}", exc_info=True)
+
+        # Build error response
+        response = self._build_error_response(error_msg, test_result.result_code)
+
+        # Save result
+        try:
+            if not test_result.result_file:
+                test_result.result_file = self._save_result(response)
+        except Exception as e:
+            logger.error(f"Executor: Failed to save result: {e}")
 
         return test_result
 
-    def _build_error_response(
-        self, error_msg: str, result_code: int, config: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _build_error_response(self, error_msg: str, result_code: int) -> Dict[str, Any]:
         """
         Build a response dict containing error information for saving to disk.
 
@@ -250,11 +258,28 @@ class Executor:
         Returns:
             Dictionary with basic test info and error details
         """
-        response = ErrorHandler.build_error_response(
-            self.run_id, self.testcase, error_msg, result_code, config
-        )
-        response["resolved"] = self._extract_device_info(config)
-        return response
+        config = self.payload.get("config", {})
+
+        # Create a cleaned config without injected metadata
+        cleaned_config = {
+            k: v
+            for k, v in config.items()
+            if not k.startswith("_")  # Skip _testcase, _run_id, _time
+        }
+
+        # Extract device information
+        resolved = self._extract_device_info(config)
+
+        return {
+            "run_id": self.run_id,
+            "testcase": self.testcase,
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "result_code": result_code,
+            "error_msg": error_msg,
+            "success": 1,  # 1 = failure
+            "config": cleaned_config,
+            "resolved": resolved,
+        }
 
     def _extract_device_info(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Extract device information from config."""
@@ -325,7 +350,7 @@ class Executor:
         else:
             topo = f"{nodes}x{(gpn or max(1, device_used // nodes))} ring mesh"
 
-        hw = collect_hardware_info(accel_type=accel_type, device_ids=device_ids)
+        hw = self._collect_static_hw(accel_type=accel_type, device_ids=device_ids)
 
         framework_info = resolved.get("framework", {})
         if not framework_info:
@@ -355,17 +380,6 @@ class Executor:
                 }
             ],
         }
-
-    def _finalize_result(
-        self, test_result: TestResult, response: Dict[str, Any]
-    ) -> None:
-        """Save result file if not already saved."""
-        if not test_result.result_file:
-            try:
-                result_file = self._save_result(response)
-                test_result.result_file = result_file
-            except Exception as teardown_error:
-                logger.error(f"Executor: Failed to save result: {teardown_error}")
 
     def _save_result(self, result: Dict[str, Any]) -> str:
         """

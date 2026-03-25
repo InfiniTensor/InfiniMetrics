@@ -157,6 +157,76 @@ class InfiniMetricsDataLoader:
             return []
         return self._source.load_summaries()
 
+    def load_ci_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+        """
+        Load CI history with detailed execution information.
+
+        Args:
+            limit: Maximum number of CI runs to load
+
+        Returns:
+            List of CI run summaries with enhanced information
+        """
+        if self._source is None:
+            return []
+
+        # Check if the source has load_ci_history method
+        if hasattr(self._source, "load_ci_history"):
+            return self._source.load_ci_history(limit)
+
+        # Fallback: use load_summaries and enhance them
+        summaries = self._source.load_summaries()
+        return self._enhance_summaries(summaries[:limit])
+
+    def _enhance_summaries(
+        self, summaries: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        """
+        Enhance summaries with CI information and failure details.
+        This is a fallback method when the data source doesn't provide enhanced data.
+        """
+        enhanced = []
+        for summary in summaries:
+            # Normalize fields
+            enhanced_summary = summary.copy()
+
+            # Set default CI fields with placeholder markers
+            ci_fields = [
+                "commit",
+                "branch",
+                "commit_message",
+                "author",
+                "pipeline_id",
+                "ci_url",
+            ]
+            for field in ci_fields:
+                if field not in enhanced_summary:
+                    enhanced_summary[field] = f"unknown_{field}"
+                    enhanced_summary[f"{field}_placeholder"] = True
+
+            # Calculate status
+            total = enhanced_summary.get("total_tests", 0)
+            failed = enhanced_summary.get("failed_tests", 0)
+            if total == 0:
+                enhanced_summary["status"] = "无测试"
+            elif failed == 0:
+                enhanced_summary["status"] = "成功"
+            elif enhanced_summary.get("successful_tests", 0) > 0:
+                enhanced_summary["status"] = "部分成功"
+            else:
+                enhanced_summary["status"] = "失败"
+
+            # Add failed tests details if not present
+            if "failed_tests_details" not in enhanced_summary:
+                enhanced_summary["failed_tests_details"] = []
+
+            # Add data source marker
+            enhanced_summary["_data_source"] = self.source_type
+
+            enhanced.append(enhanced_summary)
+
+        return enhanced
+
 
 # Re-export from sibling modules
 from .data_sources import DataSource, FileDataSource

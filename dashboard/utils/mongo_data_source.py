@@ -9,7 +9,12 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 
 from .data_sources import DataSource
-from .data_utils import extract_accelerator_types, extract_run_info
+from .data_utils import (
+    extract_accelerator_types,
+    extract_run_info,
+    normalize_ci_summary,
+    extract_failed_tests_details,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +38,7 @@ class MongoDataSource(DataSource):
             if str(project_root) not in sys.path:
                 sys.path.insert(0, str(project_root))
 
-            from db import MongoDBClient, TestRunRepository
+            from db import MongoDBClient, TestRunRepository, DispatcherSummaryRepository
 
             if self._config:
                 self._client = MongoDBClient(self._config)
@@ -46,6 +51,10 @@ class MongoDataSource(DataSource):
                 config = self._config or DatabaseConfig.from_env()
                 self._repository = TestRunRepository(
                     self._client.get_collection(config.collection_name)
+                )
+
+                self._summary_repo = DispatcherSummaryRepository(
+                    self._client.get_collection(config.summary_collection_name)
                 )
                 self._connected = True
                 logger.info("Connected to MongoDB data source")
@@ -130,3 +139,106 @@ class MongoDataSource(DataSource):
         except Exception as e:
             logger.warning(f"Failed to load summaries from MongoDB: {e}")
             return []
+
+    def load_ci_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+        """
+        Load CI history with enhanced information from MongoDB.
+        """
+        if not self._connect():
+            logger.warning("MongoDB not connected, returning empty list")
+            return []
+
+        try:
+            # Retrieve CI summaries from the summary repository
+            summaries = self._summary_repo.list_summaries(limit=limit)
+            enhanced_summaries = []
+
+            for summary in summaries:
+                # Remove internal MongoDB fields
+                summary.pop("_id", None)
+                summary.pop("_metadata", None)
+
+                # Normalize CI summary format
+                summary = normalize_ci_summary(summary)
+
+                # Extract failed test details
+                if "failed_tests_details" not in summary:
+                    # Try to load failure details from associated test results
+                    failed_details = self._load_failed_tests_for_summary(summary)
+                    summary["failed_tests_details"] = failed_details
+
+                # Add data source marker
+                summary["_data_source"] = "mongodb"
+
+                # Derive overall status
+                total = summary.get("total_tests", 0)
+                failed = summary.get("failed_tests", 0)
+                if total == 0:
+                    summary["status"] = "无测试"
+                elif failed == 0:
+                    summary["status"] = "成功"
+                elif summary.get("successful_tests", 0) > 0:
+                    summary["status"] = "部分成功"
+                else:
+                    summary["status"] = "失败"
+
+                enhanced_summaries.append(summary)
+
+            return enhanced_summaries
+
+        except Exception as e:
+            logger.warning(f"Failed to load CI history from MongoDB: {e}")
+            return []
+
+    def _load_failed_tests_for_summary(
+        self, summary: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
+        """
+        Load failed test details for a given summary.
+        """
+        failed_details = []
+
+        # If run_ids are available, try loading each failed test individually
+        if "run_ids" in summary:
+            for run_id in summary.get("run_ids", []):
+                try:
+                    test_result = self.load_test_result(run_id)
+                    if test_result and not test_result.get("success", True):
+                        failed_details.append(
+                            {
+                                "test_name": test_result.get("testcase", "unknown"),
+                                "run_id": run_id,
+                                "error": test_result.get("error_msg", "Unknown error"),
+                                "duration": self._extract_duration(test_result),
+                                "logs": test_result.get("logs", ""),
+                                "config": test_result.get("config", {}),
+                            }
+                        )
+                except Exception as e:
+                    logger.debug(f"Failed to load test {run_id}: {e}")
+
+        # If test_results are already embedded in the summary
+        elif "test_results" in summary:
+            for test in summary["test_results"]:
+                if not test.get("success", True):
+                    failed_details.append(
+                        {
+                            "test_name": test.get(
+                                "name", test.get("testcase", "unknown")
+                            ),
+                            "error": test.get(
+                                "error", test.get("message", "Unknown error")
+                            ),
+                            "duration": test.get("duration", 0),
+                            "logs": test.get("logs", test.get("output", "")),
+                        }
+                    )
+
+        return failed_details
+
+    def _extract_duration(self, test_result: Dict[str, Any]) -> float:
+        """Extract duration from test result metrics."""
+        for metric in test_result.get("metrics", []):
+            if metric.get("name") == "duration":
+                return metric.get("value", 0)
+        return 0

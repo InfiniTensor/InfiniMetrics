@@ -201,26 +201,77 @@ class Dispatcher:
         """Aggregate results from executors."""
         total = len(results)
         successful = sum(1 for r in results if r["result_code"] == 0)
+        failed = total - successful
 
-        return {
+        # 计算总duration
+        total_duration = 0
+
+        aggregated = {
             "total_tests": total,
             "successful_tests": successful,
-            "failed_tests": total - successful,
-            "results": [
+            "failed_tests": failed,
+            "results": [],
+            "timestamp": datetime.now().isoformat(),
+        }
+
+        for r in results:
+            # 提取duration（如果存在）
+            duration = r.get("duration", 0)
+            total_duration += duration
+
+            aggregated["results"].append(
                 {
                     "run_id": r["run_id"],
                     "testcase": r["testcase"],
                     "result_code": r["result_code"],
                     "result_file": r["result_file"],
                     "skipped": r.get("skipped", False),
+                    "duration": duration,  # 添加duration
                 }
-                for r in results
-            ],
-            "timestamp": datetime.now().isoformat(),
-        }
+            )
+
+        aggregated["total_duration_seconds"] = total_duration
+
+        # 添加失败详情
+        failed_details = []
+        for r in results:
+            if r["result_code"] != 0:
+                failed_details.append(
+                    {
+                        "testcase": r["testcase"],
+                        "run_id": r["run_id"],
+                        "result_code": r["result_code"],
+                        "error_msg": r.get("error_msg", "Unknown error"),
+                        "result_file": r.get("result_file"),
+                    }
+                )
+
+        if failed_details:
+            aggregated["failed_tests_details"] = failed_details
+
+        return aggregated
 
     def _save_summary(self, aggregated: Dict[str, Any]) -> None:
-        """Save aggregated results summary to disk."""
+        """Save aggregated results summary to disk with Git and CI information."""
+        # 获取Git信息
+        from infinimetrics.utils.git_utils import get_git_info, get_ci_environment_info
+
+        git_info = get_git_info()
+        ci_info = get_ci_environment_info()
+
+        # 构建增强的汇总数据（保留原有的所有字段）
+        enhanced_summary = {
+            **aggregated,  # 这里包含了 results, total_tests 等所有原有字段
+            "git": git_info,
+            "ci_environment": ci_info,
+        }
+
+        # 计算总运行时长
+        total_duration = sum(
+            r.get("duration", 0) for r in aggregated.get("results", [])
+        )
+        enhanced_summary["total_duration_seconds"] = total_duration
+
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"dispatcher_summary_{timestamp}.json"
 
@@ -228,7 +279,17 @@ class Dispatcher:
         summary_dir = Path("./summary_output")
         summary_dir.mkdir(parents=True, exist_ok=True)
 
+        # Save summary to a separate directory
+        summary_dir = Path("./summary_output")
+        summary_dir.mkdir(parents=True, exist_ok=True)
+
         with open(summary_dir / filename, "w", encoding="utf-8") as f:
-            json.dump(aggregated, f, indent=2, ensure_ascii=False)
+            json.dump(enhanced_summary, f, indent=2, ensure_ascii=False)
 
         logger.info(f"Summary saved to {summary_dir / filename}")
+        if git_info.get("is_git_repo"):
+            logger.info(
+                f"Git info: commit={git_info.get('short_commit')}, branch={git_info.get('branch')}"
+            )
+        else:
+            logger.info("Git info: not in a Git repository")

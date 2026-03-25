@@ -10,7 +10,13 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-from .data_utils import extract_accelerator_types, extract_run_info, load_summary_file
+from .data_utils import (
+    extract_accelerator_types,
+    extract_run_info,
+    load_summary_file,
+    normalize_ci_summary,
+    extract_failed_tests_details,
+)
 
 # Add project root to path for db module access (works regardless of cwd)
 _project_root = Path(__file__).parent.parent.parent
@@ -116,12 +122,84 @@ class FileDataSource(DataSource):
 
         return data
 
-    def _is_test_result_file(self, data: Dict[str, Any]) -> bool:
-        """Check if JSON file is a test result (not a summary)."""
-        required = ["run_id", "testcase", "config"]
-        return all(key in data for key in required) and "metrics" in data
-
     def load_summaries(self) -> List[Dict[str, Any]]:
         """Load dispatcher summary files from summary_output directory."""
         summary_dir = self.results_dir.parent / "summary_output"
         return load_summary_file(str(summary_dir))
+
+    def load_ci_history(self, limit: int = 100) -> List[Dict[str, Any]]:
+        """
+        Load the CI history from the summary file
+        """
+        summaries = self.load_summaries()
+        enhanced_summaries = []
+
+        for summary in summaries[:limit]:
+            # Normalize CI metadata
+            summary = normalize_ci_summary(summary)
+
+            # Extract detailed information of failed test cases
+            summary["failed_tests_details"] = extract_failed_tests_details(summary)
+
+            # Add data source marker
+            summary["_data_source"] = "file"
+            summary["_summary_file"] = summary.get("file", "unknown")
+
+            # Compute overall status
+            total = summary.get("total_tests", 0)
+            failed = summary.get("failed_tests", 0)
+            if total == 0:
+                summary["status"] = "无测试"
+            elif failed == 0:
+                summary["status"] = "成功"
+            elif summary.get("successful_tests", 0) > 0:
+                summary["status"] = "部分成功"
+            else:
+                summary["status"] = "失败"
+
+            enhanced_summaries.append(summary)
+
+        return enhanced_summaries
+
+    def _is_test_result_file(self, data: Dict[str, Any]) -> bool:
+        """Check if JSON file is a test result."""
+        required = ["run_id", "testcase", "config"]
+        return all(key in data for key in required) and "metrics" in data
+
+    def _get_csv_base_dir(self, json_data: Dict[str, Any], json_path: Path) -> Path:
+        """Get the correct base directory for CSV files."""
+        config = json_data.get("config", {})
+        output_dir = config.get("output_dir")
+
+        if output_dir:
+            output_path = Path(output_dir)
+            if output_path.is_absolute():
+                return output_path
+            return json_path.parent / output_dir
+
+        return json_path.parent
+
+    def _resolve_csv_path(self, csv_url: str, base_dir: Path) -> Optional[Path]:
+        """Resolve CSV path from raw_data_url."""
+        try:
+            if not csv_url:
+                return None
+
+            if csv_url.startswith("./"):
+                csv_url = csv_url[2:]
+
+            # Try a variety of possible paths
+            candidates = [
+                base_dir / csv_url,
+                base_dir / Path(csv_url).name,
+                base_dir.parent / csv_url,
+                base_dir.parent / Path(csv_url).name,
+            ]
+
+            for p in candidates:
+                if p.exists():
+                    return p
+
+            return None
+        except Exception:
+            return None
