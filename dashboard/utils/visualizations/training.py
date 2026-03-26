@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 
 from utils.training_utils import get_metric_dataframe, apply_smoothing
-from utils.visualizations import create_gauge_chart
+from .base import create_gauge_chart
 
 
 def render_performance_curves(selected_runs, smoothing, y_log):
