@@ -9,6 +9,7 @@ from components.header import render_header
 from utils.visualizations import (
     create_summary_table_ops,
     plot_timeseries_auto,
+    render_operator_performance_charts,
 )
 
 init_page("算子测试分析 | InfiniMetrics", "⚡")
@@ -37,6 +38,10 @@ def main():
         only_success = st.checkbox("仅显示成功测试", value=True)
         y_log = st.checkbox("Y轴对数刻度（可选）", value=False)
 
+        st.markdown("---")
+        st.markdown("### 📊 图表选项")
+        show_performance_charts = st.checkbox("显示性能仪表盘", value=True)
+
     filtered = [r for r in ops_runs if (not only_success or r.get("success"))]
 
     st.caption(f"找到 {len(filtered)} 个算子测试")
@@ -63,9 +68,15 @@ def main():
         ri["data"] = data
         selected_runs.append(ri)
 
-    tab1, tab2 = st.tabs(["📌 概览", "📈 曲线/原始数据"])
+    tab1, tab2, tab3 = st.tabs(["📈 性能图表", "📌 概览", "📊 原始数据"])
 
     with tab1:
+        # Use the new performance chart function
+        render_operator_performance_charts(
+            selected_runs, y_log, show_performance_charts
+        )
+
+    with tab2:
         for run in selected_runs:
             with st.expander(f"{run.get('run_id')} - 概览"):
                 st.dataframe(
@@ -73,16 +84,28 @@ def main():
                     use_container_width=True,
                     hide_index=True,
                 )
-                st.markdown("**config**")
+                st.markdown("**完整配置**")
                 st.json(run["data"].get("config", {}))
 
-    with tab2:
-        # If operators have timeseries CSVs, automatically plot them
+                env = run["data"].get("environment", {})
+                if env:
+                    st.markdown("**环境信息**")
+                    try:
+                        acc = env["cluster"][0]["machine"]["accelerators"][0]
+                        st.write(f"- 加速卡: {acc.get('model', 'Unknown')}")
+                        st.write(f"- 显存: {acc.get('memory_gb_per_card', '?')} GB")
+                        st.write(f"- CUDA版本: {acc.get('cuda', 'Unknown')}")
+                    except:
+                        st.json(env)
+
+    with tab3:
+        # Original data
         for run in selected_runs:
-            with st.expander(f"{run.get('run_id')} - metrics"):
+            with st.expander(f"{run.get('run_id')} - 原始数据"):
                 for m in run["data"].get("metrics", []):
                     df = m.get("data")
                     if df is not None and len(df.columns) >= 2:
+                        st.markdown(f"**{m.get('name', 'metric')}**")
                         fig = plot_timeseries_auto(
                             df, title=m.get("name", "metric"), y_log_scale=y_log
                         )
@@ -90,8 +113,9 @@ def main():
                     else:
                         # scalar
                         if m.get("type") == "scalar":
-                            st.write(
-                                f"- {m.get('name')}: {m.get('value')} {m.get('unit','')}"
+                            st.metric(
+                                label=m.get("name", ""),
+                                value=f"{m.get('value', '')} {m.get('unit', '')}",
                             )
 
 

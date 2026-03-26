@@ -12,7 +12,7 @@ from utils.training_utils import (
     load_selected_runs,
     create_training_summary,
 )
-from utils.training_plots import (
+from utils.visualizations import (
     render_performance_curves,
     render_throughput_comparison,
     render_data_tables,
