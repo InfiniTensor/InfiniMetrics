@@ -190,17 +190,19 @@ def create_history_dataframe(ci_history: list) -> pd.DataFrame:
             run_id_display = ", ".join(run_ids) if run_ids else "unknown"
 
             # Extract failed test details
-            failed_details = []
-            for result in results:
-                if result.get("result_code", 0) != 0:
-                    failed_details.append(
-                        {
-                            "testcase": result.get("testcase", "unknown"),
-                            "run_id": result.get("run_id", "unknown"),
-                            "result_code": result.get("result_code", -1),
-                            "result_file": result.get("result_file", ""),
-                        }
-                    )
+            failed_details = item.get("failed_tests_details") or []
+            if not failed_details:
+                for result in results:
+                    if result.get("result_code", 0) != 0:
+                        failed_details.append(
+                            {
+                                "testcase": result.get("testcase", "unknown"),
+                                "run_id": result.get("run_id", "unknown"),
+                                "result_code": result.get("result_code", -1),
+                                "result_file": result.get("result_file", ""),
+                                "error_msg": result.get("error_msg", "Unknown error"),
+                            }
+                        )
 
             rows.append(
                 {
@@ -477,6 +479,11 @@ def render_failure_details(df):
                 st.markdown(f"**{i+1}. {fail.get('testcase', 'unknown')}**")
                 st.markdown(f"- Run ID: `{fail.get('run_id', 'unknown')}`")
                 st.markdown(f"- Result Code: {fail.get('result_code', -1)}")
+
+                error_msg = fail.get("error_msg")
+                if error_msg and error_msg != "Unknown error":
+                    st.markdown(f"- 错误信息: `{error_msg}`")
+
                 if fail.get("result_file"):
                     st.markdown(f"- Result File: `{fail.get('result_file')}`")
                 st.divider()
