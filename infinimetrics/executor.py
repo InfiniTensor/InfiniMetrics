@@ -39,6 +39,7 @@ class TestResult:
     skipped: bool = False
     config: Optional[Dict[str, Any]] = None
     duration: float = 0.0
+    error_msg: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to lightweight dictionary format for Dispatcher aggregation."""
@@ -50,6 +51,7 @@ class TestResult:
             "skipped": self.skipped,
             "config": self.config,
             "duration": self.duration,
+            "error_msg": self.error_msg,
         }
 
 
@@ -156,6 +158,7 @@ class Executor:
             result_file=None,
             config=config,
             duration=0.0,
+            error_msg=None,
         )
 
         response = {}
@@ -214,6 +217,9 @@ class Executor:
         duration = time.time() - start_time
         test_result.duration = duration
         error_msg = str(error)
+
+        # Set error message
+        test_result.error_msg = error_msg
 
         # Determine error type and result code
         if isinstance(error, subprocess.TimeoutExpired):
@@ -315,6 +321,20 @@ class Executor:
             "nodes": nodes,
             "gpus_per_node": gpus_per_node,
             "device_used": device_used,
+        }
+
+    def _collect_static_hw(self, accel_type="", device_ids=None):
+        """
+        Collect static hardware information.
+        """
+        return {
+            "cpu_model": "Unknown",
+            "memory_gb": 0,
+            "gpu_model": "Unknown",
+            "gpu_memory_gb": 0,
+            "driver_version": "Unknown",
+            "cuda_version": "Unknown",
+            "accelerator_type": accel_type or "generic",
         }
 
     def _build_environment(self, response: Dict[str, Any]) -> Dict[str, Any]:
