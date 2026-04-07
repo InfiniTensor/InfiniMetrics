@@ -12,9 +12,9 @@ from utils.visualizations import (
     plot_metric_vs_size,
     plot_comparison_matrix,
     create_gauge_chart,
-    create_summary_table,
     plot_timeseries_auto,
     create_summary_table_infer,
+    create_summary_table_comm,
 )
 
 init_page("通信测试分析 | InfiniMetrics", "🔗")
@@ -293,7 +293,7 @@ def main():
                     f"{run['operation']} ({run['device_used']} GPUs) - 配置详情"
                 ):
                     # Create summary table
-                    summary_df = create_summary_table(run.get("data", {}))
+                    summary_df = create_summary_table_comm(run.get("data", {}))
                     st.dataframe(
                         summary_df,
                         use_container_width=True,
