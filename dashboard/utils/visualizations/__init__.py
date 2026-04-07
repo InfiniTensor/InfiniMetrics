@@ -31,9 +31,9 @@ from .inference import (
 
 # Summary tables
 from .summary_tables import (
-    create_comm_summary_table,
-    create_infer_summary_table,
-    create_ops_summary_table,
+    create_summary_table_comm,
+    create_summary_table_infer,
+    create_summary_table_ops,
 )
 
 # Hardware functions
@@ -57,11 +57,6 @@ from .training import (
     render_config_details,
 )
 
-# Backward-compatible aliases
-create_summary_table = create_comm_summary_table
-create_summary_table_infer = create_infer_summary_table
-create_summary_table_ops = create_ops_summary_table
-
 __all__ = [
     # Base
     "create_gauge_chart",
@@ -73,10 +68,7 @@ __all__ = [
     "render_inference_metrics",
     "render_memory_gauge",
     # Summary tables
-    "create_comm_summary_table",
-    "create_infer_summary_table",
-    "create_ops_summary_table",
-    "create_summary_table",
+    "create_summary_table_comm",
     "create_summary_table_infer",
     "create_summary_table_ops",
     # Hardware

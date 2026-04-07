@@ -4,7 +4,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 
 from .base import create_gauge_chart
 

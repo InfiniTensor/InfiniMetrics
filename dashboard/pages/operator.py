@@ -95,7 +95,7 @@ def main():
                         st.write(f"- 加速卡: {acc.get('model', 'Unknown')}")
                         st.write(f"- 显存: {acc.get('memory_gb_per_card', '?')} GB")
                         st.write(f"- CUDA版本: {acc.get('cuda', 'Unknown')}")
-                    except:
+                    except Exception:
                         st.json(env)
 
     with tab3:

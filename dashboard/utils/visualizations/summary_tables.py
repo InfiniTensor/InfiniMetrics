@@ -5,7 +5,7 @@ import pandas as pd
 from typing import Dict, Any
 
 
-def create_comm_summary_table(test_result: Dict[str, Any]) -> pd.DataFrame:
+def create_summary_table_comm(test_result: Dict[str, Any]) -> pd.DataFrame:
     """Create summary table for communication tests."""
     summary_data = []
 
@@ -86,7 +86,7 @@ def create_comm_summary_table(test_result: Dict[str, Any]) -> pd.DataFrame:
     return pd.DataFrame(summary_data)
 
 
-def create_infer_summary_table(test_result: dict) -> pd.DataFrame:
+def create_summary_table_infer(test_result: dict) -> pd.DataFrame:
     """Create summary table for inference tests."""
     rows = []
 
@@ -141,7 +141,7 @@ def create_infer_summary_table(test_result: dict) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def create_ops_summary_table(test_result: dict) -> pd.DataFrame:
+def create_summary_table_ops(test_result: dict) -> pd.DataFrame:
     """Create summary table for operator tests."""
     rows = []
     cfg = test_result.get("config", {})
