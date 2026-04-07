@@ -323,20 +323,6 @@ class Executor:
             "device_used": device_used,
         }
 
-    def _collect_static_hw(self, accel_type="", device_ids=None):
-        """
-        Collect static hardware information.
-        """
-        return {
-            "cpu_model": "Unknown",
-            "memory_gb": 0,
-            "gpu_model": "Unknown",
-            "gpu_memory_gb": 0,
-            "driver_version": "Unknown",
-            "cuda_version": "Unknown",
-            "accelerator_type": accel_type or "generic",
-        }
-
     def _build_environment(self, response: Dict[str, Any]) -> Dict[str, Any]:
         """
         Build a unified environment block
@@ -370,7 +356,15 @@ class Executor:
         else:
             topo = f"{nodes}x{(gpn or max(1, device_used // nodes))} ring mesh"
 
-        hw = self._collect_static_hw(accel_type=accel_type, device_ids=device_ids)
+        hw = {
+            "cpu_model": "Unknown",
+            "memory_gb": 0,
+            "gpu_model": "Unknown",
+            "gpu_memory_gb": 0,
+            "driver_version": "Unknown",
+            "cuda_version": "Unknown",
+            "accelerator_type": accel_type or "generic",
+        }
 
         framework_info = resolved.get("framework", {})
         if not framework_info:
