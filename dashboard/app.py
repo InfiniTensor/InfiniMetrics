@@ -513,4 +513,3 @@ def render_failure_details(ci_summaries):
 
 if __name__ == "__main__":
     main()
-    s
