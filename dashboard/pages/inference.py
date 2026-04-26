@@ -75,10 +75,21 @@ def main():
         return
 
     # ---------- Run Selection ----------
-    options = {
-        f"{r.get('config', {}).get('framework','unknown')} | {_mode_of(r)} | {r.get('device_used','?')} GPU | {r.get('time','')} | {r.get('run_id','')[:10]}": i
-        for i, r in enumerate(filtered)
-    }
+    options = {}
+    for i, r in enumerate(filtered):
+        fw = r.get("config", {}).get("framework", "unknown")
+        model = r.get("config", {}).get("model", "unknown")
+        accel_type = "unknown"
+        # 优先从 accelerator_types 字段取（data_loader 会解析）
+        accel_list = r.get("accelerator_types", [])
+        if accel_list:
+            accel_type = accel_list[0]
+        mode = _mode_of(r)
+        dev = r.get("device_used", "?")
+        t = r.get("time", "")[:10]
+        run_id = r.get("run_id", "")
+        label = f"{fw} | {model} | {accel_type} | {dev}GPU | {t} | {run_id}"
+        options[label] = i
 
     selected = st.multiselect(
         "选择要分析的测试运行（可多选对比）",

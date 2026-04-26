@@ -1,0 +1,45 @@
+{
+  "run_id": "test.infinilm.service",
+  "testcase": "infer.InfiniLM.Service",
+  "time": "2026-03-06 08:26:39",
+  "result_code": 5,
+  "error_msg": "[Errno 2] No such file or directory: './traces/simple_trace.csv'",
+  "success": 1,
+  "config": {
+    "model_path": "/home/sunjinge/model/Qwen3-1.7B",
+    "model": "Qwen3-1.7B",
+    "output_dir": "./test_output",
+    "device": {
+      "accelerator": "nvidia",
+      "device_ids": [
+        1
+      ],
+      "cpu_only": false
+    },
+    "infer_args": {
+      "timeout_ms": 30000,
+      "concurrency": 8,
+      "request_trace": "./traces/simple_trace.csv",
+      "prompt_token_num": 100,
+      "output_token_num": 50,
+      "max_seq_len": 2048,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "top_k": 50,
+      "parallel": {
+        "dp": 1,
+        "tp": 1,
+        "pp": 1,
+        "sp": 1
+      },
+      "service_host": "127.0.0.1",
+      "service_port": 8000,
+      "static_batch_size": 1
+    }
+  },
+  "resolved": {
+    "nodes": 1,
+    "gpus_per_node": 0,
+    "device_used": 0
+  }
+}

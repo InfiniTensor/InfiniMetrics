@@ -12,13 +12,15 @@ class ProcessorType(str, Enum):
     ACCELERATOR = "accelerator"
 
 
-class AcceleratorType(str, Enum):
-    """Supported accelerator platforms"""
-
+class AcceleratorType(Enum):
     NVIDIA = "nvidia"
-    AMD = "amd"  # ROCm
-    ASCEND = "ascend"  # Huawei NPU
-    CAMBRICON = "cambricon"  # Cambricon MLU
+    AMD = "amd"
+    ASCEND = "ascend"
+    CAMBRICON = "cambricon"
+    ILUVATAR = "iluvatar"
+    MTHREADS = "mthreads"
+    HYGON = "hygon"
+    METAX = "metax"
     GENERIC = "generic"
 
 

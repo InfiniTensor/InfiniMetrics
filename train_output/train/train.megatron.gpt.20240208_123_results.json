@@ -1,0 +1,59 @@
+{
+  "run_id": "train.megatron.gpt.20240208_123",
+  "testcase": "train.megatron.Pretrain",
+  "time": "2026-04-02 07:25:08",
+  "result_code": 5,
+  "error_msg": "Training failed (code 1). Log: train_output/training/train.megatron.gpt.20240208_123_train.log",
+  "success": 1,
+  "config": {
+    "framework": "megatron",
+    "model": "gpt",
+    "model_name": "gpt",
+    "output_dir": "./train_output",
+    "device": {
+      "gpu_platform": "nvidia",
+      "device_ids": [
+        0,
+        1
+      ]
+    },
+    "train_dataset": "mock",
+    "train_args": {
+      "parallel": {
+        "dp": 1,
+        "tp": 1,
+        "pp": 1,
+        "sp": 0
+      },
+      "mbs": 2,
+      "gbs": 8,
+      "seq_len": 128,
+      "lr": 0.00015,
+      "train_iters": 10,
+      "warmup_iterations": 2,
+      "measured_iterations": 8,
+      "precision": "bf16",
+      "optimizer": "adam",
+      "num_layers": 2,
+      "hidden_size": 512,
+      "num_attention_heads": 8,
+      "max_position_embeddings": 128,
+      "vocab_size": 128256,
+      "weight_decay": 0.01,
+      "clip_grad": 1.0,
+      "beta1": 0.9,
+      "beta2": 0.95,
+      "extra_args": [
+        "--use-fused-softmax",
+        "false"
+      ]
+    },
+    "timeout_ms": 300000,
+    "megatron_path": "/home/sunjinge/Megatron-LM"
+  },
+  "resolved": {
+    "nodes": 1,
+    "gpus_per_node": 0,
+    "device_used": 0
+  }
+}
