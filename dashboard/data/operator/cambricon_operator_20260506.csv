@@ -1,0 +1,148 @@
+platform,op_name,dtype,shape_config,ic_latency_ms,ic_tflops,pt_latency_ms,pt_tflops,date,tester,remarks
+cambricon,causalsoftmax,fp16,"M=3,N=3",0.094429,NA,1.045267,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,bf16,"M=3,N=3",0.102903,NA,0.978345,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp32,"M=3,N=3",0.099518,NA,0.790179,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp16,"M=32,N=512",0.108272,NA,0.982462,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,bf16,"M=32,N=512",0.10851,NA,0.98072,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp32,"M=32,N=512",0.105074,NA,0.790314,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp16,"M=32,N=512",0.109852,NA,1.075256,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,bf16,"M=32,N=512",0.105422,NA,1.072285,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp32,"M=32,N=512",0.101235,NA,0.876319,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp16,"bs=32,seq=5,hidden=5",0.153843,NA,0.980796,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,bf16,"bs=32,seq=5,hidden=5",0.158734,NA,0.979013,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp32,"bs=32,seq=5,hidden=5",0.134516,NA,0.786985,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp16,"bs=32,seq=20,hidden=512",0.265022,NA,0.98348,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,bf16,"bs=32,seq=20,hidden=512",0.263519,NA,0.980056,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp32,"bs=32,seq=20,hidden=512",0.224654,NA,0.786791,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp16,"bs=32,seq=20,hidden=512",0.279279,NA,1.087633,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,bf16,"bs=32,seq=20,hidden=512",0.277733,NA,1.09094,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp32,"bs=32,seq=20,hidden=512",0.231732,NA,0.883058,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp16,"bs=28,seq=15,hidden=15",0.236904,NA,0.993053,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,bf16,"bs=28,seq=15,hidden=15",0.236797,NA,0.991576,NA,2026/05/06,zhuyue,
+cambricon,causalsoftmax,fp32,"bs=28,seq=15,hidden=15",0.169307,NA,0.792383,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=1,N=4, size=4",0.194202,NA,1.05337,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=1,N=4, size=4",0.194576,NA,1.015319,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=1,N=4, size=4",0.186848,NA,0.950878,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=1,N=4, size=4",0.198418,NA,1.022772,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=1,N=4, size=4",0.198685,NA,1.008092,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=1,N=4, size=4",0.200894,NA,0.944005,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=2,N=4, size=4",0.195431,NA,1.018403,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=2,N=4, size=4",0.19537,NA,1.017246,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=2,N=4, size=4",0.193088,NA,0.954126,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=2,N=4, size=4",0.194541,NA,1.011864,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=2,N=4, size=4",0.201191,NA,1.01803,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=2,N=4, size=4",0.192439,NA,0.9573,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"bs=2,seq=2,hidden=4, size=4",0.196974,NA,1.023106,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"bs=2,seq=2,hidden=4, size=4",0.202419,NA,1.023811,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"bs=2,seq=2,hidden=4, size=4",0.200134,NA,0.953282,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"bs=2,seq=2,hidden=4, size=4",0.198379,NA,1.012315,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"bs=2,seq=2,hidden=4, size=4",0.203767,NA,1.019173,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"bs=2,seq=2,hidden=4, size=4",0.205844,NA,0.961053,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"bs=2,seq=2,hidden=4, size=4",0.198177,NA,1.134726,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"bs=2,seq=2,hidden=4, size=4",0.201133,NA,1.126289,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"bs=2,seq=2,hidden=4, size=4",0.196603,NA,1.054488,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"bs=2,seq=2,hidden=4, size=4",0.201989,NA,1.1301,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"bs=2,seq=2,hidden=4, size=4",0.200315,NA,1.113056,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"bs=2,seq=2,hidden=4, size=4",0.212954,NA,1.056347,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=16,N=2048, size=2048",0.213964,NA,1.154997,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=16,N=2048, size=2048",0.211114,NA,1.029214,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=16,N=2048, size=2048",0.210607,NA,0.959183,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=16,N=2048, size=2048",0.215586,NA,1.017423,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=16,N=2048, size=2048",0.217096,NA,1.01523,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=16,N=2048, size=2048",0.211961,NA,0.943123,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=16,N=2048, size=2048",0.211906,NA,1.117603,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=16,N=2048, size=2048",0.214481,NA,1.130273,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,fp16,"M=16,N=2048, size=2048",0.22067,NA,1.061092,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=16,N=2048, size=2048",0.216525,NA,1.184753,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=16,N=2048, size=2048",0.212086,NA,1.123815,NA,2026/05/06,zhuyue,
+cambricon,rmsnorm,bf16,"M=16,N=2048, size=2048",0.214153,NA,1.046613,NA,2026/05/06,zhuyue,
+cambricon,topk,fp16,"M=6,N=8",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,bf16,"M=6,N=8",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp32,"M=6,N=8",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp16,"M=8,N=4",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,bf16,"M=8,N=4",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp32,"M=8,N=4",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp16,"M=5,N=5",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,bf16,"M=5,N=5",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp32,"M=5,N=5",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp16,"M=3,N=7",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,bf16,"M=3,N=7",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp32,"M=3,N=7",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp16,"M=10,N=3",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,bf16,"M=10,N=3",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp32,"M=10,N=3",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp16,"M=2,N=16",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,bf16,"M=2,N=16",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,topk,fp32,"M=2,N=16",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30."
+cambricon,add,fp16,"M=13,N=4",0.107916,NA,0.073867,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"M=13,N=4",0.112475,NA,0.073362,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"M=13,N=4",0.103615,NA,0.068311,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"M=13,N=4",0.121133,NA,0.198053,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"M=13,N=4",0.124782,NA,0.194088,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"M=13,N=4",0.113975,NA,0.196644,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"M=13,N=4",0.102594,NA,0.067558,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"M=13,N=4",0.10523,NA,0.066251,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"M=13,N=4",0.103428,NA,0.066199,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"M=13,N=4",0.122928,NA,0.196748,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"M=13,N=4",0.115665,NA,0.194487,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"M=13,N=4",0.114011,NA,0.195584,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"bs=13,seq=4,hidden=4",0.105502,NA,0.067015,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"bs=13,seq=4,hidden=4",0.107749,NA,0.06761,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"bs=13,seq=4,hidden=4",0.101249,NA,0.066859,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"bs=13,seq=4,hidden=4",0.133207,NA,0.198717,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"bs=13,seq=4,hidden=4",0.132268,NA,0.196243,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"bs=13,seq=4,hidden=4",0.130743,NA,0.197279,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"bs=13,seq=4,hidden=4",0.138316,NA,0.18128,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"bs=13,seq=4,hidden=4",0.133596,NA,0.178602,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"bs=13,seq=4,hidden=4",0.135946,NA,0.179757,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"M=16,N=5632",0.103942,NA,0.069112,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"M=16,N=5632",0.105709,NA,0.070874,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"M=16,N=5632",0.095456,NA,0.07154,NA,2026/05/06,zhuyue,
+cambricon,add,fp16,"M=16,N=5632",0.130534,NA,0.203192,NA,2026/05/06,zhuyue,
+cambricon,add,bf16,"M=16,N=5632",0.127029,NA,0.200655,NA,2026/05/06,zhuyue,
+cambricon,add,fp32,"M=16,N=5632",0.129589,NA,0.202823,NA,2026/05/06,zhuyue,
+cambricon,matmul,fp16,"M=2,N=4,K=3",0.114612,0.0,0.080441,0.0,2026/05/06,zhuyue,
+cambricon,matmul,bf16,"M=2,N=4,K=3",0.144409,0.0,0.078137,0.0,2026/05/06,zhuyue,
+cambricon,matmul,fp32,"M=2,N=4,K=3",0.114104,0.0,0.083652,0.0,2026/05/06,zhuyue,
+cambricon,matmul,fp16,"M=128,N=64,K=256",0.119618,0.0,0.088419,0.0,2026/05/06,zhuyue,
+cambricon,matmul,bf16,"M=128,N=64,K=256",0.115179,0.0,0.085378,0.0,2026/05/06,zhuyue,
+cambricon,matmul,fp32,"M=128,N=64,K=256",0.1171,0.0,0.085042,0.0,2026/05/06,zhuyue,
+cambricon,matmul,fp16,"bs=2,M=4,N=2048,K=2048",0.110301,0.3,0.14275,0.2,2026/05/06,zhuyue,
+cambricon,matmul,bf16,"bs=2,M=4,N=2048,K=2048",0.110761,0.3,0.145421,0.2,2026/05/06,zhuyue,
+cambricon,matmul,fp32,"bs=2,M=4,N=2048,K=2048",0.131711,0.3,0.143833,0.2,2026/05/06,zhuyue,
+cambricon,matmul,fp16,"bs=4,M=48,N=6,K=64",0.104144,0.0,0.136173,0.0,2026/05/06,zhuyue,
+cambricon,matmul,bf16,"bs=4,M=48,N=6,K=64",0.100773,0.0,0.145287,0.0,2026/05/06,zhuyue,
+cambricon,matmul,fp32,"bs=4,M=48,N=6,K=64",0.102083,0.0,0.146328,0.0,2026/05/06,zhuyue,
+cambricon,matmul,fp16,"M=1,N=2048,K=2048",0.13372,0.1,0.102344,0.1,2026/05/06,zhuyue,
+cambricon,matmul,bf16,"M=1,N=2048,K=2048",0.131087,0.1,0.09766,0.1,2026/05/06,zhuyue,
+cambricon,matmul,fp32,"M=1,N=2048,K=2048",0.134051,0.1,0.101302,0.1,2026/05/06,zhuyue,
+cambricon,matmul,fp16,"M=6,N=2560,K=2048",0.117345,0.5,0.097629,0.6,2026/05/06,zhuyue,
+cambricon,matmul,bf16,"M=6,N=2560,K=2048",0.113424,0.6,0.099967,0.6,2026/05/06,zhuyue,
+cambricon,matmul,fp32,"M=6,N=2560,K=2048",0.116632,0.5,0.111626,0.6,2026/05/06,zhuyue,
+cambricon,matmul,fp16,"bs=8,M=16,N=32,K=16",0.100875,0.0,0.137883,0.0,2026/05/06,zhuyue,
+cambricon,matmul,bf16,"bs=8,M=16,N=32,K=16",0.100769,0.0,0.140401,0.0,2026/05/06,zhuyue,
+cambricon,matmul,fp32,"bs=8,M=16,N=32,K=16",0.103727,0.0,0.139695,0.0,2026/05/06,zhuyue,
+cambricon,silu,fp16,"M=2,N=4",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"M=2,N=4",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"M=2,N=4",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp16,"M=128,N=64",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"M=128,N=64",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"M=128,N=64",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp16,"bs=2,seq=4,hidden=8",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"bs=2,seq=4,hidden=8",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"bs=2,seq=4,hidden=8",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp16,"bs=4,seq=48,hidden=6",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"bs=4,seq=48,hidden=6",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"bs=4,seq=48,hidden=6",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp16,"M=1,N=2048",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"M=1,N=2048",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"M=1,N=2048",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp16,"bs=8,seq=16,hidden=32",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"bs=8,seq=16,hidden=32",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"bs=8,seq=16,hidden=32",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp16,"M=16,N=5632",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"M=16,N=5632",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"M=16,N=5632",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp16,"bs=4,seq=4,hidden=5632",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,bf16,"bs=4,seq=4,hidden=5632",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
+cambricon,silu,fp32,"bs=4,seq=4,hidden=5632",0.0,NA,0.0,NA,2026/05/06,zhuyue,"`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28."
