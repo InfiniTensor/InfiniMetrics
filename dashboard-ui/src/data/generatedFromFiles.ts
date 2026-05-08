@@ -1,5 +1,5 @@
 /* eslint-disable */
-// 本文件由 npm run generate:data 自动生成，请勿手改。源文件：仓库根目录 data/operator、data/infer 下 CSV。
+// 本文件由 npm run generate:data 自动生成，请勿手改。算子：new_data/operator；推理：new_data/infer；训练：new_data/train；通信：new_data/comm；访存：new_data/bw。
 
 export const OP_TABLE_FROM_FILES = {
   "ascend": {
@@ -8,55 +8,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.020143,
-        "pt": 0.010594
+        "pt": 0.010594,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.019813,
-        "pt": 0.010622
+        "pt": 0.010622,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.020082,
-        "pt": 0.010738
+        "pt": 0.010738,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0.020493,
-        "pt": 0.010674
+        "pt": 0.010674,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0.020438,
-        "pt": 0.010607
+        "pt": 0.010607,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0.020103,
-        "pt": 0.010752
+        "pt": 0.010752,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "FP32",
         "ic": 0.020317,
-        "pt": 0.010637
+        "pt": 0.010637,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "FP16",
         "ic": 0.020076,
-        "pt": 0.010677
+        "pt": 0.010677,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "BF16",
         "ic": 0.019797,
-        "pt": 0.010604
+        "pt": 0.010604,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Cast": [
@@ -64,19 +82,25 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "bs=16, hidden=5632, fp16->fp32",
         "dtype": "FP16",
         "ic": 0.015751,
-        "pt": 0.042433
+        "pt": 0.042433,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=16, hidden=5632, fp32->fp16",
         "dtype": "FP32",
         "ic": 0.015609,
-        "pt": 0.042591
+        "pt": 0.042591,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=16, hidden=5632, fp32->bf16",
         "dtype": "FP32",
         "ic": 0.015492,
-        "pt": 0.042662
+        "pt": 0.042662,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Cat": [
@@ -84,55 +108,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "2x(4, 64), dim=0",
         "dtype": "FP32",
         "ic": 0.020879,
-        "pt": 0.044789
+        "pt": 0.044789,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "2x(4, 64), dim=0",
         "dtype": "FP16",
         "ic": 0.020631,
-        "pt": 0.044248
+        "pt": 0.044248,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "2x(4, 64), dim=0",
         "dtype": "BF16",
         "ic": 0.020278,
-        "pt": 0.044411
+        "pt": 0.044411,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "(4, 32)+(4, 64), dim=1",
         "dtype": "FP32",
         "ic": 0.020582,
-        "pt": 0.044269
+        "pt": 0.044269,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "(4, 32)+(4, 64), dim=1",
         "dtype": "FP16",
         "ic": 0.020308,
-        "pt": 0.044446
+        "pt": 0.044446,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "(4, 32)+(4, 64), dim=1",
         "dtype": "BF16",
         "ic": 0.020331,
-        "pt": 0.044463
+        "pt": 0.044463,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "4x(1, 1024), dim=1",
         "dtype": "FP32",
         "ic": 0.029818,
-        "pt": 0.045154
+        "pt": 0.045154,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "4x(1, 1024), dim=1",
         "dtype": "FP16",
         "ic": 0.029523,
-        "pt": 0.045078
+        "pt": 0.045078,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "4x(1, 1024), dim=1",
         "dtype": "BF16",
         "ic": 0.029674,
-        "pt": 0.046211
+        "pt": 0.046211,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Gemm": [
@@ -140,55 +182,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.02305,
-        "pt": 0.019564
+        "pt": 0.019564,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.022962,
-        "pt": 0.012916
+        "pt": 0.012916,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.022306,
-        "pt": 0.012943
+        "pt": 0.012943,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP32",
         "ic": 0.022549,
-        "pt": 0.019589
+        "pt": 0.019589,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP16",
         "ic": 0.022619,
-        "pt": 0.013052
+        "pt": 0.013052,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "BF16",
         "ic": 0.022635,
-        "pt": 0.012873
+        "pt": 0.012873,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP32",
         "ic": 0.025228,
-        "pt": 0.014741
+        "pt": 0.014741,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP16",
         "ic": 0.027776,
-        "pt": 0.011733
+        "pt": 0.011733,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "BF16",
         "ic": 0.028154,
-        "pt": 0.011487
+        "pt": 0.011487,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Linear": [
@@ -196,55 +256,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=4, K=64, N=32",
         "dtype": "FP32",
         "ic": 0.025708,
-        "pt": 0.088799
+        "pt": 0.088799,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=4, K=64, N=32",
         "dtype": "FP16",
         "ic": 0.025249,
-        "pt": 0.142709
+        "pt": 0.142709,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=4, K=64, N=32",
         "dtype": "BF16",
         "ic": 0.027908,
-        "pt": 0.143725
+        "pt": 0.143725,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, K=4096, N=4096",
         "dtype": "FP32",
         "ic": 0.056449,
-        "pt": 0.089664
+        "pt": 0.089664,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, K=4096, N=4096",
         "dtype": "FP16",
         "ic": 0.026193,
-        "pt": 0.349535
+        "pt": 0.349535,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, K=4096, N=4096",
         "dtype": "BF16",
         "ic": 0.027529,
-        "pt": 0.34877
+        "pt": 0.34877,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
         "dtype": "FP32",
         "ic": 0.073665,
-        "pt": 0.090359
+        "pt": 0.090359,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
         "dtype": "FP16",
         "ic": 0.073199,
-        "pt": 0.144602
+        "pt": 0.144602,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
         "dtype": "BF16",
         "ic": 0.070734,
-        "pt": 0.137466
+        "pt": 0.137466,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "MatMul": [
@@ -252,55 +330,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=4, K=64, N=32",
         "dtype": "FP32",
         "ic": 0.020581,
-        "pt": 0.048252
+        "pt": 0.048252,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=4, K=64, N=32",
         "dtype": "FP16",
         "ic": 0.020429,
-        "pt": 0.083963
+        "pt": 0.083963,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=4, K=64, N=32",
         "dtype": "BF16",
         "ic": 0.020579,
-        "pt": 0.084223
+        "pt": 0.084223,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, K=128, N=256",
         "dtype": "FP32",
         "ic": 0.020582,
-        "pt": 0.048543
+        "pt": 0.048543,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, K=128, N=256",
         "dtype": "FP16",
         "ic": 0.020816,
-        "pt": 0.083821
+        "pt": 0.083821,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, K=128, N=256",
         "dtype": "BF16",
         "ic": 0.021628,
-        "pt": 0.084331
+        "pt": 0.084331,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
         "dtype": "FP32",
         "ic": 0.021014,
-        "pt": 0.051063
+        "pt": 0.051063,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
         "dtype": "FP16",
         "ic": 0.020892,
-        "pt": 0.08676
+        "pt": 0.08676,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
         "dtype": "BF16",
         "ic": 0.020875,
-        "pt": 0.087777
+        "pt": 0.087777,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Mul": [
@@ -308,55 +404,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.020653,
-        "pt": 0.00855
+        "pt": 0.00855,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.020579,
-        "pt": 0.008521
+        "pt": 0.008521,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.020414,
-        "pt": 0.00854
+        "pt": 0.00854,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0.020695,
-        "pt": 0.008566
+        "pt": 0.008566,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0.020905,
-        "pt": 0.008736
+        "pt": 0.008736,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0.020744,
-        "pt": 0.008648
+        "pt": 0.008648,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "FP32",
         "ic": 0.020643,
-        "pt": 0.008617
+        "pt": 0.008617,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "FP16",
         "ic": 0.020471,
-        "pt": 0.008805
+        "pt": 0.008805,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "BF16",
         "ic": 0.020515,
-        "pt": 0.00853
+        "pt": 0.00853,
+        "remarks": "",
+        "scoreEligible": true
       }
     ]
   },
@@ -366,127 +480,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=3, N=3",
         "dtype": "FP16",
         "ic": 0.094429,
-        "pt": 1.045267
+        "pt": 1.045267,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "BF16",
         "ic": 0.102903,
-        "pt": 0.978345
+        "pt": 0.978345,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "FP32",
         "ic": 0.099518,
-        "pt": 0.790179
+        "pt": 0.790179,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.108272,
-        "pt": 0.982462
+        "pt": 0.982462,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.10851,
-        "pt": 0.98072
+        "pt": 0.98072,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.105074,
-        "pt": 0.790314
+        "pt": 0.790314,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.109852,
-        "pt": 1.075256
+        "pt": 1.075256,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.105422,
-        "pt": 1.072285
+        "pt": 1.072285,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.101235,
-        "pt": 0.876319
+        "pt": 0.876319,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP16",
         "ic": 0.153843,
-        "pt": 0.980796
+        "pt": 0.980796,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "BF16",
         "ic": 0.158734,
-        "pt": 0.979013
+        "pt": 0.979013,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP32",
         "ic": 0.134516,
-        "pt": 0.786985
+        "pt": 0.786985,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.265022,
-        "pt": 0.98348
+        "pt": 0.98348,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.263519,
-        "pt": 0.980056
+        "pt": 0.980056,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.224654,
-        "pt": 0.786791
+        "pt": 0.786791,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.279279,
-        "pt": 1.087633
+        "pt": 1.087633,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.277733,
-        "pt": 1.09094
+        "pt": 1.09094,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.231732,
-        "pt": 0.883058
+        "pt": 0.883058,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP16",
         "ic": 0.236904,
-        "pt": 0.993053
+        "pt": 0.993053,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "BF16",
         "ic": 0.236797,
-        "pt": 0.991576
+        "pt": 0.991576,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP32",
         "ic": 0.169307,
-        "pt": 0.792383
+        "pt": 0.792383,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "RMSNorm": [
@@ -494,217 +650,289 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.194202,
-        "pt": 1.05337
+        "pt": 1.05337,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.194576,
-        "pt": 1.015319
+        "pt": 1.015319,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.186848,
-        "pt": 0.950878
+        "pt": 0.950878,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.198418,
-        "pt": 1.022772
+        "pt": 1.022772,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.198685,
-        "pt": 1.008092
+        "pt": 1.008092,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.200894,
-        "pt": 0.944005
+        "pt": 0.944005,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.195431,
-        "pt": 1.018403
+        "pt": 1.018403,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.19537,
-        "pt": 1.017246
+        "pt": 1.017246,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.193088,
-        "pt": 0.954126
+        "pt": 0.954126,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.194541,
-        "pt": 1.011864
+        "pt": 1.011864,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.201191,
-        "pt": 1.01803
+        "pt": 1.01803,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.192439,
-        "pt": 0.9573
+        "pt": 0.9573,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.196974,
-        "pt": 1.023106
+        "pt": 1.023106,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.202419,
-        "pt": 1.023811
+        "pt": 1.023811,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.200134,
-        "pt": 0.953282
+        "pt": 0.953282,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.198379,
-        "pt": 1.012315
+        "pt": 1.012315,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.203767,
-        "pt": 1.019173
+        "pt": 1.019173,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.205844,
-        "pt": 0.961053
+        "pt": 0.961053,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.198177,
-        "pt": 1.134726
+        "pt": 1.134726,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.201133,
-        "pt": 1.126289
+        "pt": 1.126289,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.196603,
-        "pt": 1.054488
+        "pt": 1.054488,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.201989,
-        "pt": 1.1301
+        "pt": 1.1301,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.200315,
-        "pt": 1.113056
+        "pt": 1.113056,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.212954,
-        "pt": 1.056347
+        "pt": 1.056347,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.213964,
-        "pt": 1.154997
+        "pt": 1.154997,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.211114,
-        "pt": 1.029214
+        "pt": 1.029214,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.210607,
-        "pt": 0.959183
+        "pt": 0.959183,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.215586,
-        "pt": 1.017423
+        "pt": 1.017423,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.217096,
-        "pt": 1.01523
+        "pt": 1.01523,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.211961,
-        "pt": 0.943123
+        "pt": 0.943123,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.211906,
-        "pt": 1.117603
+        "pt": 1.117603,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.214481,
-        "pt": 1.130273
+        "pt": 1.130273,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.22067,
-        "pt": 1.061092
+        "pt": 1.061092,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.216525,
-        "pt": 1.184753
+        "pt": 1.184753,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.212086,
-        "pt": 1.123815
+        "pt": 1.123815,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.214153,
-        "pt": 1.046613
+        "pt": 1.046613,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "TopK": [
@@ -712,109 +940,145 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=6, N=8",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=6, N=8",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=6, N=8",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=8, N=4",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=5, N=5",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=3, N=7",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=10, N=3",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=2, N=16",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
+        "scoreEligible": false
       }
     ],
     "Add": [
@@ -822,163 +1086,217 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.107916,
-        "pt": 0.073867
+        "pt": 0.073867,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.112475,
-        "pt": 0.073362
+        "pt": 0.073362,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.103615,
-        "pt": 0.068311
+        "pt": 0.068311,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.121133,
-        "pt": 0.198053
+        "pt": 0.198053,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.124782,
-        "pt": 0.194088
+        "pt": 0.194088,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.113975,
-        "pt": 0.196644
+        "pt": 0.196644,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.102594,
-        "pt": 0.067558
+        "pt": 0.067558,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.10523,
-        "pt": 0.066251
+        "pt": 0.066251,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.103428,
-        "pt": 0.066199
+        "pt": 0.066199,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.122928,
-        "pt": 0.196748
+        "pt": 0.196748,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.115665,
-        "pt": 0.194487
+        "pt": 0.194487,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.114011,
-        "pt": 0.195584
+        "pt": 0.195584,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.105502,
-        "pt": 0.067015
+        "pt": 0.067015,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.107749,
-        "pt": 0.06761
+        "pt": 0.06761,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.101249,
-        "pt": 0.066859
+        "pt": 0.066859,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.133207,
-        "pt": 0.198717
+        "pt": 0.198717,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.132268,
-        "pt": 0.196243
+        "pt": 0.196243,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.130743,
-        "pt": 0.197279
+        "pt": 0.197279,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.138316,
-        "pt": 0.18128
+        "pt": 0.18128,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.133596,
-        "pt": 0.178602
+        "pt": 0.178602,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.135946,
-        "pt": 0.179757
+        "pt": 0.179757,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.103942,
-        "pt": 0.069112
+        "pt": 0.069112,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.105709,
-        "pt": 0.070874
+        "pt": 0.070874,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.095456,
-        "pt": 0.07154
+        "pt": 0.07154,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.130534,
-        "pt": 0.203192
+        "pt": 0.203192,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.127029,
-        "pt": 0.200655
+        "pt": 0.200655,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.129589,
-        "pt": 0.202823
+        "pt": 0.202823,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "MatMul": [
@@ -986,127 +1304,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP16",
         "ic": 0.114612,
-        "pt": 0.080441
+        "pt": 0.080441,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "BF16",
         "ic": 0.144409,
-        "pt": 0.078137
+        "pt": 0.078137,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP32",
         "ic": 0.114104,
-        "pt": 0.083652
+        "pt": 0.083652,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP16",
         "ic": 0.119618,
-        "pt": 0.088419
+        "pt": 0.088419,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "BF16",
         "ic": 0.115179,
-        "pt": 0.085378
+        "pt": 0.085378,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP32",
         "ic": 0.1171,
-        "pt": 0.085042
+        "pt": 0.085042,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.110301,
-        "pt": 0.14275
+        "pt": 0.14275,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.110761,
-        "pt": 0.145421
+        "pt": 0.145421,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.131711,
-        "pt": 0.143833
+        "pt": 0.143833,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP16",
         "ic": 0.104144,
-        "pt": 0.136173
+        "pt": 0.136173,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "BF16",
         "ic": 0.100773,
-        "pt": 0.145287
+        "pt": 0.145287,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP32",
         "ic": 0.102083,
-        "pt": 0.146328
+        "pt": 0.146328,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.13372,
-        "pt": 0.102344
+        "pt": 0.102344,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.131087,
-        "pt": 0.09766
+        "pt": 0.09766,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.134051,
-        "pt": 0.101302
+        "pt": 0.101302,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP16",
         "ic": 0.117345,
-        "pt": 0.097629
+        "pt": 0.097629,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "BF16",
         "ic": 0.113424,
-        "pt": 0.099967
+        "pt": 0.099967,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP32",
         "ic": 0.116632,
-        "pt": 0.111626
+        "pt": 0.111626,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP16",
         "ic": 0.100875,
-        "pt": 0.137883
+        "pt": 0.137883,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "BF16",
         "ic": 0.100769,
-        "pt": 0.140401
+        "pt": 0.140401,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP32",
         "ic": 0.103727,
-        "pt": 0.139695
+        "pt": 0.139695,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "SiLU": [
@@ -1114,145 +1474,193 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=2, N=4",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=2, N=4",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=128, N=64",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       }
     ]
   },
@@ -1262,127 +1670,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=3, N=3",
         "dtype": "FP16",
         "ic": 0.009787,
-        "pt": 0.129153
+        "pt": 0.129153,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "BF16",
         "ic": 0.009956,
-        "pt": 0.127809
+        "pt": 0.127809,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "FP32",
         "ic": 0.010025,
-        "pt": 0.103338
+        "pt": 0.103338,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.009882,
-        "pt": 0.129674
+        "pt": 0.129674,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.010166,
-        "pt": 0.129008
+        "pt": 0.129008,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.010146,
-        "pt": 0.102473
+        "pt": 0.102473,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.010096,
-        "pt": 0.132463
+        "pt": 0.132463,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.010067,
-        "pt": 0.132972
+        "pt": 0.132972,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.0101,
-        "pt": 0.103579
+        "pt": 0.103579,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP16",
         "ic": 0.010386,
-        "pt": 0.130492
+        "pt": 0.130492,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "BF16",
         "ic": 0.009926,
-        "pt": 0.130201
+        "pt": 0.130201,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP32",
         "ic": 0.010338,
-        "pt": 0.103961
+        "pt": 0.103961,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.018776,
-        "pt": 0.132994
+        "pt": 0.132994,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.023624,
-        "pt": 0.133352
+        "pt": 0.133352,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.019198,
-        "pt": 0.105249
+        "pt": 0.105249,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.018776,
-        "pt": 0.13603
+        "pt": 0.13603,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.023753,
-        "pt": 0.137159
+        "pt": 0.137159,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.019198,
-        "pt": 0.106402
+        "pt": 0.106402,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP16",
         "ic": 0.012845,
-        "pt": 0.131947
+        "pt": 0.131947,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "BF16",
         "ic": 0.015126,
-        "pt": 0.130327
+        "pt": 0.130327,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP32",
         "ic": 0.012797,
-        "pt": 0.103811
+        "pt": 0.103811,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "RMSNorm": [
@@ -1390,217 +1840,289 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.011271,
-        "pt": 0.111328
+        "pt": 0.111328,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.011458,
-        "pt": 0.110337
+        "pt": 0.110337,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.011395,
-        "pt": 0.09899
+        "pt": 0.09899,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.011513,
-        "pt": 0.110699
+        "pt": 0.110699,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.011443,
-        "pt": 0.110204
+        "pt": 0.110204,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.011534,
-        "pt": 0.10041
+        "pt": 0.10041,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.011416,
-        "pt": 0.111249
+        "pt": 0.111249,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.011415,
-        "pt": 0.11134
+        "pt": 0.11134,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.011388,
-        "pt": 0.100242
+        "pt": 0.100242,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.011324,
-        "pt": 0.114
+        "pt": 0.114,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.011887,
-        "pt": 0.114306
+        "pt": 0.114306,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.01266,
-        "pt": 0.112938
+        "pt": 0.112938,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.012602,
-        "pt": 0.12759
+        "pt": 0.12759,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.01181,
-        "pt": 0.135993
+        "pt": 0.135993,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.012592,
-        "pt": 0.123379
+        "pt": 0.123379,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.012703,
-        "pt": 0.125937
+        "pt": 0.125937,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.012671,
-        "pt": 0.136462
+        "pt": 0.136462,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.012664,
-        "pt": 0.12494
+        "pt": 0.12494,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.011879,
-        "pt": 0.140525
+        "pt": 0.140525,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.012519,
-        "pt": 0.129116
+        "pt": 0.129116,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.012685,
-        "pt": 0.119069
+        "pt": 0.119069,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.012626,
-        "pt": 0.129367
+        "pt": 0.129367,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.012661,
-        "pt": 0.128851
+        "pt": 0.128851,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.012606,
-        "pt": 0.118872
+        "pt": 0.118872,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.012373,
-        "pt": 0.138384
+        "pt": 0.138384,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.012464,
-        "pt": 0.137587
+        "pt": 0.137587,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.012375,
-        "pt": 0.113523
+        "pt": 0.113523,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.012405,
-        "pt": 0.136883
+        "pt": 0.136883,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.012391,
-        "pt": 0.13773
+        "pt": 0.13773,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.01237,
-        "pt": 0.116364
+        "pt": 0.116364,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.012403,
-        "pt": 0.140968
+        "pt": 0.140968,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.012451,
-        "pt": 0.142111
+        "pt": 0.142111,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.01246,
-        "pt": 0.118252
+        "pt": 0.118252,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.012348,
-        "pt": 0.140708
+        "pt": 0.140708,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.012305,
-        "pt": 0.140645
+        "pt": 0.140645,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.012406,
-        "pt": 0.126882
+        "pt": 0.126882,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Embedding": [
@@ -1608,55 +2130,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP16",
         "ic": 0.009938,
-        "pt": 0.015114
+        "pt": 0.015114,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "BF16",
         "ic": 0.00965,
-        "pt": 0.014426
+        "pt": 0.014426,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP32",
         "ic": 0.009753,
-        "pt": 0.014327
+        "pt": 0.014327,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP16",
         "ic": 0.138897,
-        "pt": 0.014345
+        "pt": 0.014345,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "BF16",
         "ic": 0.139898,
-        "pt": 0.014609
+        "pt": 0.014609,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP32",
         "ic": 0.054246,
-        "pt": 0.014694
+        "pt": 0.014694,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP16",
         "ic": 0.009833,
-        "pt": 0.014471
+        "pt": 0.014471,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "BF16",
         "ic": 0.009714,
-        "pt": 0.014641
+        "pt": 0.014641,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP32",
         "ic": 0.009692,
-        "pt": 0.014611
+        "pt": 0.014611,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "TopK": [
@@ -1664,109 +2204,145 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=6, N=8",
         "dtype": "FP16",
         "ic": 0.752856,
-        "pt": 0.015139
+        "pt": 0.015139,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "BF16",
         "ic": 0.754373,
-        "pt": 0.017277
+        "pt": 0.017277,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "FP32",
         "ic": 0.758689,
-        "pt": 0.0143
+        "pt": 0.0143,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP16",
         "ic": 0.500202,
-        "pt": 0.023292
+        "pt": 0.023292,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "BF16",
         "ic": 0.498938,
-        "pt": 0.023969
+        "pt": 0.023969,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP32",
         "ic": 0.499198,
-        "pt": 0.023629
+        "pt": 0.023629,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP16",
         "ic": 0.75521,
-        "pt": 0.022224
+        "pt": 0.022224,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "BF16",
         "ic": 0.832933,
-        "pt": 0.024798
+        "pt": 0.024798,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP32",
         "ic": 0.923767,
-        "pt": 0.024589
+        "pt": 0.024589,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP16",
         "ic": 0.956161,
-        "pt": 0.035582
+        "pt": 0.035582,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "BF16",
         "ic": 0.969089,
-        "pt": 0.035545
+        "pt": 0.035545,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP32",
         "ic": 0.965043,
-        "pt": 0.035829
+        "pt": 0.035829,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP16",
         "ic": 0.502966,
-        "pt": 0.014571
+        "pt": 0.014571,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "BF16",
         "ic": 0.503783,
-        "pt": 0.016071
+        "pt": 0.016071,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP32",
         "ic": 0.504451,
-        "pt": 0.016271
+        "pt": 0.016271,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP16",
         "ic": 0.971573,
-        "pt": 0.038934
+        "pt": 0.038934,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "BF16",
         "ic": 0.966229,
-        "pt": 0.039889
+        "pt": 0.039889,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP32",
         "ic": 0.96785,
-        "pt": 0.039818
+        "pt": 0.039818,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Add": [
@@ -1774,163 +2350,217 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.041482,
-        "pt": 0.009111
+        "pt": 0.009111,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.041571,
-        "pt": 0.008854
+        "pt": 0.008854,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.041936,
-        "pt": 0.008827
+        "pt": 0.008827,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.041367,
-        "pt": 0.009919
+        "pt": 0.009919,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.041575,
-        "pt": 0.009895
+        "pt": 0.009895,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.04157,
-        "pt": 0.00984
+        "pt": 0.00984,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.04142,
-        "pt": 0.009182
+        "pt": 0.009182,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.041392,
-        "pt": 0.009189
+        "pt": 0.009189,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.042087,
-        "pt": 0.009092
+        "pt": 0.009092,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.041375,
-        "pt": 0.009983
+        "pt": 0.009983,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.041503,
-        "pt": 0.009956
+        "pt": 0.009956,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.041572,
-        "pt": 0.009954
+        "pt": 0.009954,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.041569,
-        "pt": 0.009154
+        "pt": 0.009154,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.041479,
-        "pt": 0.009175
+        "pt": 0.009175,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.041318,
-        "pt": 0.009205
+        "pt": 0.009205,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.041265,
-        "pt": 0.009971
+        "pt": 0.009971,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.041716,
-        "pt": 0.009931
+        "pt": 0.009931,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.041485,
-        "pt": 0.00998
+        "pt": 0.00998,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.041643,
-        "pt": 0.009976
+        "pt": 0.009976,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.042646,
-        "pt": 0.011307
+        "pt": 0.011307,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.041576,
-        "pt": 0.011242
+        "pt": 0.011242,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.042938,
-        "pt": 0.009793
+        "pt": 0.009793,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.042949,
-        "pt": 0.00998
+        "pt": 0.00998,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.041968,
-        "pt": 0.010183
+        "pt": 0.010183,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.04198,
-        "pt": 0.011427
+        "pt": 0.011427,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.042363,
-        "pt": 0.011104
+        "pt": 0.011104,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.042101,
-        "pt": 0.011665
+        "pt": 0.011665,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "MatMul": [
@@ -1938,127 +2568,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP16",
         "ic": 0.017647,
-        "pt": 0.018309
+        "pt": 0.018309,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "BF16",
         "ic": 0.017627,
-        "pt": 0.01848
+        "pt": 0.01848,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP32",
         "ic": 0.016959,
-        "pt": 0.016546
+        "pt": 0.016546,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP16",
         "ic": 0.014391,
-        "pt": 0.015255
+        "pt": 0.015255,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "BF16",
         "ic": 0.014221,
-        "pt": 0.015169
+        "pt": 0.015169,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP32",
         "ic": 0.013069,
-        "pt": 0.013427
+        "pt": 0.013427,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.019134,
-        "pt": 0.02903
+        "pt": 0.02903,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.024418,
-        "pt": 0.028864
+        "pt": 0.028864,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.041652,
-        "pt": 0.041604
+        "pt": 0.041604,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP16",
         "ic": 0.017331,
-        "pt": 0.028172
+        "pt": 0.028172,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "BF16",
         "ic": 0.017387,
-        "pt": 0.027995
+        "pt": 0.027995,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP32",
         "ic": 0.017087,
-        "pt": 0.026161
+        "pt": 0.026161,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.013768,
-        "pt": 0.014654
+        "pt": 0.014654,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.013628,
-        "pt": 0.014272
+        "pt": 0.014272,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.020477,
-        "pt": 0.020313
+        "pt": 0.020313,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP16",
         "ic": 0.013445,
-        "pt": 0.014092
+        "pt": 0.014092,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "BF16",
         "ic": 0.013259,
-        "pt": 0.013864
+        "pt": 0.013864,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP32",
         "ic": 0.02771,
-        "pt": 0.027872
+        "pt": 0.027872,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP16",
         "ic": 0.017604,
-        "pt": 0.028415
+        "pt": 0.028415,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "BF16",
         "ic": 0.017764,
-        "pt": 0.028245
+        "pt": 0.028245,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP32",
         "ic": 0.01688,
-        "pt": 0.025773
+        "pt": 0.025773,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "SiLU": [
@@ -2066,145 +2738,193 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=2, N=4",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=2, N=4",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=128, N=64",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0,
-        "pt": 0
+        "pt": 0,
+        "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
+        "scoreEligible": false
       }
     ]
   },
@@ -2214,55 +2934,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.018356,
-        "pt": 0.013768
+        "pt": 0.013768,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.019648,
-        "pt": 0.015195
+        "pt": 0.015195,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.021223,
-        "pt": 0.015999
+        "pt": 0.015999,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0.022378,
-        "pt": 0.017322
+        "pt": 0.017322,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0.023909,
-        "pt": 0.017336
+        "pt": 0.017336,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0.023916,
-        "pt": 0.017336
+        "pt": 0.017336,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "FP32",
         "ic": 0.019963,
-        "pt": 0.017281
+        "pt": 0.017281,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "FP16",
         "ic": 0.019959,
-        "pt": 0.017326
+        "pt": 0.017326,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=4096",
         "dtype": "BF16",
         "ic": 0.019854,
-        "pt": 0.01733
+        "pt": 0.01733,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Causal_softmax": [
@@ -2270,37 +3008,49 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "bs=32, seq=512",
         "dtype": "FP32",
         "ic": 0.01495,
-        "pt": 0.058623
+        "pt": 0.058623,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=512",
         "dtype": "FP16",
         "ic": 0.016247,
-        "pt": 0.088117
+        "pt": 0.088117,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=512",
         "dtype": "BF16",
         "ic": 0.017703,
-        "pt": 0.090513
+        "pt": 0.090513,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, heads=20, seq=512",
         "dtype": "FP32",
         "ic": 0.022238,
-        "pt": 0.079136
+        "pt": 0.079136,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, heads=20, seq=512",
         "dtype": "FP16",
         "ic": 0.022633,
-        "pt": 0.114115
+        "pt": 0.114115,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, heads=20, seq=512",
         "dtype": "BF16",
         "ic": 0.022641,
-        "pt": 0.112362
+        "pt": 0.112362,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Gemm": [
@@ -2308,55 +3058,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.106689,
-        "pt": 0.108511
+        "pt": 0.108511,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.034229,
-        "pt": 0.050382
+        "pt": 0.050382,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.033671,
-        "pt": 0.050376
+        "pt": 0.050376,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP32",
         "ic": 0.110243,
-        "pt": 0.110435
+        "pt": 0.110435,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP16",
         "ic": 0.03837,
-        "pt": 0.037306
+        "pt": 0.037306,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "BF16",
         "ic": 0.036873,
-        "pt": 0.03703
+        "pt": 0.03703,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP32",
         "ic": 0.017378,
-        "pt": 0.01734
+        "pt": 0.01734,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP16",
         "ic": 0.020597,
-        "pt": 0.020612
+        "pt": 0.020612,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "BF16",
         "ic": 0.020587,
-        "pt": 0.020606
+        "pt": 0.020606,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Rms_norm": [
@@ -2364,37 +3132,49 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "bs=2, seq=4, hidden=2048",
         "dtype": "FP32",
         "ic": 0.010282,
-        "pt": 0.058665
+        "pt": 0.058665,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=2048",
         "dtype": "FP16",
         "ic": 0.011049,
-        "pt": 0.103154
+        "pt": 0.103154,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=2048",
         "dtype": "BF16",
         "ic": 0.0113,
-        "pt": 0.104387
+        "pt": 0.104387,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=16, hidden=5632",
         "dtype": "FP32",
         "ic": 0.01386,
-        "pt": 0.077777
+        "pt": 0.077777,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=16, hidden=5632",
         "dtype": "FP16",
         "ic": 0.011182,
-        "pt": 0.120675
+        "pt": 0.120675,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=16, hidden=5632",
         "dtype": "BF16",
         "ic": 0.011151,
-        "pt": 0.118685
+        "pt": 0.118685,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Swiglu": [
@@ -2402,37 +3182,49 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "bs=16, hidden=5632",
         "dtype": "FP32",
         "ic": 0.018707,
-        "pt": 0.05884
+        "pt": 0.05884,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=16, hidden=5632",
         "dtype": "FP16",
         "ic": 0.021242,
-        "pt": 0.16574
+        "pt": 0.16574,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=16, hidden=5632",
         "dtype": "BF16",
         "ic": 0.024096,
-        "pt": 0.168865
+        "pt": 0.168865,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0.022965,
-        "pt": 0.070715
+        "pt": 0.070715,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0.025448,
-        "pt": 0.168191
+        "pt": 0.168191,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0.024097,
-        "pt": 0.167276
+        "pt": 0.167276,
+        "remarks": "",
+        "scoreEligible": true
       }
     ]
   },
@@ -2442,127 +3234,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=3, N=3",
         "dtype": "FP16",
         "ic": 0.013635,
-        "pt": 0.110871
+        "pt": 0.110871,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "BF16",
         "ic": 0.01155,
-        "pt": 0.111493
+        "pt": 0.111493,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "FP32",
         "ic": 0.016652,
-        "pt": 0.087707
+        "pt": 0.087707,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.05365,
-        "pt": 0.085022
+        "pt": 0.085022,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.039246,
-        "pt": 0.148124
+        "pt": 0.148124,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.053587,
-        "pt": 0.164711
+        "pt": 0.164711,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.022535,
-        "pt": 0.160622
+        "pt": 0.160622,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.028964,
-        "pt": 0.10713
+        "pt": 0.10713,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.02251,
-        "pt": 0.096489
+        "pt": 0.096489,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP16",
         "ic": 0.035145,
-        "pt": 0.13513
+        "pt": 0.13513,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "BF16",
         "ic": 0.032604,
-        "pt": 0.121022
+        "pt": 0.121022,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP32",
         "ic": 0.040895,
-        "pt": 0.080091
+        "pt": 0.080091,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.116487,
-        "pt": 0.204376
+        "pt": 0.204376,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.05753,
-        "pt": 0.211073
+        "pt": 0.211073,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.0867,
-        "pt": 0.137035
+        "pt": 0.137035,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.077953,
-        "pt": 0.251325
+        "pt": 0.251325,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.094521,
-        "pt": 0.214623
+        "pt": 0.214623,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.090993,
-        "pt": 0.230679
+        "pt": 0.230679,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP16",
         "ic": 0.043283,
-        "pt": 0.130034
+        "pt": 0.130034,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "BF16",
         "ic": 0.079785,
-        "pt": 0.126761
+        "pt": 0.126761,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP32",
         "ic": 0.032143,
-        "pt": 0.121325
+        "pt": 0.121325,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "RMSNorm": [
@@ -2570,217 +3404,289 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.016996,
-        "pt": 0.113902
+        "pt": 0.113902,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.028262,
-        "pt": 0.098644
+        "pt": 0.098644,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.02594,
-        "pt": 0.087757
+        "pt": 0.087757,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.01925,
-        "pt": 0.089169
+        "pt": 0.089169,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.024112,
-        "pt": 0.106743
+        "pt": 0.106743,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.015421,
-        "pt": 0.113128
+        "pt": 0.113128,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.010957,
-        "pt": 0.133982
+        "pt": 0.133982,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.011461,
-        "pt": 0.11209
+        "pt": 0.11209,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.014231,
-        "pt": 0.1104
+        "pt": 0.1104,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.012487,
-        "pt": 0.092292
+        "pt": 0.092292,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.025135,
-        "pt": 0.101656
+        "pt": 0.101656,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.014933,
-        "pt": 0.077524
+        "pt": 0.077524,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.030123,
-        "pt": 0.105386
+        "pt": 0.105386,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.027753,
-        "pt": 0.125731
+        "pt": 0.125731,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.011717,
-        "pt": 0.075296
+        "pt": 0.075296,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.029602,
-        "pt": 0.085077
+        "pt": 0.085077,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.025103,
-        "pt": 0.103111
+        "pt": 0.103111,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.012006,
-        "pt": 0.081179
+        "pt": 0.081179,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.028189,
-        "pt": 0.088881
+        "pt": 0.088881,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.021345,
-        "pt": 0.115345
+        "pt": 0.115345,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.022438,
-        "pt": 0.076853
+        "pt": 0.076853,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.027529,
-        "pt": 0.086333
+        "pt": 0.086333,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.029357,
-        "pt": 0.116251
+        "pt": 0.116251,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.03911,
-        "pt": 0.09701
+        "pt": 0.09701,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.011731,
-        "pt": 0.166145
+        "pt": 0.166145,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.055241,
-        "pt": 0.250735
+        "pt": 0.250735,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.052253,
-        "pt": 0.129109
+        "pt": 0.129109,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.025846,
-        "pt": 0.195656
+        "pt": 0.195656,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.011057,
-        "pt": 0.150595
+        "pt": 0.150595,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.01677,
-        "pt": 0.146829
+        "pt": 0.146829,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.036359,
-        "pt": 0.170067
+        "pt": 0.170067,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.01528,
-        "pt": 0.174609
+        "pt": 0.174609,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.038336,
-        "pt": 0.133928
+        "pt": 0.133928,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.032136,
-        "pt": 0.13557
+        "pt": 0.13557,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.028555,
-        "pt": 0.131683
+        "pt": 0.131683,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.036448,
-        "pt": 0.132855
+        "pt": 0.132855,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Embedding": [
@@ -2788,55 +3694,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP16",
         "ic": 0.023533,
-        "pt": 0.029413
+        "pt": 0.029413,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "BF16",
         "ic": 0.010668,
-        "pt": 0.024552
+        "pt": 0.024552,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP32",
         "ic": 0.020556,
-        "pt": 0.018767
+        "pt": 0.018767,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP16",
         "ic": 0.104279,
-        "pt": 0.035665
+        "pt": 0.035665,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "BF16",
         "ic": 0.101971,
-        "pt": 0.026004
+        "pt": 0.026004,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP32",
         "ic": 0.122889,
-        "pt": 0.029138
+        "pt": 0.029138,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP16",
         "ic": 0.008241,
-        "pt": 0.024338
+        "pt": 0.024338,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "BF16",
         "ic": 0.030502,
-        "pt": 0.012038
+        "pt": 0.012038,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP32",
         "ic": 0.021877,
-        "pt": 0.028943
+        "pt": 0.028943,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "TopK": [
@@ -2844,109 +3768,145 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=6, N=8",
         "dtype": "FP16",
         "ic": 2.861134,
-        "pt": 0.026136
+        "pt": 0.026136,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "BF16",
         "ic": 2.628399,
-        "pt": 0.041775
+        "pt": 0.041775,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "FP32",
         "ic": 2.843801,
-        "pt": 0.026716
+        "pt": 0.026716,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP16",
         "ic": 1.912624,
-        "pt": 0.086622
+        "pt": 0.086622,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "BF16",
         "ic": 1.800785,
-        "pt": 0.063622
+        "pt": 0.063622,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP32",
         "ic": 1.577265,
-        "pt": 0.043003
+        "pt": 0.043003,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP16",
         "ic": 2.623598,
-        "pt": 0.075198
+        "pt": 0.075198,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "BF16",
         "ic": 2.534146,
-        "pt": 0.075602
+        "pt": 0.075602,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP32",
         "ic": 2.792694,
-        "pt": 0.077191
+        "pt": 0.077191,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP16",
         "ic": 2.869623,
-        "pt": 0.065922
+        "pt": 0.065922,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "BF16",
         "ic": 2.61598,
-        "pt": 0.078159
+        "pt": 0.078159,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP32",
         "ic": 2.61206,
-        "pt": 0.06452
+        "pt": 0.06452,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP16",
         "ic": 1.951078,
-        "pt": 0.036654
+        "pt": 0.036654,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "BF16",
         "ic": 1.963748,
-        "pt": 0.032727
+        "pt": 0.032727,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP32",
         "ic": 2.233065,
-        "pt": 0.034673
+        "pt": 0.034673,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP16",
         "ic": 2.551683,
-        "pt": 0.068988
+        "pt": 0.068988,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "BF16",
         "ic": 2.521023,
-        "pt": 0.077074
+        "pt": 0.077074,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP32",
         "ic": 2.505571,
-        "pt": 0.08076
+        "pt": 0.08076,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Add": [
@@ -2954,163 +3914,217 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.090582,
-        "pt": 0.011058
+        "pt": 0.011058,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.07378,
-        "pt": 0.011875
+        "pt": 0.011875,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.09095,
-        "pt": 0.013693
+        "pt": 0.013693,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.074648,
-        "pt": 0.008409
+        "pt": 0.008409,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.084558,
-        "pt": 0.020535
+        "pt": 0.020535,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.072711,
-        "pt": 0.018874
+        "pt": 0.018874,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.094695,
-        "pt": 0.017127
+        "pt": 0.017127,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.104813,
-        "pt": 0.007081
+        "pt": 0.007081,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.106044,
-        "pt": 0.013038
+        "pt": 0.013038,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.082896,
-        "pt": 0.012263
+        "pt": 0.012263,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.143787,
-        "pt": 0.010816
+        "pt": 0.010816,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.095978,
-        "pt": 0.012027
+        "pt": 0.012027,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.083723,
-        "pt": 0.016617
+        "pt": 0.016617,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.144439,
-        "pt": 0.01166
+        "pt": 0.01166,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.076188,
-        "pt": 0.010515
+        "pt": 0.010515,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.112394,
-        "pt": 0.02782
+        "pt": 0.02782,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.081711,
-        "pt": 0.022087
+        "pt": 0.022087,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.14024,
-        "pt": 0.017798
+        "pt": 0.017798,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.081727,
-        "pt": 0.015465
+        "pt": 0.015465,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.090931,
-        "pt": 0.019829
+        "pt": 0.019829,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.100524,
-        "pt": 0.013294
+        "pt": 0.013294,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.077266,
-        "pt": 0.012078
+        "pt": 0.012078,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.1476,
-        "pt": 0.013557
+        "pt": 0.013557,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.127949,
-        "pt": 0.007134
+        "pt": 0.007134,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.09635,
-        "pt": 0.032625
+        "pt": 0.032625,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.139831,
-        "pt": 0.050474
+        "pt": 0.050474,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.142207,
-        "pt": 0.049469
+        "pt": 0.049469,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "MatMul": [
@@ -3118,127 +4132,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP16",
         "ic": 0.024642,
-        "pt": 0.019783
+        "pt": 0.019783,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "BF16",
         "ic": 0.020176,
-        "pt": 0.020349
+        "pt": 0.020349,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP32",
         "ic": 0.021615,
-        "pt": 0.028188
+        "pt": 0.028188,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP16",
         "ic": 0.01283,
-        "pt": 0.016909
+        "pt": 0.016909,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "BF16",
         "ic": 0.013011,
-        "pt": 0.028065
+        "pt": 0.028065,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP32",
         "ic": 0.0177,
-        "pt": 0.011163
+        "pt": 0.011163,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.083885,
-        "pt": 0.087879
+        "pt": 0.087879,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.07928,
-        "pt": 0.062126
+        "pt": 0.062126,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.077383,
-        "pt": 0.094954
+        "pt": 0.094954,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP16",
         "ic": 0.019872,
-        "pt": 0.028064
+        "pt": 0.028064,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "BF16",
         "ic": 0.018415,
-        "pt": 0.035138
+        "pt": 0.035138,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP32",
         "ic": 0.013184,
-        "pt": 0.019668
+        "pt": 0.019668,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.079638,
-        "pt": 0.045003
+        "pt": 0.045003,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.083457,
-        "pt": 0.067896
+        "pt": 0.067896,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.103102,
-        "pt": 0.079031
+        "pt": 0.079031,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP16",
         "ic": 0.115237,
-        "pt": 0.160425
+        "pt": 0.160425,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "BF16",
         "ic": 0.116744,
-        "pt": 0.133648
+        "pt": 0.133648,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP32",
         "ic": 0.09235,
-        "pt": 0.083693
+        "pt": 0.083693,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP16",
         "ic": 0.024869,
-        "pt": 0.028519
+        "pt": 0.028519,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "BF16",
         "ic": 0.030141,
-        "pt": 0.020819
+        "pt": 0.020819,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP32",
         "ic": 0.025517,
-        "pt": 0.022534
+        "pt": 0.022534,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "SiLU": [
@@ -3246,145 +4302,193 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4",
         "dtype": "FP16",
         "ic": 0.135339,
-        "pt": 0.015925
+        "pt": 0.015925,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4",
         "dtype": "BF16",
         "ic": 0.074622,
-        "pt": 0.021634
+        "pt": 0.021634,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4",
         "dtype": "FP32",
         "ic": 0.115891,
-        "pt": 0.028268
+        "pt": 0.028268,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP16",
         "ic": 0.093413,
-        "pt": 0.019769
+        "pt": 0.019769,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "BF16",
         "ic": 0.080463,
-        "pt": 0.031497
+        "pt": 0.031497,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP32",
         "ic": 0.096212,
-        "pt": 0.037899
+        "pt": 0.037899,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP16",
         "ic": 0.068982,
-        "pt": 0.036639
+        "pt": 0.036639,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "BF16",
         "ic": 0.086803,
-        "pt": 0.020481
+        "pt": 0.020481,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP32",
         "ic": 0.063301,
-        "pt": 0.029843
+        "pt": 0.029843,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP16",
         "ic": 0.090702,
-        "pt": 0.014832
+        "pt": 0.014832,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "BF16",
         "ic": 0.089,
-        "pt": 0.017586
+        "pt": 0.017586,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP32",
         "ic": 0.063291,
-        "pt": 0.024054
+        "pt": 0.024054,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP16",
         "ic": 0.103683,
-        "pt": 0.014591
+        "pt": 0.014591,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "BF16",
         "ic": 0.080669,
-        "pt": 0.023987
+        "pt": 0.023987,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP32",
         "ic": 0.077627,
-        "pt": 0.026801
+        "pt": 0.026801,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP16",
         "ic": 0.083478,
-        "pt": 0.023449
+        "pt": 0.023449,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "BF16",
         "ic": 0.068692,
-        "pt": 0.02535
+        "pt": 0.02535,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP32",
         "ic": 0.083297,
-        "pt": 0.025245
+        "pt": 0.025245,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.092367,
-        "pt": 0.035966
+        "pt": 0.035966,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.144934,
-        "pt": 0.030738
+        "pt": 0.030738,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.12544,
-        "pt": 0.043191
+        "pt": 0.043191,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0.128792,
-        "pt": 0.024609
+        "pt": 0.024609,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0.110109,
-        "pt": 0.031422
+        "pt": 0.031422,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0.117647,
-        "pt": 0.019975
+        "pt": 0.019975,
+        "remarks": "",
+        "scoreEligible": true
       }
     ]
   },
@@ -3394,127 +4498,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=3, N=3",
         "dtype": "FP16",
         "ic": 0.017228,
-        "pt": 0.219861
+        "pt": 0.219861,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "BF16",
         "ic": 0.015092,
-        "pt": 0.209454
+        "pt": 0.209454,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "FP32",
         "ic": 0.01519,
-        "pt": 0.167179
+        "pt": 0.167179,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.015205,
-        "pt": 0.22162
+        "pt": 0.22162,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.015456,
-        "pt": 0.217761
+        "pt": 0.217761,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.015671,
-        "pt": 0.163798
+        "pt": 0.163798,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.015377,
-        "pt": 0.238748
+        "pt": 0.238748,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.015393,
-        "pt": 0.239843
+        "pt": 0.239843,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.01507,
-        "pt": 0.167277
+        "pt": 0.167277,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP16",
         "ic": 0.015997,
-        "pt": 0.215992
+        "pt": 0.215992,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "BF16",
         "ic": 0.015931,
-        "pt": 0.216364
+        "pt": 0.216364,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP32",
         "ic": 0.016869,
-        "pt": 0.171688
+        "pt": 0.171688,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.048507,
-        "pt": 0.213543
+        "pt": 0.213543,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.049158,
-        "pt": 0.208482
+        "pt": 0.208482,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.050372,
-        "pt": 0.131486
+        "pt": 0.131486,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.048696,
-        "pt": 0.193585
+        "pt": 0.193585,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.048907,
-        "pt": 0.20369
+        "pt": 0.20369,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.050393,
-        "pt": 0.134409
+        "pt": 0.134409,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP16",
         "ic": 0.033525,
-        "pt": 0.169996
+        "pt": 0.169996,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "BF16",
         "ic": 0.033693,
-        "pt": 0.170425
+        "pt": 0.170425,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP32",
         "ic": 0.032915,
-        "pt": 0.143978
+        "pt": 0.143978,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "RMSNorm": [
@@ -3522,217 +4668,289 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.017637,
-        "pt": 0.225277
+        "pt": 0.225277,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.018175,
-        "pt": 0.228036
+        "pt": 0.228036,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.018076,
-        "pt": 0.205846
+        "pt": 0.205846,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.017378,
-        "pt": 0.224018
+        "pt": 0.224018,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.018035,
-        "pt": 0.223188
+        "pt": 0.223188,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.017973,
-        "pt": 0.200604
+        "pt": 0.200604,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.018034,
-        "pt": 0.208318
+        "pt": 0.208318,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.018115,
-        "pt": 0.209767
+        "pt": 0.209767,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.019044,
-        "pt": 0.189358
+        "pt": 0.189358,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.017793,
-        "pt": 0.203682
+        "pt": 0.203682,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.018069,
-        "pt": 0.198326
+        "pt": 0.198326,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.019678,
-        "pt": 0.190303
+        "pt": 0.190303,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.018337,
-        "pt": 0.210373
+        "pt": 0.210373,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.018044,
-        "pt": 0.204073
+        "pt": 0.204073,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.017943,
-        "pt": 0.182264
+        "pt": 0.182264,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.017962,
-        "pt": 0.210684
+        "pt": 0.210684,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.018107,
-        "pt": 0.199334
+        "pt": 0.199334,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.01737,
-        "pt": 0.190342
+        "pt": 0.190342,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.018119,
-        "pt": 0.236141
+        "pt": 0.236141,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.017992,
-        "pt": 0.235205
+        "pt": 0.235205,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.017929,
-        "pt": 0.216622
+        "pt": 0.216622,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.01812,
-        "pt": 0.235991
+        "pt": 0.235991,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.017636,
-        "pt": 0.234407
+        "pt": 0.234407,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.018076,
-        "pt": 0.216596
+        "pt": 0.216596,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.017379,
-        "pt": 0.213134
+        "pt": 0.213134,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.017111,
-        "pt": 0.213004
+        "pt": 0.213004,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.017285,
-        "pt": 0.192931
+        "pt": 0.192931,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.017654,
-        "pt": 0.213408
+        "pt": 0.213408,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.017781,
-        "pt": 0.212899
+        "pt": 0.212899,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.017918,
-        "pt": 0.192917
+        "pt": 0.192917,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.015368,
-        "pt": 0.239487
+        "pt": 0.239487,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.015486,
-        "pt": 0.239988
+        "pt": 0.239988,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.015685,
-        "pt": 0.220399
+        "pt": 0.220399,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.015607,
-        "pt": 0.241268
+        "pt": 0.241268,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.015536,
-        "pt": 0.239942
+        "pt": 0.239942,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.011016,
-        "pt": 0.220343
+        "pt": 0.220343,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Embedding": [
@@ -3740,55 +4958,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP16",
         "ic": 0.016681,
-        "pt": 0.018365
+        "pt": 0.018365,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "BF16",
         "ic": 0.016991,
-        "pt": 0.017793
+        "pt": 0.017793,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP32",
         "ic": 0.016143,
-        "pt": 0.017794
+        "pt": 0.017794,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP16",
         "ic": 0.142939,
-        "pt": 0.020498
+        "pt": 0.020498,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "BF16",
         "ic": 0.142868,
-        "pt": 0.017291
+        "pt": 0.017291,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP32",
         "ic": 0.075153,
-        "pt": 0.018163
+        "pt": 0.018163,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP16",
         "ic": 0.016105,
-        "pt": 0.017392
+        "pt": 0.017392,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "BF16",
         "ic": 0.016626,
-        "pt": 0.018154
+        "pt": 0.018154,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP32",
         "ic": 0.017951,
-        "pt": 0.017484
+        "pt": 0.017484,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "TopK": [
@@ -3796,109 +5032,145 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=6, N=8",
         "dtype": "FP16",
         "ic": 1.375818,
-        "pt": 0.024335
+        "pt": 0.024335,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "BF16",
         "ic": 1.303775,
-        "pt": 0.024645
+        "pt": 0.024645,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "FP32",
         "ic": 1.370844,
-        "pt": 0.02433
+        "pt": 0.02433,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP16",
         "ic": 1.058127,
-        "pt": 0.046262
+        "pt": 0.046262,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "BF16",
         "ic": 1.065943,
-        "pt": 0.046093
+        "pt": 0.046093,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP32",
         "ic": 1.065595,
-        "pt": 0.04708
+        "pt": 0.04708,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP16",
         "ic": 1.348646,
-        "pt": 0.022548
+        "pt": 0.022548,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "BF16",
         "ic": 1.30082,
-        "pt": 0.02261
+        "pt": 0.02261,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP32",
         "ic": 1.288613,
-        "pt": 0.022158
+        "pt": 0.022158,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP16",
         "ic": 1.297174,
-        "pt": 0.04453
+        "pt": 0.04453,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "BF16",
         "ic": 1.306557,
-        "pt": 0.044575
+        "pt": 0.044575,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP32",
         "ic": 1.280816,
-        "pt": 0.043555
+        "pt": 0.043555,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP16",
         "ic": 1.075252,
-        "pt": 0.022638
+        "pt": 0.022638,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "BF16",
         "ic": 1.08652,
-        "pt": 0.023542
+        "pt": 0.023542,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP32",
         "ic": 1.058583,
-        "pt": 0.022423
+        "pt": 0.022423,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP16",
         "ic": 1.299758,
-        "pt": 0.044755
+        "pt": 0.044755,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "BF16",
         "ic": 1.289314,
-        "pt": 0.043364
+        "pt": 0.043364,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP32",
         "ic": 1.29073,
-        "pt": 0.043699
+        "pt": 0.043699,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Add": [
@@ -3906,163 +5178,217 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.111088,
-        "pt": 0.01462
+        "pt": 0.01462,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.111325,
-        "pt": 0.016996
+        "pt": 0.016996,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.109417,
-        "pt": 0.016618
+        "pt": 0.016618,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.112784,
-        "pt": 0.040525
+        "pt": 0.040525,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.11275,
-        "pt": 0.04246
+        "pt": 0.04246,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.113186,
-        "pt": 0.042262
+        "pt": 0.042262,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.10551,
-        "pt": 0.015171
+        "pt": 0.015171,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.107646,
-        "pt": 0.014909
+        "pt": 0.014909,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.108669,
-        "pt": 0.014934
+        "pt": 0.014934,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.111347,
-        "pt": 0.040156
+        "pt": 0.040156,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.111791,
-        "pt": 0.037089
+        "pt": 0.037089,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.115375,
-        "pt": 0.036897
+        "pt": 0.036897,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.111439,
-        "pt": 0.015545
+        "pt": 0.015545,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.110396,
-        "pt": 0.014793
+        "pt": 0.014793,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.109146,
-        "pt": 0.015489
+        "pt": 0.015489,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.119996,
-        "pt": 0.037826
+        "pt": 0.037826,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.115443,
-        "pt": 0.038811
+        "pt": 0.038811,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.115671,
-        "pt": 0.040904
+        "pt": 0.040904,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.119261,
-        "pt": 0.016896
+        "pt": 0.016896,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.118248,
-        "pt": 0.01723
+        "pt": 0.01723,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.120715,
-        "pt": 0.014483
+        "pt": 0.014483,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.113191,
-        "pt": 0.015329
+        "pt": 0.015329,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.107413,
-        "pt": 0.010696
+        "pt": 0.010696,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.107926,
-        "pt": 0.011041
+        "pt": 0.011041,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.117225,
-        "pt": 0.035338
+        "pt": 0.035338,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.116098,
-        "pt": 0.027592
+        "pt": 0.027592,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.121227,
-        "pt": 0.024027
+        "pt": 0.024027,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "MatMul": [
@@ -4070,127 +5396,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP16",
         "ic": 0.02107,
-        "pt": 0.021651
+        "pt": 0.021651,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "BF16",
         "ic": 0.021047,
-        "pt": 0.019704
+        "pt": 0.019704,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP32",
         "ic": 0.025477,
-        "pt": 0.01905
+        "pt": 0.01905,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP16",
         "ic": 0.035695,
-        "pt": 0.03225
+        "pt": 0.03225,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "BF16",
         "ic": 0.032085,
-        "pt": 0.028286
+        "pt": 0.028286,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP32",
         "ic": 0.031207,
-        "pt": 0.028055
+        "pt": 0.028055,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.12532,
-        "pt": 0.124846
+        "pt": 0.124846,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.12747,
-        "pt": 0.127111
+        "pt": 0.127111,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.117789,
-        "pt": 0.117516
+        "pt": 0.117516,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP16",
         "ic": 0.032355,
-        "pt": 0.037081
+        "pt": 0.037081,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "BF16",
         "ic": 0.032162,
-        "pt": 0.037491
+        "pt": 0.037491,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP32",
         "ic": 0.031787,
-        "pt": 0.027638
+        "pt": 0.027638,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.022965,
-        "pt": 0.039889
+        "pt": 0.039889,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.023147,
-        "pt": 0.040546
+        "pt": 0.040546,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.021244,
-        "pt": 0.039297
+        "pt": 0.039297,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP16",
         "ic": 0.033927,
-        "pt": 0.031868
+        "pt": 0.031868,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "BF16",
         "ic": 0.033232,
-        "pt": 0.032401
+        "pt": 0.032401,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP32",
         "ic": 0.029396,
-        "pt": 0.198981
+        "pt": 0.198981,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP16",
         "ic": 0.032265,
-        "pt": 0.037094
+        "pt": 0.037094,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "BF16",
         "ic": 0.032255,
-        "pt": 0.037111
+        "pt": 0.037111,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP32",
         "ic": 0.032307,
-        "pt": 0.026901
+        "pt": 0.026901,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "SiLU": [
@@ -4198,145 +5566,193 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4",
         "dtype": "FP16",
         "ic": 0.078161,
-        "pt": 0.024105
+        "pt": 0.024105,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4",
         "dtype": "BF16",
         "ic": 0.078775,
-        "pt": 0.025042
+        "pt": 0.025042,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4",
         "dtype": "FP32",
         "ic": 0.077434,
-        "pt": 0.024207
+        "pt": 0.024207,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP16",
         "ic": 0.078958,
-        "pt": 0.024178
+        "pt": 0.024178,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "BF16",
         "ic": 0.076872,
-        "pt": 0.024562
+        "pt": 0.024562,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP32",
         "ic": 0.07569,
-        "pt": 0.024201
+        "pt": 0.024201,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP16",
         "ic": 0.075893,
-        "pt": 0.024043
+        "pt": 0.024043,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "BF16",
         "ic": 0.075367,
-        "pt": 0.023515
+        "pt": 0.023515,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP32",
         "ic": 0.074924,
-        "pt": 0.024378
+        "pt": 0.024378,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP16",
         "ic": 0.075529,
-        "pt": 0.024238
+        "pt": 0.024238,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "BF16",
         "ic": 0.07616,
-        "pt": 0.024325
+        "pt": 0.024325,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP32",
         "ic": 0.075783,
-        "pt": 0.023982
+        "pt": 0.023982,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP16",
         "ic": 0.075838,
-        "pt": 0.024408
+        "pt": 0.024408,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "BF16",
         "ic": 0.075351,
-        "pt": 0.024348
+        "pt": 0.024348,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP32",
         "ic": 0.076345,
-        "pt": 0.0244
+        "pt": 0.0244,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP16",
         "ic": 0.075938,
-        "pt": 0.024193
+        "pt": 0.024193,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "BF16",
         "ic": 0.075659,
-        "pt": 0.024477
+        "pt": 0.024477,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP32",
         "ic": 0.075764,
-        "pt": 0.024426
+        "pt": 0.024426,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.076272,
-        "pt": 0.021713
+        "pt": 0.021713,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.082506,
-        "pt": 0.027981
+        "pt": 0.027981,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.076894,
-        "pt": 0.023089
+        "pt": 0.023089,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0.075871,
-        "pt": 0.024066
+        "pt": 0.024066,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0.07583,
-        "pt": 0.026273
+        "pt": 0.026273,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0.075938,
-        "pt": 0.025661
+        "pt": 0.025661,
+        "remarks": "",
+        "scoreEligible": true
       }
     ]
   },
@@ -4346,127 +5762,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=3, N=3",
         "dtype": "FP16",
         "ic": 0.006581,
-        "pt": 0.065546
+        "pt": 0.065546,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "BF16",
         "ic": 0.006427,
-        "pt": 0.065766
+        "pt": 0.065766,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=3",
         "dtype": "FP32",
         "ic": 0.00642,
-        "pt": 0.052705
+        "pt": 0.052705,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.006341,
-        "pt": 0.066423
+        "pt": 0.066423,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.006445,
-        "pt": 0.065648
+        "pt": 0.065648,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.006353,
-        "pt": 0.053571
+        "pt": 0.053571,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP16",
         "ic": 0.006411,
-        "pt": 0.066575
+        "pt": 0.066575,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "BF16",
         "ic": 0.006438,
-        "pt": 0.066439
+        "pt": 0.066439,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=32, N=512",
         "dtype": "FP32",
         "ic": 0.006366,
-        "pt": 0.05236
+        "pt": 0.05236,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP16",
         "ic": 0.006439,
-        "pt": 0.066963
+        "pt": 0.066963,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "BF16",
         "ic": 0.006422,
-        "pt": 0.068901
+        "pt": 0.068901,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
         "dtype": "FP32",
         "ic": 0.006403,
-        "pt": 0.051177
+        "pt": 0.051177,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.013257,
-        "pt": 0.067941
+        "pt": 0.067941,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.014781,
-        "pt": 0.065739
+        "pt": 0.065739,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.012442,
-        "pt": 0.051679
+        "pt": 0.051679,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP16",
         "ic": 0.013264,
-        "pt": 0.06753
+        "pt": 0.06753,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "BF16",
         "ic": 0.014781,
-        "pt": 0.069248
+        "pt": 0.069248,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
         "dtype": "FP32",
         "ic": 0.01244,
-        "pt": 0.053494
+        "pt": 0.053494,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP16",
         "ic": 0.008815,
-        "pt": 0.066391
+        "pt": 0.066391,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "BF16",
         "ic": 0.009098,
-        "pt": 0.065727
+        "pt": 0.065727,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
         "dtype": "FP32",
         "ic": 0.008009,
-        "pt": 0.052025
+        "pt": 0.052025,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "RMSNorm": [
@@ -4474,217 +5932,289 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.007772,
-        "pt": 0.066294
+        "pt": 0.066294,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.007711,
-        "pt": 0.066075
+        "pt": 0.066075,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.007571,
-        "pt": 0.059403
+        "pt": 0.059403,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.007525,
-        "pt": 0.06549
+        "pt": 0.06549,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.007536,
-        "pt": 0.065962
+        "pt": 0.065962,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.007473,
-        "pt": 0.058896
+        "pt": 0.058896,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.007565,
-        "pt": 0.066551
+        "pt": 0.066551,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.007669,
-        "pt": 0.066727
+        "pt": 0.066727,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "FP16",
         "ic": 0.00742,
-        "pt": 0.059555
+        "pt": 0.059555,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.008089,
-        "pt": 0.066936
+        "pt": 0.066936,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.007731,
-        "pt": 0.067592
+        "pt": 0.067592,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, size=4",
         "dtype": "BF16",
         "ic": 0.007506,
-        "pt": 0.060345
+        "pt": 0.060345,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.007659,
-        "pt": 0.066879
+        "pt": 0.066879,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.00748,
-        "pt": 0.06695
+        "pt": 0.06695,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.007592,
-        "pt": 0.059371
+        "pt": 0.059371,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.007568,
-        "pt": 0.066634
+        "pt": 0.066634,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.007536,
-        "pt": 0.066984
+        "pt": 0.066984,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.008507,
-        "pt": 0.060159
+        "pt": 0.060159,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.007501,
-        "pt": 0.06728
+        "pt": 0.06728,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.00755,
-        "pt": 0.067362
+        "pt": 0.067362,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "FP16",
         "ic": 0.007601,
-        "pt": 0.060296
+        "pt": 0.060296,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.007541,
-        "pt": 0.067262
+        "pt": 0.067262,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.007407,
-        "pt": 0.067176
+        "pt": 0.067176,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
         "dtype": "BF16",
         "ic": 0.007436,
-        "pt": 0.060715
+        "pt": 0.060715,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.007583,
-        "pt": 0.068343
+        "pt": 0.068343,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.007477,
-        "pt": 0.066544
+        "pt": 0.066544,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.007474,
-        "pt": 0.060109
+        "pt": 0.060109,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.007698,
-        "pt": 0.067291
+        "pt": 0.067291,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.007478,
-        "pt": 0.066561
+        "pt": 0.066561,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.007642,
-        "pt": 0.059776
+        "pt": 0.059776,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.007481,
-        "pt": 0.068058
+        "pt": 0.068058,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.011073,
-        "pt": 0.067961
+        "pt": 0.067961,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "FP16",
         "ic": 0.007521,
-        "pt": 0.060984
+        "pt": 0.060984,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.007535,
-        "pt": 0.067811
+        "pt": 0.067811,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.007534,
-        "pt": 0.069071
+        "pt": 0.069071,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=2048, size=2048",
         "dtype": "BF16",
         "ic": 0.007573,
-        "pt": 0.060545
+        "pt": 0.060545,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Embedding": [
@@ -4692,55 +6222,73 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP16",
         "ic": 0.006692,
-        "pt": 0.010756
+        "pt": 0.010756,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "BF16",
         "ic": 0.006589,
-        "pt": 0.010815
+        "pt": 0.010815,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
         "dtype": "FP32",
         "ic": 0.006602,
-        "pt": 0.010664
+        "pt": 0.010664,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP16",
         "ic": 0.060203,
-        "pt": 0.010698
+        "pt": 0.010698,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "BF16",
         "ic": 0.058017,
-        "pt": 0.010739
+        "pt": 0.010739,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
         "dtype": "FP32",
         "ic": 0.044,
-        "pt": 0.010351
+        "pt": 0.010351,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP16",
         "ic": 0.006483,
-        "pt": 0.010639
+        "pt": 0.010639,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "BF16",
         "ic": 0.00648,
-        "pt": 0.010505
+        "pt": 0.010505,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
         "dtype": "FP32",
         "ic": 0.00653,
-        "pt": 0.010638
+        "pt": 0.010638,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "TopK": [
@@ -4748,109 +6296,145 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=6, N=8",
         "dtype": "FP16",
         "ic": 0.435852,
-        "pt": 0.009919
+        "pt": 0.009919,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "BF16",
         "ic": 0.396934,
-        "pt": 0.009802
+        "pt": 0.009802,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=8",
         "dtype": "FP32",
         "ic": 0.398159,
-        "pt": 0.009831
+        "pt": 0.009831,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP16",
         "ic": 0.313976,
-        "pt": 0.018095
+        "pt": 0.018095,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "BF16",
         "ic": 0.313508,
-        "pt": 0.017035
+        "pt": 0.017035,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=8, N=4",
         "dtype": "FP32",
         "ic": 0.314095,
-        "pt": 0.017271
+        "pt": 0.017271,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP16",
         "ic": 0.40708,
-        "pt": 0.016082
+        "pt": 0.016082,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "BF16",
         "ic": 0.401918,
-        "pt": 0.015949
+        "pt": 0.015949,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=5, N=5",
         "dtype": "FP32",
         "ic": 0.401479,
-        "pt": 0.016336
+        "pt": 0.016336,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP16",
         "ic": 0.400816,
-        "pt": 0.023797
+        "pt": 0.023797,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "BF16",
         "ic": 0.399128,
-        "pt": 0.023646
+        "pt": 0.023646,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=3, N=7",
         "dtype": "FP32",
         "ic": 0.400229,
-        "pt": 0.023884
+        "pt": 0.023884,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP16",
         "ic": 0.312614,
-        "pt": 0.00966
+        "pt": 0.00966,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "BF16",
         "ic": 0.313277,
-        "pt": 0.009818
+        "pt": 0.009818,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=10, N=3",
         "dtype": "FP32",
         "ic": 0.313715,
-        "pt": 0.009832
+        "pt": 0.009832,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP16",
         "ic": 0.392805,
-        "pt": 0.023587
+        "pt": 0.023587,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "BF16",
         "ic": 0.390576,
-        "pt": 0.023604
+        "pt": 0.023604,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=16",
         "dtype": "FP32",
         "ic": 0.391126,
-        "pt": 0.023953
+        "pt": 0.023953,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "Add": [
@@ -4858,163 +6442,217 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.010488,
-        "pt": 0.006039
+        "pt": 0.006039,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.010353,
-        "pt": 0.005824
+        "pt": 0.005824,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.010126,
-        "pt": 0.00581
+        "pt": 0.00581,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.010413,
-        "pt": 0.006287
+        "pt": 0.006287,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.012363,
-        "pt": 0.007117
+        "pt": 0.007117,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.010035,
-        "pt": 0.006731
+        "pt": 0.006731,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.010386,
-        "pt": 0.006375
+        "pt": 0.006375,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.009984,
-        "pt": 0.00553
+        "pt": 0.00553,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.009961,
-        "pt": 0.00564
+        "pt": 0.00564,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP16",
         "ic": 0.010268,
-        "pt": 0.006258
+        "pt": 0.006258,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "BF16",
         "ic": 0.010044,
-        "pt": 0.006174
+        "pt": 0.006174,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=13, N=4",
         "dtype": "FP32",
         "ic": 0.010184,
-        "pt": 0.006073
+        "pt": 0.006073,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.010142,
-        "pt": 0.00573
+        "pt": 0.00573,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.010101,
-        "pt": 0.005613
+        "pt": 0.005613,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.010053,
-        "pt": 0.005602
+        "pt": 0.005602,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.010286,
-        "pt": 0.006293
+        "pt": 0.006293,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.010918,
-        "pt": 0.006186
+        "pt": 0.006186,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.010087,
-        "pt": 0.00616
+        "pt": 0.00616,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP16",
         "ic": 0.010052,
-        "pt": 0.006292
+        "pt": 0.006292,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "BF16",
         "ic": 0.010036,
-        "pt": 0.006221
+        "pt": 0.006221,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
         "dtype": "FP32",
         "ic": 0.010306,
-        "pt": 0.006148
+        "pt": 0.006148,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.010129,
-        "pt": 0.00566
+        "pt": 0.00566,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.010076,
-        "pt": 0.005555
+        "pt": 0.005555,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.010152,
-        "pt": 0.005737
+        "pt": 0.005737,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.010126,
-        "pt": 0.006586
+        "pt": 0.006586,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.010031,
-        "pt": 0.006303
+        "pt": 0.006303,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.010184,
-        "pt": 0.006231
+        "pt": 0.006231,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "MatMul": [
@@ -5022,127 +6660,169 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP16",
         "ic": 0.009274,
-        "pt": 0.009507
+        "pt": 0.009507,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "BF16",
         "ic": 0.00852,
-        "pt": 0.008788
+        "pt": 0.008788,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4, K=3",
         "dtype": "FP32",
         "ic": 0.009414,
-        "pt": 0.008625
+        "pt": 0.008625,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP16",
         "ic": 0.009034,
-        "pt": 0.009463
+        "pt": 0.009463,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "BF16",
         "ic": 0.008769,
-        "pt": 0.00954
+        "pt": 0.00954,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64, K=256",
         "dtype": "FP32",
         "ic": 0.012313,
-        "pt": 0.011335
+        "pt": 0.011335,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.012341,
-        "pt": 0.01369
+        "pt": 0.01369,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.012334,
-        "pt": 0.013719
+        "pt": 0.013719,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.053796,
-        "pt": 0.05379
+        "pt": 0.05379,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP16",
         "ic": 0.008951,
-        "pt": 0.013832
+        "pt": 0.013832,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "BF16",
         "ic": 0.008917,
-        "pt": 0.013896
+        "pt": 0.013896,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
         "dtype": "FP32",
         "ic": 0.009149,
-        "pt": 0.013595
+        "pt": 0.013595,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP16",
         "ic": 0.011734,
-        "pt": 0.011365
+        "pt": 0.011365,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "BF16",
         "ic": 0.011772,
-        "pt": 0.011466
+        "pt": 0.011466,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048, K=2048",
         "dtype": "FP32",
         "ic": 0.013413,
-        "pt": 0.013417
+        "pt": 0.013417,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP16",
         "ic": 0.012549,
-        "pt": 0.013626
+        "pt": 0.013626,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "BF16",
         "ic": 0.012076,
-        "pt": 0.012249
+        "pt": 0.012249,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=6, N=2560, K=2048",
         "dtype": "FP32",
         "ic": 0.020502,
-        "pt": 0.029066
+        "pt": 0.029066,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP16",
         "ic": 0.008955,
-        "pt": 0.013909
+        "pt": 0.013909,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "BF16",
         "ic": 0.008818,
-        "pt": 0.013816
+        "pt": 0.013816,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
         "dtype": "FP32",
         "ic": 0.008363,
-        "pt": 0.013188
+        "pt": 0.013188,
+        "remarks": "",
+        "scoreEligible": true
       }
     ],
     "SiLU": [
@@ -5150,633 +6830,1135 @@ export const OP_TABLE_FROM_FILES = {
         "shape": "M=2, N=4",
         "dtype": "FP16",
         "ic": 0.010881,
-        "pt": 0.011481
+        "pt": 0.011481,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4",
         "dtype": "BF16",
         "ic": 0.009398,
-        "pt": 0.011645
+        "pt": 0.011645,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=2, N=4",
         "dtype": "FP32",
         "ic": 0.009562,
-        "pt": 0.011288
+        "pt": 0.011288,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP16",
         "ic": 0.01044,
-        "pt": 0.012252
+        "pt": 0.012252,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "BF16",
         "ic": 0.010436,
-        "pt": 0.012047
+        "pt": 0.012047,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=128, N=64",
         "dtype": "FP32",
         "ic": 0.00949,
-        "pt": 0.011416
+        "pt": 0.011416,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP16",
         "ic": 0.009481,
-        "pt": 0.011653
+        "pt": 0.011653,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "BF16",
         "ic": 0.011238,
-        "pt": 0.011662
+        "pt": 0.011662,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
         "dtype": "FP32",
         "ic": 0.009473,
-        "pt": 0.011632
+        "pt": 0.011632,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP16",
         "ic": 0.009418,
-        "pt": 0.011602
+        "pt": 0.011602,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "BF16",
         "ic": 0.009446,
-        "pt": 0.011493
+        "pt": 0.011493,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
         "dtype": "FP32",
         "ic": 0.009469,
-        "pt": 0.011437
+        "pt": 0.011437,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP16",
         "ic": 0.009468,
-        "pt": 0.011714
+        "pt": 0.011714,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "BF16",
         "ic": 0.009489,
-        "pt": 0.011796
+        "pt": 0.011796,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=1, N=2048",
         "dtype": "FP32",
         "ic": 0.009537,
-        "pt": 0.011561
+        "pt": 0.011561,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP16",
         "ic": 0.009508,
-        "pt": 0.011426
+        "pt": 0.011426,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "BF16",
         "ic": 0.00938,
-        "pt": 0.011274
+        "pt": 0.011274,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
         "dtype": "FP32",
         "ic": 0.009418,
-        "pt": 0.011553
+        "pt": 0.011553,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP16",
         "ic": 0.009443,
-        "pt": 0.011568
+        "pt": 0.011568,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "BF16",
         "ic": 0.009458,
-        "pt": 0.011558
+        "pt": 0.011558,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "M=16, N=5632",
         "dtype": "FP32",
         "ic": 0.009919,
-        "pt": 0.011506
+        "pt": 0.011506,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP16",
         "ic": 0.009438,
-        "pt": 0.011578
+        "pt": 0.011578,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "BF16",
         "ic": 0.009418,
-        "pt": 0.011628
+        "pt": 0.011628,
+        "remarks": "",
+        "scoreEligible": true
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
         "dtype": "FP32",
         "ic": 0.009442,
-        "pt": 0.011406
+        "pt": 0.011406,
+        "remarks": "",
+        "scoreEligible": true
       }
     ]
   }
-} as Record<string, Record<string, { shape: string; dtype: string; ic: number; pt: number }[]>>
+} as Record<string, Record<string, { shape: string; dtype: string; ic: number; pt: number; remarks: string; scoreEligible: boolean }[]>>
+
+export const OP_CARD_FROM_FILES = {
+  "ascend": {
+    "key": "ascend",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 1334,
+    "ownVal": "0.026ms",
+    "openVal": "0.350ms",
+    "n": 57,
+    "extra": "7 算子",
+    "adv": true,
+    "advTxt": "自研快 1234%"
+  },
+  "cambricon": {
+    "key": "cambricon",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 1107,
+    "ownVal": "0.094ms",
+    "openVal": "1.045ms",
+    "n": 105,
+    "extra": "6 算子",
+    "adv": true,
+    "advTxt": "自研快 1007%"
+  },
+  "hygon": {
+    "key": "hygon",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 1321,
+    "ownVal": "0.010ms",
+    "openVal": "0.133ms",
+    "n": 132,
+    "extra": "7 算子",
+    "adv": true,
+    "advTxt": "自研快 1221%"
+  },
+  "iluvatar": {
+    "key": "iluvatar",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 1079,
+    "ownVal": "0.011ms",
+    "openVal": "0.121ms",
+    "n": 36,
+    "extra": "5 算子",
+    "adv": true,
+    "advTxt": "自研快 979%"
+  },
+  "metax": {
+    "key": "metax",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 1416,
+    "ownVal": "0.012ms",
+    "openVal": "0.166ms",
+    "n": 156,
+    "extra": "7 算子",
+    "adv": true,
+    "advTxt": "自研快 1316%"
+  },
+  "mthreads": {
+    "key": "mthreads",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 2000,
+    "ownVal": "0.011ms",
+    "openVal": "0.220ms",
+    "n": 156,
+    "extra": "7 算子",
+    "adv": true,
+    "advTxt": "自研快 1900%"
+  },
+  "nvidia": {
+    "key": "nvidia",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 1073,
+    "ownVal": "0.006ms",
+    "openVal": "0.069ms",
+    "n": 156,
+    "extra": "7 算子",
+    "adv": true,
+    "advTxt": "自研快 973%"
+  }
+} as Record<string, Record<string, unknown>>
 
 export const INFER_TABLE_FROM_FILES = {
   "generic": {
     "prefill": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 2472,
+        "vsNvidia": 426,
+        "nvidiaBaselineTps": 580,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 2488,
+        "vsNvidia": 448,
+        "nvidiaBaselineTps": 555,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 2497,
+        "vsNvidia": 455,
+        "nvidiaBaselineTps": 549,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5350,
+        "vsNvidia": 140,
+        "nvidiaBaselineTps": 3831,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5387,
+        "vsNvidia": 130,
+        "nvidiaBaselineTps": 4129,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5380,
+        "vsNvidia": 131,
+        "nvidiaBaselineTps": 4099,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4720,
+        "vsNvidia": 65,
+        "nvidiaBaselineTps": 7295,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4738,
+        "vsNvidia": 65,
+        "nvidiaBaselineTps": 7308,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4739,
+        "vsNvidia": 65,
+        "nvidiaBaselineTps": 7343,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4402,
+        "vsNvidia": 86,
+        "nvidiaBaselineTps": 5090,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4409,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 5205,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4414,
+        "vsNvidia": 83,
+        "nvidiaBaselineTps": 5303,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5968,
+        "vsNvidia": 51,
+        "nvidiaBaselineTps": 11748,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5965,
+        "vsNvidia": 51,
+        "nvidiaBaselineTps": 11792,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5968,
+        "vsNvidia": 50,
+        "nvidiaBaselineTps": 11906,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4756,
+        "vsNvidia": 37,
+        "nvidiaBaselineTps": 12821,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4758,
+        "vsNvidia": 37,
+        "nvidiaBaselineTps": 12860,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 4777,
+        "vsNvidia": 37,
+        "nvidiaBaselineTps": 12891,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5672,
+        "vsNvidia": 111,
+        "nvidiaBaselineTps": 5120,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5672,
+        "vsNvidia": 110,
+        "nvidiaBaselineTps": 5136,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 5674,
+        "vsNvidia": 111,
+        "nvidiaBaselineTps": 5129,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6131,
+        "vsNvidia": 81,
+        "nvidiaBaselineTps": 7584,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6130,
+        "vsNvidia": 81,
+        "nvidiaBaselineTps": 7562,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6139,
+        "vsNvidia": 81,
+        "nvidiaBaselineTps": 7533,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6234,
+        "vsNvidia": 77,
+        "nvidiaBaselineTps": 8113,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6221,
+        "vsNvidia": 76,
+        "nvidiaBaselineTps": 8141,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6237,
+        "vsNvidia": 77,
+        "nvidiaBaselineTps": 8151,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6220,
+        "vsNvidia": 49,
+        "nvidiaBaselineTps": 12804,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6225,
+        "vsNvidia": 48,
+        "nvidiaBaselineTps": 12838,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 6224,
+        "vsNvidia": 48,
+        "nvidiaBaselineTps": 12857,
         "framework": "InfiniLM"
       }
     ],
     "decode": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 82,
+        "vsNvidia": 205,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 83,
+        "vsNvidia": 213,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 82,
+        "vsNvidia": 210,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 84,
+        "vsNvidia": 210,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 84,
+        "vsNvidia": 215,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 81,
+        "vsNvidia": 208,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 78,
+        "vsNvidia": 200,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 77,
+        "vsNvidia": 197,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 75,
+        "vsNvidia": 197,
+        "nvidiaBaselineTps": 38,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 330,
+        "vsNvidia": 107,
+        "nvidiaBaselineTps": 309,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 329,
+        "vsNvidia": 108,
+        "nvidiaBaselineTps": 304,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 316,
+        "vsNvidia": 107,
+        "nvidiaBaselineTps": 295,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 329,
+        "vsNvidia": 107,
+        "nvidiaBaselineTps": 308,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 329,
+        "vsNvidia": 110,
+        "nvidiaBaselineTps": 300,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 315,
+        "vsNvidia": 108,
+        "nvidiaBaselineTps": 293,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 297,
+        "vsNvidia": 102,
+        "nvidiaBaselineTps": 292,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 295,
+        "vsNvidia": 102,
+        "nvidiaBaselineTps": 290,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 283,
+        "vsNvidia": 98,
+        "nvidiaBaselineTps": 288,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 1275,
+        "vsNvidia": 220,
+        "nvidiaBaselineTps": 579,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 1240,
+        "vsNvidia": 224,
+        "nvidiaBaselineTps": 554,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 1142,
+        "vsNvidia": 240,
+        "nvidiaBaselineTps": 475,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 1254,
+        "vsNvidia": 222,
+        "nvidiaBaselineTps": 565,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 1224,
+        "vsNvidia": 226,
+        "nvidiaBaselineTps": 541,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 1131,
+        "vsNvidia": 243,
+        "nvidiaBaselineTps": 465,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 3252,
+        "vsNvidia": 88,
+        "nvidiaBaselineTps": 3698,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 3100,
+        "vsNvidia": 87,
+        "nvidiaBaselineTps": 3582,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 2657,
+        "vsNvidia": 82,
+        "nvidiaBaselineTps": 3243,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 3154,
+        "vsNvidia": 87,
+        "nvidiaBaselineTps": 3635,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 3019,
+        "vsNvidia": 86,
+        "nvidiaBaselineTps": 3525,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "",
         "tps": 2601,
+        "vsNvidia": 81,
+        "nvidiaBaselineTps": 3196,
         "framework": "InfiniLM"
       }
     ]
@@ -5784,396 +7966,718 @@ export const INFER_TABLE_FROM_FILES = {
   "cambricon": {
     "prefill": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 296,
-        "framework": "InfiniLM",
-        "ttft": 108.13
+        "ttft": 108.13,
+        "decodeLatencyMs": 82.55,
+        "vsNvidia": 51,
+        "nvidiaBaselineTps": 580,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 294,
-        "framework": "InfiniLM",
-        "ttft": 108.77
+        "ttft": 108.77,
+        "decodeLatencyMs": 81.92,
+        "vsNvidia": 53,
+        "nvidiaBaselineTps": 555,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 294,
-        "framework": "InfiniLM",
-        "ttft": 108.8
+        "ttft": 108.8,
+        "decodeLatencyMs": 82.48,
+        "vsNvidia": 54,
+        "nvidiaBaselineTps": 549,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 529,
-        "framework": "InfiniLM",
-        "ttft": 484.2
+        "ttft": 484.2,
+        "decodeLatencyMs": 82.2,
+        "vsNvidia": 14,
+        "nvidiaBaselineTps": 3831,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 529,
-        "framework": "InfiniLM",
-        "ttft": 484.2
+        "ttft": 484.2,
+        "decodeLatencyMs": 82.03,
+        "vsNvidia": 13,
+        "nvidiaBaselineTps": 4129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 527,
-        "framework": "InfiniLM",
-        "ttft": 485.41
+        "ttft": 485.41,
+        "decodeLatencyMs": 82.53,
+        "vsNvidia": 13,
+        "nvidiaBaselineTps": 4099,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 757,
-        "framework": "InfiniLM",
-        "ttft": 169.09
+        "ttft": 169.09,
+        "decodeLatencyMs": 77.78,
+        "vsNvidia": 15,
+        "nvidiaBaselineTps": 5090,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 740,
-        "framework": "InfiniLM",
-        "ttft": 173.03
+        "ttft": 173.03,
+        "decodeLatencyMs": 81.4,
+        "vsNvidia": 14,
+        "nvidiaBaselineTps": 5205,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 750,
-        "framework": "InfiniLM",
-        "ttft": 170.66
+        "ttft": 170.66,
+        "decodeLatencyMs": 79.82,
+        "vsNvidia": 14,
+        "nvidiaBaselineTps": 5303,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 662,
-        "framework": "InfiniLM",
-        "ttft": 1545.53
+        "ttft": 1545.53,
+        "decodeLatencyMs": 79.04,
+        "vsNvidia": 6,
+        "nvidiaBaselineTps": 11748,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 659,
-        "framework": "InfiniLM",
-        "ttft": 1554.14
+        "ttft": 1554.14,
+        "decodeLatencyMs": 80.66,
+        "vsNvidia": 6,
+        "nvidiaBaselineTps": 11792,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 657,
-        "framework": "InfiniLM",
-        "ttft": 1558.12
+        "ttft": 1558.12,
+        "decodeLatencyMs": 80.33,
+        "vsNvidia": 6,
+        "nvidiaBaselineTps": 11906,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 1232,
-        "framework": "InfiniLM",
-        "ttft": 415.43
+        "ttft": 415.43,
+        "decodeLatencyMs": 71.8,
+        "vsNvidia": 24,
+        "nvidiaBaselineTps": 5120,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 1239,
-        "framework": "InfiniLM",
-        "ttft": 413.39
+        "ttft": 413.39,
+        "decodeLatencyMs": 71.26,
+        "vsNvidia": 24,
+        "nvidiaBaselineTps": 5136,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 1239,
-        "framework": "InfiniLM",
-        "ttft": 413.16
+        "ttft": 413.16,
+        "decodeLatencyMs": 72.22,
+        "vsNvidia": 24,
+        "nvidiaBaselineTps": 5129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 710,
-        "framework": "InfiniLM",
-        "ttft": 5768.25
+        "ttft": 5768.25,
+        "decodeLatencyMs": 72.22,
+        "vsNvidia": 9,
+        "nvidiaBaselineTps": 7584,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 711,
-        "framework": "InfiniLM",
-        "ttft": 5757.43
+        "ttft": 5757.43,
+        "decodeLatencyMs": 71.2,
+        "vsNvidia": 9,
+        "nvidiaBaselineTps": 7562,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 711,
-        "framework": "InfiniLM",
-        "ttft": 5758.43
+        "ttft": 5758.43,
+        "decodeLatencyMs": 72.74,
+        "vsNvidia": 9,
+        "nvidiaBaselineTps": 7533,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 1398,
-        "framework": "InfiniLM",
-        "ttft": 1464.54
+        "ttft": 1464.54,
+        "decodeLatencyMs": 116.09,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 8113,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 1394,
-        "framework": "InfiniLM",
-        "ttft": 1473.69
+        "ttft": 1473.69,
+        "decodeLatencyMs": 119.93,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 8141,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 1396,
-        "framework": "InfiniLM",
-        "ttft": 1467.53
+        "ttft": 1467.53,
+        "decodeLatencyMs": 123.2,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 8151,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 718,
-        "framework": "InfiniLM",
-        "ttft": 22822.43
+        "ttft": 22822.43,
+        "decodeLatencyMs": 115.23,
+        "vsNvidia": 6,
+        "nvidiaBaselineTps": 12804,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 719,
-        "framework": "InfiniLM",
-        "ttft": 22796.38
+        "ttft": 22796.38,
+        "decodeLatencyMs": 117.62,
+        "vsNvidia": 6,
+        "nvidiaBaselineTps": 12838,
+        "framework": "InfiniLM"
       }
     ],
     "decode": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 12,
+        "decodeLatencyMs": 82.55,
+        "vsNvidia": 30,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 12,
+        "decodeLatencyMs": 81.92,
+        "vsNvidia": 31,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 12,
+        "decodeLatencyMs": 82.48,
+        "vsNvidia": 31,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 12,
+        "decodeLatencyMs": 82.2,
+        "vsNvidia": 30,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 12,
+        "decodeLatencyMs": 82.03,
+        "vsNvidia": 31,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 12,
+        "decodeLatencyMs": 82.53,
+        "vsNvidia": 31,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 51,
+        "decodeLatencyMs": 77.78,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 309,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 49,
+        "decodeLatencyMs": 81.4,
+        "vsNvidia": 16,
+        "nvidiaBaselineTps": 304,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 50,
+        "decodeLatencyMs": 79.82,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 295,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 51,
+        "decodeLatencyMs": 79.04,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 308,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 50,
+        "decodeLatencyMs": 80.66,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 300,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 50,
+        "decodeLatencyMs": 80.33,
+        "vsNvidia": 17,
+        "nvidiaBaselineTps": 293,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 223,
+        "decodeLatencyMs": 71.8,
+        "vsNvidia": 39,
+        "nvidiaBaselineTps": 579,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 225,
+        "decodeLatencyMs": 71.26,
+        "vsNvidia": 41,
+        "nvidiaBaselineTps": 554,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 222,
+        "decodeLatencyMs": 72.22,
+        "vsNvidia": 47,
+        "nvidiaBaselineTps": 475,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 222,
+        "decodeLatencyMs": 72.22,
+        "vsNvidia": 39,
+        "nvidiaBaselineTps": 565,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 225,
+        "decodeLatencyMs": 71.2,
+        "vsNvidia": 42,
+        "nvidiaBaselineTps": 541,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 220,
+        "decodeLatencyMs": 72.74,
+        "vsNvidia": 47,
+        "nvidiaBaselineTps": 465,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 551,
+        "decodeLatencyMs": 116.09,
+        "vsNvidia": 15,
+        "nvidiaBaselineTps": 3698,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 521,
+        "decodeLatencyMs": 119.93,
+        "vsNvidia": 15,
+        "nvidiaBaselineTps": 3582,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 519,
+        "decodeLatencyMs": 123.2,
+        "vsNvidia": 16,
+        "nvidiaBaselineTps": 3243,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 555,
+        "decodeLatencyMs": 115.23,
+        "vsNvidia": 15,
+        "nvidiaBaselineTps": 3635,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "mlu590",
         "tps": 544,
+        "decodeLatencyMs": 117.62,
+        "vsNvidia": 15,
+        "nvidiaBaselineTps": 3525,
         "framework": "InfiniLM"
       }
     ]
@@ -6181,515 +8685,935 @@ export const INFER_TABLE_FROM_FILES = {
   "hygon": {
     "prefill": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 315,
-        "framework": "InfiniLM",
-        "ttft": 101.67
+        "ttft": 101.67,
+        "decodeLatencyMs": 29.72,
+        "vsNvidia": 54,
+        "nvidiaBaselineTps": 580,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 314,
-        "framework": "InfiniLM",
-        "ttft": 101.98
+        "ttft": 101.98,
+        "decodeLatencyMs": 29.78,
+        "vsNvidia": 57,
+        "nvidiaBaselineTps": 555,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 308,
-        "framework": "InfiniLM",
-        "ttft": 103.96
+        "ttft": 103.96,
+        "decodeLatencyMs": 29.86,
+        "vsNvidia": 56,
+        "nvidiaBaselineTps": 549,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 387,
-        "framework": "InfiniLM",
-        "ttft": 660.66
+        "ttft": 660.66,
+        "decodeLatencyMs": 29.82,
+        "vsNvidia": 10,
+        "nvidiaBaselineTps": 3831,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 386,
-        "framework": "InfiniLM",
-        "ttft": 663.39
+        "ttft": 663.39,
+        "decodeLatencyMs": 29.82,
+        "vsNvidia": 9,
+        "nvidiaBaselineTps": 4129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 385,
-        "framework": "InfiniLM",
-        "ttft": 665.38
+        "ttft": 665.38,
+        "decodeLatencyMs": 29.86,
+        "vsNvidia": 9,
+        "nvidiaBaselineTps": 4099,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 11785,
-        "framework": "InfiniLM",
-        "ttft": 347.55
+        "ttft": 347.55,
+        "decodeLatencyMs": 29.98,
+        "vsNvidia": 162,
+        "nvidiaBaselineTps": 7295,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 11801,
-        "framework": "InfiniLM",
-        "ttft": 347.09
+        "ttft": 347.09,
+        "decodeLatencyMs": 30.12,
+        "vsNvidia": 161,
+        "nvidiaBaselineTps": 7308,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 11739,
-        "framework": "InfiniLM",
-        "ttft": 348.92
+        "ttft": 348.92,
+        "decodeLatencyMs": 30.01,
+        "vsNvidia": 160,
+        "nvidiaBaselineTps": 7343,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 366,
-        "framework": "InfiniLM",
-        "ttft": 349.47
+        "ttft": 349.47,
+        "decodeLatencyMs": 47.16,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 5090,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 365,
-        "framework": "InfiniLM",
-        "ttft": 350.88
+        "ttft": 350.88,
+        "decodeLatencyMs": 47.31,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 5205,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 367,
-        "framework": "InfiniLM",
-        "ttft": 348.6
+        "ttft": 348.6,
+        "decodeLatencyMs": 46.92,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 5303,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 10174,
-        "framework": "InfiniLM",
-        "ttft": 100.65
+        "ttft": 100.65,
+        "decodeLatencyMs": 47.29,
+        "vsNvidia": 87,
+        "nvidiaBaselineTps": 11748,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 10120,
-        "framework": "InfiniLM",
-        "ttft": 101.18
+        "ttft": 101.18,
+        "decodeLatencyMs": 47.33,
+        "vsNvidia": 86,
+        "nvidiaBaselineTps": 11792,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 10253,
-        "framework": "InfiniLM",
-        "ttft": 99.87
+        "ttft": 99.87,
+        "decodeLatencyMs": 46.89,
+        "vsNvidia": 86,
+        "nvidiaBaselineTps": 11906,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 13157,
-        "framework": "InfiniLM",
-        "ttft": 1245.23
+        "ttft": 1245.23,
+        "decodeLatencyMs": 47.15,
+        "vsNvidia": 103,
+        "nvidiaBaselineTps": 12821,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 13152,
-        "framework": "InfiniLM",
-        "ttft": 1245.77
+        "ttft": 1245.77,
+        "decodeLatencyMs": 47.12,
+        "vsNvidia": 102,
+        "nvidiaBaselineTps": 12860,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 13151,
-        "framework": "InfiniLM",
-        "ttft": 1245.88
+        "ttft": 1245.88,
+        "decodeLatencyMs": 47.4,
+        "vsNvidia": 102,
+        "nvidiaBaselineTps": 12891,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 5664,
-        "framework": "InfiniLM",
-        "ttft": 90.4
+        "ttft": 90.4,
+        "decodeLatencyMs": 81.29,
+        "vsNvidia": 111,
+        "nvidiaBaselineTps": 5120,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 5658,
-        "framework": "InfiniLM",
-        "ttft": 90.49
+        "ttft": 90.49,
+        "decodeLatencyMs": 81.29,
+        "vsNvidia": 110,
+        "nvidiaBaselineTps": 5136,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 5617,
-        "framework": "InfiniLM",
-        "ttft": 91.15
+        "ttft": 91.15,
+        "decodeLatencyMs": 82,
+        "vsNvidia": 110,
+        "nvidiaBaselineTps": 5129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 11984,
-        "framework": "InfiniLM",
-        "ttft": 341.8
+        "ttft": 341.8,
+        "decodeLatencyMs": 81.56,
+        "vsNvidia": 158,
+        "nvidiaBaselineTps": 7584,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 11999,
-        "framework": "InfiniLM",
-        "ttft": 341.36
+        "ttft": 341.36,
+        "decodeLatencyMs": 81.36,
+        "vsNvidia": 159,
+        "nvidiaBaselineTps": 7562,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 11964,
-        "framework": "InfiniLM",
-        "ttft": 342.37
+        "ttft": 342.37,
+        "decodeLatencyMs": 82.13,
+        "vsNvidia": 159,
+        "nvidiaBaselineTps": 7533,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 8323,
-        "framework": "InfiniLM",
-        "ttft": 246.07
+        "ttft": 246.07,
+        "decodeLatencyMs": 268.5,
+        "vsNvidia": 103,
+        "nvidiaBaselineTps": 8113,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 8301,
-        "framework": "InfiniLM",
-        "ttft": 246.73
+        "ttft": 246.73,
+        "decodeLatencyMs": 269.37,
+        "vsNvidia": 102,
+        "nvidiaBaselineTps": 8141,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 8362,
-        "framework": "InfiniLM",
-        "ttft": 244.92
+        "ttft": 244.92,
+        "decodeLatencyMs": 271.63,
+        "vsNvidia": 103,
+        "nvidiaBaselineTps": 8151,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 13307,
-        "framework": "InfiniLM",
-        "ttft": 1231.24
+        "ttft": 1231.24,
+        "decodeLatencyMs": 268.89,
+        "vsNvidia": 104,
+        "nvidiaBaselineTps": 12804,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 13324,
-        "framework": "InfiniLM",
-        "ttft": 1229.66
+        "ttft": 1229.66,
+        "decodeLatencyMs": 268.42,
+        "vsNvidia": 104,
+        "nvidiaBaselineTps": 12838,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 13302,
-        "framework": "InfiniLM",
-        "ttft": 1231.72
+        "ttft": 1231.72,
+        "decodeLatencyMs": 273.07,
+        "vsNvidia": 103,
+        "nvidiaBaselineTps": 12857,
+        "framework": "InfiniLM"
       }
     ],
     "decode": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 34,
+        "decodeLatencyMs": 29.72,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 34,
+        "decodeLatencyMs": 29.78,
+        "vsNvidia": 87,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 33,
+        "decodeLatencyMs": 29.86,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 34,
+        "decodeLatencyMs": 29.82,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 34,
+        "decodeLatencyMs": 29.82,
+        "vsNvidia": 87,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 33,
+        "decodeLatencyMs": 29.86,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 33,
+        "decodeLatencyMs": 29.98,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 33,
+        "decodeLatencyMs": 30.12,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 33,
+        "decodeLatencyMs": 30.01,
+        "vsNvidia": 87,
+        "nvidiaBaselineTps": 38,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 47.16,
+        "vsNvidia": 28,
+        "nvidiaBaselineTps": 309,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 47.31,
+        "vsNvidia": 28,
+        "nvidiaBaselineTps": 304,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 46.92,
+        "vsNvidia": 29,
+        "nvidiaBaselineTps": 295,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 47.29,
+        "vsNvidia": 28,
+        "nvidiaBaselineTps": 308,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 47.33,
+        "vsNvidia": 28,
+        "nvidiaBaselineTps": 300,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 46.89,
+        "vsNvidia": 29,
+        "nvidiaBaselineTps": 293,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 47.15,
+        "vsNvidia": 29,
+        "nvidiaBaselineTps": 292,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 85,
+        "decodeLatencyMs": 47.12,
+        "vsNvidia": 29,
+        "nvidiaBaselineTps": 290,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 84,
+        "decodeLatencyMs": 47.4,
+        "vsNvidia": 29,
+        "nvidiaBaselineTps": 288,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 197,
+        "decodeLatencyMs": 81.29,
+        "vsNvidia": 34,
+        "nvidiaBaselineTps": 579,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 197,
+        "decodeLatencyMs": 81.29,
+        "vsNvidia": 36,
+        "nvidiaBaselineTps": 554,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 195,
+        "decodeLatencyMs": 82,
+        "vsNvidia": 41,
+        "nvidiaBaselineTps": 475,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 196,
+        "decodeLatencyMs": 81.56,
+        "vsNvidia": 35,
+        "nvidiaBaselineTps": 565,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 197,
+        "decodeLatencyMs": 81.36,
+        "vsNvidia": 36,
+        "nvidiaBaselineTps": 541,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 195,
+        "decodeLatencyMs": 82.13,
+        "vsNvidia": 42,
+        "nvidiaBaselineTps": 465,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 238,
+        "decodeLatencyMs": 268.5,
+        "vsNvidia": 6,
+        "nvidiaBaselineTps": 3698,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 238,
+        "decodeLatencyMs": 269.37,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 3582,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 236,
+        "decodeLatencyMs": 271.63,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 3243,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 238,
+        "decodeLatencyMs": 268.89,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 3635,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 238,
+        "decodeLatencyMs": 268.42,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 3525,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "bw1000",
         "tps": 234,
+        "decodeLatencyMs": 273.07,
+        "vsNvidia": 7,
+        "nvidiaBaselineTps": 3196,
         "framework": "InfiniLM"
       }
     ]
@@ -6697,515 +9621,935 @@ export const INFER_TABLE_FROM_FILES = {
   "metax": {
     "prefill": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 1442,
-        "framework": "InfiniLM",
-        "ttft": 22.18
+        "ttft": 22.18,
+        "decodeLatencyMs": 15.01,
+        "vsNvidia": 249,
+        "nvidiaBaselineTps": 580,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 1429,
-        "framework": "InfiniLM",
-        "ttft": 22.39
+        "ttft": 22.39,
+        "decodeLatencyMs": 14.92,
+        "vsNvidia": 257,
+        "nvidiaBaselineTps": 555,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 1252,
-        "framework": "InfiniLM",
-        "ttft": 25.55
+        "ttft": 25.55,
+        "decodeLatencyMs": 14.95,
+        "vsNvidia": 228,
+        "nvidiaBaselineTps": 549,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 6883,
-        "framework": "InfiniLM",
-        "ttft": 37.19
+        "ttft": 37.19,
+        "decodeLatencyMs": 14.88,
+        "vsNvidia": 180,
+        "nvidiaBaselineTps": 3831,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 6813,
-        "framework": "InfiniLM",
-        "ttft": 37.57
+        "ttft": 37.57,
+        "decodeLatencyMs": 14.92,
+        "vsNvidia": 165,
+        "nvidiaBaselineTps": 4129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 6469,
-        "framework": "InfiniLM",
-        "ttft": 39.57
+        "ttft": 39.57,
+        "decodeLatencyMs": 14.95,
+        "vsNvidia": 158,
+        "nvidiaBaselineTps": 4099,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 10262,
-        "framework": "InfiniLM",
-        "ttft": 399.13
+        "ttft": 399.13,
+        "decodeLatencyMs": 15.1,
+        "vsNvidia": 141,
+        "nvidiaBaselineTps": 7295,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 10260,
-        "framework": "InfiniLM",
-        "ttft": 399.22
+        "ttft": 399.22,
+        "decodeLatencyMs": 14.99,
+        "vsNvidia": 140,
+        "nvidiaBaselineTps": 7308,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 10189,
-        "framework": "InfiniLM",
-        "ttft": 401.99
+        "ttft": 401.99,
+        "decodeLatencyMs": 14.98,
+        "vsNvidia": 139,
+        "nvidiaBaselineTps": 7343,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2980,
-        "framework": "InfiniLM",
-        "ttft": 42.95
+        "ttft": 42.95,
+        "decodeLatencyMs": 17.02,
+        "vsNvidia": 59,
+        "nvidiaBaselineTps": 5090,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2957,
-        "framework": "InfiniLM",
-        "ttft": 43.28
+        "ttft": 43.28,
+        "decodeLatencyMs": 17.04,
+        "vsNvidia": 57,
+        "nvidiaBaselineTps": 5205,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2807,
-        "framework": "InfiniLM",
-        "ttft": 45.59
+        "ttft": 45.59,
+        "decodeLatencyMs": 17.6,
+        "vsNvidia": 53,
+        "nvidiaBaselineTps": 5303,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 8818,
-        "framework": "InfiniLM",
-        "ttft": 116.11
+        "ttft": 116.11,
+        "decodeLatencyMs": 16.98,
+        "vsNvidia": 75,
+        "nvidiaBaselineTps": 11748,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 8804,
-        "framework": "InfiniLM",
-        "ttft": 116.3
+        "ttft": 116.3,
+        "decodeLatencyMs": 17.05,
+        "vsNvidia": 75,
+        "nvidiaBaselineTps": 11792,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 8588,
-        "framework": "InfiniLM",
-        "ttft": 119.23
+        "ttft": 119.23,
+        "decodeLatencyMs": 17.61,
+        "vsNvidia": 72,
+        "nvidiaBaselineTps": 11906,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 9515,
-        "framework": "InfiniLM",
-        "ttft": 1721.8
+        "ttft": 1721.8,
+        "decodeLatencyMs": 18.35,
+        "vsNvidia": 74,
+        "nvidiaBaselineTps": 12821,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 9508,
-        "framework": "InfiniLM",
-        "ttft": 1723.09
+        "ttft": 1723.09,
+        "decodeLatencyMs": 18.09,
+        "vsNvidia": 74,
+        "nvidiaBaselineTps": 12860,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 9484,
-        "framework": "InfiniLM",
-        "ttft": 1727.52
+        "ttft": 1727.52,
+        "decodeLatencyMs": 18.2,
+        "vsNvidia": 74,
+        "nvidiaBaselineTps": 12891,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 3720,
-        "framework": "InfiniLM",
-        "ttft": 137.62
+        "ttft": 137.62,
+        "decodeLatencyMs": 18.11,
+        "vsNvidia": 73,
+        "nvidiaBaselineTps": 5120,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 3709,
-        "framework": "InfiniLM",
-        "ttft": 138.04
+        "ttft": 138.04,
+        "decodeLatencyMs": 18.31,
+        "vsNvidia": 72,
+        "nvidiaBaselineTps": 5136,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 3658,
-        "framework": "InfiniLM",
-        "ttft": 139.96
+        "ttft": 139.96,
+        "decodeLatencyMs": 18.78,
+        "vsNvidia": 71,
+        "nvidiaBaselineTps": 5129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 9350,
-        "framework": "InfiniLM",
-        "ttft": 438.05
+        "ttft": 438.05,
+        "decodeLatencyMs": 18.24,
+        "vsNvidia": 123,
+        "nvidiaBaselineTps": 7584,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 9341,
-        "framework": "InfiniLM",
-        "ttft": 438.47
+        "ttft": 438.47,
+        "decodeLatencyMs": 18.41,
+        "vsNvidia": 124,
+        "nvidiaBaselineTps": 7562,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 9295,
-        "framework": "InfiniLM",
-        "ttft": 440.65
+        "ttft": 440.65,
+        "decodeLatencyMs": 18.82,
+        "vsNvidia": 123,
+        "nvidiaBaselineTps": 7533,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 4058,
-        "framework": "InfiniLM",
-        "ttft": 504.57
+        "ttft": 504.57,
+        "decodeLatencyMs": 21.62,
+        "vsNvidia": 50,
+        "nvidiaBaselineTps": 8113,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 4063,
-        "framework": "InfiniLM",
-        "ttft": 504.84
+        "ttft": 504.84,
+        "decodeLatencyMs": 22.33,
+        "vsNvidia": 50,
+        "nvidiaBaselineTps": 8141,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 4043,
-        "framework": "InfiniLM",
-        "ttft": 504.39
+        "ttft": 504.39,
+        "decodeLatencyMs": 24.62,
+        "vsNvidia": 50,
+        "nvidiaBaselineTps": 8151,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 8740,
-        "framework": "InfiniLM",
-        "ttft": 1874.57
+        "ttft": 1874.57,
+        "decodeLatencyMs": 21.71,
+        "vsNvidia": 68,
+        "nvidiaBaselineTps": 12804,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 8709,
-        "framework": "InfiniLM",
-        "ttft": 1881.1
+        "ttft": 1881.1,
+        "decodeLatencyMs": 22.65,
+        "vsNvidia": 68,
+        "nvidiaBaselineTps": 12838,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 8705,
-        "framework": "InfiniLM",
-        "ttft": 1881.93
+        "ttft": 1881.93,
+        "decodeLatencyMs": 25.13,
+        "vsNvidia": 68,
+        "nvidiaBaselineTps": 12857,
+        "framework": "InfiniLM"
       }
     ],
     "decode": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 15.01,
+        "vsNvidia": 168,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 14.92,
+        "vsNvidia": 172,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 14.95,
+        "vsNvidia": 172,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 14.88,
+        "vsNvidia": 168,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 14.92,
+        "vsNvidia": 172,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 14.95,
+        "vsNvidia": 172,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 66,
+        "decodeLatencyMs": 15.1,
+        "vsNvidia": 169,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 14.99,
+        "vsNvidia": 172,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 67,
+        "decodeLatencyMs": 14.98,
+        "vsNvidia": 176,
+        "nvidiaBaselineTps": 38,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 235,
+        "decodeLatencyMs": 17.02,
+        "vsNvidia": 76,
+        "nvidiaBaselineTps": 309,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 234,
+        "decodeLatencyMs": 17.04,
+        "vsNvidia": 77,
+        "nvidiaBaselineTps": 304,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 227,
+        "decodeLatencyMs": 17.6,
+        "vsNvidia": 77,
+        "nvidiaBaselineTps": 295,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 235,
+        "decodeLatencyMs": 16.98,
+        "vsNvidia": 76,
+        "nvidiaBaselineTps": 308,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 234,
+        "decodeLatencyMs": 17.05,
+        "vsNvidia": 78,
+        "nvidiaBaselineTps": 300,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 227,
+        "decodeLatencyMs": 17.61,
+        "vsNvidia": 77,
+        "nvidiaBaselineTps": 293,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 217,
+        "decodeLatencyMs": 18.35,
+        "vsNvidia": 74,
+        "nvidiaBaselineTps": 292,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 221,
+        "decodeLatencyMs": 18.09,
+        "vsNvidia": 76,
+        "nvidiaBaselineTps": 290,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 219,
+        "decodeLatencyMs": 18.2,
+        "vsNvidia": 76,
+        "nvidiaBaselineTps": 288,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 883,
+        "decodeLatencyMs": 18.11,
+        "vsNvidia": 153,
+        "nvidiaBaselineTps": 579,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 873,
+        "decodeLatencyMs": 18.31,
+        "vsNvidia": 158,
+        "nvidiaBaselineTps": 554,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 852,
+        "decodeLatencyMs": 18.78,
+        "vsNvidia": 179,
+        "nvidiaBaselineTps": 475,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 876,
+        "decodeLatencyMs": 18.24,
+        "vsNvidia": 155,
+        "nvidiaBaselineTps": 565,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 869,
+        "decodeLatencyMs": 18.41,
+        "vsNvidia": 161,
+        "nvidiaBaselineTps": 541,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 850,
+        "decodeLatencyMs": 18.82,
+        "vsNvidia": 183,
+        "nvidiaBaselineTps": 465,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2959,
+        "decodeLatencyMs": 21.62,
+        "vsNvidia": 80,
+        "nvidiaBaselineTps": 3698,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2856,
+        "decodeLatencyMs": 22.33,
+        "vsNvidia": 80,
+        "nvidiaBaselineTps": 3582,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2595,
+        "decodeLatencyMs": 24.62,
+        "vsNvidia": 80,
+        "nvidiaBaselineTps": 3243,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2948,
+        "decodeLatencyMs": 21.71,
+        "vsNvidia": 81,
+        "nvidiaBaselineTps": 3635,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2825,
+        "decodeLatencyMs": 22.65,
+        "vsNvidia": 80,
+        "nvidiaBaselineTps": 3525,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "c550",
         "tps": 2546,
+        "decodeLatencyMs": 25.13,
+        "vsNvidia": 80,
+        "nvidiaBaselineTps": 3196,
         "framework": "InfiniLM"
       }
     ]
@@ -7213,515 +10557,935 @@ export const INFER_TABLE_FROM_FILES = {
   "mthreads": {
     "prefill": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 967,
-        "framework": "InfiniLM",
-        "ttft": 33.1
+        "ttft": 33.1,
+        "decodeLatencyMs": 29.09,
+        "vsNvidia": 167,
+        "nvidiaBaselineTps": 580,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 972,
-        "framework": "InfiniLM",
-        "ttft": 32.93
+        "ttft": 32.93,
+        "decodeLatencyMs": 26.86,
+        "vsNvidia": 175,
+        "nvidiaBaselineTps": 555,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 1075,
-        "framework": "InfiniLM",
-        "ttft": 29.77
+        "ttft": 29.77,
+        "decodeLatencyMs": 26.36,
+        "vsNvidia": 196,
+        "nvidiaBaselineTps": 549,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 4493,
-        "framework": "InfiniLM",
-        "ttft": 56.97
+        "ttft": 56.97,
+        "decodeLatencyMs": 29.46,
+        "vsNvidia": 117,
+        "nvidiaBaselineTps": 3831,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 4690,
-        "framework": "InfiniLM",
-        "ttft": 54.59
+        "ttft": 54.59,
+        "decodeLatencyMs": 26.01,
+        "vsNvidia": 114,
+        "nvidiaBaselineTps": 4129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 4314,
-        "framework": "InfiniLM",
-        "ttft": 59.34
+        "ttft": 59.34,
+        "decodeLatencyMs": 26.12,
+        "vsNvidia": 105,
+        "nvidiaBaselineTps": 4099,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5227,
-        "framework": "InfiniLM",
-        "ttft": 783.57
+        "ttft": 783.57,
+        "decodeLatencyMs": 27.31,
+        "vsNvidia": 72,
+        "nvidiaBaselineTps": 7295,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5222,
-        "framework": "InfiniLM",
-        "ttft": 784.32
+        "ttft": 784.32,
+        "decodeLatencyMs": 27.58,
+        "vsNvidia": 71,
+        "nvidiaBaselineTps": 7308,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5192,
-        "framework": "InfiniLM",
-        "ttft": 788.96
+        "ttft": 788.96,
+        "decodeLatencyMs": 28.26,
+        "vsNvidia": 71,
+        "nvidiaBaselineTps": 7343,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 2720,
-        "framework": "InfiniLM",
-        "ttft": 47.06
+        "ttft": 47.06,
+        "decodeLatencyMs": 35.28,
+        "vsNvidia": 53,
+        "nvidiaBaselineTps": 5090,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 2946,
-        "framework": "InfiniLM",
-        "ttft": 43.46
+        "ttft": 43.46,
+        "decodeLatencyMs": 34.09,
+        "vsNvidia": 57,
+        "nvidiaBaselineTps": 5205,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 2929,
-        "framework": "InfiniLM",
-        "ttft": 43.7
+        "ttft": 43.7,
+        "decodeLatencyMs": 34.25,
+        "vsNvidia": 55,
+        "nvidiaBaselineTps": 5303,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 6771,
-        "framework": "InfiniLM",
-        "ttft": 151.22
+        "ttft": 151.22,
+        "decodeLatencyMs": 34.82,
+        "vsNvidia": 58,
+        "nvidiaBaselineTps": 11748,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 6899,
-        "framework": "InfiniLM",
-        "ttft": 148.43
+        "ttft": 148.43,
+        "decodeLatencyMs": 33.7,
+        "vsNvidia": 59,
+        "nvidiaBaselineTps": 11792,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 6862,
-        "framework": "InfiniLM",
-        "ttft": 149.22
+        "ttft": 149.22,
+        "decodeLatencyMs": 34.06,
+        "vsNvidia": 58,
+        "nvidiaBaselineTps": 11906,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5333,
-        "framework": "InfiniLM",
-        "ttft": 3072.29
+        "ttft": 3072.29,
+        "decodeLatencyMs": 34.57,
+        "vsNvidia": 42,
+        "nvidiaBaselineTps": 12821,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5353,
-        "framework": "InfiniLM",
-        "ttft": 3060.53
+        "ttft": 3060.53,
+        "decodeLatencyMs": 34.78,
+        "vsNvidia": 42,
+        "nvidiaBaselineTps": 12860,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5376,
-        "framework": "InfiniLM",
-        "ttft": 3047.59
+        "ttft": 3047.59,
+        "decodeLatencyMs": 35.92,
+        "vsNvidia": 42,
+        "nvidiaBaselineTps": 12891,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5732,
-        "framework": "InfiniLM",
-        "ttft": 89.32
+        "ttft": 89.32,
+        "decodeLatencyMs": 29.95,
+        "vsNvidia": 112,
+        "nvidiaBaselineTps": 5120,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5846,
-        "framework": "InfiniLM",
-        "ttft": 87.58
+        "ttft": 87.58,
+        "decodeLatencyMs": 27.19,
+        "vsNvidia": 114,
+        "nvidiaBaselineTps": 5136,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 5976,
-        "framework": "InfiniLM",
-        "ttft": 85.68
+        "ttft": 85.68,
+        "decodeLatencyMs": 28.18,
+        "vsNvidia": 117,
+        "nvidiaBaselineTps": 5129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7118,
-        "framework": "InfiniLM",
-        "ttft": 575.42
+        "ttft": 575.42,
+        "decodeLatencyMs": 30.44,
+        "vsNvidia": 94,
+        "nvidiaBaselineTps": 7584,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7117,
-        "framework": "InfiniLM",
-        "ttft": 575.51
+        "ttft": 575.51,
+        "decodeLatencyMs": 26.57,
+        "vsNvidia": 94,
+        "nvidiaBaselineTps": 7562,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7169,
-        "framework": "InfiniLM",
-        "ttft": 571.39
+        "ttft": 571.39,
+        "decodeLatencyMs": 28.35,
+        "vsNvidia": 95,
+        "nvidiaBaselineTps": 7533,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7212,
-        "framework": "InfiniLM",
-        "ttft": 283.97
+        "ttft": 283.97,
+        "decodeLatencyMs": 37.17,
+        "vsNvidia": 89,
+        "nvidiaBaselineTps": 8113,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7258,
-        "framework": "InfiniLM",
-        "ttft": 282.17
+        "ttft": 282.17,
+        "decodeLatencyMs": 35.45,
+        "vsNvidia": 89,
+        "nvidiaBaselineTps": 8141,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7245,
-        "framework": "InfiniLM",
-        "ttft": 282.66
+        "ttft": 282.66,
+        "decodeLatencyMs": 39.2,
+        "vsNvidia": 89,
+        "nvidiaBaselineTps": 8151,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7100,
-        "framework": "InfiniLM",
-        "ttft": 2307.55
+        "ttft": 2307.55,
+        "decodeLatencyMs": 37.78,
+        "vsNvidia": 55,
+        "nvidiaBaselineTps": 12804,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7129,
-        "framework": "InfiniLM",
-        "ttft": 2298.1
+        "ttft": 2298.1,
+        "decodeLatencyMs": 34.95,
+        "vsNvidia": 56,
+        "nvidiaBaselineTps": 12838,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 7146,
-        "framework": "InfiniLM",
-        "ttft": 2292.73
+        "ttft": 2292.73,
+        "decodeLatencyMs": 39.53,
+        "vsNvidia": 56,
+        "nvidiaBaselineTps": 12857,
+        "framework": "InfiniLM"
       }
     ],
     "decode": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 34,
+        "decodeLatencyMs": 29.09,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 37,
+        "decodeLatencyMs": 26.86,
+        "vsNvidia": 95,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 38,
+        "decodeLatencyMs": 26.36,
+        "vsNvidia": 97,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 34,
+        "decodeLatencyMs": 29.46,
+        "vsNvidia": 85,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 38,
+        "decodeLatencyMs": 26.01,
+        "vsNvidia": 97,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 38,
+        "decodeLatencyMs": 26.12,
+        "vsNvidia": 97,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 37,
+        "decodeLatencyMs": 27.31,
+        "vsNvidia": 95,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 36,
+        "decodeLatencyMs": 27.58,
+        "vsNvidia": 92,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 35,
+        "decodeLatencyMs": 28.26,
+        "vsNvidia": 92,
+        "nvidiaBaselineTps": 38,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 113,
+        "decodeLatencyMs": 35.28,
+        "vsNvidia": 37,
+        "nvidiaBaselineTps": 309,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 117,
+        "decodeLatencyMs": 34.09,
+        "vsNvidia": 38,
+        "nvidiaBaselineTps": 304,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 117,
+        "decodeLatencyMs": 34.25,
+        "vsNvidia": 40,
+        "nvidiaBaselineTps": 295,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 115,
+        "decodeLatencyMs": 34.82,
+        "vsNvidia": 37,
+        "nvidiaBaselineTps": 308,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 119,
+        "decodeLatencyMs": 33.7,
+        "vsNvidia": 40,
+        "nvidiaBaselineTps": 300,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 117,
+        "decodeLatencyMs": 34.06,
+        "vsNvidia": 40,
+        "nvidiaBaselineTps": 293,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 116,
+        "decodeLatencyMs": 34.57,
+        "vsNvidia": 40,
+        "nvidiaBaselineTps": 292,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 115,
+        "decodeLatencyMs": 34.78,
+        "vsNvidia": 40,
+        "nvidiaBaselineTps": 290,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 111,
+        "decodeLatencyMs": 35.92,
+        "vsNvidia": 39,
+        "nvidiaBaselineTps": 288,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 534,
+        "decodeLatencyMs": 29.95,
+        "vsNvidia": 92,
+        "nvidiaBaselineTps": 579,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 588,
+        "decodeLatencyMs": 27.19,
+        "vsNvidia": 106,
+        "nvidiaBaselineTps": 554,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 568,
+        "decodeLatencyMs": 28.18,
+        "vsNvidia": 120,
+        "nvidiaBaselineTps": 475,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 526,
+        "decodeLatencyMs": 30.44,
+        "vsNvidia": 93,
+        "nvidiaBaselineTps": 565,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 602,
+        "decodeLatencyMs": 26.57,
+        "vsNvidia": 111,
+        "nvidiaBaselineTps": 541,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 564,
+        "decodeLatencyMs": 28.35,
+        "vsNvidia": 121,
+        "nvidiaBaselineTps": 465,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 1722,
+        "decodeLatencyMs": 37.17,
+        "vsNvidia": 47,
+        "nvidiaBaselineTps": 3698,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 1806,
+        "decodeLatencyMs": 35.45,
+        "vsNvidia": 50,
+        "nvidiaBaselineTps": 3582,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 1633,
+        "decodeLatencyMs": 39.2,
+        "vsNvidia": 50,
+        "nvidiaBaselineTps": 3243,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 1694,
+        "decodeLatencyMs": 37.78,
+        "vsNvidia": 47,
+        "nvidiaBaselineTps": 3635,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 1831,
+        "decodeLatencyMs": 34.95,
+        "vsNvidia": 52,
+        "nvidiaBaselineTps": 3525,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "s5000",
         "tps": 1619,
+        "decodeLatencyMs": 39.53,
+        "vsNvidia": 51,
+        "nvidiaBaselineTps": 3196,
         "framework": "InfiniLM"
       }
     ]
@@ -7729,538 +11493,1056 @@ export const INFER_TABLE_FROM_FILES = {
   "nvidia": {
     "prefill": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 580,
-        "framework": "InfiniLM",
-        "ttft": 55.15
+        "ttft": 55.15,
+        "decodeLatencyMs": 25.04,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 580,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 555,
-        "framework": "InfiniLM",
-        "ttft": 57.69
+        "ttft": 57.69,
+        "decodeLatencyMs": 25.32,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 555,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 549,
-        "framework": "InfiniLM",
-        "ttft": 58.24
+        "ttft": 58.24,
+        "decodeLatencyMs": 25.73,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 549,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 3831,
-        "framework": "InfiniLM",
-        "ttft": 66.83
+        "ttft": 66.83,
+        "decodeLatencyMs": 25.3,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 3831,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 4129,
-        "framework": "InfiniLM",
-        "ttft": 62
+        "ttft": 62,
+        "decodeLatencyMs": 25.49,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 4129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 4099,
-        "framework": "InfiniLM",
-        "ttft": 62.45
+        "ttft": 62.45,
+        "decodeLatencyMs": 25.79,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 4099,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 7295,
-        "framework": "InfiniLM",
-        "ttft": 561.51
+        "ttft": 561.51,
+        "decodeLatencyMs": 25.94,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 7295,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 7308,
-        "framework": "InfiniLM",
-        "ttft": 560.5
+        "ttft": 560.5,
+        "decodeLatencyMs": 25.96,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 7308,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 7343,
-        "framework": "InfiniLM",
-        "ttft": 557.84
+        "ttft": 557.84,
+        "decodeLatencyMs": 26.07,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 7343,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 5090,
-        "framework": "InfiniLM",
-        "ttft": 25.15
+        "ttft": 25.15,
+        "decodeLatencyMs": 12.96,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 5090,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 5205,
-        "framework": "InfiniLM",
-        "ttft": 24.59
+        "ttft": 24.59,
+        "decodeLatencyMs": 13.18,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 5205,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 5303,
-        "framework": "InfiniLM",
-        "ttft": 24.14
+        "ttft": 24.14,
+        "decodeLatencyMs": 13.55,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 5303,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 11748,
-        "framework": "InfiniLM",
-        "ttft": 87.16
+        "ttft": 87.16,
+        "decodeLatencyMs": 12.99,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 11748,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 11792,
-        "framework": "InfiniLM",
-        "ttft": 86.84
+        "ttft": 86.84,
+        "decodeLatencyMs": 13.34,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 11792,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 11906,
-        "framework": "InfiniLM",
-        "ttft": 86.01
+        "ttft": 86.01,
+        "decodeLatencyMs": 13.63,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 11906,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 12821,
-        "framework": "InfiniLM",
-        "ttft": 1277.86
+        "ttft": 1277.86,
+        "decodeLatencyMs": 13.69,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 12821,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 12860,
-        "framework": "InfiniLM",
-        "ttft": 1274.01
+        "ttft": 1274.01,
+        "decodeLatencyMs": 13.79,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 12860,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 12891,
-        "framework": "InfiniLM",
-        "ttft": 1270.99
+        "ttft": 1270.99,
+        "decodeLatencyMs": 13.89,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 12891,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 5120,
-        "framework": "InfiniLM",
-        "ttft": 99.99
+        "ttft": 99.99,
+        "decodeLatencyMs": 27.64,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 5120,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 5136,
-        "framework": "InfiniLM",
-        "ttft": 99.68
+        "ttft": 99.68,
+        "decodeLatencyMs": 28.88,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 5136,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 5129,
-        "framework": "InfiniLM",
-        "ttft": 99.82
+        "ttft": 99.82,
+        "decodeLatencyMs": 33.67,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 5129,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 7584,
-        "framework": "InfiniLM",
-        "ttft": 540.08
+        "ttft": 540.08,
+        "decodeLatencyMs": 28.31,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 7584,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 7562,
-        "framework": "InfiniLM",
-        "ttft": 541.64
+        "ttft": 541.64,
+        "decodeLatencyMs": 29.58,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 7562,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 7533,
-        "framework": "InfiniLM",
-        "ttft": 543.76
+        "ttft": 543.76,
+        "decodeLatencyMs": 34.39,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 7533,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 8113,
-        "framework": "InfiniLM",
-        "ttft": 252.44
+        "ttft": 252.44,
+        "decodeLatencyMs": 17.3,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 8113,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 8141,
-        "framework": "InfiniLM",
-        "ttft": 251.56
+        "ttft": 251.56,
+        "decodeLatencyMs": 17.87,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 8141,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 8151,
-        "framework": "InfiniLM",
-        "ttft": 251.25
+        "ttft": 251.25,
+        "decodeLatencyMs": 19.73,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 8151,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 12804,
-        "framework": "InfiniLM",
-        "ttft": 1279.57
+        "ttft": 1279.57,
+        "decodeLatencyMs": 17.6,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 12804,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 12838,
-        "framework": "InfiniLM",
-        "ttft": 1276.17
+        "ttft": 1276.17,
+        "decodeLatencyMs": 18.16,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 12838,
+        "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 12857,
-        "framework": "InfiniLM",
-        "ttft": 1274.32
+        "ttft": 1274.32,
+        "decodeLatencyMs": 20.03,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 12857,
+        "framework": "InfiniLM"
       }
     ],
     "decode": [
       {
+        "configKey": "1:32:256",
         "batch": 1,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 40,
+        "decodeLatencyMs": 25.04,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:1024",
         "batch": 1,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 39,
+        "decodeLatencyMs": 25.32,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:32:4096",
         "batch": 1,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 39,
+        "decodeLatencyMs": 25.73,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:256",
         "batch": 1,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 40,
+        "decodeLatencyMs": 25.3,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 40,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:1024",
         "batch": 1,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 39,
+        "decodeLatencyMs": 25.49,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:256:4096",
         "batch": 1,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 39,
+        "decodeLatencyMs": 25.79,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:256",
         "batch": 1,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 39,
+        "decodeLatencyMs": 25.94,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:1024",
         "batch": 1,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 39,
+        "decodeLatencyMs": 25.96,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 39,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "1:4096:4096",
         "batch": 1,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 38,
+        "decodeLatencyMs": 26.07,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 38,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:256",
         "batch": 4,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 309,
+        "decodeLatencyMs": 12.96,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 309,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:1024",
         "batch": 4,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 304,
+        "decodeLatencyMs": 13.18,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 304,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:32:4096",
         "batch": 4,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 295,
+        "decodeLatencyMs": 13.55,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 295,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:256",
         "batch": 4,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 308,
+        "decodeLatencyMs": 12.99,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 308,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:1024",
         "batch": 4,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 300,
+        "decodeLatencyMs": 13.34,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 300,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:256:4096",
         "batch": 4,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 293,
+        "decodeLatencyMs": 13.63,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 293,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:256",
         "batch": 4,
         "inLen": 4096,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 292,
+        "decodeLatencyMs": 13.69,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 292,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:1024",
         "batch": 4,
         "inLen": 4096,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 290,
+        "decodeLatencyMs": 13.79,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 290,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "4:4096:4096",
         "batch": 4,
         "inLen": 4096,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 288,
+        "decodeLatencyMs": 13.89,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 288,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:256",
         "batch": 16,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 579,
+        "decodeLatencyMs": 27.64,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 579,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:1024",
         "batch": 16,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 554,
+        "decodeLatencyMs": 28.88,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 554,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:32:4096",
         "batch": 16,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 475,
+        "decodeLatencyMs": 33.67,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 475,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:256",
         "batch": 16,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 565,
+        "decodeLatencyMs": 28.31,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 565,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:1024",
         "batch": 16,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 541,
+        "decodeLatencyMs": 29.58,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 541,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "16:256:4096",
         "batch": 16,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 465,
+        "decodeLatencyMs": 34.39,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 465,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:256",
         "batch": 64,
         "inLen": 32,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 3698,
+        "decodeLatencyMs": 17.3,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 3698,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:1024",
         "batch": 64,
         "inLen": 32,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 3582,
+        "decodeLatencyMs": 17.87,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 3582,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:32:4096",
         "batch": 64,
         "inLen": 32,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 3243,
+        "decodeLatencyMs": 19.73,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 3243,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:256",
         "batch": 64,
         "inLen": 256,
         "outLen": 256,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 3635,
+        "decodeLatencyMs": 17.6,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 3635,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:1024",
         "batch": 64,
         "inLen": 256,
         "outLen": 1024,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 3525,
+        "decodeLatencyMs": 18.16,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 3525,
         "framework": "InfiniLM"
       },
       {
+        "configKey": "64:256:4096",
         "batch": 64,
         "inLen": 256,
         "outLen": 4096,
-        "model": "9g8b",
+        "model": "9G8B",
+        "dtype": "BF16",
+        "nGpu": 1,
+        "remarks": "a100",
         "tps": 3196,
+        "decodeLatencyMs": 20.03,
+        "vsNvidia": 100,
+        "nvidiaBaselineTps": 3196,
         "framework": "InfiniLM"
       }
     ]
   }
 } as Record<string, { prefill: Array<Record<string, unknown>>; decode: Array<Record<string, unknown>> }>
 
+export const INFER_CARD_FROM_FILES = {
+  "generic": {
+    "key": "generic",
+    "ownFw": "Prefill ✦",
+    "openFw": "Decode",
+    "ownScore": 48,
+    "openScore": 88,
+    "ownVal": "6.2K tok/s",
+    "openVal": "3.3K tok/s",
+    "n": 30,
+    "extra": "batch=64 in=32 out=4096",
+    "adv": false,
+    "advTxt": "Prefill 相对 NVIDIA 48%"
+  },
+  "cambricon": {
+    "key": "cambricon",
+    "ownFw": "Prefill ✦",
+    "openFw": "Decode",
+    "ownScore": 11,
+    "openScore": 15,
+    "ownVal": "1.4K tok/s",
+    "openVal": "555 tok/s",
+    "n": 23,
+    "extra": "batch=64 in=32 out=256",
+    "adv": false,
+    "advTxt": "Prefill 相对 NVIDIA 11%"
+  },
+  "hygon": {
+    "key": "hygon",
+    "ownFw": "Prefill ✦",
+    "openFw": "Decode",
+    "ownScore": 103,
+    "openScore": 6,
+    "ownVal": "13.3K tok/s",
+    "openVal": "238 tok/s",
+    "n": 30,
+    "extra": "batch=64 in=256 out=1024",
+    "adv": true,
+    "advTxt": "Prefill 相对 NVIDIA 103%"
+  },
+  "metax": {
+    "key": "metax",
+    "ownFw": "Prefill ✦",
+    "openFw": "Decode",
+    "ownScore": 80,
+    "openScore": 80,
+    "ownVal": "10.3K tok/s",
+    "openVal": "3.0K tok/s",
+    "n": 30,
+    "extra": "batch=1 in=4096 out=256",
+    "adv": false,
+    "advTxt": "Prefill 相对 NVIDIA 80%（可优化）"
+  },
+  "mthreads": {
+    "key": "mthreads",
+    "ownFw": "Prefill ✦",
+    "openFw": "Decode",
+    "ownScore": 56,
+    "openScore": 50,
+    "ownVal": "7.3K tok/s",
+    "openVal": "1.8K tok/s",
+    "n": 30,
+    "extra": "batch=64 in=32 out=1024",
+    "adv": false,
+    "advTxt": "Prefill 相对 NVIDIA 56%"
+  },
+  "nvidia": {
+    "key": "nvidia",
+    "ownFw": "Prefill ✦",
+    "openFw": "Decode",
+    "ownScore": 100,
+    "openScore": 100,
+    "ownVal": "12.9K tok/s",
+    "openVal": "3.7K tok/s",
+    "n": 30,
+    "extra": "batch=4 in=4096 out=4096",
+    "adv": true,
+    "advTxt": "Prefill 相对 NVIDIA 100%"
+  }
+} as Record<string, Record<string, unknown>>
+
+export const TRAIN_TABLE_FROM_FILES = {} as Record<string, Array<Record<string, unknown>>>
+
+export const TRAIN_CARD_FROM_FILES = {} as Record<string, Record<string, unknown>>
+
+export const COMM_TABLE_FROM_FILES = {} as Record<string, Array<Record<string, unknown>>>
+
+export const COMM_CARD_FROM_FILES = {} as Record<string, Record<string, unknown>>
+
+export const BW_TABLE_FROM_FILES = {} as Record<string, Array<Record<string, unknown>>>
+
+export const BW_CARD_FROM_FILES = {} as Record<string, Record<string, unknown>>
+
 export const BENCHMARK_DATA_META = {
-  "generatedAt": "2026-05-08T08:38:30.934Z",
+  "generatedAt": "2026-05-08T11:04:54.619Z",
   "operatorSources": [
-    "data\\operator\\ascend_operator_20260430.csv",
-    "data\\operator\\cambricon_operator_20260506.csv",
-    "data\\operator\\hygon_operator_20260429.csv",
-    "data\\operator\\iluvatar_operator_20260430.csv",
-    "data\\operator\\metax_operator_20260429.csv",
-    "data\\operator\\moore_operator_20260429.csv",
-    "data\\operator\\ops_data.csv"
+    "new_data\\operator\\ascend_operator_20260430.csv",
+    "new_data\\operator\\cambricon_operator_20260506.csv",
+    "new_data\\operator\\hygon_operator_20260429.csv",
+    "new_data\\operator\\iluvatar_operator_20260430.csv",
+    "new_data\\operator\\metax_operator_20260429.csv",
+    "new_data\\operator\\moore_operator_20260429.csv",
+    "new_data\\operator\\ops_data.csv"
   ],
   "inferSources": [
-    "data\\infer\\ali_infer_20260429.csv",
-    "data\\infer\\cambricon_infer_20260428.csv",
-    "data\\infer\\hygon_infer_20260429.csv",
-    "data\\infer\\metax_infer_20260428.csv",
-    "data\\infer\\mthreads_infer_20260429.csv",
-    "data\\infer\\nvidia_infer_20260506.csv"
-  ]
+    "new_data\\infer\\ali_infer_20260429.csv",
+    "new_data\\infer\\cambricon_infer_20260428.csv",
+    "new_data\\infer\\hygon_infer_20260429.csv",
+    "new_data\\infer\\metax_infer_20260428.csv",
+    "new_data\\infer\\mthreads_infer_20260429.csv",
+    "new_data\\infer\\nvidia_infer_20260506.csv"
+  ],
+  "trainSources": [],
+  "commSources": [],
+  "bwSources": [],
+  "opDatasetUpdatedAt": "2026-05-06",
+  "inferDatasetUpdatedAt": "2026-05-06"
 }

@@ -12,4 +12,5 @@
  * 业务与展示层请只从此模块 import（`@/data`），勿直连子路径以免散落引用。
  */
 export * from './dashboardConfig'
+export type { BwDetailRow } from '@/features/dashboard/bwBenchmark'
 export * from './logoDataUri'

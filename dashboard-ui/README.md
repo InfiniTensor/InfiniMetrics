@@ -1,5 +1,20 @@
-# Vue 3 + TypeScript + Vite
+# InfiniBench 仪表盘（dashboard-ui）
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 启动
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+```bash
+cd dashboard-ui
+npm install
+npm run dev
+```
+
+浏览器打开终端里提示的本地地址（一般为 `http://localhost:5173`）。
+
+若更新了仓库根目录下的评测 CSV，可先生成前端数据再启动：
+
+```bash
+npm run generate:data
+npm run dev
+```
+
+生产构建：`npm run build`（会先执行 `generate:data`）。

@@ -1,11 +1,22 @@
+import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
+import { bwVsNvidiaPercent, type BwDetailRow } from '@/features/dashboard/bwBenchmark'
 import {
+  BENCHMARK_DATA_META,
+  BW_CARD_FROM_FILES,
+  BW_TABLE_FROM_FILES,
+  COMM_CARD_FROM_FILES,
+  COMM_TABLE_FROM_FILES,
+  INFER_CARD_FROM_FILES,
   INFER_TABLE_FROM_FILES,
+  OP_CARD_FROM_FILES,
   OP_TABLE_FROM_FILES,
+  TRAIN_CARD_FROM_FILES,
+  TRAIN_TABLE_FROM_FILES,
 } from './generatedFromFiles'
 
 /** 自 dashboard_preview.html 同步的静态配置，勿改业务含义 */
 
-/** 用仓库根目录 data 下 CSV 生成的数据覆盖对应平台（npm run generate:data） */
+/** 用 `new_data/operator`、`new_data/infer`、`new_data/train`、`new_data/comm`、`new_data/bw` 下生成数据覆盖对应平台（npm run generate:data） */
 function mergeByPlatform<T extends Record<string, unknown>>(base: T, patch: Partial<T>): T {
   const out = { ...base }
   for (const key of Object.keys(patch)) {
@@ -21,6 +32,33 @@ function mergeByPlatform<T extends Record<string, unknown>>(base: T, patch: Part
     }
   }
   return out
+}
+
+/** 训练 / 通信详情：按平台整表替换（值为行数组） */
+function mergeTrainTableByPlatform<T extends Record<string, unknown[]>>(
+  base: T,
+  patch: Partial<Record<string, unknown[]>>,
+): T {
+  const out = { ...base } as T
+  for (const k of Object.keys(patch)) {
+    const v = patch[k as keyof typeof patch]
+    if (Array.isArray(v) && v.length > 0) (out as Record<string, unknown[]>)[k] = v as unknown[]
+  }
+  return out
+}
+
+function bwStaticRow(r: {
+  model: string
+  add: number | null
+  copy: number | null
+  scale: number | null
+  triad: number | null
+  avg: number | null
+}): BwDetailRow {
+  return {
+    ...r,
+    vsNvidia: r.avg != null ? bwVsNvidiaPercent(r.avg) : 100,
+  }
 }
 
 export const PLATFORMS = [
@@ -54,41 +92,111 @@ export const DIMS = [
   ]},
 ];
 
+const CARD_DATA_OP_STATIC: CardRow[] = [
+  {key:'nvidia',    ownScore:784,  openScore:100, ownVal:'0.0088ms', openVal:'0.0620ms', n:156, extra:'12 算子', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 973%'},
+  {key:'mthreads',  ownScore:1245, openScore:100, ownVal:'0.0278ms', openVal:'0.1914ms', n:89,  extra:'8 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1458%'},
+  {key:'cambricon', ownScore:1107, openScore:100, ownVal:'0.0170ms', openVal:'0.9489ms', n:134, extra:'10 算子', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1007%'},
+  {key:'metax',     ownScore:581,  openScore:100, ownVal:'0.0245ms', openVal:'0.1198ms', n:156, extra:'7 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 481%'},
+  {key:'iluvatar',  ownScore:542,  openScore:100, ownVal:'0.0194ms', openVal:'0.0905ms', n:45,  extra:'5 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 442%'},
+  {key:'hygon',     ownScore:1013, openScore:100, ownVal:'0.0122ms', openVal:'0.1232ms', n:156, extra:'7 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 913%'},
+]
+
+function mergeOpDimensionCards(staticCards: CardRow[]): CardRow[] {
+  const patch = OP_CARD_FROM_FILES as Record<string, Partial<CardRow>>
+  const keys = new Set(staticCards.map((c) => c.key))
+  const merged: CardRow[] = staticCards.map((c) => ({ ...c, ...(patch[c.key] || {}) }))
+  for (const key of Object.keys(patch)) {
+    if (!keys.has(key)) merged.push(patch[key] as CardRow)
+  }
+  const order = PLATFORMS.map((p) => p.key)
+  merged.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
+  return merged
+}
+
+function mergeInferDimensionCards(staticCards: CardRow[]): CardRow[] {
+  const patch = INFER_CARD_FROM_FILES as Record<string, Partial<CardRow>>
+  const keys = new Set(staticCards.map((c) => c.key))
+  const merged: CardRow[] = staticCards.map((c) => ({ ...c, ...(patch[c.key] || {}) }))
+  for (const key of Object.keys(patch)) {
+    if (!keys.has(key)) merged.push(patch[key] as CardRow)
+  }
+  const order = PLATFORMS.map((p) => p.key)
+  merged.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
+  return merged
+}
+
+function mergeTrainDimensionCards(staticCards: CardRow[]): CardRow[] {
+  const patch = TRAIN_CARD_FROM_FILES as Record<string, Partial<CardRow>>
+  const keys = new Set(staticCards.map((c) => c.key))
+  const merged: CardRow[] = staticCards.map((c) => ({ ...c, ...(patch[c.key] || {}) }))
+  for (const key of Object.keys(patch)) {
+    if (!keys.has(key)) merged.push(patch[key] as CardRow)
+  }
+  const order = PLATFORMS.map((p) => p.key)
+  merged.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
+  return merged
+}
+
+const CARD_DATA_INFER_STATIC: CardRow[] = [
+  {key:'nvidia',    ownScore:100, openScore:100, ownVal:'13.5K tok/s', openVal:'3.3K tok/s', n:30, extra:'batch=64 in=256', ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'基准平台'},
+  {key:'mthreads',  ownScore:90,  openScore:52,  ownVal:'7.3K tok/s',  openVal:'1.8K tok/s', n:30, extra:'batch=64 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 10% vs A100'},
+  {key:'cambricon', ownScore:17,  openScore:20,  ownVal:'1.4K tok/s',  openVal:'221 tok/s',  n:30, extra:'batch=16 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 83% vs A100'},
+  {key:'hygon',     ownScore:103, openScore:45,  ownVal:'8.4K tok/s',  openVal:'33.4K tok/s',n:30, extra:'batch=64 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 3% vs A100'},
+  {key:'metax',     ownScore:82,  openScore:88,  ownVal:'1.4K tok/s',  openVal:'66.8K tok/s',n:30, extra:'batch=1 in=32',   ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 18% vs A100'},
+  {key:'generic',   ownScore:140, openScore:110, ownVal:'2.5K tok/s',  openVal:'83.7K tok/s',n:30, extra:'batch=1 in=32',   ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 40% vs A100'},
+]
+
 // Card data per dimension — ownFw=自研框架 label, openFw=开源框架 label
+const CARD_DATA_TRAIN_STATIC: CardRow[] = [
+  {key:'nvidia', ownScore:100, openScore:null, ownVal:'2564 tpps', openVal:null, n:4, extra:'Megatron · llama3-8b · 8 GPU', ownFw:'Megatron', openFw:'', adv:true,  advTxt:'训练基准'},
+  {key:'metax',  ownScore:17,  openScore:null, ownVal:'438 tpps',  openVal:null, n:1, extra:'Megatron · llama3-8b · 8 GPU', ownFw:'Megatron', openFw:'', adv:false, advTxt:'落后 83% vs NVIDIA'},
+]
+
+function mergeCommDimensionCards(staticCards: CardRow[]): CardRow[] {
+  const patch = COMM_CARD_FROM_FILES as Record<string, Partial<CardRow>>
+  const keys = new Set(staticCards.map((c) => c.key))
+  const merged: CardRow[] = staticCards.map((c) => ({ ...c, ...(patch[c.key] || {}) }))
+  for (const key of Object.keys(patch)) {
+    if (!keys.has(key)) merged.push(patch[key] as CardRow)
+  }
+  const order = PLATFORMS.map((p) => p.key)
+  merged.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
+  return merged
+}
+
+const CARD_DATA_COMM_STATIC: CardRow[] = [
+  {key:'nvidia', ownScore:100, openScore:100, ownVal:'270 GB/s', openVal:'35 GB/s', n:2, extra:'NVLink',      ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'通信基准'},
+  {key:'metax',  ownScore:20,  openScore:131, ownVal:'53.1 GB/s',openVal:'45.8 GB/s',n:2, extra:'MetaxLink',  ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'allreduce 超越基准'},
+]
+
+function mergeBwDimensionCards(staticCards: CardRow[]): CardRow[] {
+  const patch = BW_CARD_FROM_FILES as Record<string, Partial<CardRow>>
+  const keys = new Set(staticCards.map((c) => c.key))
+  const merged: CardRow[] = staticCards.map((c) => ({ ...c, ...(patch[c.key] || {}) }))
+  for (const key of Object.keys(patch)) {
+    if (!keys.has(key)) merged.push(patch[key] as CardRow)
+  }
+  const order = PLATFORMS.map((p) => p.key)
+  merged.sort((a, b) => order.indexOf(a.key) - order.indexOf(b.key))
+  return merged
+}
+
+const CARD_DATA_BW_STATIC: CardRow[] = [
+  {key:'nvidia',    ownScore:null, openScore:null, ownVal:'1607.5 GB/s', openVal:null, n:4, extra:'A100 · add/copy/scale/triad', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'访存基准'},
+  {key:'cambricon', ownScore:null, openScore:null, ownVal:'2131.4 GB/s', openVal:null, n:4, extra:'MLU590', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100'},
+  {key:'mthreads',  ownScore:null, openScore:null, ownVal:'1400.9 GB/s', openVal:null, n:4, extra:'S5000', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 13%'},
+  {key:'ascend',    ownScore:null, openScore:null, ownVal:'1540.0 GB/s', openVal:null, n:1, extra:'910B3', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 4%'},
+  {key:'metax',     ownScore:null, openScore:null, ownVal:'1677.7 GB/s', openVal:null, n:4, extra:'C500', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100 4%'},
+  {key:'iluvatar',  ownScore:null, openScore:null, ownVal:'586.0 GB/s',  openVal:null, n:1, extra:'TG150', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 64%'},
+]
+
 export const CARD_DATA = {
-  op:[
-    {key:'nvidia',    ownScore:784,  openScore:100, ownVal:'0.0088ms', openVal:'0.0620ms', n:156, extra:'12 算子', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 973%'},
-    {key:'mthreads',  ownScore:1245, openScore:100, ownVal:'0.0278ms', openVal:'0.1914ms', n:89,  extra:'8 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1458%'},
-    {key:'cambricon', ownScore:1107, openScore:100, ownVal:'0.0170ms', openVal:'0.9489ms', n:134, extra:'10 算子', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1007%'},
-    {key:'metax',     ownScore:581,  openScore:100, ownVal:'0.0245ms', openVal:'0.1198ms', n:156, extra:'7 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 481%'},
-    {key:'iluvatar',  ownScore:542,  openScore:100, ownVal:'0.0194ms', openVal:'0.0905ms', n:45,  extra:'5 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 442%'},
-    {key:'hygon',     ownScore:1013, openScore:100, ownVal:'0.0122ms', openVal:'0.1232ms', n:156, extra:'7 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 913%'},
-  ],
-  infer:[
-    {key:'nvidia',    ownScore:100, openScore:100, ownVal:'13.5K tok/s', openVal:'3.3K tok/s', n:30, extra:'batch=64 in=256', ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'基准平台'},
-    {key:'mthreads',  ownScore:90,  openScore:52,  ownVal:'7.3K tok/s',  openVal:'1.8K tok/s', n:30, extra:'batch=64 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 10% vs A100'},
-    {key:'cambricon', ownScore:17,  openScore:20,  ownVal:'1.4K tok/s',  openVal:'221 tok/s',  n:30, extra:'batch=16 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 83% vs A100'},
-    {key:'hygon',     ownScore:103, openScore:45,  ownVal:'8.4K tok/s',  openVal:'33.4K tok/s',n:30, extra:'batch=64 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 3% vs A100'},
-    {key:'metax',     ownScore:82,  openScore:88,  ownVal:'1.4K tok/s',  openVal:'66.8K tok/s',n:30, extra:'batch=1 in=32',   ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 18% vs A100'},
-    {key:'generic',   ownScore:140, openScore:110, ownVal:'2.5K tok/s',  openVal:'83.7K tok/s',n:30, extra:'batch=1 in=32',   ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 40% vs A100'},
-  ],
-  train:[
-    {key:'nvidia', ownScore:100, openScore:null, ownVal:'2564 tpps', openVal:null, n:1, extra:'Megatron 8GPU', ownFw:'Megatron', openFw:'', adv:true,  advTxt:'训练基准'},
-    {key:'metax',  ownScore:17,  openScore:null, ownVal:'438 tpps',  openVal:null, n:1, extra:'Megatron 8GPU', ownFw:'Megatron', openFw:'', adv:false, advTxt:'落后 83% vs A100'},
-  ],
-  comm:[
-    {key:'nvidia', ownScore:100, openScore:100, ownVal:'270 GB/s', openVal:'35 GB/s', n:2, extra:'NVLink',      ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'通信基准'},
-    {key:'metax',  ownScore:20,  openScore:131, ownVal:'53.1 GB/s',openVal:'45.8 GB/s',n:2, extra:'MetaxLink',  ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'allreduce 超越基准'},
-  ],
-  bw:[
-    {key:'nvidia',    ownScore:null, openScore:null, ownVal:'1607.5 GB/s', openVal:null, n:4, extra:'A100 · add/copy/scale/triad', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'访存基准'},
-    {key:'cambricon', ownScore:null, openScore:null, ownVal:'2131.4 GB/s', openVal:null, n:4, extra:'MLU590', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100'},
-    {key:'mthreads',  ownScore:null, openScore:null, ownVal:'1400.9 GB/s', openVal:null, n:4, extra:'S5000', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 13%'},
-    {key:'ascend',    ownScore:null, openScore:null, ownVal:'1540.0 GB/s', openVal:null, n:1, extra:'910B3', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 4%'},
-    {key:'metax',     ownScore:null, openScore:null, ownVal:'1677.7 GB/s', openVal:null, n:4, extra:'C500', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100 4%'},
-    {key:'iluvatar',  ownScore:null, openScore:null, ownVal:'586.0 GB/s',  openVal:null, n:1, extra:'TG150', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 64%'},
-  ],
-};
+  op: mergeOpDimensionCards(CARD_DATA_OP_STATIC),
+  infer: mergeInferDimensionCards(CARD_DATA_INFER_STATIC),
+  train: mergeTrainDimensionCards(CARD_DATA_TRAIN_STATIC),
+  comm: mergeCommDimensionCards(CARD_DATA_COMM_STATIC),
+  bw: mergeBwDimensionCards(CARD_DATA_BW_STATIC),
+}
 
 // Detail ops data — scores displayed in op-tag badges, table updates on switch
 const OP_TABLE_STATIC = {
@@ -233,49 +341,165 @@ export const INFER_TABLE = mergeByPlatform(
   INFER_TABLE_FROM_FILES as unknown as Partial<Record<string, unknown>>,
 ) as typeof INFER_TABLE_STATIC
 
-// ── 训练详情数据
-export const TRAIN_TABLE = {
+// ── 训练详情数据（`new_data/train/{platform}_train_{date}.xlsx` 经 generate:data 覆盖同 key 平台）
+export interface TrainDetailRow {
+  framework: string
+  model: string
+  parallel: string
+  dtype: string
+  flashAttn: string
+  tps: number
+  baseline: number
+  vsA100: number
+  note: string
+  nGpu?: number
+  seqLen?: number
+  microBatchSize?: number
+  date?: string
+}
+
+const TRAIN_TABLE_STATIC: Record<string, TrainDetailRow[]> = {
   nvidia:[
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq 8192', dtype:'bf16', flashAttn:'on',  tps:2564, baseline:2564, vsA100:100, note:'global_bs=128'},
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq 4096', dtype:'bf16', flashAttn:'on',  tps:2890, baseline:2564, vsA100:113, note:''},
-    {framework:'megatron', model:'llama3-70b',parallel:'8 GPU · seq 8192', dtype:'bf16', flashAttn:'on',  tps:312,  baseline:312,  vsA100:100, note:'pipeline=4'},
-    {framework:'bmtrain',  model:'llama3-8b', parallel:'8 GPU · seq 2048', dtype:'bf16', flashAttn:'off', tps:1820, baseline:2564, vsA100:71,  note:''},
+    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:2564, baseline:2564, vsA100:100, note:'global_bs=128', nGpu:8, seqLen:8192},
+    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq4096', dtype:'BF16', flashAttn:'on',  tps:2890, baseline:2890, vsA100:100, note:'', nGpu:8, seqLen:4096},
+    {framework:'megatron', model:'llama3-70b',parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:312,  baseline:312,  vsA100:100, note:'pipeline=4', nGpu:8, seqLen:8192},
+    {framework:'bmtrain',  model:'llama3-8b', parallel:'8 GPU · seq2048', dtype:'BF16', flashAttn:'off', tps:1820, baseline:1820, vsA100:100, note:'', nGpu:8, seqLen:2048},
   ],
   metax:[
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq 8192', dtype:'bf16', flashAttn:'on', tps:438, baseline:2564, vsA100:17, note:''},
+    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on', tps:438, baseline:2564, vsA100:17, note:'', nGpu:8, seqLen:8192},
   ],
-};
+}
 
-// ── 通信详情数据
-export const COMM_TABLE = {
+export const TRAIN_TABLE = mergeTrainTableByPlatform(
+  TRAIN_TABLE_STATIC,
+  TRAIN_TABLE_FROM_FILES as unknown as Partial<Record<string, TrainDetailRow[]>>,
+) as Record<string, TrainDetailRow[]>
+
+// ── 通信详情数据（`new_data/comm/{platform}_comm_{date}.xlsx` 经 generate:data 覆盖同 key 平台）
+export interface CommDetailRow {
+  linkType: string
+  commType: string
+  nGpu: number
+  bw: number
+  baseline: number
+  vsA100: number
+  note: string
+  date?: string
+}
+
+const COMM_TABLE_STATIC: Record<string, CommDetailRow[]> = {
   nvidia:[
-    {linkType:'nvlink',  commType:'p2p',      nGpu:2, bw:270.0, baseline:270.0, vsA100:100, note:'NVLink 单向基准'},
-    {linkType:'nvlink',  commType:'allreduce', nGpu:8, bw:35.0,  baseline:35.0,  vsA100:100, note:'NVLink 单向基准'},
+    {linkType:'NVLink',  commType:'p2p',      nGpu:2, bw:270.0, baseline:270.0, vsA100:100, note:'NVLink 单向基准'},
+    {linkType:'NVLink',  commType:'allreduce', nGpu:8, bw:35.0,  baseline:35.0,  vsA100:100, note:'NVLink 单向基准'},
   ],
   metax:[
     {linkType:'MetaxLink', commType:'p2p',      nGpu:2, bw:53.1, baseline:270.0, vsA100:20,  note:''},
-    {linkType:'MetaxLink', commType:'allreduce', nGpu:8, bw:45.8, baseline:35.0,  vsA100:131, note:'超越 NVLink allreduce'},
+    {linkType:'MetaxLink', commType:'allreduce', nGpu:8, bw:45.8, baseline:35.0, vsA100:131, note:'超越 NVLink allreduce'},
   ],
-};
+}
 
-// ── 访存详情数据
-export const BW_TABLE = {
-  nvidia:   [{model:'A100',   add:1630.76, copy:1585.15, scale:1579.78, triad:1634.14, avg:1607.46}],
-  cambricon:[
-    {model:'MLU590', add:2145.08, copy:2110.65, scale:2116.64, triad:2153.35, avg:2131.43},
-    {model:'MLU370', add:256.52,  copy:261.18,  scale:260.33,  triad:256.63,  avg:258.67},
+export const COMM_TABLE = mergeTrainTableByPlatform(
+  COMM_TABLE_STATIC,
+  COMM_TABLE_FROM_FILES as unknown as Partial<Record<string, CommDetailRow[]>>,
+) as Record<string, CommDetailRow[]>
+
+// ── 访存详情数据（`new_data/bw/{platform}_bw_{date}.csv` 经 generate:data 覆盖同 key 平台）
+const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
+  nvidia: [
+    bwStaticRow({
+      model: 'A100',
+      add: 1630.7558,
+      copy: 1585.1489,
+      scale: 1579.7755,
+      triad: 1634.1444,
+      avg: 1607.4561,
+    }),
   ],
-  ascend:   [{model:'910B3',  add:1540,    copy:1540,    scale:1540,    triad:1540,    avg:1540}],
-  metax:    [{model:'C500',   add:1677.67, copy:1677.67, scale:1677.67, triad:1677.67, avg:1677.67}],
-  mthreads: [{model:'S5000',  add:1400.90, copy:1400.90, scale:1400.90, triad:1400.90, avg:1400.90}],
+  cambricon: [
+    bwStaticRow({
+      model: 'MLU590',
+      add: 2145.08,
+      copy: 2110.65,
+      scale: 2116.64,
+      triad: 2153.35,
+      avg: 2131.43,
+    }),
+    bwStaticRow({
+      model: 'MLU370',
+      add: 256.52,
+      copy: 261.18,
+      scale: 260.33,
+      triad: 256.63,
+      avg: 258.67,
+    }),
+  ],
+  ascend: [
+    bwStaticRow({
+      model: '910B3',
+      add: 1540,
+      copy: 1540,
+      scale: 1540,
+      triad: 1540,
+      avg: 1540,
+    }),
+  ],
+  metax: [
+    bwStaticRow({
+      model: 'C500',
+      add: 1677.67,
+      copy: 1677.67,
+      scale: 1677.67,
+      triad: 1677.67,
+      avg: 1677.67,
+    }),
+  ],
+  mthreads: [
+    bwStaticRow({
+      model: 'S5000',
+      add: 1400.9,
+      copy: 1400.9,
+      scale: 1400.9,
+      triad: 1400.9,
+      avg: 1400.9,
+    }),
+  ],
   iluvatar: [
-    {model:'TG150', add:586, copy:586, scale:586, triad:586, avg:586},
-    {model:'TG200', add:null,copy:null,scale:null,triad:null,avg:null},
+    bwStaticRow({ model: 'TG150', add: 586, copy: 586, scale: 586, triad: 586, avg: 586 }),
+    bwStaticRow({
+      model: 'TG200',
+      add: null,
+      copy: null,
+      scale: null,
+      triad: null,
+      avg: null,
+    }),
   ],
-};
+}
 
-/** 侧栏「数据更新于」展示用日期字符串 */
-export const DATA_UPDATED_AT = '2026-04-29'
+export const BW_TABLE = mergeTrainTableByPlatform(
+  BW_TABLE_STATIC,
+  BW_TABLE_FROM_FILES as unknown as Partial<Record<string, BwDetailRow[]>>,
+) as Record<string, BwDetailRow[]>
+
+/** 侧栏「数据更新于」：取算子 / 推理 / 训练 / 通信 / 访存 数据源日期的较新者 */
+export const DATA_UPDATED_AT = (() => {
+  const m = BENCHMARK_DATA_META as {
+    opDatasetUpdatedAt?: string
+    inferDatasetUpdatedAt?: string
+    trainDatasetUpdatedAt?: string
+    commDatasetUpdatedAt?: string
+    bwDatasetUpdatedAt?: string
+  }
+  const dates = [
+    m?.opDatasetUpdatedAt,
+    m?.inferDatasetUpdatedAt,
+    m?.trainDatasetUpdatedAt,
+    m?.commDatasetUpdatedAt,
+    m?.bwDatasetUpdatedAt,
+  ].filter(Boolean) as string[]
+  if (!dates.length) return '2026-04-29'
+  return dates.reduce((a, b) => (a >= b ? a : b))
+})()
 
 /**
  * 详情页 CI「运行统计」四格 KPI（接入真实 CI API 前为静态占位，与 HTML 预览一致）

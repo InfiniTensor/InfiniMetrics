@@ -1,0 +1,863 @@
+/**
+ * 从仓库根目录 `new_data/operator`、`new_data/infer`、`new_data/train`、`new_data/comm`、`new_data/bw` 生成 `src/data/generatedFromFiles.ts`。
+ * 算子 / 推理 / 训练 / 通信规则见各 `*Benchmark.ts`。
+ */
+import { parse } from 'csv-parse/sync'
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import * as XLSX from 'xlsx'
+import {
+  buildInferCardMetrics,
+  inferConfigKey,
+  inferVsPercent,
+  INFER_FRAMEWORK,
+  normalizeInferModel,
+  type InferDecodeRow,
+  type InferFlatRow,
+  type InferPrefillRow,
+} from '../src/features/dashboard/inferBenchmark'
+import {
+  buildOpPlatformOverview,
+  canComputeOpRowScore,
+  type OperatorTableRow,
+} from '../src/features/dashboard/operatorBenchmark'
+import {
+  buildCommCardMetrics,
+  commMatchKey,
+  enrichCommBaselines,
+  formatCommLinkType,
+  normalizeCommType,
+  type CommImportRow,
+} from '../src/features/dashboard/commBenchmark'
+import {
+  buildTrainCardMetrics,
+  buildTrainNote,
+  formatTrainParallel,
+  normalizeTrainDtype,
+  parseFlashAttnCell,
+  trainMatchKey,
+  trainVsPercent,
+  type TrainTableRow,
+} from '../src/features/dashboard/trainBenchmark'
+import {
+  buildBwCardMetrics,
+  bwVsNvidiaPercent,
+  type BwDetailRow,
+} from '../src/features/dashboard/bwBenchmark'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const ROOT = path.join(__dirname, '..', '..')
+const DATA_OPERATOR = path.join(ROOT, 'new_data', 'operator')
+const DATA_INFER = path.join(ROOT, 'new_data', 'infer')
+const DATA_TRAIN = path.join(ROOT, 'new_data', 'train')
+const DATA_COMM = path.join(ROOT, 'new_data', 'comm')
+const DATA_BW = path.join(ROOT, 'new_data', 'bw')
+const OUT_FILE = path.join(__dirname, '..', 'src', 'data', 'generatedFromFiles.ts')
+
+/** CSV 中的平台前缀 → 仪表盘 PLATFORMS.key */
+const PLATFORM_ALIAS: Record<string, string> = {
+  moore: 'mthreads',
+  ali: 'generic',
+}
+
+function normalizePlatform(raw: string | undefined): string {
+  const k = String(raw || '').trim().toLowerCase()
+  return PLATFORM_ALIAS[k] ?? k
+}
+
+function parseNum(v: unknown): number {
+  if (v == null || v === '') return NaN
+  const s = String(v).trim().toUpperCase()
+  if (s === 'NA' || s === 'N/A') return NaN
+  const n = Number.parseFloat(String(v))
+  return Number.isFinite(n) ? n : NaN
+}
+
+/** op_name → 与 dashboard DIMS pills / OP_TABLE 键一致 */
+function opNameToKey(name: string | undefined): string {
+  const lower = String(name || '').trim().toLowerCase().replace(/\s+/g, '')
+  const map: Record<string, string> = {
+    causalsoftmax: 'CausalSoftmax',
+    rmsnorm: 'RMSNorm',
+    embedding: 'Embedding',
+    topk: 'TopK',
+    matmul: 'MatMul',
+    add: 'Add',
+    silu: 'SiLU',
+    cast: 'Cast',
+    cat: 'Cat',
+  }
+  if (map[lower]) return map[lower]
+  return lower ? lower.charAt(0).toUpperCase() + lower.slice(1) : 'Unknown'
+}
+
+function normalizeShape(s: unknown): string {
+  return String(s || '')
+    .trim()
+    .replace(/^"|"$/g, '')
+    .replace(/,\s*/g, ', ')
+}
+
+function parseOperatorCsv(
+  filePath: string,
+  forcedPlatform: string | undefined,
+): { byPlat: Record<string, Record<string, OperatorTableRow[]>>; flatByPlat: Record<string, OperatorFlat[]> } {
+  const byPlat: Record<string, Record<string, OperatorTableRow[]>> = {}
+  const flatByPlat: Record<string, OperatorFlat[]> = {}
+  const text = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')
+  const records = parse(text, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_column_count: true,
+  }) as Record<string, string>[]
+
+  for (const row of records) {
+    const plat = forcedPlatform ?? normalizePlatform(row.platform)
+    if (!plat) continue
+    const opKey = opNameToKey(row.op_name)
+    const ic = parseNum(row.ic_latency_ms)
+    const pt = parseNum(row.pt_latency_ms)
+    const remarks = String(row.remarks ?? '').trim()
+    const dtype = String(row.dtype || '').trim().toUpperCase()
+    const shape = normalizeShape(row.shape_config)
+    const date = String(row.date || '').trim()
+
+    if (!Number.isFinite(ic) || !Number.isFinite(pt)) continue
+
+    const scoreEligible = canComputeOpRowScore(ic, pt, remarks)
+    const outRow: OperatorTableRow = {
+      shape,
+      dtype,
+      ic,
+      pt,
+      remarks,
+      scoreEligible,
+    }
+
+    if (!byPlat[plat]) byPlat[plat] = {}
+    if (!byPlat[plat][opKey]) byPlat[plat][opKey] = []
+    byPlat[plat][opKey].push(outRow)
+
+    if (!flatByPlat[plat]) flatByPlat[plat] = []
+    flatByPlat[plat].push({ opKey, shape, dtype, ic, pt, remarks, date })
+  }
+  return { byPlat, flatByPlat }
+}
+
+type OperatorFlat = {
+  opKey: string
+  shape: string
+  dtype: string
+  ic: number
+  pt: number
+  remarks: string
+  date: string
+}
+
+function pickPrefillDecodeKeys(sample: Record<string, string>): { pk: string; dk: string } | null {
+  const keys = Object.keys(sample)
+  const pk = keys.find((k) => /prefill/i.test(k) && (/token/i.test(k) || /tokens/i.test(k)))
+  const dk = keys.find(
+    (k) =>
+      /^decode/i.test(k) &&
+      (/token/i.test(k) || /tokens/i.test(k)) &&
+      !/il_decode|decode_ms|vl_decode/i.test(k),
+  )
+  if (pk && dk) return { pk, dk }
+  return null
+}
+
+function inferDateToSortable(s: string): string {
+  const t = String(s || '').trim()
+  const mYmd = t.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/)
+  if (mYmd) {
+    return `${mYmd[1]}-${mYmd[2].padStart(2, '0')}-${mYmd[3].padStart(2, '0')}`
+  }
+  const mUs = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/)
+  if (mUs) {
+    const mo = mUs[1].padStart(2, '0')
+    const da = mUs[2].padStart(2, '0')
+    return `${mUs[3]}-${mo}-${da}`
+  }
+  const mIso = t.match(/^(\d{4})-(\d{2})-(\d{2})/)
+  if (mIso) return `${mIso[1]}-${mIso[2]}-${mIso[3]}`
+  const mCn = t.match(/^(\d{4})\/(\d{2})\/(\d{2})/)
+  if (mCn) return `${mCn[1]}-${mCn[2]}-${mCn[3]}`
+  return t
+}
+
+function parseInferCsvNew(
+  filePath: string,
+  forcedPlatform: string | undefined,
+): { flats: InferFlatRow[]; prefill: InferPrefillRow[]; decode: InferDecodeRow[] } {
+  const text = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')
+  const records = parse(text, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_column_count: true,
+  }) as Record<string, string>[]
+  if (!records.length) return { flats: [], prefill: [], decode: [] }
+
+  const keysPick = pickPrefillDecodeKeys(records[0])
+  if (!keysPick) {
+    console.warn('infer CSV: cannot detect Prefill/Decode throughput columns', filePath)
+    return { flats: [], prefill: [], decode: [] }
+  }
+  const { pk: prefillCol, dk: decodeCol } = keysPick
+
+  const flats: InferFlatRow[] = []
+
+  for (const row of records) {
+    const plat = forcedPlatform ?? normalizePlatform(row.platform)
+    if (!plat) continue
+    const batch = Number.parseInt(String(row.batch_size ?? '').trim(), 10)
+    const inLen = Number.parseInt(String(row.input_tokens ?? '').trim(), 10)
+    const outLen = Number.parseInt(String(row.output_tokens ?? '').trim(), 10)
+    if (!Number.isFinite(batch) || !Number.isFinite(inLen) || !Number.isFinite(outLen)) continue
+
+    const prefillTps = parseNum(row[prefillCol])
+    const decodeTps = parseNum(row[decodeCol])
+    const ttftMs = parseNum(row.il_ttft_ms)
+    const decodeMs = parseNum(row.il_decode_ms)
+
+    if (!Number.isFinite(prefillTps) && !Number.isFinite(decodeTps)) continue
+
+    flats.push({
+      plat,
+      batch,
+      inLen,
+      outLen,
+      model: normalizeInferModel(row.model),
+      dtype: String(row.dtype || '').trim().toUpperCase(),
+      nGpu: Number.parseInt(String(row.n_gpu ?? '').trim(), 10) || 0,
+      remarks: String(row.remarks ?? '').trim(),
+      date: String(row.date ?? '').trim(),
+      ttftMs: Number.isFinite(ttftMs) ? ttftMs : null,
+      decodeMs: Number.isFinite(decodeMs) ? decodeMs : null,
+      prefillTps: Number.isFinite(prefillTps) ? prefillTps : null,
+      decodeTps: Number.isFinite(decodeTps) ? decodeTps : null,
+    })
+  }
+
+  flats.sort((a, b) => {
+    if (a.batch !== b.batch) return a.batch - b.batch
+    if (a.inLen !== b.inLen) return a.inLen - b.inLen
+    return a.outLen - b.outLen
+  })
+
+  const prefill: InferPrefillRow[] = []
+  const decode: InferDecodeRow[] = []
+
+  for (const r of flats) {
+    const key = inferConfigKey(r.batch, r.inLen, r.outLen)
+    if (r.prefillTps != null) {
+      prefill.push({
+        configKey: key,
+        batch: r.batch,
+        inLen: r.inLen,
+        outLen: r.outLen,
+        model: r.model,
+        dtype: r.dtype,
+        nGpu: r.nGpu,
+        remarks: r.remarks,
+        tps: Math.round(r.prefillTps),
+        ttft: r.ttftMs != null && r.ttftMs > 0 ? r.ttftMs : undefined,
+        decodeLatencyMs: r.decodeMs != null && r.decodeMs > 0 ? r.decodeMs : undefined,
+        vsNvidia: null,
+        nvidiaBaselineTps: null,
+        framework: INFER_FRAMEWORK,
+      })
+    }
+    if (r.decodeTps != null) {
+      decode.push({
+        configKey: key,
+        batch: r.batch,
+        inLen: r.inLen,
+        outLen: r.outLen,
+        model: r.model,
+        dtype: r.dtype,
+        nGpu: r.nGpu,
+        remarks: r.remarks,
+        tps: Math.round(r.decodeTps),
+        decodeLatencyMs: r.decodeMs != null && r.decodeMs > 0 ? r.decodeMs : undefined,
+        vsNvidia: null,
+        nvidiaBaselineTps: null,
+        framework: INFER_FRAMEWORK,
+      })
+    }
+  }
+
+  return { flats, prefill, decode }
+}
+
+function enrichInferWithNvidiaBaseline(
+  prefill: InferPrefillRow[],
+  decode: InferDecodeRow[],
+  nvPrefill: InferPrefillRow[],
+  nvDecode: InferDecodeRow[],
+) {
+  const pm = new Map(nvPrefill.map((r) => [r.configKey, r.tps]))
+  const dm = new Map(nvDecode.map((r) => [r.configKey, r.tps]))
+  for (const row of prefill) {
+    const nb = pm.get(row.configKey)
+    row.nvidiaBaselineTps = nb ?? null
+    row.vsNvidia = nb != null && nb > 0 ? inferVsPercent(row.tps, nb) : null
+  }
+  for (const row of decode) {
+    const nb = dm.get(row.configKey)
+    row.nvidiaBaselineTps = nb ?? null
+    row.vsNvidia = nb != null && nb > 0 ? inferVsPercent(row.tps, nb) : null
+  }
+}
+
+function maxInferMetric(rows: InferFlatRow[], key: 'prefillTps' | 'decodeTps'): number {
+  let m = 0
+  for (const r of rows) {
+    const v = r[key]
+    if (v != null && Number.isFinite(v) && v > m) m = v
+  }
+  return m
+}
+
+function pickLatestByPlatform(dir: string, pattern: RegExp) {
+  const map: Record<string, { date: string; full: string }> = {}
+  if (!fs.existsSync(dir)) return map
+  for (const name of fs.readdirSync(dir)) {
+    const m = name.match(pattern)
+    if (!m) continue
+    const plat = normalizePlatform(m[1])
+    const date = m[2]
+    const full = path.join(dir, name)
+    if (!map[plat] || date > map[plat].date) {
+      map[plat] = { date, full }
+    }
+  }
+  return map
+}
+
+function normalizeXlsxHeaderKey(k: string): string {
+  return String(k || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\u00a0/g, ' ')
+    .replace(/\s+/g, '_')
+}
+
+function readFirstSheetStringRecords(filePath: string): Record<string, string>[] {
+  if (!fs.existsSync(filePath)) return []
+  const wb = XLSX.readFile(filePath)
+  const sheetName = wb.SheetNames[0]
+  if (!sheetName) return []
+  const sheet = wb.Sheets[sheetName]
+  const raw = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: '' })
+  return raw.map((rec) => {
+    const o: Record<string, string> = {}
+    for (const [k, v] of Object.entries(rec)) {
+      o[normalizeXlsxHeaderKey(k)] = String(v ?? '').trim()
+    }
+    return o
+  })
+}
+
+function trainCell(o: Record<string, string>, ...keys: string[]): string {
+  for (const k of keys) {
+    const v = o[k]
+    if (v !== undefined && v !== '') return v
+  }
+  return ''
+}
+
+function trainRowFromRecord(o: Record<string, string>): TrainTableRow | null {
+  const framework = trainCell(o, 'framework').toLowerCase()
+  const model = trainCell(o, 'model').toLowerCase()
+  const nGpu = Math.round(parseNum(trainCell(o, 'n_gpu', 'ngpu')))
+  const seqLen = Math.round(parseNum(trainCell(o, 'seq_len', 'seqlen', 'seq_length')))
+  const tps = parseNum(trainCell(o, 'throughput_tpps', 'throughput', 'tpps'))
+  if (!framework || !model || !Number.isFinite(nGpu) || !Number.isFinite(seqLen) || !Number.isFinite(tps)) return null
+
+  const mbsRaw = parseNum(trainCell(o, 'micro_batch_size', 'microbatchsize', 'mbs'))
+  const dtype = normalizeTrainDtype(trainCell(o, 'dtype'))
+  const flashRaw = parseFlashAttnCell(trainCell(o, 'flash_attn', 'flashattention'))
+  const note = buildTrainNote(trainCell(o, 'zero_stage', 'zerostage'), trainCell(o, 'remarks', 'remark'))
+  const date = trainCell(o, 'date')
+  const mk = trainMatchKey(framework, model, nGpu, seqLen, dtype)
+
+  const row: TrainTableRow = {
+    matchKey: mk,
+    framework,
+    model,
+    parallel: formatTrainParallel(nGpu, seqLen),
+    dtype,
+    flashAttn: flashRaw,
+    tps: Math.round(tps),
+    baseline: 0,
+    vsA100: 100,
+    note,
+    nGpu,
+    seqLen,
+    microBatchSize: Number.isFinite(mbsRaw) ? Math.round(mbsRaw) : 0,
+  }
+  if (date) row.date = date
+  return row
+}
+
+function ingestTrainFile(filePath: string, forcedPlat: string, acc: Record<string, TrainTableRow[]>) {
+  const records = readFirstSheetStringRecords(filePath)
+  for (const o of records) {
+    const row = trainRowFromRecord(o)
+    if (!row) continue
+    if (!acc[forcedPlat]) acc[forcedPlat] = []
+    acc[forcedPlat].push(row)
+  }
+}
+
+function enrichTrainBaselines(byPlat: Record<string, TrainTableRow[]>) {
+  const nv = byPlat.nvidia || []
+  const baselineMap = new Map<string, number>()
+  for (const r of nv) {
+    const prev = baselineMap.get(r.matchKey) ?? 0
+    baselineMap.set(r.matchKey, Math.max(prev, r.tps))
+  }
+  for (const plat of Object.keys(byPlat)) {
+    for (const row of byPlat[plat]) {
+      const b = baselineMap.get(row.matchKey)
+      if (b != null && b > 0) {
+        row.baseline = b
+        row.vsA100 = trainVsPercent(row.tps, b)
+      } else {
+        row.baseline = row.tps
+        row.vsA100 = 100
+      }
+    }
+  }
+}
+
+function stripTrainMatchKey(rows: TrainTableRow[]): Omit<TrainTableRow, 'matchKey'>[] {
+  return rows.map(({ matchKey: _mk, ...rest }) => rest)
+}
+
+function commCell(o: Record<string, string>, ...keys: string[]): string {
+  for (const k of keys) {
+    const v = o[k]
+    if (v !== undefined && v !== '') return v
+  }
+  return ''
+}
+
+function commRowFromRecord(o: Record<string, string>): CommImportRow | null {
+  const commType = normalizeCommType(commCell(o, 'comm_type', 'commtype', 'type'))
+  if (commType !== 'p2p' && commType !== 'allreduce') return null
+  const nGpu = Math.round(parseNum(commCell(o, 'n_gpu', 'ngpu')))
+  const bw = parseNum(commCell(o, 'bw_gbps', 'bw', 'bandwidth_gbps', 'bandwidth'))
+  if (!Number.isFinite(nGpu) || !Number.isFinite(bw)) return null
+  const linkRaw = commCell(o, 'link_type', 'linktype', 'link')
+  const linkType = formatCommLinkType(linkRaw)
+  const note = commCell(o, 'remarks', 'remark', 'note')
+  const date = commCell(o, 'date')
+  const mk = commMatchKey(commType, nGpu)
+  const row: CommImportRow = {
+    matchKey: mk,
+    linkType,
+    commType,
+    nGpu,
+    bw: Number(bw),
+    baseline: 0,
+    vsA100: 100,
+    note,
+  }
+  if (date) row.date = date
+  return row
+}
+
+function ingestCommFile(filePath: string, forcedPlat: string, acc: Record<string, CommImportRow[]>) {
+  const records = readFirstSheetStringRecords(filePath)
+  for (const o of records) {
+    const row = commRowFromRecord(o)
+    if (!row) continue
+    if (!acc[forcedPlat]) acc[forcedPlat] = []
+    acc[forcedPlat].push(row)
+  }
+}
+
+function stripCommMatchKey(rows: CommImportRow[]): Omit<CommImportRow, 'matchKey'>[] {
+  return rows.map(({ matchKey: _mk, ...rest }) => rest)
+}
+
+function normalizeCsvRowKeys(rec: Record<string, unknown>): Record<string, string> {
+  const o: Record<string, string> = {}
+  for (const [k, v] of Object.entries(rec)) {
+    o[String(k).trim().toLowerCase().replace(/\u00a0/g, ' ').replace(/\s+/g, '_')] = String(v ?? '').trim()
+  }
+  return o
+}
+
+function bwCsvCell(o: Record<string, string>, ...keys: string[]): string {
+  for (const k of keys) {
+    if (o[k] !== undefined && o[k] !== '') return o[k]
+  }
+  return ''
+}
+
+function bwRowFromCsvRecord(o: Record<string, string>): BwDetailRow | null {
+  const model = bwCsvCell(o, 'model').trim()
+  if (!model) return null
+
+  const add = parseNum(bwCsvCell(o, 'add_bw_gbps', 'add'))
+  const copy = parseNum(bwCsvCell(o, 'copy_bw_gbps', 'copy'))
+  const scale = parseNum(bwCsvCell(o, 'scale_bw_gbps', 'scale'))
+  const triad = parseNum(bwCsvCell(o, 'triad_bw_gbps', 'triad'))
+  const avgRaw = parseNum(bwCsvCell(o, 'bw_gbps', 'bw', 'hbm_mean_gbps', 'mean_bw_gbps'))
+
+  const addN = Number.isFinite(add) ? add : null
+  const copyN = Number.isFinite(copy) ? copy : null
+  const scaleN = Number.isFinite(scale) ? scale : null
+  const triadN = Number.isFinite(triad) ? triad : null
+
+  let avg: number | null = null
+  if (Number.isFinite(avgRaw)) avg = avgRaw
+  else if (addN != null && copyN != null && scaleN != null && triadN != null) {
+    avg = (addN + copyN + scaleN + triadN) / 4
+  }
+
+  const modesKnown = [addN, copyN, scaleN, triadN].filter((x) => x != null).length
+  if (avg == null && modesKnown === 0) {
+    const remarks = bwCsvCell(o, 'remarks', 'remark')
+    const date = bwCsvCell(o, 'date')
+    const row: BwDetailRow = {
+      model,
+      add: addN,
+      copy: copyN,
+      scale: scaleN,
+      triad: triadN,
+      avg: null,
+      vsNvidia: 100,
+    }
+    if (remarks) row.remarks = remarks
+    if (date) row.date = date
+    return row
+  }
+
+  const vsNvidia = avg != null ? bwVsNvidiaPercent(avg) : 100
+  const remarks = bwCsvCell(o, 'remarks', 'remark')
+  const date = bwCsvCell(o, 'date')
+  const row: BwDetailRow = {
+    model,
+    add: addN,
+    copy: copyN,
+    scale: scaleN,
+    triad: triadN,
+    avg,
+    vsNvidia,
+  }
+  if (remarks) row.remarks = remarks
+  if (date) row.date = date
+  return row
+}
+
+function parseBwCsv(filePath: string): BwDetailRow[] {
+  if (!fs.existsSync(filePath)) return []
+  const text = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')
+  const records = parse(text, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_column_count: true,
+  }) as Record<string, unknown>[]
+  const out: BwDetailRow[] = []
+  for (const rec of records) {
+    const o = normalizeCsvRowKeys(rec)
+    const row = bwRowFromCsvRecord(o)
+    if (row) out.push(row)
+  }
+  return out
+}
+
+const CARD_TEMPLATE = {
+  openScore: 100,
+  ownFw: 'InfiniCore ✦',
+  openFw: 'PyTorch',
+}
+
+function main() {
+  const meta: {
+    generatedAt: string
+    operatorSources: string[]
+    inferSources: string[]
+    trainSources: string[]
+    commSources: string[]
+    bwSources: string[]
+    opDatasetUpdatedAt?: string
+    inferDatasetUpdatedAt?: string
+    trainDatasetUpdatedAt?: string
+    commDatasetUpdatedAt?: string
+    bwDatasetUpdatedAt?: string
+  } = {
+    generatedAt: new Date().toISOString(),
+    operatorSources: [],
+    inferSources: [],
+    trainSources: [],
+    commSources: [],
+    bwSources: [],
+  }
+
+  const OP_TABLE_FROM_FILES: Record<string, Record<string, OperatorTableRow[]>> = {}
+  const OP_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
+  const flatAccumulator: Record<string, OperatorFlat[]> = {}
+
+  const datedOp = pickLatestByPlatform(DATA_OPERATOR, /^(.+)_operator_(\d+)\.csv$/)
+  for (const [plat, { full }] of Object.entries(datedOp)) {
+    const { byPlat, flatByPlat } = parseOperatorCsv(full, plat)
+    if (parsedHasPlat(byPlat, plat)) {
+      OP_TABLE_FROM_FILES[plat] = byPlat[plat]
+      meta.operatorSources.push(full.replace(ROOT + path.sep, ''))
+      const flats = flatByPlat[plat] || []
+      flatAccumulator[plat] = (flatAccumulator[plat] || []).concat(flats)
+    }
+  }
+
+  const opsDataPath = path.join(DATA_OPERATOR, 'ops_data.csv')
+  if (fs.existsSync(opsDataPath)) {
+    const { byPlat, flatByPlat } = parseOperatorCsv(opsDataPath, undefined)
+    for (const [plat, ops] of Object.entries(byPlat)) {
+      if (!OP_TABLE_FROM_FILES[plat]) {
+        OP_TABLE_FROM_FILES[plat] = ops
+        meta.operatorSources.push(opsDataPath.replace(ROOT + path.sep, ''))
+        const flats = flatByPlat[plat] || []
+        flatAccumulator[plat] = (flatAccumulator[plat] || []).concat(flats)
+      }
+    }
+  }
+
+  let maxDateSlash = ''
+  for (const [plat, flats] of Object.entries(flatAccumulator)) {
+    const overview = buildOpPlatformOverview(flats)
+    if (overview) {
+      const { dataDate, ...cardMetrics } = overview
+      OP_CARD_FROM_FILES[plat] = { key: plat, ...CARD_TEMPLATE, ...cardMetrics }
+      if (dataDate && dataDate > maxDateSlash) maxDateSlash = dataDate
+    }
+  }
+  if (maxDateSlash) meta.opDatasetUpdatedAt = maxDateSlash.replace(/\//g, '-')
+
+  const INFER_TABLE_FROM_FILES: Record<string, { prefill: InferPrefillRow[]; decode: InferDecodeRow[] }> = {}
+  const inferFlatByPlat: Record<string, InferFlatRow[]> = {}
+  const datedInfer = pickLatestByPlatform(DATA_INFER, /^(.+)_infer_(\d+)\.csv$/)
+  for (const [plat, { full }] of Object.entries(datedInfer)) {
+    const { flats, prefill, decode } = parseInferCsvNew(full, plat)
+    if (prefill.length || decode.length) {
+      INFER_TABLE_FROM_FILES[plat] = { prefill, decode }
+      meta.inferSources.push(full.replace(ROOT + path.sep, ''))
+      inferFlatByPlat[plat] = flats
+    }
+  }
+
+  const nvPref = INFER_TABLE_FROM_FILES.nvidia?.prefill || []
+  const nvDec = INFER_TABLE_FROM_FILES.nvidia?.decode || []
+  for (const plat of Object.keys(INFER_TABLE_FROM_FILES)) {
+    const p = INFER_TABLE_FROM_FILES[plat]
+    enrichInferWithNvidiaBaseline(p.prefill, p.decode, nvPref, nvDec)
+  }
+
+  const INFER_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
+  const nvFlats = inferFlatByPlat.nvidia || []
+  let nvMaxPrefill = maxInferMetric(nvFlats, 'prefillTps')
+  let nvMaxDecode = maxInferMetric(nvFlats, 'decodeTps')
+  if (nvMaxPrefill <= 0 || nvMaxDecode <= 0) {
+    for (const f of Object.values(inferFlatByPlat)) {
+      nvMaxPrefill = Math.max(nvMaxPrefill, maxInferMetric(f, 'prefillTps'))
+      nvMaxDecode = Math.max(nvMaxDecode, maxInferMetric(f, 'decodeTps'))
+    }
+  }
+
+  let maxInferDate = ''
+  for (const [, flats] of Object.entries(inferFlatByPlat)) {
+    for (const r of flats) {
+      if (r.date) {
+        const iso = inferDateToSortable(r.date)
+        if (iso && iso > maxInferDate) maxInferDate = iso
+      }
+    }
+  }
+  if (maxInferDate) meta.inferDatasetUpdatedAt = maxInferDate
+
+  for (const [plat, flats] of Object.entries(inferFlatByPlat)) {
+    const m = buildInferCardMetrics(flats, nvMaxPrefill || 1, nvMaxDecode || 1)
+    if (m) {
+      const { dataDate: _drop, ...card } = m
+      INFER_CARD_FROM_FILES[plat] = {
+        key: plat,
+        ownFw: 'Prefill ✦',
+        openFw: 'Decode',
+        ...card,
+      }
+    }
+  }
+
+  const TRAIN_TABLE_FROM_FILES: Record<string, Omit<TrainTableRow, 'matchKey'>[]> = {}
+  const TRAIN_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
+  const trainByPlat: Record<string, TrainTableRow[]> = {}
+
+  const datedTrain = pickLatestByPlatform(DATA_TRAIN, /^(.+)_train_(\d+)\.xlsx$/i)
+  for (const [plat, { full }] of Object.entries(datedTrain)) {
+    ingestTrainFile(full, plat, trainByPlat)
+    if ((trainByPlat[plat] || []).length) {
+      meta.trainSources.push(full.replace(ROOT + path.sep, ''))
+    }
+  }
+
+  enrichTrainBaselines(trainByPlat)
+
+  let maxTrainDate = ''
+  for (const rows of Object.values(trainByPlat)) {
+    for (const r of rows) {
+      if (r.date) {
+        const iso = inferDateToSortable(r.date)
+        if (iso && iso > maxTrainDate) maxTrainDate = iso
+      }
+    }
+  }
+  if (maxTrainDate) meta.trainDatasetUpdatedAt = maxTrainDate
+
+  for (const [plat, rows] of Object.entries(trainByPlat)) {
+    if (!rows.length) continue
+    TRAIN_TABLE_FROM_FILES[plat] = stripTrainMatchKey(rows)
+    const m = buildTrainCardMetrics(rows)
+    if (m) {
+      const best = rows.reduce((a, b) => (a.tps >= b.tps ? a : b))
+      const fwLabel =
+        best.framework.charAt(0).toUpperCase() + best.framework.slice(1).toLowerCase()
+      TRAIN_CARD_FROM_FILES[plat] = {
+        key: plat,
+        ownFw: fwLabel,
+        openFw: '',
+        openScore: null,
+        openVal: null,
+        ...m,
+      }
+    }
+  }
+
+  const COMM_TABLE_FROM_FILES: Record<string, Omit<CommImportRow, 'matchKey'>[]> = {}
+  const COMM_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
+  const commByPlat: Record<string, CommImportRow[]> = {}
+
+  const datedComm = pickLatestByPlatform(DATA_COMM, /^(.+)_comm_(\d+)\.xlsx$/i)
+  for (const [plat, { full }] of Object.entries(datedComm)) {
+    ingestCommFile(full, plat, commByPlat)
+    if ((commByPlat[plat] || []).length) {
+      meta.commSources.push(full.replace(ROOT + path.sep, ''))
+    }
+  }
+
+  for (const rows of Object.values(commByPlat)) {
+    rows.sort((a, b) => {
+      if (a.commType !== b.commType) return a.commType.localeCompare(b.commType)
+      return a.nGpu - b.nGpu
+    })
+  }
+
+  enrichCommBaselines(commByPlat)
+
+  let maxCommDate = ''
+  for (const rows of Object.values(commByPlat)) {
+    for (const r of rows) {
+      if (r.date) {
+        const iso = inferDateToSortable(r.date)
+        if (iso && iso > maxCommDate) maxCommDate = iso
+      }
+    }
+  }
+  if (maxCommDate) meta.commDatasetUpdatedAt = maxCommDate
+
+  for (const [plat, rows] of Object.entries(commByPlat)) {
+    if (!rows.length) continue
+    COMM_TABLE_FROM_FILES[plat] = stripCommMatchKey(rows)
+    const m = buildCommCardMetrics(rows)
+    if (m) {
+      COMM_CARD_FROM_FILES[plat] = {
+        key: plat,
+        ownFw: 'p2p',
+        openFw: 'allreduce',
+        ...m,
+      }
+    }
+  }
+
+  const BW_TABLE_FROM_FILES: Record<string, BwDetailRow[]> = {}
+  const BW_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
+
+  const datedBw = pickLatestByPlatform(DATA_BW, /^(.+)_bw_(\d+)\.csv$/i)
+  for (const [plat, { full }] of Object.entries(datedBw)) {
+    const rows = parseBwCsv(full)
+    if (rows.length) {
+      BW_TABLE_FROM_FILES[plat] = rows
+      meta.bwSources.push(full.replace(ROOT + path.sep, ''))
+      const m = buildBwCardMetrics(rows)
+      if (m) {
+        BW_CARD_FROM_FILES[plat] = {
+          key: plat,
+          ownFw: 'HBM均值',
+          openFw: '',
+          openScore: null,
+          openVal: null,
+          ...m,
+        }
+      }
+    }
+  }
+
+  let maxBwDate = ''
+  for (const rows of Object.values(BW_TABLE_FROM_FILES)) {
+    for (const r of rows) {
+      if (r.date) {
+        const iso = inferDateToSortable(r.date)
+        if (iso && iso > maxBwDate) maxBwDate = iso
+      }
+    }
+  }
+  if (maxBwDate) meta.bwDatasetUpdatedAt = maxBwDate
+
+  const ts = `/* eslint-disable */
+// 本文件由 npm run generate:data 自动生成，请勿手改。算子：new_data/operator；推理：new_data/infer；训练：new_data/train；通信：new_data/comm；访存：new_data/bw。
+
+export const OP_TABLE_FROM_FILES = ${JSON.stringify(OP_TABLE_FROM_FILES, null, 2)} as Record<string, Record<string, { shape: string; dtype: string; ic: number; pt: number; remarks: string; scoreEligible: boolean }[]>>
+
+export const OP_CARD_FROM_FILES = ${JSON.stringify(OP_CARD_FROM_FILES, null, 2)} as Record<string, Record<string, unknown>>
+
+export const INFER_TABLE_FROM_FILES = ${JSON.stringify(INFER_TABLE_FROM_FILES, null, 2)} as Record<string, { prefill: Array<Record<string, unknown>>; decode: Array<Record<string, unknown>> }>
+
+export const INFER_CARD_FROM_FILES = ${JSON.stringify(INFER_CARD_FROM_FILES, null, 2)} as Record<string, Record<string, unknown>>
+
+export const TRAIN_TABLE_FROM_FILES = ${JSON.stringify(TRAIN_TABLE_FROM_FILES, null, 2)} as Record<string, Array<Record<string, unknown>>>
+
+export const TRAIN_CARD_FROM_FILES = ${JSON.stringify(TRAIN_CARD_FROM_FILES, null, 2)} as Record<string, Record<string, unknown>>
+
+export const COMM_TABLE_FROM_FILES = ${JSON.stringify(COMM_TABLE_FROM_FILES, null, 2)} as Record<string, Array<Record<string, unknown>>>
+
+export const COMM_CARD_FROM_FILES = ${JSON.stringify(COMM_CARD_FROM_FILES, null, 2)} as Record<string, Record<string, unknown>>
+
+export const BW_TABLE_FROM_FILES = ${JSON.stringify(BW_TABLE_FROM_FILES, null, 2)} as Record<string, Array<Record<string, unknown>>>
+
+export const BW_CARD_FROM_FILES = ${JSON.stringify(BW_CARD_FROM_FILES, null, 2)} as Record<string, Record<string, unknown>>
+
+export const BENCHMARK_DATA_META = ${JSON.stringify(meta, null, 2)}
+`
+
+  fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true })
+  fs.writeFileSync(OUT_FILE, ts, 'utf8')
+  console.log('Wrote', OUT_FILE)
+  console.log('Platforms (op):', Object.keys(OP_TABLE_FROM_FILES).join(', ') || '(none)')
+  console.log('Platforms (infer):', Object.keys(INFER_TABLE_FROM_FILES).join(', ') || '(none)')
+  console.log('Platforms (train):', Object.keys(TRAIN_TABLE_FROM_FILES).join(', ') || '(none)')
+  console.log('Platforms (comm):', Object.keys(COMM_TABLE_FROM_FILES).join(', ') || '(none)')
+  console.log('Platforms (bw):', Object.keys(BW_TABLE_FROM_FILES).join(', ') || '(none)')
+}
+
+function parsedHasPlat(byPlat: Record<string, Record<string, OperatorTableRow[]>>, plat: string) {
+  return byPlat[plat] && Object.keys(byPlat[plat]).length > 0
+}
+
+main()

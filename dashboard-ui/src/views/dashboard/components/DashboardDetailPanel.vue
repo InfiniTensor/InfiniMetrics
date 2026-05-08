@@ -4,11 +4,13 @@ import VChart from 'vue-echarts'
 import {
   BW_TABLE,
   CI_SUMMARY,
-  COMM_TABLE,
-  INFER_TABLE,
-  TRAIN_TABLE,
 } from '@/data'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
+import {
+  computeOpRowScore,
+  remarksExcludeIcFromScore,
+} from '@/features/dashboard/operatorBenchmark'
+import { BW_NVIDIA_BASELINE_GBPS } from '@/features/dashboard/bwBenchmark'
 
 const store = useInfiniDashboard()
 const {
@@ -21,6 +23,13 @@ const {
   tableNotice,
   scoreTabHint,
   opDetailRows,
+  inferDetailTabRows,
+  inferNvidiaTabRows,
+  inferTestEnvLine,
+  trainDetailRows,
+  trainTestEnvLine,
+  commDetailRows,
+  commNvidiaBaselineRows,
   lineChartOption,
   barChartOption,
   ciChartOption,
@@ -31,23 +40,11 @@ const {
 
 const platColor = computed(() => detailPlat.value.color)
 
-const inferRows = computed(() => {
-  const data = INFER_TABLE[detailState.value.platKey as keyof typeof INFER_TABLE] as
-    | { prefill?: unknown[]; decode?: unknown[] }
-    | undefined
-  return data?.[detailState.value.inferTab] || []
-})
-
-const nvidiaInferRows = computed(() => {
-  const nv = INFER_TABLE.nvidia as { prefill?: unknown[]; decode?: unknown[] } | undefined
-  return nv?.[detailState.value.inferTab] || []
-})
-
 const inferMaxTps = computed(() => {
-  const rows = inferRows.value as { tps: number }[]
-  const nv = nvidiaInferRows.value as { tps: number }[]
+  const rows = inferDetailTabRows.value as { tps: number }[]
+  const nv = inferNvidiaTabRows.value as { tps: number }[]
   const isNvidia = detailState.value.platKey === 'nvidia'
-  if (isNvidia) return rows.length ? Math.max(...rows.map((r) => r.tps)) : 1
+  if (isNvidia) return rows.length ? Math.max(...rows.map((r) => r.tps), 1) : 1
   return Math.max(
     rows.length ? Math.max(...rows.map((r) => r.tps)) : 0,
     nv.length ? Math.max(...nv.map((r) => r.tps || 0)) : 0,
@@ -56,42 +53,42 @@ const inferMaxTps = computed(() => {
 })
 
 type InferRow = {
+  configKey: string
   model: string
   batch: number
   inLen: number
   outLen?: number
+  dtype?: string
   tps: number
   ttft?: number
+  decodeLatencyMs?: number
+  vsNvidia?: number | null
+  nvidiaBaselineTps?: number | null
 }
 
-const trainRows = computed(
-  () => TRAIN_TABLE[detailState.value.platKey as keyof typeof TRAIN_TABLE] as
-    | typeof TRAIN_TABLE.nvidia
-    | undefined || [],
-)
+function nvInferMatch(r: InferRow) {
+  return (inferNvidiaTabRows.value as InferRow[]).find((x) => x.configKey === r.configKey)
+}
 
-const commRows = computed(
-  () => COMM_TABLE[detailState.value.platKey as keyof typeof COMM_TABLE] as
-    | typeof COMM_TABLE.nvidia
-    | undefined || [],
-)
+type CommRowLite = { commType: string; nGpu: number; bw: number }
 
-const commNvRows = computed(() => COMM_TABLE.nvidia || [])
+function nvCommMatch(r: CommRowLite) {
+  return commNvidiaBaselineRows.value.find(
+    (x) => x.commType === r.commType && x.nGpu === r.nGpu,
+  )
+}
+
+const commBwMax = computed(() => {
+  const a = commDetailRows.value.map((x) => x.bw)
+  const b = commNvidiaBaselineRows.value.map((x) => x.bw)
+  return Math.max(1, ...a, ...b)
+})
 
 const bwRows = computed(
   () => BW_TABLE[detailState.value.platKey as keyof typeof BW_TABLE] as
     | typeof BW_TABLE.nvidia
     | undefined || [],
 )
-
-const nvidiaAvgBw = computed(() => (BW_TABLE.nvidia?.[0]?.avg ?? 1607.46) as number)
-
-const commBwMax = computed(() => {
-  const a = commRows.value.map((x) => x.bw)
-  const b = commNvRows.value.map((x) => x.bw)
-  const n = Math.max(1, ...a, ...b)
-  return n
-})
 
 function hasChart(opt: object) {
   return opt && Object.keys(opt).length > 0
@@ -106,6 +103,33 @@ function precClass(dtype: string) {
 function scoreCellColor(score: number) {
   return score >= 100 ? '#2e7d32' : score >= 60 ? '#e65100' : '#c62828'
 }
+
+type OpDetailRow = {
+  shape: string
+  dtype: string
+  ic: number
+  pt: number
+  remarks?: string
+  scoreEligible?: boolean
+}
+
+function opRowRemarks(r: OpDetailRow) {
+  return String(r.remarks ?? '')
+}
+
+function opDetailScore(r: OpDetailRow): number | null {
+  return computeOpRowScore(r.ic, r.pt, opRowRemarks(r))
+}
+
+function opRowWarning(r: OpDetailRow) {
+  return remarksExcludeIcFromScore(opRowRemarks(r))
+}
+
+const opLatencyMax = computed(() => {
+  const rows = opDetailRows.value as OpDetailRow[]
+  const m = Math.max(1e-9, ...rows.flatMap((x) => [x.ic, x.pt]))
+  return m
+})
 </script>
 
 <template>
@@ -139,6 +163,53 @@ function scoreCellColor(score: number) {
 
     <!-- 测试环境横条 -->
     <div
+      v-if="activeDimKey === 'infer'"
+      style="
+        margin-bottom: 16px;
+        padding: 10px 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        color: #888;
+      "
+    >
+      <span style="font-size: 14px">🖥</span>
+      <span style="font-weight: 600; color: #555">测试环境</span>
+      <span style="color: #ddd">|</span>
+      <span style="color: #667eea; font-weight: 500">{{ inferTestEnvLine }}</span>
+      <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
+        来源：推理 CSV（n_gpu · remarks 硬件型号）
+      </span>
+    </div>
+    <div
+      v-else-if="activeDimKey === 'train'"
+      style="
+        margin-bottom: 16px;
+        padding: 10px 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        color: #888;
+      "
+    >
+      <span style="font-size: 14px">🖥</span>
+      <span style="font-weight: 600; color: #555">测试环境</span>
+      <span style="color: #ddd">|</span>
+      <span style="color: #667eea; font-weight: 500">{{ trainTestEnvLine }}</span>
+      <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
+        来源：训练 XLSX（n_gpu · 精度 · 框架）
+      </span>
+    </div>
+    <div
+      v-else
       style="
         margin-bottom: 16px;
         padding: 10px 20px;
@@ -213,11 +284,17 @@ function scoreCellColor(score: number) {
                 <th>InfiniCore ✦</th>
                 <th>PyTorch</th>
                 <th>得分</th>
+                <th>备注</th>
                 <th>延迟对比</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(r, ri) in opDetailRows" :key="ri">
+              <tr
+                v-for="(r, ri) in opDetailRows"
+                :key="ri"
+                class="op-detail-row"
+                :class="{ 'op-detail-row--warn': opRowWarning(r as OpDetailRow) }"
+              >
                 <td class="shape-cell">{{ r.shape }}</td>
                 <td>
                   <span class="prec-badge" :class="precClass(r.dtype)">{{ r.dtype }}</span>
@@ -225,14 +302,28 @@ function scoreCellColor(score: number) {
                 <td :style="{ color: platColor, fontWeight: 600 }">{{ r.ic.toFixed(4) }}ms</td>
                 <td style="color: #888">{{ r.pt.toFixed(4) }}ms</td>
                 <td class="score-cell">
-                  <span class="score-num" :style="{ color: scoreCellColor(Math.round((r.pt / r.ic) * 100)) }">
-                    {{ Math.round((r.pt / r.ic) * 100) }}
-                  </span>
-                  <span
-                    :class="Math.round((r.pt / r.ic) * 100) >= 100 ? 'score-up' : 'score-dn'"
-                  >
-                    {{ Math.round((r.pt / r.ic) * 100) >= 100 ? '↑' : '↓' }}
-                  </span>
+                  <template v-if="opDetailScore(r as OpDetailRow) != null">
+                    <span
+                      class="score-num"
+                      :style="{ color: scoreCellColor(Math.round(opDetailScore(r as OpDetailRow)!)) }"
+                    >
+                      {{ Math.round(opDetailScore(r as OpDetailRow)!) }}
+                    </span>
+                    <span
+                      :class="
+                        Math.round(opDetailScore(r as OpDetailRow)!) >= 100 ? 'score-up' : 'score-dn'
+                      "
+                    >
+                      {{ Math.round(opDetailScore(r as OpDetailRow)!) >= 100 ? '↑' : '↓' }}
+                    </span>
+                  </template>
+                  <template v-else>
+                    <span class="score-num score-na">—</span>
+                    <span v-if="opRowWarning(r as OpDetailRow)" class="op-warn-icon" title="该行 InfiniCore 延迟不参与计分">⚠</span>
+                  </template>
+                </td>
+                <td class="remarks-cell" :title="opRowRemarks(r as OpDetailRow)">
+                  {{ opRowRemarks(r as OpDetailRow) || '—' }}
                 </td>
                 <td>
                   <div class="dual-bar">
@@ -243,13 +334,7 @@ function scoreCellColor(score: number) {
                           class="dual-fill"
                           :style="{
                             width:
-                              Math.round(
-                                (r.ic /
-                                  Math.max(
-                                    ...opDetailRows.flatMap((x) => [x.ic, x.pt]),
-                                  )) *
-                                  100,
-                              ) + '%',
+                              Math.round(((r.ic as number) / opLatencyMax) * 100) + '%',
                             background: platColor,
                           }"
                         />
@@ -263,13 +348,7 @@ function scoreCellColor(score: number) {
                           class="dual-fill"
                           :style="{
                             width:
-                              Math.round(
-                                (r.pt /
-                                  Math.max(
-                                    ...opDetailRows.flatMap((x) => [x.ic, x.pt]),
-                                  )) *
-                                  100,
-                              ) + '%',
+                              Math.round(((r.pt as number) / opLatencyMax) * 100) + '%',
                             background: '#aaa',
                           }"
                         />
@@ -304,50 +383,55 @@ function scoreCellColor(score: number) {
               Decode 吞吐量
             </button>
           </div>
-          <table v-if="inferRows.length">
+          <table v-if="inferDetailTabRows.length">
             <thead>
               <tr>
                 <th>模型</th>
                 <th>Batch</th>
                 <th>In-len</th>
                 <th>Out-len</th>
+                <th>精度</th>
                 <th>TPS</th>
                 <th v-if="detailState.inferTab === 'prefill'">TTFT</th>
-                <th v-if="detailState.platKey !== 'nvidia'">vs A100</th>
+                <th v-if="detailState.inferTab === 'decode'">Decode 延迟</th>
+                <th v-if="detailState.platKey !== 'nvidia'">vs NVIDIA</th>
                 <th>对比</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(r, i) in inferRows as InferRow[]" :key="i">
+              <tr v-for="r in inferDetailTabRows as InferRow[]" :key="r.configKey">
                 <td style="font-family: monospace; font-size: 12px" :style="{ color: platColor }">
                   {{ r.model }}
                 </td>
                 <td>{{ r.batch }}</td>
                 <td>{{ r.inLen }}</td>
-                <td>{{ r.outLen ?? 128 }}</td>
+                <td>{{ r.outLen ?? '—' }}</td>
+                <td>
+                  <span v-if="r.dtype" class="prec-badge" :class="precClass(r.dtype)">{{ r.dtype }}</span>
+                  <span v-else style="color: #ccc">—</span>
+                </td>
                 <td style="font-weight: 700" :style="{ color: platColor }">
                   {{ r.tps.toLocaleString() }}
                 </td>
                 <td v-if="detailState.inferTab === 'prefill'" style="color: #888">
                   {{ r.ttft ? r.ttft + 'ms' : '—' }}
                 </td>
+                <td v-if="detailState.inferTab === 'decode'" style="color: #888">
+                  {{ r.decodeLatencyMs != null ? r.decodeLatencyMs + 'ms' : '—' }}
+                </td>
                 <td
                   v-if="detailState.platKey !== 'nvidia'"
                   :style="{
                     color:
-                      (nvidiaInferRows[i] as InferRow | undefined)
-                        ? Math.round((r.tps / (nvidiaInferRows[i] as InferRow).tps) * 100) >= 100
+                      r.vsNvidia != null
+                        ? r.vsNvidia >= 100
                           ? '#2e7d32'
                           : '#e65100'
                         : '#999',
                     fontWeight: 700,
                   }"
                 >
-                  {{
-                    (nvidiaInferRows[i] as InferRow | undefined)
-                      ? Math.round((r.tps / (nvidiaInferRows[i] as InferRow).tps) * 100) + '%'
-                      : '—'
-                  }}
+                  {{ r.vsNvidia != null ? r.vsNvidia + '%' : '—' }}
                 </td>
                 <td>
                   <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
@@ -378,22 +462,22 @@ function scoreCellColor(score: number) {
                       </div>
                       <span class="dual-ms" :style="{ color: platColor }">{{ r.tps.toLocaleString() }}</span>
                     </div>
-                    <div v-if="nvidiaInferRows[i]" class="dual-row">
-                      <span class="dual-lbl" style="color: #aaa">A100</span>
+                    <div v-if="nvInferMatch(r)" class="dual-row">
+                      <span class="dual-lbl" style="color: #aaa">NV</span>
                       <div class="dual-track">
                         <div
                           class="dual-fill"
                           :style="{
                             width:
                               Math.round(
-                                ((nvidiaInferRows[i] as InferRow).tps / inferMaxTps) * 100,
+                                ((nvInferMatch(r)!.tps || 0) / inferMaxTps) * 100,
                               ) + '%',
                             background: '#aaa',
                           }"
                         />
                       </div>
                       <span class="dual-ms" style="color: #aaa">{{
-                        (nvidiaInferRows[i] as InferRow).tps.toLocaleString()
+                        (nvInferMatch(r)!.tps ?? 0).toLocaleString()
                       }}</span>
                     </div>
                   </div>
@@ -406,7 +490,7 @@ function scoreCellColor(score: number) {
 
         <!-- 训练 -->
         <template v-else-if="activeDimKey === 'train'">
-          <table v-if="trainRows.length">
+          <table v-if="trainDetailRows.length">
             <thead>
               <tr>
                 <th>框架</th>
@@ -416,29 +500,29 @@ function scoreCellColor(score: number) {
                 <th>Flash Attn</th>
                 <th>吞吐</th>
                 <template v-if="detailState.platKey !== 'nvidia'">
-                  <th>A100 基线</th>
-                  <th>vs A100</th>
+                  <th>NVIDIA 基线</th>
+                  <th>vs NVIDIA</th>
                 </template>
                 <th>备注</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(r, ri) in trainRows" :key="ri">
+              <tr v-for="(r, ri) in trainDetailRows" :key="ri">
                 <td style="font-weight: 600">{{ r.framework }}</td>
                 <td style="font-family: monospace; font-size: 12px" :style="{ color: platColor }">
                   {{ r.model }}
                 </td>
                 <td style="font-size: 12px">{{ r.parallel }}</td>
-                <td><span class="prec-badge p-bf16">{{ r.dtype }}</span></td>
+                <td><span class="prec-badge" :class="precClass(r.dtype)">{{ r.dtype }}</span></td>
                 <td style="font-size: 12px">
                   <span v-if="r.flashAttn === 'on'" style="color: #2e7d32">✓ on</span>
-                  <span v-else style="color: #aaa">off</span>
+                  <span v-else style="color: #aaa">{{ r.flashAttn }}</span>
                 </td>
                 <td style="font-weight: 700" :style="{ color: platColor }">
-                  {{ r.tps.toLocaleString() }} t/s
+                  {{ r.tps.toLocaleString() }} tpps
                 </td>
                 <template v-if="detailState.platKey !== 'nvidia'">
-                  <td style="color: #888">{{ r.baseline.toLocaleString() }} t/s</td>
+                  <td style="color: #888">{{ r.baseline.toLocaleString() }} tpps</td>
                   <td
                     :style="{
                       fontWeight: 700,
@@ -458,7 +542,7 @@ function scoreCellColor(score: number) {
 
         <!-- 通信 -->
         <template v-else-if="activeDimKey === 'comm'">
-          <table v-if="commRows.length">
+          <table v-if="commDetailRows.length">
             <thead>
               <tr>
                 <th>Link 类型</th>
@@ -466,15 +550,15 @@ function scoreCellColor(score: number) {
                 <th>GPU 数</th>
                 <th>带宽</th>
                 <template v-if="detailState.platKey !== 'nvidia'">
-                  <th>A100 基线</th>
-                  <th>vs A100</th>
+                  <th>NVIDIA 基线</th>
+                  <th>vs NVIDIA</th>
                 </template>
                 <th>带宽对比</th>
                 <th>备注</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(r, i) in commRows" :key="i">
+              <tr v-for="r in commDetailRows" :key="r.commType + '-' + r.nGpu">
                 <td style="font-weight: 600" :style="{ color: platColor }">{{ r.linkType }}</td>
                 <td><span class="prec-badge p-fp16">{{ r.commType }}</span></td>
                 <td>{{ r.nGpu }} GPU</td>
@@ -485,16 +569,10 @@ function scoreCellColor(score: number) {
                   :style="{
                     fontWeight: 700,
                     color:
-                      commNvRows[i]
-                        ? Math.round((r.bw / commNvRows[i].bw) * 100) >= 100
-                          ? '#2e7d32'
-                          : '#e65100'
-                        : '#999',
+                      r.vsA100 >= 100 ? '#2e7d32' : r.vsA100 >= 70 ? '#e65100' : '#c62828',
                   }"
                 >
-                  {{
-                    commNvRows[i] ? Math.round((r.bw / commNvRows[i].bw) * 100) + '%' : '—'
-                  }}
+                  {{ r.vsA100 }}%
                 </td>
                 <td>
                   <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
@@ -533,22 +611,22 @@ function scoreCellColor(score: number) {
                       </div>
                       <span class="dual-ms" :style="{ color: platColor }">{{ r.bw }}</span>
                     </div>
-                    <div v-if="commNvRows[i]" class="dual-row">
-                      <span class="dual-lbl" style="color: #aaa">A100</span>
+                    <div v-if="nvCommMatch(r)" class="dual-row">
+                      <span class="dual-lbl" style="color: #aaa">NV</span>
                       <div class="dual-track">
                         <div
                           class="dual-fill"
                           :style="{
                             width:
                               Math.round(
-                                (commNvRows[i].bw / commBwMax) *
+                                ((nvCommMatch(r)!.bw || 0) / commBwMax) *
                                   100,
                               ) + '%',
                             background: '#aaa',
                           }"
                         />
                       </div>
-                      <span class="dual-ms" style="color: #aaa">{{ commNvRows[i].bw }}</span>
+                      <span class="dual-ms" style="color: #aaa">{{ nvCommMatch(r)!.bw }}</span>
                     </div>
                   </div>
                 </td>
@@ -570,7 +648,7 @@ function scoreCellColor(score: number) {
                 <th>scale GB/s</th>
                 <th>triad GB/s</th>
                 <th>均值 GB/s</th>
-                <th v-if="detailState.platKey !== 'nvidia'">vs A100</th>
+                <th>vs NVIDIA</th>
                 <th>带宽对比</th>
               </tr>
             </thead>
@@ -578,9 +656,7 @@ function scoreCellColor(score: number) {
               <tr v-for="(r, ri) in bwRows" :key="ri">
                 <template v-if="r.avg == null">
                   <td :style="{ color: platColor, fontWeight: 600 }">{{ r.model }}</td>
-                  <td :colspan="detailState.platKey === 'nvidia' ? 5 : 7" style="color: #aaa; font-style: italic">
-                    数据待补充
-                  </td>
+                  <td colspan="7" style="color: #aaa; font-style: italic">数据待补充</td>
                 </template>
                 <template v-else>
                   <td :style="{ color: platColor, fontWeight: 600 }">{{ r.model }}</td>
@@ -590,40 +666,15 @@ function scoreCellColor(score: number) {
                   <td>{{ r.triad!.toFixed(2) }}</td>
                   <td style="font-weight: 700" :style="{ color: platColor }">{{ r.avg!.toFixed(2) }}</td>
                   <td
-                    v-if="detailState.platKey !== 'nvidia'"
                     :style="{
                       fontWeight: 700,
-                      color:
-                        Math.round((r.avg! / nvidiaAvgBw) * 100) >= 100
-                          ? '#2e7d32'
-                          : Math.round((r.avg! / nvidiaAvgBw) * 100) >= 80
-                            ? '#e65100'
-                            : '#c62828',
+                      color: r.vsNvidia >= 100 ? '#2e7d32' : '#e65100',
                     }"
                   >
-                    {{ Math.round((r.avg! / nvidiaAvgBw) * 100) }}%
+                    {{ r.vsNvidia }}%
                   </td>
                   <td>
-                    <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
-                      <div class="dual-row">
-                        <div class="dual-track" style="flex: 1">
-                          <div
-                            class="dual-fill"
-                            :style="{
-                              width:
-                                Math.round(
-                                  (r.avg! /
-                                    Math.max(r.add!, r.copy!, r.scale!, r.triad!)) *
-                                    100,
-                                ) + '%',
-                              background: platColor,
-                            }"
-                          />
-                        </div>
-                        <span class="dual-ms" :style="{ color: platColor }">{{ r.avg!.toFixed(0) }}</span>
-                      </div>
-                    </div>
-                    <div v-else class="dual-bar">
+                    <div class="dual-bar">
                       <div class="dual-row">
                         <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
                         <div class="dual-track">
@@ -638,7 +689,7 @@ function scoreCellColor(score: number) {
                                       r.copy!,
                                       r.scale!,
                                       r.triad!,
-                                      nvidiaAvgBw,
+                                      BW_NVIDIA_BASELINE_GBPS,
                                     )) *
                                     100,
                                 ) + '%',
@@ -649,20 +700,20 @@ function scoreCellColor(score: number) {
                         <span class="dual-ms" :style="{ color: platColor }">{{ r.avg!.toFixed(0) }}</span>
                       </div>
                       <div class="dual-row">
-                        <span class="dual-lbl" style="color: #aaa">A100</span>
+                        <span class="dual-lbl" style="color: #aaa">NVIDIA 基线</span>
                         <div class="dual-track">
                           <div
                             class="dual-fill"
                             :style="{
                               width:
                                 Math.round(
-                                  (nvidiaAvgBw /
+                                  (BW_NVIDIA_BASELINE_GBPS /
                                     Math.max(
                                       r.add!,
                                       r.copy!,
                                       r.scale!,
                                       r.triad!,
-                                      nvidiaAvgBw,
+                                      BW_NVIDIA_BASELINE_GBPS,
                                     )) *
                                     100,
                                 ) + '%',
@@ -670,7 +721,9 @@ function scoreCellColor(score: number) {
                             }"
                           />
                         </div>
-                        <span class="dual-ms" style="color: #aaa">{{ nvidiaAvgBw.toFixed(0) }}</span>
+                        <span class="dual-ms" style="color: #aaa">{{
+                          BW_NVIDIA_BASELINE_GBPS.toFixed(1)
+                        }}</span>
                       </div>
                     </div>
                   </td>

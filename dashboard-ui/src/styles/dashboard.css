@@ -294,6 +294,10 @@ tr:hover td{background:#f8f9ff;}
 .score-num{font-weight:700;color:var(--blue);}
 .score-up{color:#00c853;}
 .score-dn{color:#ef5350;}
+.score-na{color:#999;font-weight:600;}
+.op-warn-icon{cursor:help;font-size:14px;}
+.op-detail-row--warn td:first-child{box-shadow:inset 3px 0 0 #c62828;}
+.remarks-cell{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px;color:#666;}
 .dual-bar{display:flex;flex-direction:column;gap:3px;min-width:110px;}
 .dual-row{display:flex;align-items:center;gap:4px;}
 .dual-lbl{font-size:9px;font-weight:600;width:24px;text-align:right;}

@@ -22,9 +22,11 @@ export function buildCiLineOption(seriesData: number[]) {
   }
 }
 
-type OpRow = { shape: string; dtype: string; ic: number; pt: number }
+type OpRow = { shape: string; dtype: string; ic: number; pt: number; scoreEligible?: boolean }
 
 export function buildOpLineOption(rows: OpRow[], platColor: string) {
+  const icSeries = rows.map((r) => (r.scoreEligible === false ? null : r.ic))
+  const ptSeries = rows.map((r) => (r.scoreEligible === false ? null : r.pt))
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 0 },
@@ -35,18 +37,20 @@ export function buildOpLineOption(rows: OpRow[], platColor: string) {
       {
         type: 'line' as const,
         name: 'InfiniCore',
-        data: rows.map((r) => r.ic),
+        data: icSeries,
         smooth: true,
         symbolSize: 8,
+        connectNulls: false,
         lineStyle: { color: platColor },
         areaStyle: { color: platColor + '22' },
       },
       {
         type: 'line' as const,
         name: 'PyTorch',
-        data: rows.map((r) => r.pt),
+        data: ptSeries,
         smooth: true,
         symbolSize: 8,
+        connectNulls: false,
         lineStyle: { color: '#999' },
         areaStyle: { color: '#99999922' },
       },
@@ -135,6 +139,64 @@ export function buildInferDecodeBarOption(
   }
 }
 
+export function buildInferPrefillBarAligned(
+  categories: string[],
+  platVals: number[],
+  nvVals: number[],
+  platColor: string,
+) {
+  return {
+    tooltip: { trigger: 'axis' as const },
+    legend: { top: 0 },
+    grid: { left: 56, right: 24, top: 40, bottom: 48 },
+    xAxis: { type: 'category' as const, data: categories },
+    yAxis: { type: 'value' as const, name: 'tokens/s' },
+    series: [
+      {
+        type: 'bar' as const,
+        name: 'Prefill TPS',
+        data: platVals,
+        itemStyle: { color: platColor + 'cc', borderRadius: 5 },
+      },
+      {
+        type: 'bar' as const,
+        name: 'NVIDIA Prefill',
+        data: nvVals,
+        itemStyle: { color: '#76b90044', borderRadius: 5 },
+      },
+    ],
+  }
+}
+
+export function buildInferDecodeBarAligned(
+  categories: string[],
+  platVals: number[],
+  nvVals: number[],
+  platColor: string,
+) {
+  return {
+    tooltip: { trigger: 'axis' as const },
+    legend: { top: 0 },
+    grid: { left: 56, right: 24, top: 40, bottom: 48 },
+    xAxis: { type: 'category' as const, data: categories },
+    yAxis: { type: 'value' as const, name: 'tokens/s' },
+    series: [
+      {
+        type: 'bar' as const,
+        name: 'Decode TPS',
+        data: platVals,
+        itemStyle: { color: platColor + '99', borderRadius: 5 },
+      },
+      {
+        type: 'bar' as const,
+        name: 'NVIDIA Decode',
+        data: nvVals,
+        itemStyle: { color: '#76b90044', borderRadius: 5 },
+      },
+    ],
+  }
+}
+
 type TrainRow = {
   framework: string
   model: string
@@ -167,7 +229,7 @@ export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
       },
       {
         type: 'bar' as const,
-        name: 'A100 基线',
+        name: 'NVIDIA 基线',
         data: rows.map((r) => r.baseline),
         itemStyle: { color: '#76b90055', borderRadius: 6 },
       },
@@ -184,11 +246,11 @@ export function buildTrainBarVs(rows: TrainRow[]) {
       data: rows.map((r) => `${r.framework}·${r.model}`),
       axisLabel: { rotate: 25, fontSize: 10 },
     },
-    yAxis: { type: 'value' as const, name: '% vs A100', min: 0 },
+    yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0 },
     series: [
       {
         type: 'bar' as const,
-        name: 'vs A100 (%)',
+        name: 'vs NVIDIA (%)',
         data: rows.map((r) => ({
           value: r.vsA100,
           itemStyle: {
@@ -230,7 +292,7 @@ export function buildCommBarBw(rows: CommRow[], platColor: string) {
       },
       {
         type: 'bar' as const,
-        name: 'A100 基线',
+        name: 'NVIDIA 基线',
         data: rows.map((r) => r.baseline),
         itemStyle: { color: '#76b90055', borderRadius: 6 },
       },
@@ -243,11 +305,11 @@ export function buildCommBarVs(rows: CommRow[]) {
     tooltip: { trigger: 'axis' as const },
     grid: { left: 52, right: 24, top: 28, bottom: 48 },
     xAxis: { type: 'category' as const, data: rows.map((r) => r.commType) },
-    yAxis: { type: 'value' as const, name: '% vs A100', min: 0 },
+    yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0 },
     series: [
       {
         type: 'bar' as const,
-        name: 'vs A100 (%)',
+        name: 'vs NVIDIA (%)',
         data: rows.map((r) => ({
           value: r.vsA100,
           itemStyle: {
@@ -290,7 +352,7 @@ export function buildBwBarAvg(
       },
       {
         type: 'bar' as const,
-        name: 'A100 基线',
+        name: 'NVIDIA A100 基线',
         data: valid.map(() => nvidiaAvg),
         itemStyle: { color: '#76b90055', borderRadius: 6 },
       },
@@ -315,7 +377,7 @@ export function buildBwBarModes(bestRow: BwRow, nvidiaRow: BwRow, platColor: str
       },
       {
         type: 'bar' as const,
-        name: 'A100',
+        name: 'NVIDIA A100（四模式参考）',
         data: modes.map((m) => nvidiaRow[m] as number),
         itemStyle: { color: '#76b90055', borderRadius: 6 },
       },
