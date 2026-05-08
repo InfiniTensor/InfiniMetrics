@@ -1,0 +1,771 @@
+<script setup lang="ts">
+import { computed } from 'vue'
+import VChart from 'vue-echarts'
+import {
+  BW_TABLE,
+  CI_SUMMARY,
+  COMM_TABLE,
+  INFER_TABLE,
+  TRAIN_TABLE,
+} from '@/data'
+import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
+
+const store = useInfiniDashboard()
+const {
+  activeDimKey,
+  detailTitle,
+  detailState,
+  detailPlat,
+  detailKpiCells,
+  detailTableTab,
+  tableNotice,
+  scoreTabHint,
+  opDetailRows,
+  lineChartOption,
+  barChartOption,
+  ciChartOption,
+  ciTabKey,
+  setInferTab,
+  goBack,
+} = store
+
+const platColor = computed(() => detailPlat.value.color)
+
+const inferRows = computed(() => {
+  const data = INFER_TABLE[detailState.value.platKey as keyof typeof INFER_TABLE] as
+    | { prefill?: unknown[]; decode?: unknown[] }
+    | undefined
+  return data?.[detailState.value.inferTab] || []
+})
+
+const nvidiaInferRows = computed(() => {
+  const nv = INFER_TABLE.nvidia as { prefill?: unknown[]; decode?: unknown[] } | undefined
+  return nv?.[detailState.value.inferTab] || []
+})
+
+const inferMaxTps = computed(() => {
+  const rows = inferRows.value as { tps: number }[]
+  const nv = nvidiaInferRows.value as { tps: number }[]
+  const isNvidia = detailState.value.platKey === 'nvidia'
+  if (isNvidia) return rows.length ? Math.max(...rows.map((r) => r.tps)) : 1
+  return Math.max(
+    rows.length ? Math.max(...rows.map((r) => r.tps)) : 0,
+    nv.length ? Math.max(...nv.map((r) => r.tps || 0)) : 0,
+    1,
+  )
+})
+
+type InferRow = {
+  model: string
+  batch: number
+  inLen: number
+  outLen?: number
+  tps: number
+  ttft?: number
+}
+
+const trainRows = computed(
+  () => TRAIN_TABLE[detailState.value.platKey as keyof typeof TRAIN_TABLE] as
+    | typeof TRAIN_TABLE.nvidia
+    | undefined || [],
+)
+
+const commRows = computed(
+  () => COMM_TABLE[detailState.value.platKey as keyof typeof COMM_TABLE] as
+    | typeof COMM_TABLE.nvidia
+    | undefined || [],
+)
+
+const commNvRows = computed(() => COMM_TABLE.nvidia || [])
+
+const bwRows = computed(
+  () => BW_TABLE[detailState.value.platKey as keyof typeof BW_TABLE] as
+    | typeof BW_TABLE.nvidia
+    | undefined || [],
+)
+
+const nvidiaAvgBw = computed(() => (BW_TABLE.nvidia?.[0]?.avg ?? 1607.46) as number)
+
+const commBwMax = computed(() => {
+  const a = commRows.value.map((x) => x.bw)
+  const b = commNvRows.value.map((x) => x.bw)
+  const n = Math.max(1, ...a, ...b)
+  return n
+})
+
+function hasChart(opt: object) {
+  return opt && Object.keys(opt).length > 0
+}
+
+function precClass(dtype: string) {
+  if (dtype === 'FP16') return 'p-fp16'
+  if (dtype === 'BF16') return 'p-bf16'
+  return 'p-fp32'
+}
+
+function scoreCellColor(score: number) {
+  return score >= 100 ? '#2e7d32' : score >= 60 ? '#e65100' : '#c62828'
+}
+</script>
+
+<template>
+  <div>
+    <div class="breadcrumb">
+      <div class="detail-title-row">
+        <div class="detail-title">{{ detailTitle }}</div>
+        <button type="button" class="back-btn" @click="goBack">← 返回概览</button>
+      </div>
+      <div class="kpi-grid">
+        <div
+          v-for="(cell, idx) in detailKpiCells"
+          :key="idx"
+          class="kpi-card"
+        >
+          <div
+            class="kpi-val"
+            :class="{ 'kpi-val--sm': (cell as { valSm?: boolean }).valSm }"
+            :style="{
+              fontSize: (cell as { valSm?: boolean }).valSm ? '22px' : undefined,
+              color: (cell as { muted?: boolean }).muted ? '#999' : undefined,
+            }"
+          >
+            {{ cell.val }}
+          </div>
+          <div class="kpi-lbl">{{ cell.lbl }}</div>
+          <div class="kpi-sub">{{ cell.sub }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 测试环境横条 -->
+    <div
+      style="
+        margin-bottom: 16px;
+        padding: 10px 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 12px;
+        color: #888;
+      "
+    >
+      <span style="font-size: 14px">🖥</span>
+      <span style="font-weight: 600; color: #555">测试环境</span>
+      <span style="color: #ddd">|</span>
+      <span style="color: #667eea; font-weight: 500">待补充</span>
+      <span style="color: #ddd">·</span>
+      <span>Accelerator · Collective · n_gpu · timestamp</span>
+      <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
+        来源：JSON 测试输出，接入后自动填充
+      </span>
+    </div>
+
+    <!-- 详情内算子筛选在 HTML 中为 display:none，此处不渲染 -->
+
+    <div class="table-card">
+      <div class="table-head-row">
+        <div class="table-title">数据明细</div>
+        <div class="view-toggle">
+          <button
+            type="button"
+            class="vt-btn"
+            :class="{ active: detailTableTab === 'data' }"
+            @click="detailTableTab = 'data'"
+          >
+            数据明细
+          </button>
+          <button
+            type="button"
+            class="vt-btn"
+            :class="{ active: detailTableTab === 'score' }"
+            @click="detailTableTab = 'score'"
+          >
+            得分说明
+          </button>
+        </div>
+      </div>
+      <div
+        style="
+          margin-bottom: 12px;
+          padding: 10px 14px;
+          background: #e8f0fe;
+          border-left: 4px solid #667eea;
+          border-radius: 0 8px 8px 0;
+          font-size: 12px;
+          color: #3d5afe;
+        "
+      >
+        {{ detailTableTab === 'data' ? tableNotice : scoreTabHint }}
+      </div>
+
+      <!-- 数据明细 -->
+      <div v-show="detailTableTab === 'data'" class="table-wrap">
+        <!-- 算子 -->
+        <template v-if="activeDimKey === 'op'">
+          <table v-if="opDetailRows.length">
+            <thead>
+              <tr>
+                <th>Shape 配置</th>
+                <th>精度</th>
+                <th>InfiniCore ✦</th>
+                <th>PyTorch</th>
+                <th>得分</th>
+                <th>延迟对比</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, ri) in opDetailRows" :key="ri">
+                <td class="shape-cell">{{ r.shape }}</td>
+                <td>
+                  <span class="prec-badge" :class="precClass(r.dtype)">{{ r.dtype }}</span>
+                </td>
+                <td :style="{ color: platColor, fontWeight: 600 }">{{ r.ic.toFixed(4) }}ms</td>
+                <td style="color: #888">{{ r.pt.toFixed(4) }}ms</td>
+                <td class="score-cell">
+                  <span class="score-num" :style="{ color: scoreCellColor(Math.round((r.pt / r.ic) * 100)) }">
+                    {{ Math.round((r.pt / r.ic) * 100) }}
+                  </span>
+                  <span
+                    :class="Math.round((r.pt / r.ic) * 100) >= 100 ? 'score-up' : 'score-dn'"
+                  >
+                    {{ Math.round((r.pt / r.ic) * 100) >= 100 ? '↑' : '↓' }}
+                  </span>
+                </td>
+                <td>
+                  <div class="dual-bar">
+                    <div class="dual-row">
+                      <span class="dual-lbl" :style="{ color: platColor }">自研</span>
+                      <div class="dual-track">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width:
+                              Math.round(
+                                (r.ic /
+                                  Math.max(
+                                    ...opDetailRows.flatMap((x) => [x.ic, x.pt]),
+                                  )) *
+                                  100,
+                              ) + '%',
+                            background: platColor,
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" :style="{ color: platColor }">{{ r.ic.toFixed(4) }}ms</span>
+                    </div>
+                    <div class="dual-row">
+                      <span class="dual-lbl" style="color: #aaa">开源</span>
+                      <div class="dual-track">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width:
+                              Math.round(
+                                (r.pt /
+                                  Math.max(
+                                    ...opDetailRows.flatMap((x) => [x.ic, x.pt]),
+                                  )) *
+                                  100,
+                              ) + '%',
+                            background: '#aaa',
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" style="color: #aaa">{{ r.pt.toFixed(4) }}ms</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该条件数据</p>
+        </template>
+
+        <!-- 推理 -->
+        <template v-else-if="activeDimKey === 'infer'">
+          <div style="display: flex; gap: 6px; margin-bottom: 14px">
+            <button
+              type="button"
+              class="fpill"
+              :class="{ active: detailState.inferTab === 'prefill' }"
+              @click="setInferTab('prefill')"
+            >
+              Prefill 吞吐量
+            </button>
+            <button
+              type="button"
+              class="fpill"
+              :class="{ active: detailState.inferTab === 'decode' }"
+              @click="setInferTab('decode')"
+            >
+              Decode 吞吐量
+            </button>
+          </div>
+          <table v-if="inferRows.length">
+            <thead>
+              <tr>
+                <th>模型</th>
+                <th>Batch</th>
+                <th>In-len</th>
+                <th>Out-len</th>
+                <th>TPS</th>
+                <th v-if="detailState.inferTab === 'prefill'">TTFT</th>
+                <th v-if="detailState.platKey !== 'nvidia'">vs A100</th>
+                <th>对比</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, i) in inferRows as InferRow[]" :key="i">
+                <td style="font-family: monospace; font-size: 12px" :style="{ color: platColor }">
+                  {{ r.model }}
+                </td>
+                <td>{{ r.batch }}</td>
+                <td>{{ r.inLen }}</td>
+                <td>{{ r.outLen ?? 128 }}</td>
+                <td style="font-weight: 700" :style="{ color: platColor }">
+                  {{ r.tps.toLocaleString() }}
+                </td>
+                <td v-if="detailState.inferTab === 'prefill'" style="color: #888">
+                  {{ r.ttft ? r.ttft + 'ms' : '—' }}
+                </td>
+                <td
+                  v-if="detailState.platKey !== 'nvidia'"
+                  :style="{
+                    color:
+                      (nvidiaInferRows[i] as InferRow | undefined)
+                        ? Math.round((r.tps / (nvidiaInferRows[i] as InferRow).tps) * 100) >= 100
+                          ? '#2e7d32'
+                          : '#e65100'
+                        : '#999',
+                    fontWeight: 700,
+                  }"
+                >
+                  {{
+                    (nvidiaInferRows[i] as InferRow | undefined)
+                      ? Math.round((r.tps / (nvidiaInferRows[i] as InferRow).tps) * 100) + '%'
+                      : '—'
+                  }}
+                </td>
+                <td>
+                  <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
+                    <div class="dual-row">
+                      <div class="dual-track" style="flex: 1">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width: Math.round((r.tps / inferMaxTps) * 100) + '%',
+                            background: platColor,
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" :style="{ color: platColor }">{{ r.tps.toLocaleString() }}</span>
+                    </div>
+                  </div>
+                  <div v-else class="dual-bar">
+                    <div class="dual-row">
+                      <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
+                      <div class="dual-track">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width: Math.round((r.tps / inferMaxTps) * 100) + '%',
+                            background: platColor,
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" :style="{ color: platColor }">{{ r.tps.toLocaleString() }}</span>
+                    </div>
+                    <div v-if="nvidiaInferRows[i]" class="dual-row">
+                      <span class="dual-lbl" style="color: #aaa">A100</span>
+                      <div class="dual-track">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width:
+                              Math.round(
+                                ((nvidiaInferRows[i] as InferRow).tps / inferMaxTps) * 100,
+                              ) + '%',
+                            background: '#aaa',
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" style="color: #aaa">{{
+                        (nvidiaInferRows[i] as InferRow).tps.toLocaleString()
+                      }}</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
+        </template>
+
+        <!-- 训练 -->
+        <template v-else-if="activeDimKey === 'train'">
+          <table v-if="trainRows.length">
+            <thead>
+              <tr>
+                <th>框架</th>
+                <th>模型</th>
+                <th>并行配置</th>
+                <th>精度</th>
+                <th>Flash Attn</th>
+                <th>吞吐</th>
+                <template v-if="detailState.platKey !== 'nvidia'">
+                  <th>A100 基线</th>
+                  <th>vs A100</th>
+                </template>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, ri) in trainRows" :key="ri">
+                <td style="font-weight: 600">{{ r.framework }}</td>
+                <td style="font-family: monospace; font-size: 12px" :style="{ color: platColor }">
+                  {{ r.model }}
+                </td>
+                <td style="font-size: 12px">{{ r.parallel }}</td>
+                <td><span class="prec-badge p-bf16">{{ r.dtype }}</span></td>
+                <td style="font-size: 12px">
+                  <span v-if="r.flashAttn === 'on'" style="color: #2e7d32">✓ on</span>
+                  <span v-else style="color: #aaa">off</span>
+                </td>
+                <td style="font-weight: 700" :style="{ color: platColor }">
+                  {{ r.tps.toLocaleString() }} t/s
+                </td>
+                <template v-if="detailState.platKey !== 'nvidia'">
+                  <td style="color: #888">{{ r.baseline.toLocaleString() }} t/s</td>
+                  <td
+                    :style="{
+                      fontWeight: 700,
+                      color:
+                        r.vsA100 >= 100 ? '#2e7d32' : r.vsA100 >= 70 ? '#e65100' : '#c62828',
+                    }"
+                  >
+                    {{ r.vsA100 }}%
+                  </td>
+                </template>
+                <td style="font-size: 11px; color: #aaa">{{ r.note || '' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
+        </template>
+
+        <!-- 通信 -->
+        <template v-else-if="activeDimKey === 'comm'">
+          <table v-if="commRows.length">
+            <thead>
+              <tr>
+                <th>Link 类型</th>
+                <th>通信类型</th>
+                <th>GPU 数</th>
+                <th>带宽</th>
+                <template v-if="detailState.platKey !== 'nvidia'">
+                  <th>A100 基线</th>
+                  <th>vs A100</th>
+                </template>
+                <th>带宽对比</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, i) in commRows" :key="i">
+                <td style="font-weight: 600" :style="{ color: platColor }">{{ r.linkType }}</td>
+                <td><span class="prec-badge p-fp16">{{ r.commType }}</span></td>
+                <td>{{ r.nGpu }} GPU</td>
+                <td style="font-weight: 700" :style="{ color: platColor }">{{ r.bw }} GB/s</td>
+                <td v-if="detailState.platKey !== 'nvidia'" style="color: #888">{{ r.baseline }} GB/s</td>
+                <td
+                  v-if="detailState.platKey !== 'nvidia'"
+                  :style="{
+                    fontWeight: 700,
+                    color:
+                      commNvRows[i]
+                        ? Math.round((r.bw / commNvRows[i].bw) * 100) >= 100
+                          ? '#2e7d32'
+                          : '#e65100'
+                        : '#999',
+                  }"
+                >
+                  {{
+                    commNvRows[i] ? Math.round((r.bw / commNvRows[i].bw) * 100) + '%' : '—'
+                  }}
+                </td>
+                <td>
+                  <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
+                    <div class="dual-row">
+                      <div class="dual-track" style="flex: 1">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width:
+                              Math.round(
+                                (r.bw / commBwMax) *
+                                  100,
+                              ) + '%',
+                            background: platColor,
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" :style="{ color: platColor }">{{ r.bw }}</span>
+                    </div>
+                  </div>
+                  <div v-else class="dual-bar">
+                    <div class="dual-row">
+                      <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
+                      <div class="dual-track">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width:
+                              Math.round(
+                                (r.bw / commBwMax) *
+                                  100,
+                              ) + '%',
+                            background: platColor,
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" :style="{ color: platColor }">{{ r.bw }}</span>
+                    </div>
+                    <div v-if="commNvRows[i]" class="dual-row">
+                      <span class="dual-lbl" style="color: #aaa">A100</span>
+                      <div class="dual-track">
+                        <div
+                          class="dual-fill"
+                          :style="{
+                            width:
+                              Math.round(
+                                (commNvRows[i].bw / commBwMax) *
+                                  100,
+                              ) + '%',
+                            background: '#aaa',
+                          }"
+                        />
+                      </div>
+                      <span class="dual-ms" style="color: #aaa">{{ commNvRows[i].bw }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td style="font-size: 11px; color: #aaa">{{ r.note || '' }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
+        </template>
+
+        <!-- 访存 -->
+        <template v-else-if="activeDimKey === 'bw'">
+          <table v-if="bwRows.length">
+            <thead>
+              <tr>
+                <th>型号</th>
+                <th>add GB/s</th>
+                <th>copy GB/s</th>
+                <th>scale GB/s</th>
+                <th>triad GB/s</th>
+                <th>均值 GB/s</th>
+                <th v-if="detailState.platKey !== 'nvidia'">vs A100</th>
+                <th>带宽对比</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, ri) in bwRows" :key="ri">
+                <template v-if="r.avg == null">
+                  <td :style="{ color: platColor, fontWeight: 600 }">{{ r.model }}</td>
+                  <td :colspan="detailState.platKey === 'nvidia' ? 5 : 7" style="color: #aaa; font-style: italic">
+                    数据待补充
+                  </td>
+                </template>
+                <template v-else>
+                  <td :style="{ color: platColor, fontWeight: 600 }">{{ r.model }}</td>
+                  <td style="font-weight: 600">{{ r.add!.toFixed(2) }}</td>
+                  <td>{{ r.copy!.toFixed(2) }}</td>
+                  <td>{{ r.scale!.toFixed(2) }}</td>
+                  <td>{{ r.triad!.toFixed(2) }}</td>
+                  <td style="font-weight: 700" :style="{ color: platColor }">{{ r.avg!.toFixed(2) }}</td>
+                  <td
+                    v-if="detailState.platKey !== 'nvidia'"
+                    :style="{
+                      fontWeight: 700,
+                      color:
+                        Math.round((r.avg! / nvidiaAvgBw) * 100) >= 100
+                          ? '#2e7d32'
+                          : Math.round((r.avg! / nvidiaAvgBw) * 100) >= 80
+                            ? '#e65100'
+                            : '#c62828',
+                    }"
+                  >
+                    {{ Math.round((r.avg! / nvidiaAvgBw) * 100) }}%
+                  </td>
+                  <td>
+                    <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
+                      <div class="dual-row">
+                        <div class="dual-track" style="flex: 1">
+                          <div
+                            class="dual-fill"
+                            :style="{
+                              width:
+                                Math.round(
+                                  (r.avg! /
+                                    Math.max(r.add!, r.copy!, r.scale!, r.triad!)) *
+                                    100,
+                                ) + '%',
+                              background: platColor,
+                            }"
+                          />
+                        </div>
+                        <span class="dual-ms" :style="{ color: platColor }">{{ r.avg!.toFixed(0) }}</span>
+                      </div>
+                    </div>
+                    <div v-else class="dual-bar">
+                      <div class="dual-row">
+                        <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
+                        <div class="dual-track">
+                          <div
+                            class="dual-fill"
+                            :style="{
+                              width:
+                                Math.round(
+                                  (r.avg! /
+                                    Math.max(
+                                      r.add!,
+                                      r.copy!,
+                                      r.scale!,
+                                      r.triad!,
+                                      nvidiaAvgBw,
+                                    )) *
+                                    100,
+                                ) + '%',
+                              background: platColor,
+                            }"
+                          />
+                        </div>
+                        <span class="dual-ms" :style="{ color: platColor }">{{ r.avg!.toFixed(0) }}</span>
+                      </div>
+                      <div class="dual-row">
+                        <span class="dual-lbl" style="color: #aaa">A100</span>
+                        <div class="dual-track">
+                          <div
+                            class="dual-fill"
+                            :style="{
+                              width:
+                                Math.round(
+                                  (nvidiaAvgBw /
+                                    Math.max(
+                                      r.add!,
+                                      r.copy!,
+                                      r.scale!,
+                                      r.triad!,
+                                      nvidiaAvgBw,
+                                    )) *
+                                    100,
+                                ) + '%',
+                              background: '#aaa',
+                            }"
+                          />
+                        </div>
+                        <span class="dual-ms" style="color: #aaa">{{ nvidiaAvgBw.toFixed(0) }}</span>
+                      </div>
+                    </div>
+                  </td>
+                </template>
+              </tr>
+            </tbody>
+          </table>
+          <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
+        </template>
+      </div>
+
+      <!-- 得分说明 Tab：仅文案 -->
+      <div v-show="detailTableTab === 'score'" class="table-wrap">
+        <p style="text-align: center; padding: 30px; color: #aaa; font-size: 13px">
+          {{ scoreTabHint }}
+        </p>
+      </div>
+    </div>
+
+    <!-- 主图（与 HTML 标题文案一致） -->
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">延迟趋势对比</div>
+        <v-chart
+          v-if="hasChart(lineChartOption)"
+          class="detail-chart"
+          :option="lineChartOption"
+          autoresize
+        />
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">各算子平均得分</div>
+        <v-chart
+          v-if="hasChart(barChartOption)"
+          class="detail-chart"
+          :option="barChartOption"
+          autoresize
+        />
+      </div>
+    </div>
+
+    <!-- CI -->
+    <div class="ci-card">
+      <a-tabs v-model:activeKey="ciTabKey">
+        <a-tab-pane key="ci-stats" tab="CI 运行统计">
+          <div class="ci-stats-grid">
+            <div class="ci-stat">
+              <div class="ci-stat-val">{{ CI_SUMMARY.runCount }}</div>
+              <div class="ci-stat-lbl">CI 运行次数</div>
+            </div>
+            <div class="ci-stat">
+              <div class="ci-stat-val" style="color: #2e7d32">{{ CI_SUMMARY.avgSuccessRate }}</div>
+              <div class="ci-stat-lbl">平均成功率</div>
+            </div>
+            <div class="ci-stat">
+              <div class="ci-stat-val" style="color: #2e7d32">{{ CI_SUMMARY.last10SuccessRate }}</div>
+              <div class="ci-stat-lbl">最近10次成功率</div>
+            </div>
+            <div class="ci-stat">
+              <div class="ci-stat-val" style="color: #ef5350">{{ CI_SUMMARY.failureCount }}</div>
+              <div class="ci-stat-lbl">失败用例</div>
+            </div>
+          </div>
+          <v-chart v-if="hasChart(ciChartOption)" class="ci-chart" :option="ciChartOption" autoresize />
+        </a-tab-pane>
+        <a-tab-pane key="dispatcher" tab="Dispatcher 汇总">
+          <p style="text-align: center; padding: 30px; color: #aaa; font-size: 13px">
+            Dispatcher 汇总记录 — 接入真实 CI 数据后展示
+          </p>
+        </a-tab-pane>
+        <a-tab-pane key="ci-detail" tab="CI 详细记录">
+          <p style="text-align: center; padding: 30px; color: #aaa; font-size: 13px">
+            CI 详细记录 — 可跳转至独立页面查看
+          </p>
+        </a-tab-pane>
+        <a-tab-pane key="failure" tab="失败详情">
+          <p style="text-align: center; padding: 30px; color: #aaa; font-size: 13px">
+            失败详情 — 可跳转至独立页面查看
+          </p>
+        </a-tab-pane>
+      </a-tabs>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.detail-chart {
+  height: 280px;
+  width: 100%;
+}
+.ci-chart {
+  height: 160px;
+  width: 100%;
+}
+.kpi-val--sm {
+  font-size: 20px;
+}
+</style>
