@@ -13,5 +13,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     ATabPane: typeof import('ant-design-vue/es')['TabPane']
     ATabs: typeof import('ant-design-vue/es')['Tabs']
+    DashboardCard: typeof import('./components/DashboardCard.vue')['default']
   }
 }

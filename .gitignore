@@ -1,0 +1,62 @@
+# Dependencies (npm / yarn / pnpm)
+node_modules/
+
+# Python virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python bytecode & packaging
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+*.egg
+
+# Build / generated artifacts (repo root & generic)
+dist/
+build/
+
+# Environment & secrets (keep .env.example if you use one)
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Test & coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.tox/
+coverage/
+.nox/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE / editors
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local-only overrides
+*.local
+
+# Jupyter
+.ipynb_checkpoints/

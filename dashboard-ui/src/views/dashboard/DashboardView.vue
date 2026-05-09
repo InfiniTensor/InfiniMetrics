@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DashboardCard from '@/components/DashboardCard.vue'
 import DashboardComparePanel from '@/views/dashboard/components/DashboardComparePanel.vue'
 import DashboardDetailPanel from '@/views/dashboard/components/DashboardDetailPanel.vue'
 import DashboardFilterBar from '@/views/dashboard/components/DashboardFilterBar.vue'
@@ -18,20 +19,37 @@ const { currentView } = useInfiniDashboard()
       <div class="main-grid">
         <DashboardSidebar />
         <div class="right-panel">
-          <DashboardFilterBar />
-          <div class="content-panel">
-            <div class="overview-panel" :class="{ active: currentView === 'overview' }">
-              <DashboardOverviewCards />
+          <DashboardCard>
+            <DashboardFilterBar />
+            <div class="content-panel">
+              <div class="overview-panel" :class="{ active: currentView === 'overview' }">
+                <DashboardOverviewCards />
+              </div>
+              <div class="detail-wrap" :class="{ active: currentView === 'detail' }">
+                <DashboardDetailPanel />
+              </div>
+              <div class="compare-wrap" :class="{ active: currentView === 'compare' }">
+                <DashboardComparePanel />
+              </div>
             </div>
-            <div class="detail-wrap" :class="{ active: currentView === 'detail' }">
-              <DashboardDetailPanel />
-            </div>
-            <div class="compare-wrap" :class="{ active: currentView === 'compare' }">
-              <DashboardComparePanel />
-            </div>
-          </div>
+          </DashboardCard>
         </div>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.right-panel {
+  background: #f7f8fa;
+  padding: 20px;
+}
+
+.right-panel :deep(.dashboard-card) {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+</style>
