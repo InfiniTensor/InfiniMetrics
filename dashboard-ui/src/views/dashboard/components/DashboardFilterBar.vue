@@ -10,23 +10,15 @@ const {
   sortDesc,
   comparePlatKeys,
   PLATFORMS,
-  currentView,
-  bcBrand,
-  bcDim,
   toggleSort,
   setFilter,
   clearCompare,
   openComparePage,
   toggleCompare,
-  goBack,
 } = store
 
 const dim = computed(() => DIMS[activeDim.value])
 const fs = computed(() => filterState.value[dim.value.key] || {})
-
-function pillActive(fi: number, pi: number) {
-  return (fs.value[fi] ?? 0) === pi
-}
 
 const compareChosen = computed(() =>
   comparePlatKeys.value
@@ -34,32 +26,24 @@ const compareChosen = computed(() =>
     .filter(Boolean),
 )
 
-function onBcOverview() {
-  goBack()
+/** 筛选区（含已选对比）Ant Design 主题：圆角 2px；fontSizeSM 供 Tag 与 small 按钮对齐 */
+const filterBarTheme = {
+  token: {
+    borderRadius: 2,
+    borderRadiusLG: 2,
+    borderRadiusSM: 2,
+    fontSizeSM: 12,
+  },
 }
+
 </script>
 
 <template>
-  <div class="filter-bar">
-    <!-- 全局面包屑（与 HTML updateGlobalBc 一致） -->
-    <div class="global-bc visible">
-      <template v-if="currentView === 'overview'">
-        <span class="bc-item cur">概览</span>
-      </template>
-      <template v-else-if="currentView === 'detail'">
-        <span class="bc-item" @click="onBcOverview">概览</span>
-        <span class="bc-sep">/</span>
-        <span class="bc-item">{{ bcBrand }}</span>
-        <span class="bc-sep">/</span>
-        <span class="bc-item cur">{{ bcDim }}</span>
-      </template>
-      <template v-else-if="currentView === 'compare'">
-        <span class="bc-item" @click="onBcOverview">概览</span>
-        <span class="bc-sep">/</span>
-        <span class="bc-item cur">平台对比</span>
-      </template>
-    </div>
-
+  <a-config-provider :theme="filterBarTheme">
+  <div
+    class="filter-bar-root"
+    :style="{ '--filter-bar-font-sm': `${filterBarTheme.token.fontSizeSM}px` }"
+  >
     <div
       v-for="(f, fi) in dim.filters"
       :key="f.label"
@@ -67,44 +51,60 @@ function onBcOverview() {
     >
       <span class="filter-label">{{ f.label }}</span>
       <div class="filter-pills">
-        <button
-          v-for="(p, pi) in f.pills"
-          :key="`${fi}-${pi}-${p}`"
-          type="button"
-          class="fpill"
-          :class="{ active: pillActive(fi, pi) }"
-          @click="setFilter(fi, pi)"
-        >
-          {{ p }}
-        </button>
+        <a-space :size="[6, 4]" wrap>
+          <a-button
+            v-for="(p, pi) in f.pills"
+            :key="`${fi}-${pi}-${p}`"
+            size="small"
+            :type="(fs[fi] ?? 0) === pi ? 'primary' : 'default'"
+            @click="setFilter(fi, pi)"
+          >
+            {{ p }}
+          </a-button>
+        </a-space>
       </div>
-      <button
-        v-if="fi === 0"
-        type="button"
-        class="sort-btn"
-        @click="toggleSort"
-      >
-        ⇅ 按得分 {{ sortDesc ? '↓' : '↑' }}
-      </button>
+      <div v-if="fi === 0" class="filter-row-sort-wrap">
+        <a-button size="small" @click="toggleSort">
+          ⇅ 按得分 {{ sortDesc ? '↓' : '↑' }}
+        </a-button>
+      </div>
     </div>
 
-    <!-- 对比条：有选中平台时展示 -->
+    <!-- 对比条：与算子类型 / 精度等同在一卡片内 -->
     <div class="compare-bar" :class="{ active: compareChosen.length > 0 }">
       <div class="compare-title">已选对比</div>
       <div class="compare-chips">
         <template v-if="compareChosen.length">
-          <div v-for="p in compareChosen" :key="p.key" class="compare-chip">
-            <span class="compare-dot" :style="{ background: p.color }" />
+          <a-tag
+            v-for="p in compareChosen"
+            :key="p.key"
+            closable
+            @close="() => toggleCompare(p.key)"
+          >
             {{ p.name }}
-            <button type="button" class="compare-remove" @click="toggleCompare(p.key)">×</button>
-          </div>
+          </a-tag>
         </template>
         <span v-else class="compare-empty">从卡片中加入 2–4 个平台进行横向对比</span>
       </div>
       <div class="compare-bar-actions">
-        <button type="button" class="mini-btn" @click="clearCompare">清空</button>
-        <button type="button" class="mini-btn primary" @click="openComparePage">开始对比</button>
+        <a-space wrap>
+          <a-button @click="clearCompare">清空</a-button>
+          <a-button type="primary" @click="openComparePage">开始对比</a-button>
+        </a-space>
       </div>
     </div>
   </div>
+  </a-config-provider>
 </template>
+
+<style scoped>
+/* 仅布局：排序按钮靠右，不改变 Ant Design 按钮外观 */
+.filter-row-sort-wrap {
+  margin-left: auto;
+}
+
+/* small 按钮默认仍用 fontSize(14)；Tag 用 fontSizeSM — 筛选行内 small 与 Tag 字号一致 */
+.filter-bar-root :deep(.filter-row .ant-btn-sm) {
+  font-size: var(--filter-bar-font-sm);
+}
+</style>

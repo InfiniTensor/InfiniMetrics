@@ -137,7 +137,7 @@ const opLatencyMax = computed(() => {
     <div class="breadcrumb">
       <div class="detail-title-row">
         <div class="detail-title">{{ detailTitle }}</div>
-        <button type="button" class="back-btn" @click="goBack">← 返回概览</button>
+        <a-button type="primary" @click="goBack">返回概览</a-button>
       </div>
       <div class="kpi-grid">
         <div
