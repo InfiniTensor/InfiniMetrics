@@ -10,7 +10,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020143,
         "pt": 0.010594,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=5632",
@@ -18,7 +19,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019813,
         "pt": 0.010622,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=5632",
@@ -26,7 +28,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020082,
         "pt": 0.010738,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -34,7 +37,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020493,
         "pt": 0.010674,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -42,7 +46,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020438,
         "pt": 0.010607,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -50,7 +55,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020103,
         "pt": 0.010752,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -58,7 +64,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020317,
         "pt": 0.010637,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -66,7 +73,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020076,
         "pt": 0.010677,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -74,7 +82,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019797,
         "pt": 0.010604,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Cast": [
@@ -84,7 +93,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015751,
         "pt": 0.042433,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=16, hidden=5632, fp32->fp16",
@@ -92,7 +102,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015609,
         "pt": 0.042591,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=16, hidden=5632, fp32->bf16",
@@ -100,7 +111,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015492,
         "pt": 0.042662,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Cat": [
@@ -110,7 +122,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020879,
         "pt": 0.044789,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "2x(4, 64), dim=0",
@@ -118,7 +131,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020631,
         "pt": 0.044248,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "2x(4, 64), dim=0",
@@ -126,7 +140,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020278,
         "pt": 0.044411,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "(4, 32)+(4, 64), dim=1",
@@ -134,7 +149,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020582,
         "pt": 0.044269,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "(4, 32)+(4, 64), dim=1",
@@ -142,7 +158,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020308,
         "pt": 0.044446,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "(4, 32)+(4, 64), dim=1",
@@ -150,7 +167,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020331,
         "pt": 0.044463,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "4x(1, 1024), dim=1",
@@ -158,7 +176,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.029818,
         "pt": 0.045154,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "4x(1, 1024), dim=1",
@@ -166,7 +185,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.029523,
         "pt": 0.045078,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "4x(1, 1024), dim=1",
@@ -174,7 +194,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.029674,
         "pt": 0.046211,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Gemm": [
@@ -184,7 +205,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.02305,
         "pt": 0.019564,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -192,7 +214,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022962,
         "pt": 0.012916,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -200,7 +223,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022306,
         "pt": 0.012943,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -208,7 +232,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022549,
         "pt": 0.019589,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -216,7 +241,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022619,
         "pt": 0.013052,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -224,7 +250,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022635,
         "pt": 0.012873,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -232,7 +259,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025228,
         "pt": 0.014741,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -240,7 +268,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.027776,
         "pt": 0.011733,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -248,7 +277,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.028154,
         "pt": 0.011487,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Linear": [
@@ -258,7 +288,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025708,
         "pt": 0.088799,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=4, K=64, N=32",
@@ -266,7 +297,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025249,
         "pt": 0.142709,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=4, K=64, N=32",
@@ -274,7 +306,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.027908,
         "pt": 0.143725,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=1, K=4096, N=4096",
@@ -282,7 +315,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.056449,
         "pt": 0.089664,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=1, K=4096, N=4096",
@@ -290,7 +324,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.026193,
         "pt": 0.349535,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=1, K=4096, N=4096",
@@ -298,7 +333,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.027529,
         "pt": 0.34877,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
@@ -306,7 +342,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.073665,
         "pt": 0.090359,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
@@ -314,7 +351,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.073199,
         "pt": 0.144602,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
@@ -322,7 +360,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.070734,
         "pt": 0.137466,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "MatMul": [
@@ -332,7 +371,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020581,
         "pt": 0.048252,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=4, K=64, N=32",
@@ -340,7 +380,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020429,
         "pt": 0.083963,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=4, K=64, N=32",
@@ -348,7 +389,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020579,
         "pt": 0.084223,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=2, K=128, N=256",
@@ -356,7 +398,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020582,
         "pt": 0.048543,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=2, K=128, N=256",
@@ -364,7 +407,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020816,
         "pt": 0.083821,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=2, K=128, N=256",
@@ -372,7 +416,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021628,
         "pt": 0.084331,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
@@ -380,7 +425,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021014,
         "pt": 0.051063,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
@@ -388,7 +434,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020892,
         "pt": 0.08676,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=8, K=128, N=64",
@@ -396,7 +443,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020875,
         "pt": 0.087777,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Mul": [
@@ -406,7 +454,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020653,
         "pt": 0.00855,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=5632",
@@ -414,7 +463,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020579,
         "pt": 0.008521,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=5632",
@@ -422,7 +472,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020414,
         "pt": 0.00854,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -430,7 +481,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020695,
         "pt": 0.008566,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -438,7 +490,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020905,
         "pt": 0.008736,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -446,7 +499,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020744,
         "pt": 0.008648,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -454,7 +508,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020643,
         "pt": 0.008617,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -462,7 +517,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020471,
         "pt": 0.008805,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -470,7 +526,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020515,
         "pt": 0.00853,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ]
   },
@@ -482,7 +539,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.094429,
         "pt": 1.045267,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=3, N=3",
@@ -490,7 +548,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.102903,
         "pt": 0.978345,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=3, N=3",
@@ -498,7 +557,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.099518,
         "pt": 0.790179,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=32, N=512",
@@ -506,7 +566,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.108272,
         "pt": 0.982462,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=32, N=512",
@@ -514,7 +575,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.10851,
         "pt": 0.98072,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=32, N=512",
@@ -522,7 +584,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.105074,
         "pt": 0.790314,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=32, N=512",
@@ -530,7 +593,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.109852,
         "pt": 1.075256,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=32, N=512",
@@ -538,7 +602,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.105422,
         "pt": 1.072285,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=32, N=512",
@@ -546,7 +611,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.101235,
         "pt": 0.876319,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -554,7 +620,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.153843,
         "pt": 0.980796,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -562,7 +629,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.158734,
         "pt": 0.979013,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -570,7 +638,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.134516,
         "pt": 0.786985,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -578,7 +647,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.265022,
         "pt": 0.98348,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -586,7 +656,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.263519,
         "pt": 0.980056,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -594,7 +665,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.224654,
         "pt": 0.786791,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -602,7 +674,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.279279,
         "pt": 1.087633,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -610,7 +683,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.277733,
         "pt": 1.09094,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -618,7 +692,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.231732,
         "pt": 0.883058,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -626,7 +701,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.236904,
         "pt": 0.993053,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -634,7 +710,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.236797,
         "pt": 0.991576,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -642,7 +719,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.169307,
         "pt": 0.792383,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       }
     ],
     "RMSNorm": [
@@ -652,7 +730,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.194202,
         "pt": 1.05337,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -660,7 +739,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.194576,
         "pt": 1.015319,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -668,7 +748,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.186848,
         "pt": 0.950878,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -676,7 +757,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.198418,
         "pt": 1.022772,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -684,7 +766,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.198685,
         "pt": 1.008092,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -692,7 +775,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.200894,
         "pt": 0.944005,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -700,7 +784,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.195431,
         "pt": 1.018403,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -708,7 +793,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.19537,
         "pt": 1.017246,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -716,7 +802,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.193088,
         "pt": 0.954126,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -724,7 +811,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.194541,
         "pt": 1.011864,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -732,7 +820,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.201191,
         "pt": 1.01803,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -740,7 +829,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.192439,
         "pt": 0.9573,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -748,7 +838,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.196974,
         "pt": 1.023106,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -756,7 +847,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.202419,
         "pt": 1.023811,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -764,7 +856,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.200134,
         "pt": 0.953282,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -772,7 +865,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.198379,
         "pt": 1.012315,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -780,7 +874,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.203767,
         "pt": 1.019173,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -788,7 +883,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.205844,
         "pt": 0.961053,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -796,7 +892,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.198177,
         "pt": 1.134726,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -804,7 +901,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.201133,
         "pt": 1.126289,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -812,7 +910,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.196603,
         "pt": 1.054488,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -820,7 +919,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.201989,
         "pt": 1.1301,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -828,7 +928,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.200315,
         "pt": 1.113056,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -836,7 +937,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.212954,
         "pt": 1.056347,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -844,7 +946,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.213964,
         "pt": 1.154997,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -852,7 +955,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.211114,
         "pt": 1.029214,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -860,7 +964,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.210607,
         "pt": 0.959183,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -868,7 +973,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.215586,
         "pt": 1.017423,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -876,7 +982,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.217096,
         "pt": 1.01523,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -884,7 +991,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.211961,
         "pt": 0.943123,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -892,7 +1000,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.211906,
         "pt": 1.117603,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -900,7 +1009,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.214481,
         "pt": 1.130273,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -908,7 +1018,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.22067,
         "pt": 1.061092,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -916,7 +1027,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.216525,
         "pt": 1.184753,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -924,7 +1036,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.212086,
         "pt": 1.123815,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -932,7 +1045,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.214153,
         "pt": 1.046613,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       }
     ],
     "TopK": [
@@ -942,7 +1056,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=6, N=8",
@@ -950,7 +1065,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=6, N=8",
@@ -958,7 +1074,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=8, N=4",
@@ -966,7 +1083,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=8, N=4",
@@ -974,7 +1092,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=8, N=4",
@@ -982,7 +1101,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=5, N=5",
@@ -990,7 +1110,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=5, N=5",
@@ -998,7 +1119,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=5, N=5",
@@ -1006,7 +1128,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=3, N=7",
@@ -1014,7 +1137,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=3, N=7",
@@ -1022,7 +1146,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=3, N=7",
@@ -1030,7 +1155,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=10, N=3",
@@ -1038,7 +1164,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=10, N=3",
@@ -1046,7 +1173,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=10, N=3",
@@ -1054,7 +1182,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=16",
@@ -1062,7 +1191,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=16",
@@ -1070,7 +1200,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=16",
@@ -1078,7 +1209,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateTopKDescriptor( context::getInfiniopHandle(values_output->device()), &desc, values_output->desc(), indices_output->desc(), input->desc(), k, dim, largest, sorted)` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/topk/topk_infiniop.cc:30.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       }
     ],
     "Add": [
@@ -1088,7 +1220,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.107916,
         "pt": 0.073867,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1096,7 +1229,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.112475,
         "pt": 0.073362,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1104,7 +1238,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.103615,
         "pt": 0.068311,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1112,7 +1247,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.121133,
         "pt": 0.198053,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1120,7 +1256,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.124782,
         "pt": 0.194088,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1128,7 +1265,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.113975,
         "pt": 0.196644,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1136,7 +1274,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.102594,
         "pt": 0.067558,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1144,7 +1283,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.10523,
         "pt": 0.066251,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1152,7 +1292,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.103428,
         "pt": 0.066199,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1160,7 +1301,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.122928,
         "pt": 0.196748,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1168,7 +1310,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.115665,
         "pt": 0.194487,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=13, N=4",
@@ -1176,7 +1319,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.114011,
         "pt": 0.195584,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1184,7 +1328,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.105502,
         "pt": 0.067015,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1192,7 +1337,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.107749,
         "pt": 0.06761,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1200,7 +1346,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.101249,
         "pt": 0.066859,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1208,7 +1355,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.133207,
         "pt": 0.198717,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1216,7 +1364,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.132268,
         "pt": 0.196243,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1224,7 +1373,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.130743,
         "pt": 0.197279,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1232,7 +1382,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.138316,
         "pt": 0.18128,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1240,7 +1391,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.133596,
         "pt": 0.178602,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -1248,7 +1400,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.135946,
         "pt": 0.179757,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1256,7 +1409,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.103942,
         "pt": 0.069112,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1264,7 +1418,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.105709,
         "pt": 0.070874,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1272,7 +1427,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.095456,
         "pt": 0.07154,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1280,7 +1436,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.130534,
         "pt": 0.203192,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1288,7 +1445,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.127029,
         "pt": 0.200655,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1296,7 +1454,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.129589,
         "pt": 0.202823,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       }
     ],
     "MatMul": [
@@ -1306,7 +1465,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.114612,
         "pt": 0.080441,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -1314,7 +1474,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.144409,
         "pt": 0.078137,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -1322,7 +1483,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.114104,
         "pt": 0.083652,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -1330,7 +1492,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.119618,
         "pt": 0.088419,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -1338,7 +1501,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.115179,
         "pt": 0.085378,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -1346,7 +1510,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.1171,
         "pt": 0.085042,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -1354,7 +1519,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.110301,
         "pt": 0.14275,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -1362,7 +1528,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.110761,
         "pt": 0.145421,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -1370,7 +1537,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.131711,
         "pt": 0.143833,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -1378,7 +1546,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.104144,
         "pt": 0.136173,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -1386,7 +1555,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.100773,
         "pt": 0.145287,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -1394,7 +1564,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.102083,
         "pt": 0.146328,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -1402,7 +1573,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.13372,
         "pt": 0.102344,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -1410,7 +1582,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.131087,
         "pt": 0.09766,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -1418,7 +1591,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.134051,
         "pt": 0.101302,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -1426,7 +1600,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.117345,
         "pt": 0.097629,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -1434,7 +1609,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.113424,
         "pt": 0.099967,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -1442,7 +1618,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.116632,
         "pt": 0.111626,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -1450,7 +1627,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.100875,
         "pt": 0.137883,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -1458,7 +1636,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.100769,
         "pt": 0.140401,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -1466,7 +1645,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.103727,
         "pt": 0.139695,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/05/06"
       }
     ],
     "SiLU": [
@@ -1476,7 +1656,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4",
@@ -1484,7 +1665,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=2, N=4",
@@ -1492,7 +1674,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=128, N=64",
@@ -1500,7 +1683,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=128, N=64",
@@ -1508,7 +1692,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=128, N=64",
@@ -1516,7 +1701,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -1524,7 +1710,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -1532,7 +1719,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -1540,7 +1728,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -1548,7 +1737,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -1556,7 +1746,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -1564,7 +1755,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=2048",
@@ -1572,7 +1764,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=2048",
@@ -1580,7 +1773,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=1, N=2048",
@@ -1588,7 +1782,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -1596,7 +1791,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -1604,7 +1800,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -1612,7 +1809,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1620,7 +1818,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1628,7 +1827,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "M=16, N=5632",
@@ -1636,7 +1836,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -1644,7 +1845,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -1652,7 +1854,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -1660,7 +1863,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/05/06"
       }
     ]
   },
@@ -1672,7 +1876,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009787,
         "pt": 0.129153,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -1680,7 +1885,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009956,
         "pt": 0.127809,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -1688,7 +1894,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010025,
         "pt": 0.103338,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -1696,7 +1903,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009882,
         "pt": 0.129674,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -1704,7 +1912,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010166,
         "pt": 0.129008,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -1712,7 +1921,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010146,
         "pt": 0.102473,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -1720,7 +1930,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010096,
         "pt": 0.132463,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -1728,7 +1939,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010067,
         "pt": 0.132972,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -1736,7 +1948,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.0101,
         "pt": 0.103579,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -1744,7 +1957,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010386,
         "pt": 0.130492,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -1752,7 +1966,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009926,
         "pt": 0.130201,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -1760,7 +1975,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010338,
         "pt": 0.103961,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -1768,7 +1984,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018776,
         "pt": 0.132994,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -1776,7 +1993,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.023624,
         "pt": 0.133352,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -1784,7 +2002,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019198,
         "pt": 0.105249,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -1792,7 +2011,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018776,
         "pt": 0.13603,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -1800,7 +2020,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.023753,
         "pt": 0.137159,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -1808,7 +2029,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019198,
         "pt": 0.106402,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -1816,7 +2038,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012845,
         "pt": 0.131947,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -1824,7 +2047,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015126,
         "pt": 0.130327,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -1832,7 +2056,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012797,
         "pt": 0.103811,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "RMSNorm": [
@@ -1842,7 +2067,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011271,
         "pt": 0.111328,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -1850,7 +2076,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011458,
         "pt": 0.110337,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -1858,7 +2085,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011395,
         "pt": 0.09899,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -1866,7 +2094,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011513,
         "pt": 0.110699,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -1874,7 +2103,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011443,
         "pt": 0.110204,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -1882,7 +2112,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011534,
         "pt": 0.10041,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -1890,7 +2121,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011416,
         "pt": 0.111249,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -1898,7 +2130,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011415,
         "pt": 0.11134,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -1906,7 +2139,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011388,
         "pt": 0.100242,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -1914,7 +2148,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011324,
         "pt": 0.114,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -1922,7 +2157,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011887,
         "pt": 0.114306,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -1930,7 +2166,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01266,
         "pt": 0.112938,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1938,7 +2175,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012602,
         "pt": 0.12759,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1946,7 +2184,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01181,
         "pt": 0.135993,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1954,7 +2193,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012592,
         "pt": 0.123379,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1962,7 +2202,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012703,
         "pt": 0.125937,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1970,7 +2211,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012671,
         "pt": 0.136462,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1978,7 +2220,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012664,
         "pt": 0.12494,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1986,7 +2229,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011879,
         "pt": 0.140525,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -1994,7 +2238,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012519,
         "pt": 0.129116,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -2002,7 +2247,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012685,
         "pt": 0.119069,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -2010,7 +2256,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012626,
         "pt": 0.129367,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -2018,7 +2265,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012661,
         "pt": 0.128851,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -2026,7 +2274,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012606,
         "pt": 0.118872,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2034,7 +2283,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012373,
         "pt": 0.138384,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2042,7 +2292,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012464,
         "pt": 0.137587,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2050,7 +2301,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012375,
         "pt": 0.113523,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2058,7 +2310,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012405,
         "pt": 0.136883,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2066,7 +2319,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012391,
         "pt": 0.13773,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2074,7 +2328,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01237,
         "pt": 0.116364,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2082,7 +2337,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012403,
         "pt": 0.140968,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2090,7 +2346,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012451,
         "pt": 0.142111,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2098,7 +2355,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01246,
         "pt": 0.118252,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2106,7 +2364,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012348,
         "pt": 0.140708,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2114,7 +2373,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012305,
         "pt": 0.140645,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -2122,7 +2382,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012406,
         "pt": 0.126882,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Embedding": [
@@ -2132,7 +2393,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009938,
         "pt": 0.015114,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -2140,7 +2402,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00965,
         "pt": 0.014426,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -2148,7 +2411,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009753,
         "pt": 0.014327,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -2156,7 +2420,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.138897,
         "pt": 0.014345,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -2164,7 +2429,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.139898,
         "pt": 0.014609,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -2172,7 +2438,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.054246,
         "pt": 0.014694,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -2180,7 +2447,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009833,
         "pt": 0.014471,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -2188,7 +2456,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009714,
         "pt": 0.014641,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -2196,7 +2465,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009692,
         "pt": 0.014611,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "TopK": [
@@ -2206,7 +2476,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.752856,
         "pt": 0.015139,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -2214,7 +2485,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.754373,
         "pt": 0.017277,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -2222,7 +2494,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.758689,
         "pt": 0.0143,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -2230,7 +2503,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.500202,
         "pt": 0.023292,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -2238,7 +2512,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.498938,
         "pt": 0.023969,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -2246,7 +2521,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.499198,
         "pt": 0.023629,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -2254,7 +2530,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.75521,
         "pt": 0.022224,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -2262,7 +2539,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.832933,
         "pt": 0.024798,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -2270,7 +2548,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.923767,
         "pt": 0.024589,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -2278,7 +2557,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.956161,
         "pt": 0.035582,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -2286,7 +2566,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.969089,
         "pt": 0.035545,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -2294,7 +2575,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.965043,
         "pt": 0.035829,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -2302,7 +2584,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.502966,
         "pt": 0.014571,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -2310,7 +2593,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.503783,
         "pt": 0.016071,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -2318,7 +2602,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.504451,
         "pt": 0.016271,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -2326,7 +2611,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.971573,
         "pt": 0.038934,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -2334,7 +2620,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.966229,
         "pt": 0.039889,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -2342,7 +2629,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.96785,
         "pt": 0.039818,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Add": [
@@ -2352,7 +2640,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041482,
         "pt": 0.009111,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2360,7 +2649,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041571,
         "pt": 0.008854,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2368,7 +2658,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041936,
         "pt": 0.008827,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2376,7 +2667,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041367,
         "pt": 0.009919,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2384,7 +2676,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041575,
         "pt": 0.009895,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2392,7 +2685,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.04157,
         "pt": 0.00984,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2400,7 +2694,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.04142,
         "pt": 0.009182,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2408,7 +2703,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041392,
         "pt": 0.009189,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2416,7 +2712,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.042087,
         "pt": 0.009092,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2424,7 +2721,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041375,
         "pt": 0.009983,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2432,7 +2730,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041503,
         "pt": 0.009956,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -2440,7 +2739,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041572,
         "pt": 0.009954,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2448,7 +2748,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041569,
         "pt": 0.009154,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2456,7 +2757,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041479,
         "pt": 0.009175,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2464,7 +2766,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041318,
         "pt": 0.009205,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2472,7 +2775,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041265,
         "pt": 0.009971,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2480,7 +2784,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041716,
         "pt": 0.009931,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2488,7 +2793,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041485,
         "pt": 0.00998,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2496,7 +2802,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041643,
         "pt": 0.009976,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2504,7 +2811,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.042646,
         "pt": 0.011307,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -2512,7 +2820,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041576,
         "pt": 0.011242,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2520,7 +2829,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.042938,
         "pt": 0.009793,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2528,7 +2838,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.042949,
         "pt": 0.00998,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2536,7 +2847,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041968,
         "pt": 0.010183,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2544,7 +2856,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.04198,
         "pt": 0.011427,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2552,7 +2865,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.042363,
         "pt": 0.011104,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2560,7 +2874,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.042101,
         "pt": 0.011665,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "MatMul": [
@@ -2570,7 +2885,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017647,
         "pt": 0.018309,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -2578,7 +2894,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017627,
         "pt": 0.01848,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -2586,7 +2903,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016959,
         "pt": 0.016546,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -2594,7 +2912,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.014391,
         "pt": 0.015255,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -2602,7 +2921,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.014221,
         "pt": 0.015169,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -2610,7 +2930,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013069,
         "pt": 0.013427,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -2618,7 +2939,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019134,
         "pt": 0.02903,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -2626,7 +2948,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.024418,
         "pt": 0.028864,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -2634,7 +2957,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.041652,
         "pt": 0.041604,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -2642,7 +2966,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017331,
         "pt": 0.028172,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -2650,7 +2975,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017387,
         "pt": 0.027995,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -2658,7 +2984,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017087,
         "pt": 0.026161,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -2666,7 +2993,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013768,
         "pt": 0.014654,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -2674,7 +3002,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013628,
         "pt": 0.014272,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -2682,7 +3011,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020477,
         "pt": 0.020313,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -2690,7 +3020,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013445,
         "pt": 0.014092,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -2698,7 +3029,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013259,
         "pt": 0.013864,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -2706,7 +3038,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.02771,
         "pt": 0.027872,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -2714,7 +3047,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017604,
         "pt": 0.028415,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -2722,7 +3056,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017764,
         "pt": 0.028245,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -2730,7 +3065,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01688,
         "pt": 0.025773,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "SiLU": [
@@ -2740,7 +3076,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -2748,7 +3085,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -2756,7 +3094,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -2764,7 +3103,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -2772,7 +3112,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -2780,7 +3121,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -2788,7 +3130,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -2796,7 +3139,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -2804,7 +3148,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -2812,7 +3157,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -2820,7 +3166,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -2828,7 +3175,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -2836,7 +3184,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -2844,7 +3193,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -2852,7 +3202,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -2860,7 +3211,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -2868,7 +3220,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -2876,7 +3229,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2884,7 +3238,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2892,7 +3247,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -2900,7 +3256,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -2908,7 +3265,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -2916,7 +3274,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -2924,7 +3283,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0,
         "pt": 0,
         "remarks": "`infiniopCreateSiluDescriptor( context::getInfiniopHandle(device), &desc, output->desc(), input->desc())` failed with error: Device Type Not Supported from calculate at src/infinicore/ops/silu/silu_infiniop.cc:28.",
-        "scoreEligible": false
+        "scoreEligible": false,
+        "date": "2026/04/29"
       }
     ]
   },
@@ -2936,7 +3296,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018356,
         "pt": 0.013768,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=5632",
@@ -2944,7 +3305,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019648,
         "pt": 0.015195,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=5632",
@@ -2952,7 +3314,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021223,
         "pt": 0.015999,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -2960,7 +3323,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022378,
         "pt": 0.017322,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -2968,7 +3332,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.023909,
         "pt": 0.017336,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -2976,7 +3341,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.023916,
         "pt": 0.017336,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -2984,7 +3350,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019963,
         "pt": 0.017281,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -2992,7 +3359,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019959,
         "pt": 0.017326,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=16, N=4096",
@@ -3000,7 +3368,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019854,
         "pt": 0.01733,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Causal_softmax": [
@@ -3010,7 +3379,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01495,
         "pt": 0.058623,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=32, seq=512",
@@ -3018,7 +3388,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016247,
         "pt": 0.088117,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=32, seq=512",
@@ -3026,7 +3397,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017703,
         "pt": 0.090513,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, heads=20, seq=512",
@@ -3034,7 +3406,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022238,
         "pt": 0.079136,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, heads=20, seq=512",
@@ -3042,7 +3415,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022633,
         "pt": 0.114115,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, heads=20, seq=512",
@@ -3050,7 +3424,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022641,
         "pt": 0.112362,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Gemm": [
@@ -3060,7 +3435,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.106689,
         "pt": 0.108511,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -3068,7 +3444,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.034229,
         "pt": 0.050382,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -3076,7 +3453,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.033671,
         "pt": 0.050376,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -3084,7 +3462,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.110243,
         "pt": 0.110435,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -3092,7 +3471,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.03837,
         "pt": 0.037306,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -3100,7 +3480,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.036873,
         "pt": 0.03703,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -3108,7 +3489,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017378,
         "pt": 0.01734,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -3116,7 +3498,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020597,
         "pt": 0.020612,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -3124,7 +3507,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020587,
         "pt": 0.020606,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Rms_norm": [
@@ -3134,7 +3518,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010282,
         "pt": 0.058665,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=2, seq=4, hidden=2048",
@@ -3142,7 +3527,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011049,
         "pt": 0.103154,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=2, seq=4, hidden=2048",
@@ -3150,7 +3536,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.0113,
         "pt": 0.104387,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=16, hidden=5632",
@@ -3158,7 +3545,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01386,
         "pt": 0.077777,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=16, hidden=5632",
@@ -3166,7 +3554,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011182,
         "pt": 0.120675,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=16, hidden=5632",
@@ -3174,7 +3563,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011151,
         "pt": 0.118685,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ],
     "Swiglu": [
@@ -3184,7 +3574,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018707,
         "pt": 0.05884,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=16, hidden=5632",
@@ -3192,7 +3583,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021242,
         "pt": 0.16574,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=16, hidden=5632",
@@ -3200,7 +3592,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.024096,
         "pt": 0.168865,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -3208,7 +3601,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022965,
         "pt": 0.070715,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -3216,7 +3610,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025448,
         "pt": 0.168191,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -3224,7 +3619,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.024097,
         "pt": 0.167276,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/30"
       }
     ]
   },
@@ -3236,7 +3632,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013635,
         "pt": 0.110871,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -3244,7 +3641,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01155,
         "pt": 0.111493,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -3252,7 +3650,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016652,
         "pt": 0.087707,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -3260,7 +3659,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.05365,
         "pt": 0.085022,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -3268,7 +3668,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.039246,
         "pt": 0.148124,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -3276,7 +3677,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.053587,
         "pt": 0.164711,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -3284,7 +3686,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022535,
         "pt": 0.160622,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -3292,7 +3695,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.028964,
         "pt": 0.10713,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -3300,7 +3704,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.02251,
         "pt": 0.096489,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -3308,7 +3713,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.035145,
         "pt": 0.13513,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -3316,7 +3722,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032604,
         "pt": 0.121022,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -3324,7 +3731,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.040895,
         "pt": 0.080091,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -3332,7 +3740,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.116487,
         "pt": 0.204376,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -3340,7 +3749,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.05753,
         "pt": 0.211073,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -3348,7 +3758,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.0867,
         "pt": 0.137035,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -3356,7 +3767,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.077953,
         "pt": 0.251325,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -3364,7 +3776,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.094521,
         "pt": 0.214623,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -3372,7 +3785,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.090993,
         "pt": 0.230679,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -3380,7 +3794,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.043283,
         "pt": 0.130034,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -3388,7 +3803,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.079785,
         "pt": 0.126761,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -3396,7 +3812,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032143,
         "pt": 0.121325,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "RMSNorm": [
@@ -3406,7 +3823,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016996,
         "pt": 0.113902,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -3414,7 +3832,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.028262,
         "pt": 0.098644,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -3422,7 +3841,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.02594,
         "pt": 0.087757,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -3430,7 +3850,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01925,
         "pt": 0.089169,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -3438,7 +3859,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.024112,
         "pt": 0.106743,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -3446,7 +3868,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015421,
         "pt": 0.113128,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -3454,7 +3877,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010957,
         "pt": 0.133982,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -3462,7 +3886,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011461,
         "pt": 0.11209,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -3470,7 +3895,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.014231,
         "pt": 0.1104,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -3478,7 +3904,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012487,
         "pt": 0.092292,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -3486,7 +3913,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025135,
         "pt": 0.101656,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -3494,7 +3922,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.014933,
         "pt": 0.077524,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3502,7 +3931,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.030123,
         "pt": 0.105386,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3510,7 +3940,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.027753,
         "pt": 0.125731,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3518,7 +3949,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011717,
         "pt": 0.075296,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3526,7 +3958,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.029602,
         "pt": 0.085077,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3534,7 +3967,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025103,
         "pt": 0.103111,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3542,7 +3976,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012006,
         "pt": 0.081179,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3550,7 +3985,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.028189,
         "pt": 0.088881,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3558,7 +3994,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021345,
         "pt": 0.115345,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3566,7 +4003,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022438,
         "pt": 0.076853,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3574,7 +4012,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.027529,
         "pt": 0.086333,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3582,7 +4021,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.029357,
         "pt": 0.116251,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -3590,7 +4030,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.03911,
         "pt": 0.09701,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3598,7 +4039,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011731,
         "pt": 0.166145,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3606,7 +4048,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.055241,
         "pt": 0.250735,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3614,7 +4057,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.052253,
         "pt": 0.129109,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3622,7 +4066,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025846,
         "pt": 0.195656,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3630,7 +4075,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011057,
         "pt": 0.150595,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3638,7 +4084,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01677,
         "pt": 0.146829,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3646,7 +4093,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.036359,
         "pt": 0.170067,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3654,7 +4102,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01528,
         "pt": 0.174609,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3662,7 +4111,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.038336,
         "pt": 0.133928,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3670,7 +4120,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032136,
         "pt": 0.13557,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3678,7 +4129,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.028555,
         "pt": 0.131683,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -3686,7 +4138,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.036448,
         "pt": 0.132855,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Embedding": [
@@ -3696,7 +4149,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.023533,
         "pt": 0.029413,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -3704,7 +4158,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010668,
         "pt": 0.024552,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -3712,7 +4167,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020556,
         "pt": 0.018767,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -3720,7 +4176,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.104279,
         "pt": 0.035665,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -3728,7 +4185,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.101971,
         "pt": 0.026004,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -3736,7 +4194,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.122889,
         "pt": 0.029138,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -3744,7 +4203,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008241,
         "pt": 0.024338,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -3752,7 +4212,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.030502,
         "pt": 0.012038,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -3760,7 +4221,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021877,
         "pt": 0.028943,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "TopK": [
@@ -3770,7 +4232,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.861134,
         "pt": 0.026136,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -3778,7 +4241,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.628399,
         "pt": 0.041775,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -3786,7 +4250,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.843801,
         "pt": 0.026716,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -3794,7 +4259,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.912624,
         "pt": 0.086622,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -3802,7 +4268,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.800785,
         "pt": 0.063622,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -3810,7 +4277,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.577265,
         "pt": 0.043003,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -3818,7 +4286,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.623598,
         "pt": 0.075198,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -3826,7 +4295,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.534146,
         "pt": 0.075602,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -3834,7 +4304,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.792694,
         "pt": 0.077191,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -3842,7 +4313,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.869623,
         "pt": 0.065922,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -3850,7 +4322,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.61598,
         "pt": 0.078159,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -3858,7 +4331,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.61206,
         "pt": 0.06452,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -3866,7 +4340,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.951078,
         "pt": 0.036654,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -3874,7 +4349,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.963748,
         "pt": 0.032727,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -3882,7 +4358,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.233065,
         "pt": 0.034673,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -3890,7 +4367,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.551683,
         "pt": 0.068988,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -3898,7 +4376,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.521023,
         "pt": 0.077074,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -3906,7 +4385,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 2.505571,
         "pt": 0.08076,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Add": [
@@ -3916,7 +4396,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.090582,
         "pt": 0.011058,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3924,7 +4405,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.07378,
         "pt": 0.011875,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3932,7 +4414,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.09095,
         "pt": 0.013693,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3940,7 +4423,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.074648,
         "pt": 0.008409,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3948,7 +4432,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.084558,
         "pt": 0.020535,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3956,7 +4441,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.072711,
         "pt": 0.018874,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3964,7 +4450,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.094695,
         "pt": 0.017127,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3972,7 +4459,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.104813,
         "pt": 0.007081,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3980,7 +4468,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.106044,
         "pt": 0.013038,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3988,7 +4477,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.082896,
         "pt": 0.012263,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -3996,7 +4486,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.143787,
         "pt": 0.010816,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -4004,7 +4495,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.095978,
         "pt": 0.012027,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4012,7 +4504,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.083723,
         "pt": 0.016617,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4020,7 +4513,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.144439,
         "pt": 0.01166,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4028,7 +4522,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.076188,
         "pt": 0.010515,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4036,7 +4531,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.112394,
         "pt": 0.02782,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4044,7 +4540,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.081711,
         "pt": 0.022087,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4052,7 +4549,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.14024,
         "pt": 0.017798,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4060,7 +4558,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.081727,
         "pt": 0.015465,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4068,7 +4567,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.090931,
         "pt": 0.019829,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -4076,7 +4576,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.100524,
         "pt": 0.013294,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4084,7 +4585,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.077266,
         "pt": 0.012078,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4092,7 +4594,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.1476,
         "pt": 0.013557,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4100,7 +4603,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.127949,
         "pt": 0.007134,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4108,7 +4612,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.09635,
         "pt": 0.032625,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4116,7 +4621,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.139831,
         "pt": 0.050474,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4124,7 +4630,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.142207,
         "pt": 0.049469,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "MatMul": [
@@ -4134,7 +4641,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.024642,
         "pt": 0.019783,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -4142,7 +4650,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020176,
         "pt": 0.020349,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -4150,7 +4659,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021615,
         "pt": 0.028188,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -4158,7 +4668,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01283,
         "pt": 0.016909,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -4166,7 +4677,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013011,
         "pt": 0.028065,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -4174,7 +4686,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.0177,
         "pt": 0.011163,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -4182,7 +4695,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.083885,
         "pt": 0.087879,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -4190,7 +4704,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.07928,
         "pt": 0.062126,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -4198,7 +4713,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.077383,
         "pt": 0.094954,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -4206,7 +4722,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019872,
         "pt": 0.028064,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -4214,7 +4731,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018415,
         "pt": 0.035138,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -4222,7 +4740,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013184,
         "pt": 0.019668,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -4230,7 +4749,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.079638,
         "pt": 0.045003,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -4238,7 +4758,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.083457,
         "pt": 0.067896,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -4246,7 +4767,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.103102,
         "pt": 0.079031,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -4254,7 +4776,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.115237,
         "pt": 0.160425,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -4262,7 +4785,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.116744,
         "pt": 0.133648,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -4270,7 +4794,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.09235,
         "pt": 0.083693,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -4278,7 +4803,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.024869,
         "pt": 0.028519,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -4286,7 +4812,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.030141,
         "pt": 0.020819,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -4294,7 +4821,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025517,
         "pt": 0.022534,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "SiLU": [
@@ -4304,7 +4832,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.135339,
         "pt": 0.015925,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -4312,7 +4841,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.074622,
         "pt": 0.021634,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -4320,7 +4850,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.115891,
         "pt": 0.028268,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -4328,7 +4859,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.093413,
         "pt": 0.019769,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -4336,7 +4868,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.080463,
         "pt": 0.031497,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -4344,7 +4877,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.096212,
         "pt": 0.037899,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -4352,7 +4886,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.068982,
         "pt": 0.036639,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -4360,7 +4895,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.086803,
         "pt": 0.020481,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -4368,7 +4904,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.063301,
         "pt": 0.029843,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -4376,7 +4913,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.090702,
         "pt": 0.014832,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -4384,7 +4922,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.089,
         "pt": 0.017586,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -4392,7 +4931,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.063291,
         "pt": 0.024054,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -4400,7 +4940,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.103683,
         "pt": 0.014591,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -4408,7 +4949,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.080669,
         "pt": 0.023987,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -4416,7 +4958,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.077627,
         "pt": 0.026801,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -4424,7 +4967,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.083478,
         "pt": 0.023449,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -4432,7 +4976,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.068692,
         "pt": 0.02535,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -4440,7 +4985,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.083297,
         "pt": 0.025245,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4448,7 +4994,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.092367,
         "pt": 0.035966,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4456,7 +5003,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.144934,
         "pt": 0.030738,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -4464,7 +5012,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.12544,
         "pt": 0.043191,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -4472,7 +5021,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.128792,
         "pt": 0.024609,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -4480,7 +5030,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.110109,
         "pt": 0.031422,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -4488,7 +5039,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.117647,
         "pt": 0.019975,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ]
   },
@@ -4500,7 +5052,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017228,
         "pt": 0.219861,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -4508,7 +5061,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015092,
         "pt": 0.209454,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -4516,7 +5070,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01519,
         "pt": 0.167179,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -4524,7 +5079,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015205,
         "pt": 0.22162,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -4532,7 +5088,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015456,
         "pt": 0.217761,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -4540,7 +5097,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015671,
         "pt": 0.163798,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -4548,7 +5106,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015377,
         "pt": 0.238748,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -4556,7 +5115,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015393,
         "pt": 0.239843,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -4564,7 +5124,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01507,
         "pt": 0.167277,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -4572,7 +5133,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015997,
         "pt": 0.215992,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -4580,7 +5142,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015931,
         "pt": 0.216364,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -4588,7 +5151,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016869,
         "pt": 0.171688,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -4596,7 +5160,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.048507,
         "pt": 0.213543,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -4604,7 +5169,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.049158,
         "pt": 0.208482,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -4612,7 +5178,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.050372,
         "pt": 0.131486,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -4620,7 +5187,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.048696,
         "pt": 0.193585,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -4628,7 +5196,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.048907,
         "pt": 0.20369,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -4636,7 +5205,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.050393,
         "pt": 0.134409,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -4644,7 +5214,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.033525,
         "pt": 0.169996,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -4652,7 +5223,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.033693,
         "pt": 0.170425,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -4660,7 +5232,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032915,
         "pt": 0.143978,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "RMSNorm": [
@@ -4670,7 +5243,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017637,
         "pt": 0.225277,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -4678,7 +5252,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018175,
         "pt": 0.228036,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -4686,7 +5261,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018076,
         "pt": 0.205846,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -4694,7 +5270,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017378,
         "pt": 0.224018,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -4702,7 +5279,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018035,
         "pt": 0.223188,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -4710,7 +5288,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017973,
         "pt": 0.200604,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -4718,7 +5297,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018034,
         "pt": 0.208318,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -4726,7 +5306,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018115,
         "pt": 0.209767,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -4734,7 +5315,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019044,
         "pt": 0.189358,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -4742,7 +5324,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017793,
         "pt": 0.203682,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -4750,7 +5333,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018069,
         "pt": 0.198326,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -4758,7 +5342,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.019678,
         "pt": 0.190303,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4766,7 +5351,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018337,
         "pt": 0.210373,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4774,7 +5360,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018044,
         "pt": 0.204073,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4782,7 +5369,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017943,
         "pt": 0.182264,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4790,7 +5378,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017962,
         "pt": 0.210684,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4798,7 +5387,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018107,
         "pt": 0.199334,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4806,7 +5396,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01737,
         "pt": 0.190342,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4814,7 +5405,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018119,
         "pt": 0.236141,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4822,7 +5414,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017992,
         "pt": 0.235205,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4830,7 +5423,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017929,
         "pt": 0.216622,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4838,7 +5432,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01812,
         "pt": 0.235991,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4846,7 +5441,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017636,
         "pt": 0.234407,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -4854,7 +5450,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.018076,
         "pt": 0.216596,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4862,7 +5459,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017379,
         "pt": 0.213134,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4870,7 +5468,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017111,
         "pt": 0.213004,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4878,7 +5477,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017285,
         "pt": 0.192931,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4886,7 +5486,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017654,
         "pt": 0.213408,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4894,7 +5495,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017781,
         "pt": 0.212899,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4902,7 +5504,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017918,
         "pt": 0.192917,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4910,7 +5513,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015368,
         "pt": 0.239487,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4918,7 +5522,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015486,
         "pt": 0.239988,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4926,7 +5531,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015685,
         "pt": 0.220399,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4934,7 +5540,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015607,
         "pt": 0.241268,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4942,7 +5549,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.015536,
         "pt": 0.239942,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -4950,7 +5558,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011016,
         "pt": 0.220343,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Embedding": [
@@ -4960,7 +5569,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016681,
         "pt": 0.018365,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -4968,7 +5578,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016991,
         "pt": 0.017793,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -4976,7 +5587,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016143,
         "pt": 0.017794,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -4984,7 +5596,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.142939,
         "pt": 0.020498,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -4992,7 +5605,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.142868,
         "pt": 0.017291,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -5000,7 +5614,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075153,
         "pt": 0.018163,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -5008,7 +5623,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016105,
         "pt": 0.017392,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -5016,7 +5632,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.016626,
         "pt": 0.018154,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -5024,7 +5641,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.017951,
         "pt": 0.017484,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "TopK": [
@@ -5034,7 +5652,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.375818,
         "pt": 0.024335,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -5042,7 +5661,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.303775,
         "pt": 0.024645,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -5050,7 +5670,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.370844,
         "pt": 0.02433,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -5058,7 +5679,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.058127,
         "pt": 0.046262,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -5066,7 +5688,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.065943,
         "pt": 0.046093,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -5074,7 +5697,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.065595,
         "pt": 0.04708,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -5082,7 +5706,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.348646,
         "pt": 0.022548,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -5090,7 +5715,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.30082,
         "pt": 0.02261,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -5098,7 +5724,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.288613,
         "pt": 0.022158,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -5106,7 +5733,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.297174,
         "pt": 0.04453,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -5114,7 +5742,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.306557,
         "pt": 0.044575,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -5122,7 +5751,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.280816,
         "pt": 0.043555,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -5130,7 +5760,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.075252,
         "pt": 0.022638,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -5138,7 +5769,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.08652,
         "pt": 0.023542,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -5146,7 +5778,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.058583,
         "pt": 0.022423,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -5154,7 +5787,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.299758,
         "pt": 0.044755,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -5162,7 +5796,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.289314,
         "pt": 0.043364,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -5170,7 +5805,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 1.29073,
         "pt": 0.043699,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Add": [
@@ -5180,7 +5816,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.111088,
         "pt": 0.01462,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5188,7 +5825,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.111325,
         "pt": 0.016996,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5196,7 +5834,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.109417,
         "pt": 0.016618,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5204,7 +5843,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.112784,
         "pt": 0.040525,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5212,7 +5852,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.11275,
         "pt": 0.04246,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5220,7 +5861,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.113186,
         "pt": 0.042262,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5228,7 +5870,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.10551,
         "pt": 0.015171,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5236,7 +5879,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.107646,
         "pt": 0.014909,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5244,7 +5888,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.108669,
         "pt": 0.014934,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5252,7 +5897,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.111347,
         "pt": 0.040156,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5260,7 +5906,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.111791,
         "pt": 0.037089,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -5268,7 +5915,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.115375,
         "pt": 0.036897,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5276,7 +5924,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.111439,
         "pt": 0.015545,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5284,7 +5933,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.110396,
         "pt": 0.014793,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5292,7 +5942,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.109146,
         "pt": 0.015489,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5300,7 +5951,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.119996,
         "pt": 0.037826,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5308,7 +5960,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.115443,
         "pt": 0.038811,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5316,7 +5969,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.115671,
         "pt": 0.040904,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5324,7 +5978,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.119261,
         "pt": 0.016896,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5332,7 +5987,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.118248,
         "pt": 0.01723,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -5340,7 +5996,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.120715,
         "pt": 0.014483,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5348,7 +6005,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.113191,
         "pt": 0.015329,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5356,7 +6014,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.107413,
         "pt": 0.010696,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5364,7 +6023,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.107926,
         "pt": 0.011041,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5372,7 +6032,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.117225,
         "pt": 0.035338,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5380,7 +6041,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.116098,
         "pt": 0.027592,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5388,7 +6050,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.121227,
         "pt": 0.024027,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "MatMul": [
@@ -5398,7 +6061,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.02107,
         "pt": 0.021651,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -5406,7 +6070,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021047,
         "pt": 0.019704,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -5414,7 +6079,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.025477,
         "pt": 0.01905,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -5422,7 +6088,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.035695,
         "pt": 0.03225,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -5430,7 +6097,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032085,
         "pt": 0.028286,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -5438,7 +6106,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.031207,
         "pt": 0.028055,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -5446,7 +6115,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.12532,
         "pt": 0.124846,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -5454,7 +6124,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.12747,
         "pt": 0.127111,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -5462,7 +6133,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.117789,
         "pt": 0.117516,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -5470,7 +6142,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032355,
         "pt": 0.037081,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -5478,7 +6151,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032162,
         "pt": 0.037491,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -5486,7 +6160,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.031787,
         "pt": 0.027638,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -5494,7 +6169,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.022965,
         "pt": 0.039889,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -5502,7 +6178,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.023147,
         "pt": 0.040546,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -5510,7 +6187,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.021244,
         "pt": 0.039297,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -5518,7 +6196,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.033927,
         "pt": 0.031868,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -5526,7 +6205,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.033232,
         "pt": 0.032401,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -5534,7 +6214,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.029396,
         "pt": 0.198981,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -5542,7 +6223,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032265,
         "pt": 0.037094,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -5550,7 +6232,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032255,
         "pt": 0.037111,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -5558,7 +6241,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.032307,
         "pt": 0.026901,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "SiLU": [
@@ -5568,7 +6252,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.078161,
         "pt": 0.024105,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -5576,7 +6261,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.078775,
         "pt": 0.025042,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -5584,7 +6270,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.077434,
         "pt": 0.024207,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -5592,7 +6279,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.078958,
         "pt": 0.024178,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -5600,7 +6288,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.076872,
         "pt": 0.024562,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -5608,7 +6297,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.07569,
         "pt": 0.024201,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -5616,7 +6306,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075893,
         "pt": 0.024043,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -5624,7 +6315,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075367,
         "pt": 0.023515,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -5632,7 +6324,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.074924,
         "pt": 0.024378,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -5640,7 +6333,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075529,
         "pt": 0.024238,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -5648,7 +6342,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.07616,
         "pt": 0.024325,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -5656,7 +6351,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075783,
         "pt": 0.023982,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -5664,7 +6360,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075838,
         "pt": 0.024408,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -5672,7 +6369,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075351,
         "pt": 0.024348,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -5680,7 +6378,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.076345,
         "pt": 0.0244,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -5688,7 +6387,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075938,
         "pt": 0.024193,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -5696,7 +6396,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075659,
         "pt": 0.024477,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -5704,7 +6405,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075764,
         "pt": 0.024426,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5712,7 +6414,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.076272,
         "pt": 0.021713,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5720,7 +6423,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.082506,
         "pt": 0.027981,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -5728,7 +6432,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.076894,
         "pt": 0.023089,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -5736,7 +6441,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075871,
         "pt": 0.024066,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -5744,7 +6450,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.07583,
         "pt": 0.026273,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -5752,7 +6459,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.075938,
         "pt": 0.025661,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ]
   },
@@ -5764,7 +6472,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006581,
         "pt": 0.065546,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -5772,7 +6481,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006427,
         "pt": 0.065766,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=3",
@@ -5780,7 +6490,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00642,
         "pt": 0.052705,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -5788,7 +6499,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006341,
         "pt": 0.066423,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -5796,7 +6508,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006445,
         "pt": 0.065648,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -5804,7 +6517,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006353,
         "pt": 0.053571,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -5812,7 +6526,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006411,
         "pt": 0.066575,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -5820,7 +6535,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006438,
         "pt": 0.066439,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=32, N=512",
@@ -5828,7 +6544,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006366,
         "pt": 0.05236,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -5836,7 +6553,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006439,
         "pt": 0.066963,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -5844,7 +6562,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006422,
         "pt": 0.068901,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=5, hidden=5",
@@ -5852,7 +6571,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006403,
         "pt": 0.051177,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -5860,7 +6580,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013257,
         "pt": 0.067941,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -5868,7 +6589,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.014781,
         "pt": 0.065739,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -5876,7 +6598,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012442,
         "pt": 0.051679,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -5884,7 +6607,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013264,
         "pt": 0.06753,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -5892,7 +6616,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.014781,
         "pt": 0.069248,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=32, seq=20, hidden=512",
@@ -5900,7 +6625,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01244,
         "pt": 0.053494,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -5908,7 +6634,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008815,
         "pt": 0.066391,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -5916,7 +6643,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009098,
         "pt": 0.065727,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=28, seq=15, hidden=15",
@@ -5924,7 +6652,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008009,
         "pt": 0.052025,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "RMSNorm": [
@@ -5934,7 +6663,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007772,
         "pt": 0.066294,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -5942,7 +6672,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007711,
         "pt": 0.066075,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -5950,7 +6681,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007571,
         "pt": 0.059403,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -5958,7 +6690,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007525,
         "pt": 0.06549,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -5966,7 +6699,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007536,
         "pt": 0.065962,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=4, size=4",
@@ -5974,7 +6708,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007473,
         "pt": 0.058896,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -5982,7 +6717,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007565,
         "pt": 0.066551,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -5990,7 +6726,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007669,
         "pt": 0.066727,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -5998,7 +6735,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00742,
         "pt": 0.059555,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -6006,7 +6744,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008089,
         "pt": 0.066936,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -6014,7 +6753,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007731,
         "pt": 0.067592,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, size=4",
@@ -6022,7 +6762,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007506,
         "pt": 0.060345,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6030,7 +6771,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007659,
         "pt": 0.066879,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6038,7 +6780,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00748,
         "pt": 0.06695,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6046,7 +6789,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007592,
         "pt": 0.059371,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6054,7 +6798,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007568,
         "pt": 0.066634,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6062,7 +6807,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007536,
         "pt": 0.066984,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6070,7 +6816,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008507,
         "pt": 0.060159,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6078,7 +6825,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007501,
         "pt": 0.06728,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6086,7 +6834,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00755,
         "pt": 0.067362,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6094,7 +6843,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007601,
         "pt": 0.060296,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6102,7 +6852,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007541,
         "pt": 0.067262,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6110,7 +6861,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007407,
         "pt": 0.067176,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=2, hidden=4, size=4",
@@ -6118,7 +6870,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007436,
         "pt": 0.060715,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6126,7 +6879,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007583,
         "pt": 0.068343,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6134,7 +6888,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007477,
         "pt": 0.066544,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6142,7 +6897,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007474,
         "pt": 0.060109,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6150,7 +6906,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007698,
         "pt": 0.067291,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6158,7 +6915,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007478,
         "pt": 0.066561,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6166,7 +6924,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007642,
         "pt": 0.059776,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6174,7 +6933,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007481,
         "pt": 0.068058,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6182,7 +6942,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011073,
         "pt": 0.067961,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6190,7 +6951,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007521,
         "pt": 0.060984,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6198,7 +6960,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007535,
         "pt": 0.067811,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6206,7 +6969,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007534,
         "pt": 0.069071,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=2048, size=2048",
@@ -6214,7 +6978,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.007573,
         "pt": 0.060545,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Embedding": [
@@ -6224,7 +6989,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006692,
         "pt": 0.010756,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -6232,7 +6998,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006589,
         "pt": 0.010815,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=32000, N=4",
@@ -6240,7 +7007,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006602,
         "pt": 0.010664,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -6248,7 +7016,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.060203,
         "pt": 0.010698,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -6256,7 +7025,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.058017,
         "pt": 0.010739,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=10, M=32000, N=2048",
@@ -6264,7 +7034,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.044,
         "pt": 0.010351,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -6272,7 +7043,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.006483,
         "pt": 0.010639,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -6280,7 +7052,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00648,
         "pt": 0.010505,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=5, M=10, N=10",
@@ -6288,7 +7061,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00653,
         "pt": 0.010638,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "TopK": [
@@ -6298,7 +7072,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.435852,
         "pt": 0.009919,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -6306,7 +7081,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.396934,
         "pt": 0.009802,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=8",
@@ -6314,7 +7090,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.398159,
         "pt": 0.009831,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -6322,7 +7099,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.313976,
         "pt": 0.018095,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -6330,7 +7108,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.313508,
         "pt": 0.017035,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=8, N=4",
@@ -6338,7 +7117,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.314095,
         "pt": 0.017271,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -6346,7 +7126,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.40708,
         "pt": 0.016082,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -6354,7 +7135,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.401918,
         "pt": 0.015949,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=5, N=5",
@@ -6362,7 +7144,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.401479,
         "pt": 0.016336,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -6370,7 +7153,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.400816,
         "pt": 0.023797,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -6378,7 +7162,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.399128,
         "pt": 0.023646,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=3, N=7",
@@ -6386,7 +7171,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.400229,
         "pt": 0.023884,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -6394,7 +7180,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.312614,
         "pt": 0.00966,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -6402,7 +7189,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.313277,
         "pt": 0.009818,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=10, N=3",
@@ -6410,7 +7198,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.313715,
         "pt": 0.009832,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -6418,7 +7207,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.392805,
         "pt": 0.023587,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -6426,7 +7216,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.390576,
         "pt": 0.023604,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=16",
@@ -6434,7 +7225,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.391126,
         "pt": 0.023953,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "Add": [
@@ -6444,7 +7236,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010488,
         "pt": 0.006039,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6452,7 +7245,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010353,
         "pt": 0.005824,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6460,7 +7254,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010126,
         "pt": 0.00581,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6468,7 +7263,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010413,
         "pt": 0.006287,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6476,7 +7272,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012363,
         "pt": 0.007117,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6484,7 +7281,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010035,
         "pt": 0.006731,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6492,7 +7290,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010386,
         "pt": 0.006375,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6500,7 +7299,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009984,
         "pt": 0.00553,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6508,7 +7308,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009961,
         "pt": 0.00564,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6516,7 +7317,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010268,
         "pt": 0.006258,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6524,7 +7326,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010044,
         "pt": 0.006174,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=13, N=4",
@@ -6532,7 +7335,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010184,
         "pt": 0.006073,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6540,7 +7344,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010142,
         "pt": 0.00573,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6548,7 +7353,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010101,
         "pt": 0.005613,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6556,7 +7362,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010053,
         "pt": 0.005602,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6564,7 +7371,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010286,
         "pt": 0.006293,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6572,7 +7380,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010918,
         "pt": 0.006186,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6580,7 +7389,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010087,
         "pt": 0.00616,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6588,7 +7398,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010052,
         "pt": 0.006292,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6596,7 +7407,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010036,
         "pt": 0.006221,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=13, seq=4, hidden=4",
@@ -6604,7 +7416,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010306,
         "pt": 0.006148,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6612,7 +7425,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010129,
         "pt": 0.00566,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6620,7 +7434,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010076,
         "pt": 0.005555,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6628,7 +7443,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010152,
         "pt": 0.005737,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6636,7 +7452,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010126,
         "pt": 0.006586,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6644,7 +7461,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010031,
         "pt": 0.006303,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6652,7 +7470,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010184,
         "pt": 0.006231,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "MatMul": [
@@ -6662,7 +7481,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009274,
         "pt": 0.009507,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -6670,7 +7490,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00852,
         "pt": 0.008788,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4, K=3",
@@ -6678,7 +7499,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009414,
         "pt": 0.008625,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -6686,7 +7508,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009034,
         "pt": 0.009463,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -6694,7 +7517,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008769,
         "pt": 0.00954,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64, K=256",
@@ -6702,7 +7526,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012313,
         "pt": 0.011335,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -6710,7 +7535,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012341,
         "pt": 0.01369,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -6718,7 +7544,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012334,
         "pt": 0.013719,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, M=4, N=2048, K=2048",
@@ -6726,7 +7553,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.053796,
         "pt": 0.05379,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -6734,7 +7562,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008951,
         "pt": 0.013832,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -6742,7 +7571,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008917,
         "pt": 0.013896,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, M=48, N=6, K=64",
@@ -6750,7 +7580,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009149,
         "pt": 0.013595,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -6758,7 +7589,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011734,
         "pt": 0.011365,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -6766,7 +7598,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011772,
         "pt": 0.011466,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048, K=2048",
@@ -6774,7 +7607,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.013413,
         "pt": 0.013417,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -6782,7 +7616,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012549,
         "pt": 0.013626,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -6790,7 +7625,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.012076,
         "pt": 0.012249,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=6, N=2560, K=2048",
@@ -6798,7 +7634,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.020502,
         "pt": 0.029066,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -6806,7 +7643,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008955,
         "pt": 0.013909,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -6814,7 +7652,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008818,
         "pt": 0.013816,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, M=16, N=32, K=16",
@@ -6822,7 +7661,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.008363,
         "pt": 0.013188,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ],
     "SiLU": [
@@ -6832,7 +7672,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010881,
         "pt": 0.011481,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -6840,7 +7681,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009398,
         "pt": 0.011645,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=2, N=4",
@@ -6848,7 +7690,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009562,
         "pt": 0.011288,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -6856,7 +7699,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.01044,
         "pt": 0.012252,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -6864,7 +7708,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.010436,
         "pt": 0.012047,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=128, N=64",
@@ -6872,7 +7717,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00949,
         "pt": 0.011416,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -6880,7 +7726,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009481,
         "pt": 0.011653,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -6888,7 +7735,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.011238,
         "pt": 0.011662,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=2, seq=4, hidden=8",
@@ -6896,7 +7744,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009473,
         "pt": 0.011632,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -6904,7 +7753,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009418,
         "pt": 0.011602,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -6912,7 +7762,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009446,
         "pt": 0.011493,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=48, hidden=6",
@@ -6920,7 +7771,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009469,
         "pt": 0.011437,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -6928,7 +7780,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009468,
         "pt": 0.011714,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -6936,7 +7789,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009489,
         "pt": 0.011796,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=1, N=2048",
@@ -6944,7 +7798,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009537,
         "pt": 0.011561,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -6952,7 +7807,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009508,
         "pt": 0.011426,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -6960,7 +7816,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.00938,
         "pt": 0.011274,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=8, seq=16, hidden=32",
@@ -6968,7 +7825,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009418,
         "pt": 0.011553,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6976,7 +7834,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009443,
         "pt": 0.011568,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6984,7 +7843,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009458,
         "pt": 0.011558,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "M=16, N=5632",
@@ -6992,7 +7852,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009919,
         "pt": 0.011506,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -7000,7 +7861,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009438,
         "pt": 0.011578,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -7008,7 +7870,8 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009418,
         "pt": 0.011628,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       },
       {
         "shape": "bs=4, seq=4, hidden=5632",
@@ -7016,11 +7879,12 @@ export const OP_TABLE_FROM_FILES = {
         "ic": 0.009442,
         "pt": 0.011406,
         "remarks": "",
-        "scoreEligible": true
+        "scoreEligible": true,
+        "date": "2026/04/29"
       }
     ]
   }
-} as Record<string, Record<string, { shape: string; dtype: string; ic: number; pt: number; remarks: string; scoreEligible: boolean }[]>>
+} as Record<string, Record<string, { shape: string; dtype: string; ic: number; pt: number; remarks: string; scoreEligible: boolean; date?: string }[]>>
 
 export const OP_CARD_FROM_FILES = {
   "ascend": {
@@ -7131,7 +7995,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 2472,
         "vsNvidia": 426,
         "nvidiaBaselineTps": 580,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:32:1024",
@@ -7145,7 +8010,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 2488,
         "vsNvidia": 448,
         "nvidiaBaselineTps": 555,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:32:4096",
@@ -7159,7 +8025,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 2497,
         "vsNvidia": 455,
         "nvidiaBaselineTps": 549,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:256:256",
@@ -7173,7 +8040,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5350,
         "vsNvidia": 140,
         "nvidiaBaselineTps": 3831,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:256:1024",
@@ -7187,7 +8055,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5387,
         "vsNvidia": 130,
         "nvidiaBaselineTps": 4129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:256:4096",
@@ -7201,7 +8070,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5380,
         "vsNvidia": 131,
         "nvidiaBaselineTps": 4099,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:4096:256",
@@ -7215,7 +8085,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4720,
         "vsNvidia": 65,
         "nvidiaBaselineTps": 7295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:4096:1024",
@@ -7229,7 +8100,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4738,
         "vsNvidia": 65,
         "nvidiaBaselineTps": 7308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:4096:4096",
@@ -7243,7 +8115,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4739,
         "vsNvidia": 65,
         "nvidiaBaselineTps": 7343,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:32:256",
@@ -7257,7 +8130,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4402,
         "vsNvidia": 86,
         "nvidiaBaselineTps": 5090,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:32:1024",
@@ -7271,7 +8145,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4409,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 5205,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:32:4096",
@@ -7285,7 +8160,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4414,
         "vsNvidia": 83,
         "nvidiaBaselineTps": 5303,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:256:256",
@@ -7299,7 +8175,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5968,
         "vsNvidia": 51,
         "nvidiaBaselineTps": 11748,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:256:1024",
@@ -7313,7 +8190,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5965,
         "vsNvidia": 51,
         "nvidiaBaselineTps": 11792,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:256:4096",
@@ -7327,7 +8205,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5968,
         "vsNvidia": 50,
         "nvidiaBaselineTps": 11906,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:4096:256",
@@ -7341,7 +8220,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4756,
         "vsNvidia": 37,
         "nvidiaBaselineTps": 12821,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:4096:1024",
@@ -7355,7 +8235,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4758,
         "vsNvidia": 37,
         "nvidiaBaselineTps": 12860,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:4096:4096",
@@ -7369,7 +8250,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 4777,
         "vsNvidia": 37,
         "nvidiaBaselineTps": 12891,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:32:256",
@@ -7383,7 +8265,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5672,
         "vsNvidia": 111,
         "nvidiaBaselineTps": 5120,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:32:1024",
@@ -7397,7 +8280,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5672,
         "vsNvidia": 110,
         "nvidiaBaselineTps": 5136,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:32:4096",
@@ -7411,7 +8295,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 5674,
         "vsNvidia": 111,
         "nvidiaBaselineTps": 5129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:256:256",
@@ -7425,7 +8310,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6131,
         "vsNvidia": 81,
         "nvidiaBaselineTps": 7584,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:256:1024",
@@ -7439,7 +8325,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6130,
         "vsNvidia": 81,
         "nvidiaBaselineTps": 7562,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:256:4096",
@@ -7453,7 +8340,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6139,
         "vsNvidia": 81,
         "nvidiaBaselineTps": 7533,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:32:256",
@@ -7467,7 +8355,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6234,
         "vsNvidia": 77,
         "nvidiaBaselineTps": 8113,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:32:1024",
@@ -7481,7 +8370,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6221,
         "vsNvidia": 76,
         "nvidiaBaselineTps": 8141,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:32:4096",
@@ -7495,7 +8385,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6237,
         "vsNvidia": 77,
         "nvidiaBaselineTps": 8151,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:256:256",
@@ -7509,7 +8400,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6220,
         "vsNvidia": 49,
         "nvidiaBaselineTps": 12804,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:256:1024",
@@ -7523,7 +8415,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6225,
         "vsNvidia": 48,
         "nvidiaBaselineTps": 12838,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:256:4096",
@@ -7537,7 +8430,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 6224,
         "vsNvidia": 48,
         "nvidiaBaselineTps": 12857,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       }
     ],
     "decode": [
@@ -7553,7 +8447,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 82,
         "vsNvidia": 205,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:32:1024",
@@ -7567,7 +8462,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 83,
         "vsNvidia": 213,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:32:4096",
@@ -7581,7 +8477,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 82,
         "vsNvidia": 210,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:256:256",
@@ -7595,7 +8492,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 84,
         "vsNvidia": 210,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:256:1024",
@@ -7609,7 +8507,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 84,
         "vsNvidia": 215,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:256:4096",
@@ -7623,7 +8522,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 81,
         "vsNvidia": 208,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:4096:256",
@@ -7637,7 +8537,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 78,
         "vsNvidia": 200,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:4096:1024",
@@ -7651,7 +8552,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 77,
         "vsNvidia": 197,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "1:4096:4096",
@@ -7665,7 +8567,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 75,
         "vsNvidia": 197,
         "nvidiaBaselineTps": 38,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:32:256",
@@ -7679,7 +8582,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 330,
         "vsNvidia": 107,
         "nvidiaBaselineTps": 309,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:32:1024",
@@ -7693,7 +8597,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 329,
         "vsNvidia": 108,
         "nvidiaBaselineTps": 304,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:32:4096",
@@ -7707,7 +8612,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 316,
         "vsNvidia": 107,
         "nvidiaBaselineTps": 295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:256:256",
@@ -7721,7 +8627,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 329,
         "vsNvidia": 107,
         "nvidiaBaselineTps": 308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:256:1024",
@@ -7735,7 +8642,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 329,
         "vsNvidia": 110,
         "nvidiaBaselineTps": 300,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:256:4096",
@@ -7749,7 +8657,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 315,
         "vsNvidia": 108,
         "nvidiaBaselineTps": 293,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:4096:256",
@@ -7763,7 +8672,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 297,
         "vsNvidia": 102,
         "nvidiaBaselineTps": 292,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:4096:1024",
@@ -7777,7 +8687,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 295,
         "vsNvidia": 102,
         "nvidiaBaselineTps": 290,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "4:4096:4096",
@@ -7791,7 +8702,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 283,
         "vsNvidia": 98,
         "nvidiaBaselineTps": 288,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:32:256",
@@ -7805,7 +8717,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 1275,
         "vsNvidia": 220,
         "nvidiaBaselineTps": 579,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:32:1024",
@@ -7819,7 +8732,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 1240,
         "vsNvidia": 224,
         "nvidiaBaselineTps": 554,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:32:4096",
@@ -7833,7 +8747,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 1142,
         "vsNvidia": 240,
         "nvidiaBaselineTps": 475,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:256:256",
@@ -7847,7 +8762,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 1254,
         "vsNvidia": 222,
         "nvidiaBaselineTps": 565,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:256:1024",
@@ -7861,7 +8777,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 1224,
         "vsNvidia": 226,
         "nvidiaBaselineTps": 541,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "16:256:4096",
@@ -7875,7 +8792,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 1131,
         "vsNvidia": 243,
         "nvidiaBaselineTps": 465,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:32:256",
@@ -7889,7 +8807,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 3252,
         "vsNvidia": 88,
         "nvidiaBaselineTps": 3698,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:32:1024",
@@ -7903,7 +8822,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 3100,
         "vsNvidia": 87,
         "nvidiaBaselineTps": 3582,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:32:4096",
@@ -7917,7 +8837,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 2657,
         "vsNvidia": 82,
         "nvidiaBaselineTps": 3243,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:256:256",
@@ -7931,7 +8852,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 3154,
         "vsNvidia": 87,
         "nvidiaBaselineTps": 3635,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:256:1024",
@@ -7945,7 +8867,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 3019,
         "vsNvidia": 86,
         "nvidiaBaselineTps": 3525,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       },
       {
         "configKey": "64:256:4096",
@@ -7959,7 +8882,8 @@ export const INFER_TABLE_FROM_FILES = {
         "tps": 2601,
         "vsNvidia": 81,
         "nvidiaBaselineTps": 3196,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "2026/2/14"
       }
     ]
   },
@@ -7979,7 +8903,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.55,
         "vsNvidia": 51,
         "nvidiaBaselineTps": 580,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -7995,7 +8920,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.92,
         "vsNvidia": 53,
         "nvidiaBaselineTps": 555,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -8011,7 +8937,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.48,
         "vsNvidia": 54,
         "nvidiaBaselineTps": 549,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:256",
@@ -8027,7 +8954,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.2,
         "vsNvidia": 14,
         "nvidiaBaselineTps": 3831,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -8043,7 +8971,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.03,
         "vsNvidia": 13,
         "nvidiaBaselineTps": 4129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -8059,7 +8988,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.53,
         "vsNvidia": 13,
         "nvidiaBaselineTps": 4099,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:256",
@@ -8075,7 +9005,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 77.78,
         "vsNvidia": 15,
         "nvidiaBaselineTps": 5090,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -8091,7 +9022,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.4,
         "vsNvidia": 14,
         "nvidiaBaselineTps": 5205,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -8107,7 +9039,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 79.82,
         "vsNvidia": 14,
         "nvidiaBaselineTps": 5303,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:256",
@@ -8123,7 +9056,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 79.04,
         "vsNvidia": 6,
         "nvidiaBaselineTps": 11748,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -8139,7 +9073,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 80.66,
         "vsNvidia": 6,
         "nvidiaBaselineTps": 11792,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -8155,7 +9090,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 80.33,
         "vsNvidia": 6,
         "nvidiaBaselineTps": 11906,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:256",
@@ -8171,7 +9107,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 71.8,
         "vsNvidia": 24,
         "nvidiaBaselineTps": 5120,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -8187,7 +9124,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 71.26,
         "vsNvidia": 24,
         "nvidiaBaselineTps": 5136,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -8203,7 +9141,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 72.22,
         "vsNvidia": 24,
         "nvidiaBaselineTps": 5129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:256",
@@ -8219,7 +9158,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 72.22,
         "vsNvidia": 9,
         "nvidiaBaselineTps": 7584,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -8235,7 +9175,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 71.2,
         "vsNvidia": 9,
         "nvidiaBaselineTps": 7562,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -8251,7 +9192,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 72.74,
         "vsNvidia": 9,
         "nvidiaBaselineTps": 7533,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:256",
@@ -8267,7 +9209,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 116.09,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 8113,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -8283,7 +9226,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 119.93,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 8141,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -8299,7 +9243,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 123.2,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 8151,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:256",
@@ -8315,7 +9260,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 115.23,
         "vsNvidia": 6,
         "nvidiaBaselineTps": 12804,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -8331,7 +9277,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 117.62,
         "vsNvidia": 6,
         "nvidiaBaselineTps": 12838,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       }
     ],
     "decode": [
@@ -8348,7 +9295,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.55,
         "vsNvidia": 30,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -8363,7 +9311,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.92,
         "vsNvidia": 31,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -8378,7 +9327,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.48,
         "vsNvidia": 31,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:256",
@@ -8393,7 +9343,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.2,
         "vsNvidia": 30,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -8408,7 +9359,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.03,
         "vsNvidia": 31,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -8423,7 +9375,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.53,
         "vsNvidia": 31,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:256",
@@ -8438,7 +9391,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 77.78,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 309,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -8453,7 +9407,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.4,
         "vsNvidia": 16,
         "nvidiaBaselineTps": 304,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -8468,7 +9423,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 79.82,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:256",
@@ -8483,7 +9439,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 79.04,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -8498,7 +9455,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 80.66,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 300,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -8513,7 +9471,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 80.33,
         "vsNvidia": 17,
         "nvidiaBaselineTps": 293,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:256",
@@ -8528,7 +9487,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 71.8,
         "vsNvidia": 39,
         "nvidiaBaselineTps": 579,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -8543,7 +9503,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 71.26,
         "vsNvidia": 41,
         "nvidiaBaselineTps": 554,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -8558,7 +9519,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 72.22,
         "vsNvidia": 47,
         "nvidiaBaselineTps": 475,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:256",
@@ -8573,7 +9535,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 72.22,
         "vsNvidia": 39,
         "nvidiaBaselineTps": 565,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -8588,7 +9551,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 71.2,
         "vsNvidia": 42,
         "nvidiaBaselineTps": 541,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -8603,7 +9567,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 72.74,
         "vsNvidia": 47,
         "nvidiaBaselineTps": 465,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:256",
@@ -8618,7 +9583,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 116.09,
         "vsNvidia": 15,
         "nvidiaBaselineTps": 3698,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -8633,7 +9599,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 119.93,
         "vsNvidia": 15,
         "nvidiaBaselineTps": 3582,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -8648,7 +9615,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 123.2,
         "vsNvidia": 16,
         "nvidiaBaselineTps": 3243,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:256",
@@ -8663,7 +9631,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 115.23,
         "vsNvidia": 15,
         "nvidiaBaselineTps": 3635,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -8678,7 +9647,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 117.62,
         "vsNvidia": 15,
         "nvidiaBaselineTps": 3525,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       }
     ]
   },
@@ -8698,7 +9668,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.72,
         "vsNvidia": 54,
         "nvidiaBaselineTps": 580,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -8714,7 +9685,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.78,
         "vsNvidia": 57,
         "nvidiaBaselineTps": 555,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -8730,7 +9702,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.86,
         "vsNvidia": 56,
         "nvidiaBaselineTps": 549,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:256",
@@ -8746,7 +9719,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.82,
         "vsNvidia": 10,
         "nvidiaBaselineTps": 3831,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -8762,7 +9736,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.82,
         "vsNvidia": 9,
         "nvidiaBaselineTps": 4129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -8778,7 +9753,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.86,
         "vsNvidia": 9,
         "nvidiaBaselineTps": 4099,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -8794,7 +9770,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.98,
         "vsNvidia": 162,
         "nvidiaBaselineTps": 7295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -8810,7 +9787,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 30.12,
         "vsNvidia": 161,
         "nvidiaBaselineTps": 7308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -8826,7 +9804,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 30.01,
         "vsNvidia": 160,
         "nvidiaBaselineTps": 7343,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:256",
@@ -8842,7 +9821,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.16,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 5090,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -8858,7 +9838,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.31,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 5205,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -8874,7 +9855,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 46.92,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 5303,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:256",
@@ -8890,7 +9872,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.29,
         "vsNvidia": 87,
         "nvidiaBaselineTps": 11748,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -8906,7 +9889,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.33,
         "vsNvidia": 86,
         "nvidiaBaselineTps": 11792,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -8922,7 +9906,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 46.89,
         "vsNvidia": 86,
         "nvidiaBaselineTps": 11906,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -8938,7 +9923,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.15,
         "vsNvidia": 103,
         "nvidiaBaselineTps": 12821,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -8954,7 +9940,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.12,
         "vsNvidia": 102,
         "nvidiaBaselineTps": 12860,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -8970,7 +9957,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.4,
         "vsNvidia": 102,
         "nvidiaBaselineTps": 12891,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:256",
@@ -8986,7 +9974,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.29,
         "vsNvidia": 111,
         "nvidiaBaselineTps": 5120,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -9002,7 +9991,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.29,
         "vsNvidia": 110,
         "nvidiaBaselineTps": 5136,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -9018,7 +10008,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82,
         "vsNvidia": 110,
         "nvidiaBaselineTps": 5129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:256",
@@ -9034,7 +10025,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.56,
         "vsNvidia": 158,
         "nvidiaBaselineTps": 7584,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -9050,7 +10042,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.36,
         "vsNvidia": 159,
         "nvidiaBaselineTps": 7562,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -9066,7 +10059,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.13,
         "vsNvidia": 159,
         "nvidiaBaselineTps": 7533,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:256",
@@ -9082,7 +10076,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 268.5,
         "vsNvidia": 103,
         "nvidiaBaselineTps": 8113,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -9098,7 +10093,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 269.37,
         "vsNvidia": 102,
         "nvidiaBaselineTps": 8141,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -9114,7 +10110,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 271.63,
         "vsNvidia": 103,
         "nvidiaBaselineTps": 8151,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:256",
@@ -9130,7 +10127,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 268.89,
         "vsNvidia": 104,
         "nvidiaBaselineTps": 12804,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -9146,7 +10144,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 268.42,
         "vsNvidia": 104,
         "nvidiaBaselineTps": 12838,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -9162,7 +10161,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 273.07,
         "vsNvidia": 103,
         "nvidiaBaselineTps": 12857,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       }
     ],
     "decode": [
@@ -9179,7 +10179,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.72,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -9194,7 +10195,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.78,
         "vsNvidia": 87,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -9209,7 +10211,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.86,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:256",
@@ -9224,7 +10227,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.82,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -9239,7 +10243,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.82,
         "vsNvidia": 87,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -9254,7 +10259,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.86,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -9269,7 +10275,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.98,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -9284,7 +10291,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 30.12,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -9299,7 +10307,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 30.01,
         "vsNvidia": 87,
         "nvidiaBaselineTps": 38,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:256",
@@ -9314,7 +10323,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.16,
         "vsNvidia": 28,
         "nvidiaBaselineTps": 309,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -9329,7 +10339,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.31,
         "vsNvidia": 28,
         "nvidiaBaselineTps": 304,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -9344,7 +10355,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 46.92,
         "vsNvidia": 29,
         "nvidiaBaselineTps": 295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:256",
@@ -9359,7 +10371,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.29,
         "vsNvidia": 28,
         "nvidiaBaselineTps": 308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -9374,7 +10387,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.33,
         "vsNvidia": 28,
         "nvidiaBaselineTps": 300,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -9389,7 +10403,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 46.89,
         "vsNvidia": 29,
         "nvidiaBaselineTps": 293,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -9404,7 +10419,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.15,
         "vsNvidia": 29,
         "nvidiaBaselineTps": 292,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -9419,7 +10435,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.12,
         "vsNvidia": 29,
         "nvidiaBaselineTps": 290,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -9434,7 +10451,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 47.4,
         "vsNvidia": 29,
         "nvidiaBaselineTps": 288,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:256",
@@ -9449,7 +10467,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.29,
         "vsNvidia": 34,
         "nvidiaBaselineTps": 579,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -9464,7 +10483,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.29,
         "vsNvidia": 36,
         "nvidiaBaselineTps": 554,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -9479,7 +10499,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82,
         "vsNvidia": 41,
         "nvidiaBaselineTps": 475,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:256",
@@ -9494,7 +10515,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.56,
         "vsNvidia": 35,
         "nvidiaBaselineTps": 565,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -9509,7 +10531,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 81.36,
         "vsNvidia": 36,
         "nvidiaBaselineTps": 541,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -9524,7 +10547,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 82.13,
         "vsNvidia": 42,
         "nvidiaBaselineTps": 465,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:256",
@@ -9539,7 +10563,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 268.5,
         "vsNvidia": 6,
         "nvidiaBaselineTps": 3698,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -9554,7 +10579,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 269.37,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 3582,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -9569,7 +10595,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 271.63,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 3243,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:256",
@@ -9584,7 +10611,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 268.89,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 3635,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -9599,7 +10627,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 268.42,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 3525,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -9614,7 +10643,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 273.07,
         "vsNvidia": 7,
         "nvidiaBaselineTps": 3196,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       }
     ]
   },
@@ -9634,7 +10664,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 15.01,
         "vsNvidia": 249,
         "nvidiaBaselineTps": 580,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -9650,7 +10681,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.92,
         "vsNvidia": 257,
         "nvidiaBaselineTps": 555,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -9666,7 +10698,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.95,
         "vsNvidia": 228,
         "nvidiaBaselineTps": 549,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:256",
@@ -9682,7 +10715,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.88,
         "vsNvidia": 180,
         "nvidiaBaselineTps": 3831,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -9698,7 +10732,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.92,
         "vsNvidia": 165,
         "nvidiaBaselineTps": 4129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -9714,7 +10749,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.95,
         "vsNvidia": 158,
         "nvidiaBaselineTps": 4099,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -9730,7 +10766,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 15.1,
         "vsNvidia": 141,
         "nvidiaBaselineTps": 7295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -9746,7 +10783,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.99,
         "vsNvidia": 140,
         "nvidiaBaselineTps": 7308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -9762,7 +10800,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.98,
         "vsNvidia": 139,
         "nvidiaBaselineTps": 7343,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:256",
@@ -9778,7 +10817,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.02,
         "vsNvidia": 59,
         "nvidiaBaselineTps": 5090,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -9794,7 +10834,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.04,
         "vsNvidia": 57,
         "nvidiaBaselineTps": 5205,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -9810,7 +10851,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.6,
         "vsNvidia": 53,
         "nvidiaBaselineTps": 5303,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:256",
@@ -9826,7 +10868,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 16.98,
         "vsNvidia": 75,
         "nvidiaBaselineTps": 11748,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -9842,7 +10885,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.05,
         "vsNvidia": 75,
         "nvidiaBaselineTps": 11792,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -9858,7 +10902,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.61,
         "vsNvidia": 72,
         "nvidiaBaselineTps": 11906,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -9874,7 +10919,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.35,
         "vsNvidia": 74,
         "nvidiaBaselineTps": 12821,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -9890,7 +10936,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.09,
         "vsNvidia": 74,
         "nvidiaBaselineTps": 12860,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -9906,7 +10953,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.2,
         "vsNvidia": 74,
         "nvidiaBaselineTps": 12891,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:256",
@@ -9922,7 +10970,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.11,
         "vsNvidia": 73,
         "nvidiaBaselineTps": 5120,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -9938,7 +10987,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.31,
         "vsNvidia": 72,
         "nvidiaBaselineTps": 5136,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -9954,7 +11004,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.78,
         "vsNvidia": 71,
         "nvidiaBaselineTps": 5129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:256",
@@ -9970,7 +11021,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.24,
         "vsNvidia": 123,
         "nvidiaBaselineTps": 7584,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -9986,7 +11038,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.41,
         "vsNvidia": 124,
         "nvidiaBaselineTps": 7562,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -10002,7 +11055,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.82,
         "vsNvidia": 123,
         "nvidiaBaselineTps": 7533,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:256",
@@ -10018,7 +11072,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 21.62,
         "vsNvidia": 50,
         "nvidiaBaselineTps": 8113,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -10034,7 +11089,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 22.33,
         "vsNvidia": 50,
         "nvidiaBaselineTps": 8141,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -10050,7 +11106,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 24.62,
         "vsNvidia": 50,
         "nvidiaBaselineTps": 8151,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:256",
@@ -10066,7 +11123,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 21.71,
         "vsNvidia": 68,
         "nvidiaBaselineTps": 12804,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -10082,7 +11140,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 22.65,
         "vsNvidia": 68,
         "nvidiaBaselineTps": 12838,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -10098,7 +11157,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.13,
         "vsNvidia": 68,
         "nvidiaBaselineTps": 12857,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       }
     ],
     "decode": [
@@ -10115,7 +11175,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 15.01,
         "vsNvidia": 168,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -10130,7 +11191,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.92,
         "vsNvidia": 172,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -10145,7 +11207,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.95,
         "vsNvidia": 172,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:256",
@@ -10160,7 +11223,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.88,
         "vsNvidia": 168,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -10175,7 +11239,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.92,
         "vsNvidia": 172,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -10190,7 +11255,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.95,
         "vsNvidia": 172,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -10205,7 +11271,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 15.1,
         "vsNvidia": 169,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -10220,7 +11287,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.99,
         "vsNvidia": 172,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -10235,7 +11303,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 14.98,
         "vsNvidia": 176,
         "nvidiaBaselineTps": 38,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:256",
@@ -10250,7 +11319,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.02,
         "vsNvidia": 76,
         "nvidiaBaselineTps": 309,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -10265,7 +11335,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.04,
         "vsNvidia": 77,
         "nvidiaBaselineTps": 304,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -10280,7 +11351,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.6,
         "vsNvidia": 77,
         "nvidiaBaselineTps": 295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:256",
@@ -10295,7 +11367,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 16.98,
         "vsNvidia": 76,
         "nvidiaBaselineTps": 308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -10310,7 +11383,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.05,
         "vsNvidia": 78,
         "nvidiaBaselineTps": 300,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -10325,7 +11399,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.61,
         "vsNvidia": 77,
         "nvidiaBaselineTps": 293,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -10340,7 +11415,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.35,
         "vsNvidia": 74,
         "nvidiaBaselineTps": 292,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -10355,7 +11431,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.09,
         "vsNvidia": 76,
         "nvidiaBaselineTps": 290,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -10370,7 +11447,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.2,
         "vsNvidia": 76,
         "nvidiaBaselineTps": 288,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:256",
@@ -10385,7 +11463,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.11,
         "vsNvidia": 153,
         "nvidiaBaselineTps": 579,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -10400,7 +11479,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.31,
         "vsNvidia": 158,
         "nvidiaBaselineTps": 554,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -10415,7 +11495,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.78,
         "vsNvidia": 179,
         "nvidiaBaselineTps": 475,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:256",
@@ -10430,7 +11511,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.24,
         "vsNvidia": 155,
         "nvidiaBaselineTps": 565,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -10445,7 +11527,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.41,
         "vsNvidia": 161,
         "nvidiaBaselineTps": 541,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -10460,7 +11543,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.82,
         "vsNvidia": 183,
         "nvidiaBaselineTps": 465,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:256",
@@ -10475,7 +11559,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 21.62,
         "vsNvidia": 80,
         "nvidiaBaselineTps": 3698,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -10490,7 +11575,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 22.33,
         "vsNvidia": 80,
         "nvidiaBaselineTps": 3582,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -10505,7 +11591,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 24.62,
         "vsNvidia": 80,
         "nvidiaBaselineTps": 3243,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:256",
@@ -10520,7 +11607,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 21.71,
         "vsNvidia": 81,
         "nvidiaBaselineTps": 3635,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -10535,7 +11623,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 22.65,
         "vsNvidia": 80,
         "nvidiaBaselineTps": 3525,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -10550,7 +11639,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.13,
         "vsNvidia": 80,
         "nvidiaBaselineTps": 3196,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/28/2026"
       }
     ]
   },
@@ -10570,7 +11660,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.09,
         "vsNvidia": 167,
         "nvidiaBaselineTps": 580,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -10586,7 +11677,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.86,
         "vsNvidia": 175,
         "nvidiaBaselineTps": 555,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -10602,7 +11694,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.36,
         "vsNvidia": 196,
         "nvidiaBaselineTps": 549,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:256",
@@ -10618,7 +11711,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.46,
         "vsNvidia": 117,
         "nvidiaBaselineTps": 3831,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -10634,7 +11728,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.01,
         "vsNvidia": 114,
         "nvidiaBaselineTps": 4129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -10650,7 +11745,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.12,
         "vsNvidia": 105,
         "nvidiaBaselineTps": 4099,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -10666,7 +11762,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.31,
         "vsNvidia": 72,
         "nvidiaBaselineTps": 7295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -10682,7 +11779,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.58,
         "vsNvidia": 71,
         "nvidiaBaselineTps": 7308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -10698,7 +11796,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.26,
         "vsNvidia": 71,
         "nvidiaBaselineTps": 7343,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:256",
@@ -10714,7 +11813,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 35.28,
         "vsNvidia": 53,
         "nvidiaBaselineTps": 5090,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -10730,7 +11830,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.09,
         "vsNvidia": 57,
         "nvidiaBaselineTps": 5205,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -10746,7 +11847,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.25,
         "vsNvidia": 55,
         "nvidiaBaselineTps": 5303,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:256",
@@ -10762,7 +11864,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.82,
         "vsNvidia": 58,
         "nvidiaBaselineTps": 11748,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -10778,7 +11881,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 33.7,
         "vsNvidia": 59,
         "nvidiaBaselineTps": 11792,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -10794,7 +11898,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.06,
         "vsNvidia": 58,
         "nvidiaBaselineTps": 11906,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -10810,7 +11915,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.57,
         "vsNvidia": 42,
         "nvidiaBaselineTps": 12821,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -10826,7 +11932,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.78,
         "vsNvidia": 42,
         "nvidiaBaselineTps": 12860,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -10842,7 +11949,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 35.92,
         "vsNvidia": 42,
         "nvidiaBaselineTps": 12891,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:256",
@@ -10858,7 +11966,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.95,
         "vsNvidia": 112,
         "nvidiaBaselineTps": 5120,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -10874,7 +11983,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.19,
         "vsNvidia": 114,
         "nvidiaBaselineTps": 5136,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -10890,7 +12000,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.18,
         "vsNvidia": 117,
         "nvidiaBaselineTps": 5129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:256",
@@ -10906,7 +12017,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 30.44,
         "vsNvidia": 94,
         "nvidiaBaselineTps": 7584,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -10922,7 +12034,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.57,
         "vsNvidia": 94,
         "nvidiaBaselineTps": 7562,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -10938,7 +12051,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.35,
         "vsNvidia": 95,
         "nvidiaBaselineTps": 7533,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:256",
@@ -10954,7 +12068,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 37.17,
         "vsNvidia": 89,
         "nvidiaBaselineTps": 8113,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -10970,7 +12085,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 35.45,
         "vsNvidia": 89,
         "nvidiaBaselineTps": 8141,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -10986,7 +12102,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 39.2,
         "vsNvidia": 89,
         "nvidiaBaselineTps": 8151,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:256",
@@ -11002,7 +12119,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 37.78,
         "vsNvidia": 55,
         "nvidiaBaselineTps": 12804,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -11018,7 +12136,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.95,
         "vsNvidia": 56,
         "nvidiaBaselineTps": 12838,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -11034,7 +12153,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 39.53,
         "vsNvidia": 56,
         "nvidiaBaselineTps": 12857,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       }
     ],
     "decode": [
@@ -11051,7 +12171,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.09,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -11066,7 +12187,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.86,
         "vsNvidia": 95,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -11081,7 +12203,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.36,
         "vsNvidia": 97,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:256",
@@ -11096,7 +12219,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.46,
         "vsNvidia": 85,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -11111,7 +12235,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.01,
         "vsNvidia": 97,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -11126,7 +12251,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.12,
         "vsNvidia": 97,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -11141,7 +12267,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.31,
         "vsNvidia": 95,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -11156,7 +12283,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.58,
         "vsNvidia": 92,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -11171,7 +12299,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.26,
         "vsNvidia": 92,
         "nvidiaBaselineTps": 38,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:256",
@@ -11186,7 +12315,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 35.28,
         "vsNvidia": 37,
         "nvidiaBaselineTps": 309,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -11201,7 +12331,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.09,
         "vsNvidia": 38,
         "nvidiaBaselineTps": 304,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -11216,7 +12347,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.25,
         "vsNvidia": 40,
         "nvidiaBaselineTps": 295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:256",
@@ -11231,7 +12363,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.82,
         "vsNvidia": 37,
         "nvidiaBaselineTps": 308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -11246,7 +12379,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 33.7,
         "vsNvidia": 40,
         "nvidiaBaselineTps": 300,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -11261,7 +12395,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.06,
         "vsNvidia": 40,
         "nvidiaBaselineTps": 293,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -11276,7 +12411,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.57,
         "vsNvidia": 40,
         "nvidiaBaselineTps": 292,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -11291,7 +12427,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.78,
         "vsNvidia": 40,
         "nvidiaBaselineTps": 290,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -11306,7 +12443,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 35.92,
         "vsNvidia": 39,
         "nvidiaBaselineTps": 288,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:256",
@@ -11321,7 +12459,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.95,
         "vsNvidia": 92,
         "nvidiaBaselineTps": 579,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -11336,7 +12475,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.19,
         "vsNvidia": 106,
         "nvidiaBaselineTps": 554,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -11351,7 +12491,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.18,
         "vsNvidia": 120,
         "nvidiaBaselineTps": 475,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:256",
@@ -11366,7 +12507,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 30.44,
         "vsNvidia": 93,
         "nvidiaBaselineTps": 565,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -11381,7 +12523,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.57,
         "vsNvidia": 111,
         "nvidiaBaselineTps": 541,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -11396,7 +12539,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.35,
         "vsNvidia": 121,
         "nvidiaBaselineTps": 465,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:256",
@@ -11411,7 +12555,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 37.17,
         "vsNvidia": 47,
         "nvidiaBaselineTps": 3698,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -11426,7 +12571,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 35.45,
         "vsNvidia": 50,
         "nvidiaBaselineTps": 3582,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -11441,7 +12587,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 39.2,
         "vsNvidia": 50,
         "nvidiaBaselineTps": 3243,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:256",
@@ -11456,7 +12603,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 37.78,
         "vsNvidia": 47,
         "nvidiaBaselineTps": 3635,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -11471,7 +12619,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.95,
         "vsNvidia": 52,
         "nvidiaBaselineTps": 3525,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -11486,7 +12635,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 39.53,
         "vsNvidia": 51,
         "nvidiaBaselineTps": 3196,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "4/29/2026"
       }
     ]
   },
@@ -11506,7 +12656,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.04,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 580,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -11522,7 +12673,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.32,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 555,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -11538,7 +12690,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.73,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 549,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:256:256",
@@ -11554,7 +12707,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.3,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 3831,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -11570,7 +12724,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.49,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 4129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -11586,7 +12741,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.79,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 4099,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -11602,7 +12758,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.94,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 7295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -11618,7 +12775,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.96,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 7308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -11634,7 +12792,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.07,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 7343,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:32:256",
@@ -11650,7 +12809,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 12.96,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 5090,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -11666,7 +12826,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.18,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 5205,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -11682,7 +12843,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.55,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 5303,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:256:256",
@@ -11698,7 +12860,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 12.99,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 11748,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -11714,7 +12877,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.34,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 11792,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -11730,7 +12894,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.63,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 11906,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -11746,7 +12911,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.69,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 12821,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -11762,7 +12928,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.79,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 12860,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -11778,7 +12945,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.89,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 12891,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:32:256",
@@ -11794,7 +12962,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.64,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 5120,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -11810,7 +12979,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.88,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 5136,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -11826,7 +12996,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 33.67,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 5129,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:256:256",
@@ -11842,7 +13013,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.31,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 7584,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -11858,7 +13030,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.58,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 7562,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -11874,7 +13047,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.39,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 7533,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:32:256",
@@ -11890,7 +13064,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.3,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 8113,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -11906,7 +13081,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.87,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 8141,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -11922,7 +13098,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 19.73,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 8151,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:256:256",
@@ -11938,7 +13115,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.6,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 12804,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -11954,7 +13132,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.16,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 12838,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -11970,7 +13149,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 20.03,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 12857,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       }
     ],
     "decode": [
@@ -11987,7 +13167,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.04,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:32:1024",
@@ -12002,7 +13183,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.32,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:32:4096",
@@ -12017,7 +13199,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.73,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:256:256",
@@ -12032,7 +13215,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.3,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 40,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:256:1024",
@@ -12047,7 +13231,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.49,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:256:4096",
@@ -12062,7 +13247,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.79,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:4096:256",
@@ -12077,7 +13263,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.94,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:4096:1024",
@@ -12092,7 +13279,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 25.96,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 39,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "1:4096:4096",
@@ -12107,7 +13295,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 26.07,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 38,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:32:256",
@@ -12122,7 +13311,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 12.96,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 309,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:32:1024",
@@ -12137,7 +13327,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.18,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 304,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:32:4096",
@@ -12152,7 +13343,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.55,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 295,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:256:256",
@@ -12167,7 +13359,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 12.99,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 308,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:256:1024",
@@ -12182,7 +13375,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.34,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 300,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:256:4096",
@@ -12197,7 +13391,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.63,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 293,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:4096:256",
@@ -12212,7 +13407,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.69,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 292,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:4096:1024",
@@ -12227,7 +13423,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.79,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 290,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "4:4096:4096",
@@ -12242,7 +13439,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 13.89,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 288,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:32:256",
@@ -12257,7 +13455,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 27.64,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 579,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:32:1024",
@@ -12272,7 +13471,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.88,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 554,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:32:4096",
@@ -12287,7 +13487,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 33.67,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 475,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:256:256",
@@ -12302,7 +13503,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 28.31,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 565,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:256:1024",
@@ -12317,7 +13519,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 29.58,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 541,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "16:256:4096",
@@ -12332,7 +13535,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 34.39,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 465,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:32:256",
@@ -12347,7 +13551,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.3,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 3698,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:32:1024",
@@ -12362,7 +13567,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.87,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 3582,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:32:4096",
@@ -12377,7 +13583,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 19.73,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 3243,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:256:256",
@@ -12392,7 +13599,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 17.6,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 3635,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:256:1024",
@@ -12407,7 +13615,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 18.16,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 3525,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       },
       {
         "configKey": "64:256:4096",
@@ -12422,7 +13631,8 @@ export const INFER_TABLE_FROM_FILES = {
         "decodeLatencyMs": 20.03,
         "vsNvidia": 100,
         "nvidiaBaselineTps": 3196,
-        "framework": "InfiniLM"
+        "framework": "InfiniLM",
+        "date": "5/6/2026"
       }
     ]
   }
@@ -12509,20 +13719,319 @@ export const INFER_CARD_FROM_FILES = {
   }
 } as Record<string, Record<string, unknown>>
 
-export const TRAIN_TABLE_FROM_FILES = {} as Record<string, Array<Record<string, unknown>>>
+export const TRAIN_TABLE_FROM_FILES = {
+  "metax": [
+    {
+      "framework": "megatron",
+      "model": "llama3-8b",
+      "parallel": "8 GPU · seq8192",
+      "dtype": "BF16",
+      "flashAttn": "off（不支持 fused attn）",
+      "tps": 438,
+      "baseline": 2564,
+      "vsA100": 17,
+      "note": "global_bs=128",
+      "nGpu": 8,
+      "seqLen": 8192,
+      "microBatchSize": 1,
+      "date": "2026-04-29"
+    }
+  ],
+  "nvidia": [
+    {
+      "framework": "megatron",
+      "model": "llama3-8b",
+      "parallel": "8 GPU · seq8192",
+      "dtype": "BF16",
+      "flashAttn": "on",
+      "tps": 2564,
+      "baseline": 2564,
+      "vsA100": 100,
+      "note": "global_bs=128",
+      "nGpu": 8,
+      "seqLen": 8192,
+      "microBatchSize": 1,
+      "date": "2026-04-29"
+    }
+  ]
+} as Record<string, Array<Record<string, unknown>>>
 
-export const TRAIN_CARD_FROM_FILES = {} as Record<string, Record<string, unknown>>
+export const TRAIN_CARD_FROM_FILES = {
+  "metax": {
+    "key": "metax",
+    "ownFw": "Megatron",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 17,
+    "ownVal": "438 tpps",
+    "n": 1,
+    "extra": "Megatron - llama3-8b - 8 GPU",
+    "adv": false,
+    "advTxt": "相对 NVIDIA 17%"
+  },
+  "nvidia": {
+    "key": "nvidia",
+    "ownFw": "Megatron",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 100,
+    "ownVal": "2564 tpps",
+    "n": 1,
+    "extra": "Megatron - llama3-8b - 8 GPU",
+    "adv": true,
+    "advTxt": "相对 NVIDIA 同配置 100%"
+  }
+} as Record<string, Record<string, unknown>>
 
-export const COMM_TABLE_FROM_FILES = {} as Record<string, Array<Record<string, unknown>>>
+export const COMM_TABLE_FROM_FILES = {
+  "metax": [
+    {
+      "linkType": "MetaxLink",
+      "commType": "allreduce",
+      "nGpu": 8,
+      "bw": 45.8,
+      "baseline": 35,
+      "vsA100": 131,
+      "note": "MetaxLink 单向",
+      "date": "2025-04-28"
+    },
+    {
+      "linkType": "MetaxLink",
+      "commType": "p2p",
+      "nGpu": 2,
+      "bw": 53.1,
+      "baseline": 270,
+      "vsA100": 20,
+      "note": "MetaxLink 单向",
+      "date": "2025-04-28"
+    }
+  ],
+  "nvidia": [
+    {
+      "linkType": "NVLink",
+      "commType": "allreduce",
+      "nGpu": 8,
+      "bw": 35,
+      "baseline": 35,
+      "vsA100": 100,
+      "note": "NVLink 单向基准",
+      "date": "2025-04-28"
+    },
+    {
+      "linkType": "NVLink",
+      "commType": "p2p",
+      "nGpu": 2,
+      "bw": 270,
+      "baseline": 270,
+      "vsA100": 100,
+      "note": "NVLink 单向基准",
+      "date": "2025-04-28"
+    }
+  ]
+} as Record<string, Array<Record<string, unknown>>>
 
-export const COMM_CARD_FROM_FILES = {} as Record<string, Record<string, unknown>>
+export const COMM_CARD_FROM_FILES = {
+  "metax": {
+    "key": "metax",
+    "ownFw": "p2p",
+    "openFw": "allreduce",
+    "ownScore": 20,
+    "openScore": 131,
+    "ownVal": "53.1 GB/s",
+    "openVal": "45.8 GB/s",
+    "n": 2,
+    "extra": "MetaxLink",
+    "adv": true,
+    "advTxt": "AllReduce 相对 NVIDIA 131%（P2P 20%）"
+  },
+  "nvidia": {
+    "key": "nvidia",
+    "ownFw": "p2p",
+    "openFw": "allreduce",
+    "ownScore": 100,
+    "openScore": 100,
+    "ownVal": "270 GB/s",
+    "openVal": "35 GB/s",
+    "n": 2,
+    "extra": "NVLink",
+    "adv": true,
+    "advTxt": "P2P / AllReduce 均达或超过 NVIDIA 基线"
+  }
+} as Record<string, Record<string, unknown>>
 
-export const BW_TABLE_FROM_FILES = {} as Record<string, Array<Record<string, unknown>>>
+export const BW_TABLE_FROM_FILES = {
+  "nvidia": [
+    {
+      "model": "A100",
+      "add": 1630.7558,
+      "copy": 1585.1489,
+      "scale": 1579.7755,
+      "triad": 1634.1444,
+      "avg": 1607.4561,
+      "vsNvidia": 100,
+      "date": "2026-04-29"
+    }
+  ],
+  "cambricon": [
+    {
+      "model": "MLU590",
+      "add": 2145.08,
+      "copy": 2110.65,
+      "scale": 2116.64,
+      "triad": 2153.35,
+      "avg": 2131.43,
+      "vsNvidia": 133
+    },
+    {
+      "model": "MLU370",
+      "add": 256.52,
+      "copy": 261.182,
+      "scale": 260.332,
+      "triad": 256.63,
+      "avg": 258.666,
+      "vsNvidia": 16
+    }
+  ],
+  "ascend": [
+    {
+      "model": "910B3",
+      "add": 1540,
+      "copy": null,
+      "scale": null,
+      "triad": null,
+      "avg": 1540,
+      "vsNvidia": 96
+    }
+  ],
+  "metax": [
+    {
+      "model": "C500",
+      "add": 1677.67,
+      "copy": null,
+      "scale": null,
+      "triad": null,
+      "avg": 1677.67,
+      "vsNvidia": 104
+    }
+  ],
+  "mthreads": [
+    {
+      "model": "S5000",
+      "add": 1400.903,
+      "copy": null,
+      "scale": null,
+      "triad": null,
+      "avg": 1400.903,
+      "vsNvidia": 87
+    }
+  ],
+  "iluvatar": [
+    {
+      "model": "TG150",
+      "add": 586,
+      "copy": null,
+      "scale": null,
+      "triad": null,
+      "avg": 586,
+      "vsNvidia": 36
+    },
+    {
+      "model": "TG200",
+      "add": null,
+      "copy": null,
+      "scale": null,
+      "triad": null,
+      "avg": null,
+      "vsNvidia": 100
+    }
+  ]
+} as Record<string, Array<Record<string, unknown>>>
 
-export const BW_CARD_FROM_FILES = {} as Record<string, Record<string, unknown>>
+export const BW_CARD_FROM_FILES = {
+  "nvidia": {
+    "key": "nvidia",
+    "ownFw": "HBM均值",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 100,
+    "ownVal": "1607.5 GB/s",
+    "n": 1,
+    "extra": "A100",
+    "adv": true,
+    "advTxt": "HBM 均值相对 NVIDIA A100 基线 100%"
+  },
+  "cambricon": {
+    "key": "cambricon",
+    "ownFw": "HBM均值",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 133,
+    "ownVal": "2131.4 GB/s",
+    "n": 2,
+    "extra": "MLU590",
+    "adv": true,
+    "advTxt": "HBM 均值相对 NVIDIA A100 基线 133%"
+  },
+  "ascend": {
+    "key": "ascend",
+    "ownFw": "HBM均值",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 96,
+    "ownVal": "1540.0 GB/s",
+    "n": 1,
+    "extra": "910B3",
+    "adv": false,
+    "advTxt": "相对 NVIDIA A100 基线 96%"
+  },
+  "metax": {
+    "key": "metax",
+    "ownFw": "HBM均值",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 104,
+    "ownVal": "1677.7 GB/s",
+    "n": 1,
+    "extra": "C500",
+    "adv": true,
+    "advTxt": "HBM 均值相对 NVIDIA A100 基线 104%"
+  },
+  "mthreads": {
+    "key": "mthreads",
+    "ownFw": "HBM均值",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 87,
+    "ownVal": "1400.9 GB/s",
+    "n": 1,
+    "extra": "S5000",
+    "adv": false,
+    "advTxt": "相对 NVIDIA A100 基线 87%"
+  },
+  "iluvatar": {
+    "key": "iluvatar",
+    "ownFw": "HBM均值",
+    "openFw": "",
+    "openScore": null,
+    "openVal": null,
+    "ownScore": 36,
+    "ownVal": "586.0 GB/s",
+    "n": 2,
+    "extra": "TG150",
+    "adv": false,
+    "advTxt": "相对 NVIDIA A100 基线 36%"
+  }
+} as Record<string, Record<string, unknown>>
 
 export const BENCHMARK_DATA_META = {
-  "generatedAt": "2026-05-09T09:11:33.600Z",
+  "generatedAt": "2026-05-11T04:08:36.509Z",
   "operatorSources": [
     "new_data\\operator\\ascend_operator_20260430.csv",
     "new_data\\operator\\cambricon_operator_20260506.csv",
@@ -12540,9 +14049,41 @@ export const BENCHMARK_DATA_META = {
     "new_data\\infer\\mthreads_infer_20260429.csv",
     "new_data\\infer\\nvidia_infer_20260506.csv"
   ],
-  "trainSources": [],
-  "commSources": [],
-  "bwSources": [],
+  "trainSources": [
+    "new_data\\train\\metax_train_20260429.xlsx",
+    "new_data\\train\\nvidia_train_20260429.xlsx"
+  ],
+  "commSources": [
+    "new_data\\comm\\metax_comm_20250428.xlsx",
+    "new_data\\comm\\nvidia_comm_20250428.xlsx"
+  ],
+  "bwSources": [
+    "new_data\\bw\\bw_template.csv",
+    "new_data\\bw\\bw_template.csv",
+    "new_data\\bw\\bw_template.csv",
+    "new_data\\bw\\bw_template.csv",
+    "new_data\\bw\\bw_template.csv",
+    "new_data\\bw\\bw_template.csv"
+  ],
   "opDatasetUpdatedAt": "2026-05-06",
-  "inferDatasetUpdatedAt": "2026-05-06"
+  "inferDatasetUpdatedAt": "2026-05-06",
+  "trainSourceFileDateByPlatform": {
+    "metax": "2026-04-29",
+    "nvidia": "2026-04-29"
+  },
+  "trainDatasetUpdatedAt": "2026-04-29",
+  "commSourceFileDateByPlatform": {
+    "metax": "2025-04-28",
+    "nvidia": "2025-04-28"
+  },
+  "commDatasetUpdatedAt": "2025-04-28",
+  "bwSourceFileDateByPlatform": {
+    "nvidia": "2026-04-29",
+    "cambricon": "2026-04-29",
+    "ascend": "2026-04-29",
+    "metax": "2026-04-29",
+    "mthreads": "2026-04-29",
+    "iluvatar": "2026-04-29"
+  },
+  "bwDatasetUpdatedAt": "2026-04-29"
 }

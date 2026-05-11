@@ -16,7 +16,6 @@ export function buildCiLineOption(seriesData: number[]) {
         smooth: true,
         symbolSize: 6,
         lineStyle: { color: '#00c853' },
-        areaStyle: { color: 'rgba(0, 200, 83, 0.12)' },
       },
     ],
   }
@@ -42,7 +41,6 @@ export function buildOpLineOption(rows: OpRow[], platColor: string) {
         symbolSize: 8,
         connectNulls: false,
         lineStyle: { color: platColor },
-        areaStyle: { color: platColor + '22' },
       },
       {
         type: 'line' as const,
@@ -52,7 +50,6 @@ export function buildOpLineOption(rows: OpRow[], platColor: string) {
         symbolSize: 8,
         connectNulls: false,
         lineStyle: { color: '#999' },
-        areaStyle: { color: '#99999922' },
       },
     ],
   }

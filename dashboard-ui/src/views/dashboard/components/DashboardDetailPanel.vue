@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import VChart from 'vue-echarts'
 import {
   BW_TABLE,
   CI_SUMMARY,
+  DIMS,
+  PLATFORMS,
 } from '@/data'
+import { routeParamString } from '@/utils/routeParams'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
+import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 import {
   computeOpRowScore,
   remarksExcludeIcFromScore,
 } from '@/features/dashboard/operatorBenchmark'
 import { BW_NVIDIA_BASELINE_GBPS } from '@/features/dashboard/bwBenchmark'
 
+const route = useRoute()
 const store = useInfiniDashboard()
 const {
   activeDimKey,
@@ -25,9 +31,9 @@ const {
   opDetailRows,
   inferDetailTabRows,
   inferNvidiaTabRows,
-  inferTestEnvLine,
+  detailTestEnvLine,
+  detailTestEnvSourceHint,
   trainDetailRows,
-  trainTestEnvLine,
   commDetailRows,
   commNvidiaBaselineRows,
   lineChartOption,
@@ -35,8 +41,20 @@ const {
   ciChartOption,
   ciTabKey,
   setInferTab,
-  goBack,
 } = store
+
+const { goOverview } = useDashboardNavigation()
+
+/** 标题与 URL 一致，避免 store 与路由瞬时不同步时误显其它平台（如访存点昇腾却显示 NVIDIA） */
+const detailTitleDisplay = computed(() => {
+  if (route.name !== 'detail') return detailTitle.value
+  const pk = routeParamString(route.params.platKey)
+  const dk = routeParamString(route.params.dimKey)
+  const plat = PLATFORMS.find((p) => p.key === pk)
+  const dim = DIMS.find((d) => d.key === dk)
+  if (!plat || !dim) return detailTitle.value
+  return `${plat.name} · ${dim.label}详情`
+})
 
 const platColor = computed(() => detailPlat.value.color)
 
@@ -85,10 +103,32 @@ const commBwMax = computed(() => {
 })
 
 const bwRows = computed(
-  () => BW_TABLE[detailState.value.platKey as keyof typeof BW_TABLE] as
-    | typeof BW_TABLE.nvidia
-    | undefined || [],
+  () =>
+    (BW_TABLE[detailState.value.platKey as keyof typeof BW_TABLE] as
+      | typeof BW_TABLE.nvidia
+      | undefined) ?? [],
 )
+
+/** 访存表单元格：仅有 bw_GBps（avg）而四模式为空时，避免对 null 调用 toFixed */
+function bwGbpsCell(n: number | null | undefined): string {
+  if (n == null || !Number.isFinite(n)) return '—'
+  return n.toFixed(2)
+}
+
+function bwBarDenom(r: {
+  add: number | null
+  copy: number | null
+  scale: number | null
+  triad: number | null
+}): number {
+  return Math.max(
+    r.add ?? 0,
+    r.copy ?? 0,
+    r.scale ?? 0,
+    r.triad ?? 0,
+    BW_NVIDIA_BASELINE_GBPS,
+  )
+}
 
 function hasChart(opt: object) {
   return opt && Object.keys(opt).length > 0
@@ -133,12 +173,14 @@ const opLatencyMax = computed(() => {
 </script>
 
 <template>
-  <div>
-    <div class="breadcrumb">
+  <div class="detail-panel">
+    <header class="detail-panel__header">
       <div class="detail-title-row">
-        <div class="detail-title">{{ detailTitle }}</div>
-        <a-button type="primary" @click="goBack">返回概览</a-button>
+        <div class="detail-title">{{ detailTitleDisplay }}</div>
+        <a-button type="primary" @click="goOverview">返回概览</a-button>
       </div>
+    </header>
+    <div class="detail-panel__scroll">
       <div class="kpi-grid">
         <div
           v-for="(cell, idx) in detailKpiCells"
@@ -147,9 +189,7 @@ const opLatencyMax = computed(() => {
         >
           <div
             class="kpi-val"
-            :class="{ 'kpi-val--sm': (cell as { valSm?: boolean }).valSm }"
             :style="{
-              fontSize: (cell as { valSm?: boolean }).valSm ? '22px' : undefined,
               color: (cell as { muted?: boolean }).muted ? '#999' : undefined,
             }"
           >
@@ -159,84 +199,35 @@ const opLatencyMax = computed(() => {
           <div class="kpi-sub">{{ cell.sub }}</div>
         </div>
       </div>
-    </div>
 
-    <!-- 测试环境横条 -->
-    <div
-      v-if="activeDimKey === 'infer'"
-      style="
-        margin-bottom: 16px;
-        padding: 10px 20px;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 12px;
-        color: #888;
-      "
-    >
-      <span style="font-size: 14px">🖥</span>
-      <span style="font-weight: 600; color: #555">测试环境</span>
-      <span style="color: #ddd">|</span>
-      <span style="color: #667eea; font-weight: 500">{{ inferTestEnvLine }}</span>
-      <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
-        来源：推理 CSV（n_gpu · remarks 硬件型号）
-      </span>
-    </div>
-    <div
-      v-else-if="activeDimKey === 'train'"
-      style="
-        margin-bottom: 16px;
-        padding: 10px 20px;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 12px;
-        color: #888;
-      "
-    >
-      <span style="font-size: 14px">🖥</span>
-      <span style="font-weight: 600; color: #555">测试环境</span>
-      <span style="color: #ddd">|</span>
-      <span style="color: #667eea; font-weight: 500">{{ trainTestEnvLine }}</span>
-      <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
-        来源：训练 XLSX（n_gpu · 精度 · 框架）
-      </span>
-    </div>
-    <div
-      v-else
-      style="
-        margin-bottom: 16px;
-        padding: 10px 20px;
-        background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 12px;
-        color: #888;
-      "
-    >
-      <span style="font-size: 14px">🖥</span>
-      <span style="font-weight: 600; color: #555">测试环境</span>
-      <span style="color: #ddd">|</span>
-      <span style="color: #667eea; font-weight: 500">待补充</span>
-      <span style="color: #ddd">·</span>
-      <span>Accelerator · Collective · n_gpu · timestamp</span>
-      <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
-        来源：JSON 测试输出，接入后自动填充
-      </span>
-    </div>
+      <!-- 测试环境 + 数据明细：用 flex gap 分隔，避免 margin 透出右侧栏灰底 -->
+      <div class="detail-env-table-gap">
+        <!-- 测试环境横条（各维度：n_gpu · date · device，缺省项不展示） -->
+        <div
+          style="
+            padding: 10px 20px;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #888;
+          "
+        >
+          <span style="font-size: 14px">🖥</span>
+          <span style="font-weight: 600; color: #555">测试环境</span>
+          <span style="color: #ddd">|</span>
+          <span style="color: #667eea; font-weight: 500">{{ detailTestEnvLine }}</span>
+          <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
+            {{ detailTestEnvSourceHint }}
+          </span>
+        </div>
 
-    <!-- 详情内算子筛选在 HTML 中为 display:none，此处不渲染 -->
+        <!-- 详情内算子筛选在 HTML 中为 display:none，此处不渲染 -->
 
-    <div class="table-card">
+        <div class="table-card">
       <div class="table-head-row">
         <div class="table-title">数据明细</div>
         <div class="view-toggle">
@@ -264,7 +255,7 @@ const opLatencyMax = computed(() => {
           padding: 10px 14px;
           background: #e8f0fe;
           border-left: 4px solid #667eea;
-          border-radius: 0 8px 8px 0;
+          border-radius: 0 4px 4px 0;
           font-size: 12px;
           color: #3d5afe;
         "
@@ -660,11 +651,11 @@ const opLatencyMax = computed(() => {
                 </template>
                 <template v-else>
                   <td :style="{ color: platColor, fontWeight: 600 }">{{ r.model }}</td>
-                  <td style="font-weight: 600">{{ r.add!.toFixed(2) }}</td>
-                  <td>{{ r.copy!.toFixed(2) }}</td>
-                  <td>{{ r.scale!.toFixed(2) }}</td>
-                  <td>{{ r.triad!.toFixed(2) }}</td>
-                  <td style="font-weight: 700" :style="{ color: platColor }">{{ r.avg!.toFixed(2) }}</td>
+                  <td style="font-weight: 600">{{ bwGbpsCell(r.add) }}</td>
+                  <td>{{ bwGbpsCell(r.copy) }}</td>
+                  <td>{{ bwGbpsCell(r.scale) }}</td>
+                  <td>{{ bwGbpsCell(r.triad) }}</td>
+                  <td style="font-weight: 700" :style="{ color: platColor }">{{ bwGbpsCell(r.avg) }}</td>
                   <td
                     :style="{
                       fontWeight: 700,
@@ -683,21 +674,15 @@ const opLatencyMax = computed(() => {
                             :style="{
                               width:
                                 Math.round(
-                                  (r.avg! /
-                                    Math.max(
-                                      r.add!,
-                                      r.copy!,
-                                      r.scale!,
-                                      r.triad!,
-                                      BW_NVIDIA_BASELINE_GBPS,
-                                    )) *
-                                    100,
+                                  (((r.avg ?? 0) / bwBarDenom(r)) || 0) * 100,
                                 ) + '%',
                               background: platColor,
                             }"
                           />
                         </div>
-                        <span class="dual-ms" :style="{ color: platColor }">{{ r.avg!.toFixed(0) }}</span>
+                        <span class="dual-ms" :style="{ color: platColor }">{{
+                          r.avg != null && Number.isFinite(r.avg) ? Math.round(r.avg).toString() : '—'
+                        }}</span>
                       </div>
                       <div class="dual-row">
                         <span class="dual-lbl" style="color: #aaa">NVIDIA 基线</span>
@@ -707,15 +692,7 @@ const opLatencyMax = computed(() => {
                             :style="{
                               width:
                                 Math.round(
-                                  (BW_NVIDIA_BASELINE_GBPS /
-                                    Math.max(
-                                      r.add!,
-                                      r.copy!,
-                                      r.scale!,
-                                      r.triad!,
-                                      BW_NVIDIA_BASELINE_GBPS,
-                                    )) *
-                                    100,
+                                  ((BW_NVIDIA_BASELINE_GBPS / bwBarDenom(r)) || 0) * 100,
                                 ) + '%',
                               background: '#aaa',
                             }"
@@ -741,7 +718,8 @@ const opLatencyMax = computed(() => {
           {{ scoreTabHint }}
         </p>
       </div>
-    </div>
+        </div>
+      </div>
 
     <!-- 主图（与 HTML 标题文案一致） -->
     <div class="charts-grid">
@@ -806,10 +784,40 @@ const opLatencyMax = computed(() => {
         </a-tab-pane>
       </a-tabs>
     </div>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.detail-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  /* 与外层白卡片一致，避免块间距透出右侧栏灰底 */
+  background-color: #fff;
+}
+.detail-panel__header {
+  flex-shrink: 0;
+}
+.detail-panel__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 4px;
+  background-color: #fff;
+}
+.detail-panel__scroll .kpi-grid {
+  margin-bottom: 16px;
+}
+.detail-env-table-gap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: #ffffff;
+}
 .detail-chart {
   height: 280px;
   width: 100%;
@@ -817,8 +825,5 @@ const opLatencyMax = computed(() => {
 .ci-chart {
   height: 160px;
   width: 100%;
-}
-.kpi-val--sm {
-  font-size: 20px;
 }
 </style>

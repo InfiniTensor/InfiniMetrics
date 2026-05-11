@@ -12,6 +12,8 @@ export type OperatorTableRow = {
   remarks: string
   /** 该行是否参与得分 / 计入口径 n / 代表延迟选取 */
   scoreEligible: boolean
+  /** CSV date，详情横条可选展示 */
+  date?: string
 }
 
 /** remarks 含 failed 或 Device Type Not Supported 时，ic 延迟不参与得分（仍展示行） */

@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import VChart from 'vue-echarts'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
+import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 
 const {
   comparePageTitle,
@@ -10,8 +11,8 @@ const {
   compareScoreOption,
   compareLatencyOption,
   compareTableRows,
-  goBack,
 } = useInfiniDashboard()
+const { goOverview } = useDashboardNavigation()
 
 function hasChart(opt: object) {
   return opt && Object.keys(opt).length > 0
@@ -30,7 +31,7 @@ const showLatencyChart = computed(
           <div class="compare-page-title">{{ comparePageTitle }}</div>
           <div class="compare-subtitle">{{ comparePageSubtitle }}</div>
         </div>
-        <button type="button" class="back-btn" @click="goBack">← 返回概览</button>
+        <button type="button" class="back-btn" @click="goOverview">← 返回概览</button>
       </div>
       <div class="compare-kpi-grid">
         <div

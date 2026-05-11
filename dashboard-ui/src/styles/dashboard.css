@@ -16,7 +16,7 @@ body{
   --grad:linear-gradient(160deg,#3d5499 0%,#4a6ab8 55%,#6080cc 100%);
   --grad-green:linear-gradient(135deg,#00c853 0%,#00e676 100%);
   --card-shadow:0 10px 40px rgba(0,0,0,0.12);
-  --card-radius:16px;
+  --card-radius:4px;
 }
 
 /* ══ Layout：整页占满视口，仅内层 content-panel 滚动，避免 body 双滚动条 ══ */
@@ -194,11 +194,30 @@ body{
   gap:16px;
   flex:1;
   min-height:0;
-  overflow-y:auto;
-  padding:0 0 12px;
+  /* 滚动由各子视图自行承担：详情页标题栏固定在卡片顶，正文在 .detail-panel__scroll 内滚动 */
+  overflow:hidden;
+  padding:0 0 16px;
 }
-.overview-panel,.detail-wrap,.compare-wrap{display:none;}
-.overview-panel.active,.detail-wrap.active,.compare-wrap.active{display:block;}
+.overview-panel,
+.detail-wrap,
+.compare-wrap{
+  min-height:0;
+  display:none;
+}
+.overview-panel.active,
+.compare-wrap.active{
+  display:block;
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+}
+.detail-wrap.active{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
 .overview-wrap.hidden{display:block;}
 
 /* global breadcrumb（灰底区域：无底部分割线与额外下边距，间距由 right-panel gap 控制） */
@@ -224,18 +243,25 @@ body{
   box-shadow:0 4px 14px rgba(102,126,234,.4);transition:all .2s;
 }
 .back-btn:hover{opacity:.88;transform:translateY(-1px);}
-.detail-title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-.detail-title{font-size:14px;font-weight:700;color:#1a1a2e;}
+.detail-title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:#fff;
+  padding-bottom:14px;
+  margin-bottom:0;
+}
+.detail-title{font-size:17px;font-weight:700;color:#1a1a2e;}
 
 /* KPI cards */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
 .kpi-card{
-  padding:18px;background:linear-gradient(135deg,#667eea12,#764ba212);
-  border-radius:12px;text-align:center;
+  padding:18px;background:#f2f3f5;
+  border-radius:var(--card-radius);text-align:center;
 }
-.kpi-val{font-size:28px;font-weight:700;color:var(--blue);margin-bottom:4px;}
-.kpi-lbl{font-size:12px;color:#888;}
-.kpi-sub{font-size:11px;color:#aaa;margin-top:3px;}
+.kpi-val{font-size:28px;font-weight:700;color:var(--blue);margin-bottom:4px;line-height:1.2;}
+.kpi-lbl{font-size:14px;color:#767676;}
+.kpi-sub{font-size:14px;color:#9a9a9a;margin-top:3px;line-height:1.4;}
 
 /* op tags */
 .op-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px;}
@@ -261,7 +287,7 @@ body{
 }
 .table-head-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
 .table-title{font-size:17px;font-weight:700;color:#1a1a2e;}
-.view-toggle{display:flex;background:#f0f2f5;border-radius:8px;overflow:hidden;}
+.view-toggle{display:flex;background:#f0f2f5;border-radius:var(--card-radius);overflow:hidden;}
 .vt-btn{padding:7px 16px;border:none;background:transparent;color:#666;font-size:12px;cursor:pointer;}
 .vt-btn.active{background:var(--grad);color:#fff;}
 .table-wrap{overflow-x:auto;}
@@ -307,8 +333,8 @@ tr:hover td{background:#f8f9ff;}
 .ci-tab.active{background:var(--grad);color:#fff;}
 .ci-content{display:none;}
 .ci-content.active{display:block;}
-.ci-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
-.ci-stat{padding:14px;background:#f8f9ff;border-radius:10px;text-align:center;}
+.ci-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px;}
+.ci-stat{padding:14px;background:#f8f9ff;border-radius:var(--card-radius);text-align:center;}
 .ci-stat-val{font-size:22px;font-weight:700;color:var(--blue);}
 .ci-stat-lbl{font-size:11px;color:#888;margin-top:4px;}
 
@@ -352,8 +378,8 @@ tr:hover td{background:#f8f9ff;}
 .compare-title-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
 .compare-page-title{font-size:22px;font-weight:700;color:#1a1a2e;}
 .compare-subtitle{font-size:12px;color:#888;}
-.compare-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}
-.compare-kpi-card{padding:15px;background:#f8f9ff;border-radius:12px;}
+.compare-kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;}
+.compare-kpi-card{padding:15px;background:#f8f9ff;border-radius:var(--card-radius);}
 .compare-kpi-name{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:8px;}
 .compare-kpi-score{font-size:26px;font-weight:800;}
 .compare-kpi-meta{font-size:11px;color:#888;margin-top:4px;}
@@ -382,4 +408,6 @@ tr:hover td{background:#f8f9ff;}
   max-height:100svh;
   overflow:hidden;
   box-sizing:border-box;
+  /* 仪表盘整体衬底（与右侧 .right-panel 一致）；白卡片、侧栏渐变叠在上面 */
+  background:#f7f8fa;
 }

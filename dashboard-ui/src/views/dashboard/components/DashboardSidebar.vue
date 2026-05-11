@@ -2,6 +2,7 @@
 import { ClockCircleOutlined } from '@ant-design/icons-vue'
 import { DATA_UPDATED_AT } from '@/data'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
+import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 
 const {
   PLATFORMS,
@@ -13,6 +14,12 @@ const {
   selectDomestic,
   setDim,
 } = useInfiniDashboard()
+const { goOverview } = useDashboardNavigation()
+
+function onSetDim(i: number) {
+  setDim(i)
+  void goOverview()
+}
 
 function isBrandActive(key: string) {
   return selectedPlatKeys.value.includes(key)
@@ -53,7 +60,7 @@ function isBrandActive(key: string) {
             :key="d.key"
             class="dim-item"
             :class="{ active: activeDim === i }"
-            @click="setDim(i)"
+            @click="onSetDim(i)"
           >
             {{ d.label }}
           </div>

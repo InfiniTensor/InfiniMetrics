@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { provide } from 'vue'
+import { RouterView } from 'vue-router'
 import { createInfiniDashboardStore } from '@/features/dashboard/createInfiniDashboardStore'
 import { INFINI_DASHBOARD_KEY } from '@/features/dashboard/injection'
-import DashboardView from '@/views/dashboard/DashboardView.vue'
 
 const dashboardStore = createInfiniDashboardStore()
 provide(INFINI_DASHBOARD_KEY, dashboardStore)
@@ -10,6 +10,6 @@ provide(INFINI_DASHBOARD_KEY, dashboardStore)
 
 <template>
   <div id="app" class="ib-dashboard-root">
-    <DashboardView />
+    <RouterView />
   </div>
 </template>

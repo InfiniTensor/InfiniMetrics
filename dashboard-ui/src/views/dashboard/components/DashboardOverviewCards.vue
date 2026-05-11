@@ -3,14 +3,10 @@ import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { computed } from 'vue'
 import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
+import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 
-const {
-  PLATFORMS,
-  overviewCards,
-  comparePlatKeys,
-  openDetail,
-  toggleCompare,
-} = useInfiniDashboard()
+const { PLATFORMS, overviewCards, comparePlatKeys, toggleCompare } = useInfiniDashboard()
+const { goDetail } = useDashboardNavigation()
 
 const sortedCards = computed(() => overviewCards.value)
 
@@ -57,7 +53,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
       v-else
       :key="c.key"
       class="score-card"
-      @click="openDetail(c.key)"
+      @click="goDetail(c.key)"
     >
       <div class="card-head">
         <div class="card-head-row card-head-row--top">

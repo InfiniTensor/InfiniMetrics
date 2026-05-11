@@ -4,7 +4,8 @@ import './style.css'
 import './styles/dashboard.css'
 import { setupEcharts } from './plugins/echarts'
 import App from './App.vue'
+import { router } from './router'
 
 setupEcharts()
 
-createApp(App).mount('#app')
+createApp(App).use(router).mount('#app')

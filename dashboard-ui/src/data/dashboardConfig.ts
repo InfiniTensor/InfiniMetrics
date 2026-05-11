@@ -14,6 +14,9 @@ import {
   TRAIN_TABLE_FROM_FILES,
 } from './generatedFromFiles'
 
+/** 由 `npm run generate:data` 写入，含各维度数据源路径与日期元信息 */
+export { BENCHMARK_DATA_META }
+
 /** 自 dashboard_preview.html 同步的静态配置，勿改业务含义 */
 
 /** 用 `new_data/operator`、`new_data/infer`、`new_data/train`、`new_data/comm`、`new_data/bw` 下生成数据覆盖对应平台（npm run generate:data） */
@@ -34,7 +37,7 @@ function mergeByPlatform<T extends Record<string, unknown>>(base: T, patch: Part
   return out
 }
 
-/** 训练 / 通信详情：按平台整表替换（值为行数组） */
+/** 训练 / 通信详情：按平台整表替换（值为行数组；空数组表示「无导入数据」不写入） */
 function mergeTrainTableByPlatform<T extends Record<string, unknown[]>>(
   base: T,
   patch: Partial<Record<string, unknown[]>>,
@@ -54,11 +57,19 @@ function bwStaticRow(r: {
   scale: number | null
   triad: number | null
   avg: number | null
+  date?: string
 }): BwDetailRow {
-  return {
-    ...r,
+  const out: BwDetailRow = {
+    model: r.model,
+    add: r.add,
+    copy: r.copy,
+    scale: r.scale,
+    triad: r.triad,
+    avg: r.avg,
     vsNvidia: r.avg != null ? bwVsNvidiaPercent(r.avg) : 100,
   }
+  if (r.date) out.date = r.date
+  return out
 }
 
 export const PLATFORMS = [
@@ -360,13 +371,13 @@ export interface TrainDetailRow {
 
 const TRAIN_TABLE_STATIC: Record<string, TrainDetailRow[]> = {
   nvidia:[
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:2564, baseline:2564, vsA100:100, note:'global_bs=128', nGpu:8, seqLen:8192},
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq4096', dtype:'BF16', flashAttn:'on',  tps:2890, baseline:2890, vsA100:100, note:'', nGpu:8, seqLen:4096},
-    {framework:'megatron', model:'llama3-70b',parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:312,  baseline:312,  vsA100:100, note:'pipeline=4', nGpu:8, seqLen:8192},
-    {framework:'bmtrain',  model:'llama3-8b', parallel:'8 GPU · seq2048', dtype:'BF16', flashAttn:'off', tps:1820, baseline:1820, vsA100:100, note:'', nGpu:8, seqLen:2048},
+    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:2564, baseline:2564, vsA100:100, note:'global_bs=128', nGpu:8, seqLen:8192, date:'2026-04-29'},
+    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq4096', dtype:'BF16', flashAttn:'on',  tps:2890, baseline:2890, vsA100:100, note:'', nGpu:8, seqLen:4096, date:'2026-04-29'},
+    {framework:'megatron', model:'llama3-70b',parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:312,  baseline:312,  vsA100:100, note:'pipeline=4', nGpu:8, seqLen:8192, date:'2026-04-29'},
+    {framework:'bmtrain',  model:'llama3-8b', parallel:'8 GPU · seq2048', dtype:'BF16', flashAttn:'off', tps:1820, baseline:1820, vsA100:100, note:'', nGpu:8, seqLen:2048, date:'2026-04-29'},
   ],
   metax:[
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on', tps:438, baseline:2564, vsA100:17, note:'', nGpu:8, seqLen:8192},
+    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on', tps:438, baseline:2564, vsA100:17, note:'', nGpu:8, seqLen:8192, date:'2026-04-29'},
   ],
 }
 
@@ -389,12 +400,12 @@ export interface CommDetailRow {
 
 const COMM_TABLE_STATIC: Record<string, CommDetailRow[]> = {
   nvidia:[
-    {linkType:'NVLink',  commType:'p2p',      nGpu:2, bw:270.0, baseline:270.0, vsA100:100, note:'NVLink 单向基准'},
-    {linkType:'NVLink',  commType:'allreduce', nGpu:8, bw:35.0,  baseline:35.0,  vsA100:100, note:'NVLink 单向基准'},
+    {linkType:'NVLink',  commType:'p2p',      nGpu:2, bw:270.0, baseline:270.0, vsA100:100, note:'NVLink 单向基准', date:'2026-04-29'},
+    {linkType:'NVLink',  commType:'allreduce', nGpu:8, bw:35.0,  baseline:35.0,  vsA100:100, note:'NVLink 单向基准', date:'2026-04-29'},
   ],
   metax:[
-    {linkType:'MetaxLink', commType:'p2p',      nGpu:2, bw:53.1, baseline:270.0, vsA100:20,  note:''},
-    {linkType:'MetaxLink', commType:'allreduce', nGpu:8, bw:45.8, baseline:35.0, vsA100:131, note:'超越 NVLink allreduce'},
+    {linkType:'MetaxLink', commType:'p2p',      nGpu:2, bw:53.1, baseline:270.0, vsA100:20,  note:'', date:'2026-04-29'},
+    {linkType:'MetaxLink', commType:'allreduce', nGpu:8, bw:45.8, baseline:35.0, vsA100:131, note:'超越 NVLink allreduce', date:'2026-04-29'},
   ],
 }
 
@@ -403,7 +414,7 @@ export const COMM_TABLE = mergeTrainTableByPlatform(
   COMM_TABLE_FROM_FILES as unknown as Partial<Record<string, CommDetailRow[]>>,
 ) as Record<string, CommDetailRow[]>
 
-// ── 访存详情数据（`new_data/bw/{platform}_bw_{date}.csv` 经 generate:data 覆盖同 key 平台）
+// ── 访存详情数据（`new_data/bw/{platform}_bw_{date}.csv` 与 `new_data/bw/bw_template.csv` 经 generate:data 覆盖同 key 平台）
 const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
   nvidia: [
     bwStaticRow({
@@ -413,6 +424,7 @@ const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
       scale: 1579.7755,
       triad: 1634.1444,
       avg: 1607.4561,
+      date: '2026-04-29',
     }),
   ],
   cambricon: [
@@ -423,6 +435,7 @@ const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
       scale: 2116.64,
       triad: 2153.35,
       avg: 2131.43,
+      date: '2026-04-29',
     }),
     bwStaticRow({
       model: 'MLU370',
@@ -431,6 +444,7 @@ const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
       scale: 260.33,
       triad: 256.63,
       avg: 258.67,
+      date: '2026-04-29',
     }),
   ],
   ascend: [
@@ -451,6 +465,7 @@ const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
       scale: 1677.67,
       triad: 1677.67,
       avg: 1677.67,
+      date: '2026-04-29',
     }),
   ],
   mthreads: [
@@ -461,10 +476,19 @@ const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
       scale: 1400.9,
       triad: 1400.9,
       avg: 1400.9,
+      date: '2026-04-29',
     }),
   ],
   iluvatar: [
-    bwStaticRow({ model: 'TG150', add: 586, copy: 586, scale: 586, triad: 586, avg: 586 }),
+    bwStaticRow({
+      model: 'TG150',
+      add: 586,
+      copy: 586,
+      scale: 586,
+      triad: 586,
+      avg: 586,
+      date: '2026-04-29',
+    }),
     bwStaticRow({
       model: 'TG200',
       add: null,
@@ -472,6 +496,7 @@ const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
       scale: null,
       triad: null,
       avg: null,
+      date: '2026-04-29',
     }),
   ],
 }

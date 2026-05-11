@@ -1,6 +1,7 @@
 import { Modal } from 'ant-design-vue'
 import { computed, ref } from 'vue'
 import {
+  BENCHMARK_DATA_META,
   BW_TABLE,
   CARD_DATA,
   COMM_TABLE,
@@ -26,11 +27,16 @@ import {
   filterInferRows,
 } from '@/features/dashboard/inferBenchmark'
 import { filterCommRows } from '@/features/dashboard/commBenchmark'
-import {
-  BW_NVIDIA_BASELINE_GBPS,
-  pickBestBwRow,
-} from '@/features/dashboard/bwBenchmark'
+import { BW_NVIDIA_BASELINE_GBPS, pickBestBwRow } from '@/features/dashboard/bwBenchmark'
 import { filterTrainRows } from '@/features/dashboard/trainBenchmark'
+import {
+  buildBwTestEnvLine,
+  buildCommTestEnvLine,
+  buildInferTestEnvLine,
+  buildOpTestEnvLine,
+  buildTrainTestEnvLine,
+  DETAIL_TEST_ENV_SOURCE_HINT,
+} from '@/features/dashboard/detailTestEnvBar'
 import {
   buildBwBarAvg,
   buildBwBarModes,
@@ -51,7 +57,18 @@ export type MainView = 'overview' | 'detail' | 'compare'
 
 const OTABLE = OP_TABLE as Record<
   string,
-  Record<string, { shape: string; dtype: string; ic: number; pt: number; remarks?: string; scoreEligible?: boolean }[]>
+  Record<
+    string,
+    {
+      shape: string
+      dtype: string
+      ic: number
+      pt: number
+      remarks?: string
+      scoreEligible?: boolean
+      date?: string
+    }[]
+  >
 >
 
 type InferRowCore = {
@@ -68,6 +85,7 @@ type InferRowCore = {
   nvidiaBaselineTps?: number | null
   nGpu?: number
   remarks?: string
+  date?: string
 }
 
 const ITABLE = INFER_TABLE as unknown as Record<
@@ -82,6 +100,17 @@ const TTRAIN = TRAIN_TABLE as Record<string, TrainRow[] | undefined>
 const CTABLE = COMM_TABLE as Record<string, CommDetailRow[] | undefined>
 
 const BTABLE = BW_TABLE as Record<string, BwDetailRow[] | undefined>
+
+type BenchMetaFileDates = {
+  trainSourceFileDateByPlatform?: Record<string, string>
+  commSourceFileDateByPlatform?: Record<string, string>
+  bwSourceFileDateByPlatform?: Record<string, string>
+}
+
+function benchSourceFileDate(plat: string, dim: keyof BenchMetaFileDates): string | undefined {
+  const m = BENCHMARK_DATA_META as BenchMetaFileDates
+  return m[dim]?.[plat]
+}
 
 export function createInfiniDashboardStore() {
   const selectedPlatKeys = ref<string[]>(PLATFORMS.map((p) => p.key))
@@ -108,11 +137,13 @@ export function createInfiniDashboardStore() {
     const raw = (CARD_DATA as Record<string, CardRow[]>)[dim.key] || []
     let data = raw.filter((c) => selectedPlatKeys.value.includes(c.key))
     data = applyCardFilter(data, activeDim.value, filterState.value) as CardRow[]
-    const sorted = [...data].sort((a, b) =>
-      sortDesc.value
-        ? (b.ownScore ?? 0) - (a.ownScore ?? 0)
-        : (a.ownScore ?? 0) - (b.ownScore ?? 0),
-    )
+    const sorted = [...data].sort((a, b) => {
+      const va = a.ownScore ?? 0
+      const vb = b.ownScore ?? 0
+      const primary = sortDesc.value ? vb - va : va - vb
+      if (primary !== 0) return primary
+      return String(a.key).localeCompare(String(b.key))
+    })
     return sorted
   })
 
@@ -192,18 +223,6 @@ export function createInfiniDashboardStore() {
     return filterTrainRows(TTRAIN[plat], pill)
   })
 
-  const trainTestEnvLine = computed(() => {
-    const rows = trainDetailRows.value
-    const r = rows.length ? rows.reduce((a, b) => (a.tps >= b.tps ? a : b)) : null
-    if (!r) return '待补充（无训练数据）'
-    const parts = [
-      r.nGpu != null && r.nGpu > 0 ? `${r.nGpu} GPU` : '',
-      r.dtype ? `精度 ${r.dtype}` : '',
-      r.framework ? `框架 ${r.framework}` : '',
-    ].filter(Boolean)
-    return parts.join(' · ')
-  })
-
   const commNvidiaBaselineRows = computed(() => CTABLE.nvidia || [])
 
   const commDetailRows = computed(() => {
@@ -219,17 +238,49 @@ export function createInfiniDashboardStore() {
     return pickBestBwRow(rows) ?? rows[0] ?? null
   })
 
-  const inferTestEnvLine = computed(() => {
-    const rows = inferPrefillFiltered.value
-    const r = rows[0]
-    if (!r) return '待补充（无 Prefill 数据）'
-    const parts = [
-      `n_gpu=${r.nGpu ?? '—'}`,
-      r.remarks ? `硬件 ${r.remarks}` : '',
-      r.dtype ? `精度 ${r.dtype}` : '',
-    ].filter(Boolean)
-    return parts.join(' · ')
+  const detailTestEnvLine = computed(() => {
+    const dk = activeDimKey.value
+    const plat = detailState.value.platKey
+    if (dk === 'infer') {
+      const pack = ITABLE[plat]
+      const inferWide = [...(pack?.prefill ?? []), ...(pack?.decode ?? [])]
+      return buildInferTestEnvLine(
+        inferDetailTabRows.value as InferRowCore[],
+        inferWide,
+      )
+    }
+    if (dk === 'op') {
+      const platOps = OTABLE[plat] || {}
+      const platformWide = Object.values(platOps).flat() as { date?: string }[]
+      return buildOpTestEnvLine(plat, opDetailRows.value, platformWide)
+    }
+    if (dk === 'train') {
+      return buildTrainTestEnvLine(
+        plat,
+        trainDetailRows.value,
+        TTRAIN[plat] ?? [],
+        benchSourceFileDate(plat, 'trainSourceFileDateByPlatform'),
+      )
+    }
+    if (dk === 'comm') {
+      return buildCommTestEnvLine(
+        plat,
+        commDetailRows.value,
+        CTABLE[plat] ?? [],
+        benchSourceFileDate(plat, 'commSourceFileDateByPlatform'),
+      )
+    }
+    if (dk === 'bw') {
+      return buildBwTestEnvLine(
+        plat,
+        BTABLE[plat] || [],
+        benchSourceFileDate(plat, 'bwSourceFileDateByPlatform'),
+      )
+    }
+    return '—'
   })
+
+  const detailTestEnvSourceHint = computed(() => DETAIL_TEST_ENV_SOURCE_HINT)
 
   const lineChartOption = computed(() => {
     const plat = detailPlat.value
@@ -596,32 +647,6 @@ export function createInfiniDashboardStore() {
     comparePlatKeys.value = []
   }
 
-  function openComparePage() {
-    const cards = compareCards.value
-    if (cards.length < 2) {
-      Modal.warning({ title: '提示', content: '请至少选择 2 个有当前维度数据的平台' })
-      return
-    }
-    switchMainView('compare')
-  }
-
-  function openDetail(platKey: string) {
-    detailState.value.platKey = platKey
-    detailState.value.opKey = 'CausalSoftmax'
-    detailState.value.prec = '全部'
-    detailState.value.inferTab = 'prefill'
-    detailTableTab.value = 'data'
-    const plat = PLATFORMS.find((p) => p.key === platKey)!
-    const dim = DIMS[activeDim.value]
-    bcBrand.value = plat.name
-    bcDim.value = dim.label
-    switchMainView('detail')
-  }
-
-  function goBack() {
-    switchMainView('overview')
-  }
-
   function switchMainView(v: MainView) {
     currentView.value = v
   }
@@ -673,9 +698,9 @@ export function createInfiniDashboardStore() {
     opDetailRows,
     inferDetailTabRows,
     inferNvidiaTabRows,
-    inferTestEnvLine,
+    detailTestEnvLine,
+    detailTestEnvSourceHint,
     trainDetailRows,
-    trainTestEnvLine,
     commDetailRows,
     commNvidiaBaselineRows,
     lineChartOption,
@@ -700,9 +725,6 @@ export function createInfiniDashboardStore() {
     toggleSort,
     toggleCompare,
     clearCompare,
-    openComparePage,
-    openDetail,
-    goBack,
     switchMainView,
     opTagKeys,
     setOp,

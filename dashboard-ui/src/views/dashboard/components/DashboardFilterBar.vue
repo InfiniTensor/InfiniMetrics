@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { Modal } from 'ant-design-vue'
 import { computed } from 'vue'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
+import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 
 const store = useInfiniDashboard()
 const {
@@ -13,9 +15,18 @@ const {
   toggleSort,
   setFilter,
   clearCompare,
-  openComparePage,
+  compareCards,
   toggleCompare,
 } = store
+const { goCompare } = useDashboardNavigation()
+
+function onOpenComparePage() {
+  if (compareCards.value.length < 2) {
+    Modal.warning({ title: '提示', content: '请至少选择 2 个有当前维度数据的平台' })
+    return
+  }
+  void goCompare()
+}
 
 const dim = computed(() => DIMS[activeDim.value])
 const fs = computed(() => filterState.value[dim.value.key] || {})
@@ -89,7 +100,7 @@ const filterBarTheme = {
       <div class="compare-bar-actions">
         <a-space wrap>
           <a-button @click="clearCompare">清空</a-button>
-          <a-button type="primary" @click="openComparePage">开始对比</a-button>
+          <a-button type="primary" @click="onOpenComparePage">开始对比</a-button>
         </a-space>
       </div>
     </div>

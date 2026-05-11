@@ -13,6 +13,8 @@ export type InferPrefillRow = {
   dtype: string
   nGpu: number
   remarks: string
+  /** 原始 CSV date，横条可选展示 */
+  date?: string
   tps: number
   ttft?: number
   /** 单步 decode 延迟参考（ms） */
@@ -33,6 +35,7 @@ export type InferDecodeRow = {
   dtype: string
   nGpu: number
   remarks: string
+  date?: string
   tps: number
   decodeLatencyMs?: number
   vsNvidia: number | null

@@ -1,12 +1,23 @@
 /**
  * 从仓库根目录 `new_data/operator`、`new_data/infer`、`new_data/train`、`new_data/comm`、`new_data/bw` 生成 `src/data/generatedFromFiles.ts`。
+ *
+ * 前端读的是本脚本生成进 `generatedFromFiles.ts` 的数据，不会在浏览器里直接打开 Excel/CSV。
+ * 改 `new_data/**` 后必须执行：`npm run generate:data`（`npm run dev` / `npm run build` 已配置为执行前自动生成）。
+ *
+ * 通信：`new_data/comm/{plat}_comm_YYYYMMDD.xlsx` 或同名的 `.csv`（同平台同时存在时优先 CSV）；文件名 8 位日期会参与行内日期的对齐。
+ * 访存：`{plat}_bw_YYYYMMDD.csv` 与可选的 `bw/bw_template.csv`（多平台、含 platform 列）。
  * 算子 / 推理 / 训练 / 通信规则见各 `*Benchmark.ts`。
  */
 import { parse } from 'csv-parse/sync'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import * as XLSX from 'xlsx'
+import * as XLSXImport from 'xlsx'
+/** tsx / ESM 下 xlsx 常为 `default` 导出，`import *` 无 `readFile` */
+const XLSX =
+  typeof (XLSXImport as unknown as { readFile?: unknown }).readFile === 'function'
+    ? (XLSXImport as unknown as typeof import('xlsx'))
+    : ((XLSXImport as unknown as { default: typeof import('xlsx') }).default as typeof import('xlsx'))
 import {
   buildInferCardMetrics,
   inferConfigKey,
@@ -59,6 +70,8 @@ const OUT_FILE = path.join(__dirname, '..', 'src', 'data', 'generatedFromFiles.t
 const PLATFORM_ALIAS: Record<string, string> = {
   moore: 'mthreads',
   ali: 'generic',
+  nvdia: 'nvidia',
+  nivdia: 'nvidia',
 }
 
 function normalizePlatform(raw: string | undefined): string {
@@ -135,6 +148,7 @@ function parseOperatorCsv(
       remarks,
       scoreEligible,
     }
+    if (date) outRow.date = date
 
     if (!byPlat[plat]) byPlat[plat] = {}
     if (!byPlat[plat][opKey]) byPlat[plat][opKey] = []
@@ -167,6 +181,13 @@ function pickPrefillDecodeKeys(sample: Record<string, string>): { pk: string; dk
   )
   if (pk && dk) return { pk, dk }
   return null
+}
+
+/** `new_data/.../nvidia_train_20260506.xlsx` 文件名中的 8 位日期 → `2026-05-06` */
+function fileStampYmdToIso(stamp: string): string {
+  const s = String(stamp || '').trim()
+  if (/^\d{8}$/.test(s)) return `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}`
+  return ''
 }
 
 function inferDateToSortable(s: string): string {
@@ -254,7 +275,7 @@ function parseInferCsvNew(
   for (const r of flats) {
     const key = inferConfigKey(r.batch, r.inLen, r.outLen)
     if (r.prefillTps != null) {
-      prefill.push({
+      const preRow: InferPrefillRow = {
         configKey: key,
         batch: r.batch,
         inLen: r.inLen,
@@ -269,10 +290,12 @@ function parseInferCsvNew(
         vsNvidia: null,
         nvidiaBaselineTps: null,
         framework: INFER_FRAMEWORK,
-      })
+      }
+      if (r.date) preRow.date = r.date
+      prefill.push(preRow)
     }
     if (r.decodeTps != null) {
-      decode.push({
+      const decRow: InferDecodeRow = {
         configKey: key,
         batch: r.batch,
         inLen: r.inLen,
@@ -286,7 +309,9 @@ function parseInferCsvNew(
         vsNvidia: null,
         nvidiaBaselineTps: null,
         framework: INFER_FRAMEWORK,
-      })
+      }
+      if (r.date) decRow.date = r.date
+      decode.push(decRow)
     }
   }
 
@@ -346,20 +371,90 @@ function normalizeXlsxHeaderKey(k: string): string {
     .replace(/\s+/g, '_')
 }
 
+/** 单元格 → 导入用字符串：`raw:false` 时多为已格式化文本；数字则可能是 Excel 日期序列号 */
+function spreadsheetCellToImportString(v: unknown): string {
+  if (v == null || v === '') return ''
+  if (typeof v === 'number' && Number.isFinite(v)) {
+    const n = v
+    if (n > 20000 && n < 120000) {
+      const whole = Math.floor(n)
+      const ms = (whole - 25569) * 86400 * 1000
+      const d = new Date(ms)
+      return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
+    }
+  }
+  if (v instanceof Date) {
+    return `${v.getFullYear()}-${String(v.getMonth() + 1).padStart(2, '0')}-${String(v.getDate()).padStart(2, '0')}`
+  }
+  return String(v).trim()
+}
+
 function readFirstSheetStringRecords(filePath: string): Record<string, string>[] {
   if (!fs.existsSync(filePath)) return []
   const wb = XLSX.readFile(filePath)
   const sheetName = wb.SheetNames[0]
   if (!sheetName) return []
   const sheet = wb.Sheets[sheetName]
-  const raw = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, { defval: '' })
+  const raw = XLSX.utils.sheet_to_json<Record<string, unknown>>(sheet, {
+    defval: '',
+    raw: false,
+  })
   return raw.map((rec) => {
     const o: Record<string, string> = {}
     for (const [k, v] of Object.entries(rec)) {
-      o[normalizeXlsxHeaderKey(k)] = String(v ?? '').trim()
+      o[normalizeXlsxHeaderKey(k)] = spreadsheetCellToImportString(v)
     }
     return o
   })
+}
+
+/** 解析出的日历日与文件名 `*_YYYYMMDD` 一致时，用文件名年月日（解决 Excel `4/28/25` 与 `20260428` 年份不一致） */
+function alignIsoDateToFileHint(parsedIso: string, fileHintIso?: string): string {
+  if (!fileHintIso || !/^\d{4}-\d{2}-\d{2}$/.test(fileHintIso)) return parsedIso
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(parsedIso)) return parsedIso
+  if (parsedIso.slice(5) === fileHintIso.slice(5)) return fileHintIso
+  return parsedIso
+}
+
+/** 通信/训练等：ISO、年在前斜杠、美区 M/D/YY、纯序列号字符串 → YYYY-MM-DD */
+function normalizeImportedCalendarDateString(s: string, fileHintIso?: string): string {
+  const t = String(s ?? '').trim()
+  if (!t) return ''
+  const iso = t.match(/^(\d{4}-\d{2}-\d{2})/)
+  if (iso) return alignIsoDateToFileHint(iso[1]!, fileHintIso)
+  const slash = t.match(/^(\d{4})[/.](\d{1,2})[/.](\d{1,2})/)
+  if (slash) {
+    const y = slash[1]
+    const mo = slash[2].padStart(2, '0')
+    const da = slash[3].padStart(2, '0')
+    return alignIsoDateToFileHint(`${y}-${mo}-${da}`, fileHintIso)
+  }
+  const mdy4 = t.match(/^(\d{1,2})[/.](\d{1,2})[/.](\d{4})$/)
+  if (mdy4) {
+    const mo = mdy4[1].padStart(2, '0')
+    const da = mdy4[2].padStart(2, '0')
+    const y = mdy4[3]
+    return alignIsoDateToFileHint(`${y}-${mo}-${da}`, fileHintIso)
+  }
+  const mdy2 = t.match(/^(\d{1,2})[/.](\d{1,2})[/.](\d{2})$/)
+  if (mdy2) {
+    let y = parseInt(mdy2[3], 10)
+    if (y < 100) y = y >= 70 ? 1900 + y : 2000 + y
+    const mo = mdy2[1].padStart(2, '0')
+    const da = mdy2[2].padStart(2, '0')
+    return alignIsoDateToFileHint(`${y}-${mo}-${da}`, fileHintIso)
+  }
+  if (/^\d+(\.\d+)?$/.test(t)) {
+    const num = parseFloat(t)
+    if (Number.isFinite(num) && num > 20000 && num < 120000) {
+      const whole = Math.floor(num)
+      const ms = (whole - 25569) * 86400 * 1000
+      const d = new Date(ms)
+      const out = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`
+      return alignIsoDateToFileHint(out, fileHintIso)
+    }
+  }
+  return t
 }
 
 function trainCell(o: Record<string, string>, ...keys: string[]): string {
@@ -382,7 +477,17 @@ function trainRowFromRecord(o: Record<string, string>): TrainTableRow | null {
   const dtype = normalizeTrainDtype(trainCell(o, 'dtype'))
   const flashRaw = parseFlashAttnCell(trainCell(o, 'flash_attn', 'flashattention'))
   const note = buildTrainNote(trainCell(o, 'zero_stage', 'zerostage'), trainCell(o, 'remarks', 'remark'))
-  const date = trainCell(o, 'date')
+  const dateRaw = trainCell(
+    o,
+    'date',
+    'test_date',
+    'run_date',
+    'data_date',
+    'experiment_date',
+    '测试日期',
+    '测试时间',
+  )
+  const date = normalizeImportedCalendarDateString(dateRaw)
   const mk = trainMatchKey(framework, model, nGpu, seqLen, dtype)
 
   const row: TrainTableRow = {
@@ -447,7 +552,7 @@ function commCell(o: Record<string, string>, ...keys: string[]): string {
   return ''
 }
 
-function commRowFromRecord(o: Record<string, string>): CommImportRow | null {
+function commRowFromRecord(o: Record<string, string>, fileHintIso?: string): CommImportRow | null {
   const commType = normalizeCommType(commCell(o, 'comm_type', 'commtype', 'type'))
   if (commType !== 'p2p' && commType !== 'allreduce') return null
   const nGpu = Math.round(parseNum(commCell(o, 'n_gpu', 'ngpu')))
@@ -456,7 +561,18 @@ function commRowFromRecord(o: Record<string, string>): CommImportRow | null {
   const linkRaw = commCell(o, 'link_type', 'linktype', 'link')
   const linkType = formatCommLinkType(linkRaw)
   const note = commCell(o, 'remarks', 'remark', 'note')
-  const date = commCell(o, 'date')
+  const dateRaw = commCell(
+    o,
+    'date',
+    'test_date',
+    'run_date',
+    'data_date',
+    'experiment_date',
+    'timestamp',
+    '测试日期',
+    '测试时间',
+  )
+  const date = normalizeImportedCalendarDateString(dateRaw, fileHintIso)
   const mk = commMatchKey(commType, nGpu)
   const row: CommImportRow = {
     matchKey: mk,
@@ -472,10 +588,47 @@ function commRowFromRecord(o: Record<string, string>): CommImportRow | null {
   return row
 }
 
-function ingestCommFile(filePath: string, forcedPlat: string, acc: Record<string, CommImportRow[]>) {
+function ingestCommFile(
+  filePath: string,
+  forcedPlat: string,
+  acc: Record<string, CommImportRow[]>,
+  fileHintIso?: string,
+) {
   const records = readFirstSheetStringRecords(filePath)
   for (const o of records) {
-    const row = commRowFromRecord(o)
+    const row = commRowFromRecord(o, fileHintIso)
+    if (!row) continue
+    if (!acc[forcedPlat]) acc[forcedPlat] = []
+    acc[forcedPlat].push(row)
+  }
+}
+
+function readCommCsvStringRecords(filePath: string): Record<string, string>[] {
+  if (!fs.existsSync(filePath)) return []
+  const text = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')
+  const records = parse(text, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_column_count: true,
+  }) as Record<string, unknown>[]
+  return records.map((rec) => {
+    const o: Record<string, string> = {}
+    for (const [k, v] of Object.entries(rec)) {
+      o[normalizeXlsxHeaderKey(String(k))] = String(v ?? '').trim()
+    }
+    return o
+  })
+}
+
+function ingestCommCsvFile(
+  filePath: string,
+  forcedPlat: string,
+  acc: Record<string, CommImportRow[]>,
+  fileHintIso?: string,
+) {
+  for (const o of readCommCsvStringRecords(filePath)) {
+    const row = commRowFromRecord(o, fileHintIso)
     if (!row) continue
     if (!acc[forcedPlat]) acc[forcedPlat] = []
     acc[forcedPlat].push(row)
@@ -525,7 +678,16 @@ function bwRowFromCsvRecord(o: Record<string, string>): BwDetailRow | null {
   const modesKnown = [addN, copyN, scaleN, triadN].filter((x) => x != null).length
   if (avg == null && modesKnown === 0) {
     const remarks = bwCsvCell(o, 'remarks', 'remark')
-    const date = bwCsvCell(o, 'date')
+    const date = bwCsvCell(
+      o,
+      'date',
+      'test_date',
+      'run_date',
+      'data_date',
+      'experiment_date',
+      '测试日期',
+      '测试时间',
+    )
     const row: BwDetailRow = {
       model,
       add: addN,
@@ -542,7 +704,16 @@ function bwRowFromCsvRecord(o: Record<string, string>): BwDetailRow | null {
 
   const vsNvidia = avg != null ? bwVsNvidiaPercent(avg) : 100
   const remarks = bwCsvCell(o, 'remarks', 'remark')
-  const date = bwCsvCell(o, 'date')
+  const date = bwCsvCell(
+    o,
+    'date',
+    'test_date',
+    'run_date',
+    'data_date',
+    'experiment_date',
+    '测试日期',
+    '测试时间',
+  )
   const row: BwDetailRow = {
     model,
     add: addN,
@@ -575,6 +746,40 @@ function parseBwCsv(filePath: string): BwDetailRow[] {
   return out
 }
 
+function maxBwTableDateIso(rows: BwDetailRow[]): string {
+  let max = ''
+  for (const r of rows) {
+    if (!r.date) continue
+    const iso = inferDateToSortable(r.date)
+    if (iso && iso > max) max = iso
+  }
+  return max
+}
+
+/** `new_data/bw/bw_template.csv`：多平台同文件，按 platform 列拆成与 `{plat}_bw_*.csv` 相同的结构 */
+function parseBwTemplateCsvByPlatform(filePath: string): Record<string, BwDetailRow[]> {
+  if (!fs.existsSync(filePath)) return {}
+  const text = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')
+  const records = parse(text, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_column_count: true,
+  }) as Record<string, unknown>[]
+  const byPlat: Record<string, BwDetailRow[]> = {}
+  for (const rec of records) {
+    const o = normalizeCsvRowKeys(rec)
+    const platRaw = bwCsvCell(o, 'platform', 'vendor', 'plat', 'chip')
+    const plat = normalizePlatform(platRaw === '' ? undefined : platRaw)
+    if (!plat) continue
+    const row = bwRowFromCsvRecord(o)
+    if (!row) continue
+    if (!byPlat[plat]) byPlat[plat] = []
+    byPlat[plat].push(row)
+  }
+  return byPlat
+}
+
 const CARD_TEMPLATE = {
   openScore: 100,
   ownFw: 'InfiniCore ✦',
@@ -594,6 +799,10 @@ function main() {
     trainDatasetUpdatedAt?: string
     commDatasetUpdatedAt?: string
     bwDatasetUpdatedAt?: string
+    /** 文件名 `*_train_YYYYMMDD.xlsx` 解析出的日期（行内无 date 时横条回退） */
+    trainSourceFileDateByPlatform?: Record<string, string>
+    commSourceFileDateByPlatform?: Record<string, string>
+    bwSourceFileDateByPlatform?: Record<string, string>
   } = {
     generatedAt: new Date().toISOString(),
     operatorSources: [],
@@ -701,6 +910,13 @@ function main() {
   const trainByPlat: Record<string, TrainTableRow[]> = {}
 
   const datedTrain = pickLatestByPlatform(DATA_TRAIN, /^(.+)_train_(\d+)\.xlsx$/i)
+  const trainFileDateByPlat: Record<string, string> = {}
+  for (const [plat, { date: stamp }] of Object.entries(datedTrain)) {
+    const iso = fileStampYmdToIso(stamp)
+    if (iso) trainFileDateByPlat[plat] = iso
+  }
+  if (Object.keys(trainFileDateByPlat).length) meta.trainSourceFileDateByPlatform = trainFileDateByPlat
+
   for (const [plat, { full }] of Object.entries(datedTrain)) {
     ingestTrainFile(full, plat, trainByPlat)
     if ((trainByPlat[plat] || []).length) {
@@ -744,11 +960,31 @@ function main() {
   const COMM_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
   const commByPlat: Record<string, CommImportRow[]> = {}
 
-  const datedComm = pickLatestByPlatform(DATA_COMM, /^(.+)_comm_(\d+)\.xlsx$/i)
-  for (const [plat, { full }] of Object.entries(datedComm)) {
-    ingestCommFile(full, plat, commByPlat)
-    if ((commByPlat[plat] || []).length) {
-      meta.commSources.push(full.replace(ROOT + path.sep, ''))
+  const datedCommXlsx = pickLatestByPlatform(DATA_COMM, /^(.+)_comm_(\d+)\.xlsx$/i)
+  const datedCommCsv = pickLatestByPlatform(DATA_COMM, /^(.+)_comm_(\d+)\.csv$/i)
+  const commPlats = new Set([...Object.keys(datedCommXlsx), ...Object.keys(datedCommCsv)])
+  const commFileDateByPlat: Record<string, string> = {}
+  for (const plat of commPlats) {
+    const csv = datedCommCsv[plat]
+    const xlsx = datedCommXlsx[plat]
+    const chosen = csv ?? xlsx
+    if (!chosen) continue
+    const iso = fileStampYmdToIso(chosen.date)
+    if (iso) commFileDateByPlat[plat] = iso
+  }
+  if (Object.keys(commFileDateByPlat).length) meta.commSourceFileDateByPlatform = commFileDateByPlat
+
+  for (const plat of commPlats) {
+    const csv = datedCommCsv[plat]
+    const xlsx = datedCommXlsx[plat]
+    if (csv) {
+      const hint = fileStampYmdToIso(csv.date)
+      ingestCommCsvFile(csv.full, plat, commByPlat, hint || undefined)
+      if ((commByPlat[plat] || []).length) meta.commSources.push(csv.full.replace(ROOT + path.sep, ''))
+    } else if (xlsx) {
+      const hint = fileStampYmdToIso(xlsx.date)
+      ingestCommFile(xlsx.full, plat, commByPlat, hint || undefined)
+      if ((commByPlat[plat] || []).length) meta.commSources.push(xlsx.full.replace(ROOT + path.sep, ''))
     }
   }
 
@@ -790,6 +1026,12 @@ function main() {
   const BW_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
 
   const datedBw = pickLatestByPlatform(DATA_BW, /^(.+)_bw_(\d+)\.csv$/i)
+  const bwFileDateByPlat: Record<string, string> = {}
+  for (const [plat, { date: stamp }] of Object.entries(datedBw)) {
+    const iso = fileStampYmdToIso(stamp)
+    if (iso) bwFileDateByPlat[plat] = iso
+  }
+
   for (const [plat, { full }] of Object.entries(datedBw)) {
     const rows = parseBwCsv(full)
     if (rows.length) {
@@ -809,6 +1051,37 @@ function main() {
     }
   }
 
+  const bwTemplatePath = path.join(DATA_BW, 'bw_template.csv')
+  if (fs.existsSync(bwTemplatePath)) {
+    const grouped = parseBwTemplateCsvByPlatform(bwTemplatePath)
+    const flatTemplate = Object.values(grouped).flat()
+    const templateFileMaxIso = maxBwTableDateIso(flatTemplate)
+    for (const [plat, rows] of Object.entries(grouped)) {
+      if (!rows.length) continue
+      if (!BW_TABLE_FROM_FILES[plat]) {
+        BW_TABLE_FROM_FILES[plat] = rows
+        meta.bwSources.push(bwTemplatePath.replace(ROOT + path.sep, ''))
+        const m = buildBwCardMetrics(rows)
+        if (m) {
+          BW_CARD_FROM_FILES[plat] = {
+            key: plat,
+            ownFw: 'HBM均值',
+            openFw: '',
+            openScore: null,
+            openVal: null,
+            ...m,
+          }
+        }
+      }
+      if (!bwFileDateByPlat[plat]) {
+        const rowIso = maxBwTableDateIso(rows)
+        bwFileDateByPlat[plat] = rowIso || templateFileMaxIso
+      }
+    }
+  }
+
+  if (Object.keys(bwFileDateByPlat).length) meta.bwSourceFileDateByPlatform = bwFileDateByPlat
+
   let maxBwDate = ''
   for (const rows of Object.values(BW_TABLE_FROM_FILES)) {
     for (const r of rows) {
@@ -823,7 +1096,7 @@ function main() {
   const ts = `/* eslint-disable */
 // 本文件由 npm run generate:data 自动生成，请勿手改。算子：new_data/operator；推理：new_data/infer；训练：new_data/train；通信：new_data/comm；访存：new_data/bw。
 
-export const OP_TABLE_FROM_FILES = ${JSON.stringify(OP_TABLE_FROM_FILES, null, 2)} as Record<string, Record<string, { shape: string; dtype: string; ic: number; pt: number; remarks: string; scoreEligible: boolean }[]>>
+export const OP_TABLE_FROM_FILES = ${JSON.stringify(OP_TABLE_FROM_FILES, null, 2)} as Record<string, Record<string, { shape: string; dtype: string; ic: number; pt: number; remarks: string; scoreEligible: boolean; date?: string }[]>>
 
 export const OP_CARD_FROM_FILES = ${JSON.stringify(OP_CARD_FROM_FILES, null, 2)} as Record<string, Record<string, unknown>>
 
