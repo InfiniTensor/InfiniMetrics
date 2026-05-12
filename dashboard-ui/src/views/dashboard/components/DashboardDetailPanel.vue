@@ -17,6 +17,7 @@ import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 import {
   computeOpRowScore,
+  opRemarksContainsFailed,
   remarksExcludeIcFromScore,
 } from '@/features/dashboard/operatorBenchmark'
 import { BW_NVIDIA_BASELINE_GBPS } from '@/features/dashboard/bwBenchmark'
@@ -153,6 +154,7 @@ type OpDetailRow = {
   pt: number
   remarks?: string
   scoreEligible?: boolean
+  date?: string
 }
 
 function opRowRemarks(r: OpDetailRow) {
@@ -177,19 +179,34 @@ const opLatencyMax = computed(() => {
 const opTableColumns: ColumnsType<OpDetailRow> = [
   { title: 'Shape 配置', dataIndex: 'shape', key: 'shape', width: 152, ellipsis: true },
   { title: '精度', key: 'dtype', width: 84 },
-  { title: 'InfiniCore ✦', key: 'ic', width: 118 },
-  { title: 'PyTorch', key: 'pt', width: 118 },
-  { title: '得分', key: 'score', width: 92 },
+  { title: 'InfiniCore（ms）', key: 'ic', width: 128 },
+  { title: 'PyTorch（ms）', key: 'pt', width: 120 },
+  {
+    title: '得分',
+    key: 'score',
+    width: 92,
+    sorter: (a: OpDetailRow, b: OpDetailRow) => {
+      const sa = opDetailScore(a)
+      const sb = opDetailScore(b)
+      if (sa == null && sb == null) return 0
+      if (sa == null) return 1
+      if (sb == null) return -1
+      return sa - sb
+    },
+    sortDirections: ['descend', 'ascend'],
+  },
   { title: '延迟对比', key: 'dual', width: 268, minWidth: 240 },
+  { title: '备注', key: 'remarks', width: 168, ellipsis: true },
 ]
 
-function opRowKey(r: OpDetailRow, i?: number) {
-  return `${i ?? 0}-${r.shape}-${r.dtype}`
+function opRowKey(r: OpDetailRow) {
+  return `${r.shape}|${r.dtype}|${r.ic}|${r.pt}|${opRowRemarks(r)}`
 }
 
 function opCustomRow(r: OpDetailRow) {
+  const warn = opRowWarning(r) && !opRemarksContainsFailed(r.remarks)
   return {
-    class: opRowWarning(r) ? 'op-detail-row op-detail-row--warn' : 'op-detail-row',
+    class: warn ? 'op-detail-row op-detail-row--warn' : 'op-detail-row',
   }
 }
 
@@ -447,13 +464,22 @@ function inferRowKey(r: InferRow) {
             :pagination="false"
             :bordered="false"
             table-layout="fixed"
-            :scroll="{ x: 832 }"
+            :scroll="{ x: 1062 }"
             :row-key="opRowKey"
             :custom-row="opCustomRow"
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'shape'">
-                <span class="shape-cell">{{ record.shape }}</span>
+                <span class="op-shape-lead">
+                  <span
+                    v-if="opRemarksContainsFailed((record as OpDetailRow).remarks)"
+                    class="op-failed-lead-icon"
+                    title="remarks 含 failed"
+                    aria-hidden="true"
+                    >⚠</span
+                  >
+                  <span class="shape-cell">{{ record.shape }}</span>
+                </span>
               </template>
               <template v-else-if="column.key === 'dtype'">
                 <span class="prec-badge" :class="precClass(record.dtype)">{{ record.dtype }}</span>
@@ -487,19 +513,18 @@ function inferRowKey(r: InferRow) {
                   </template>
                   <template v-else>
                     <span class="score-num score-na">—</span>
-                    <span
-                      v-if="opRowWarning(record as OpDetailRow)"
-                      class="op-warn-icon"
-                      title="该行 InfiniCore 延迟不参与计分"
-                      >⚠</span
-                    >
                   </template>
                 </div>
+              </template>
+              <template v-else-if="column.key === 'remarks'">
+                <span class="op-remarks-cell" :title="opRowRemarks(record as OpDetailRow)">
+                  {{ opRowRemarks(record as OpDetailRow) || '—' }}
+                </span>
               </template>
               <template v-else-if="column.key === 'dual'">
                 <div class="dual-bar">
                   <div class="dual-row">
-                    <span class="dual-lbl" :style="{ color: platColor }">自研</span>
+                    <span class="dual-lbl" :style="{ color: platColor }">InfiniCore</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
@@ -512,7 +537,7 @@ function inferRowKey(r: InferRow) {
                     <span class="dual-ms" :style="{ color: platColor }">{{ record.ic.toFixed(4) }}ms</span>
                   </div>
                   <div class="dual-row">
-                    <span class="dual-lbl" style="color: #aaa">开源</span>
+                    <span class="dual-lbl" style="color: #aaa">PyTorch</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
@@ -1014,6 +1039,35 @@ function inferRowKey(r: InferRow) {
 .ci-chart {
   height: 160px;
   width: 100%;
+}
+
+.op-shape-lead {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.op-failed-lead-icon {
+  flex-shrink: 0;
+  color: #e6a100;
+  font-size: 15px;
+  line-height: 1;
+  cursor: help;
+}
+
+/** 算子表「备注」：最多两行，超出省略号 */
+.op-remarks-cell {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  line-height: 1.4;
+  font-size: 11px;
+  color: #666;
+  white-space: normal;
 }
 
 </style>

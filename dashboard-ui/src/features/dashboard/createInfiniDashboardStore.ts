@@ -21,7 +21,11 @@ import {
   parseLatencyMs,
   type CardRow,
 } from '@/features/dashboard/dashboardFilterHelpers'
-import { canComputeOpRowScore } from '@/features/dashboard/operatorBenchmark'
+import {
+  canComputeOpRowScore,
+  computeOpRowScore,
+  formatOpLatencyMs,
+} from '@/features/dashboard/operatorBenchmark'
 import {
   alignInferSeries,
   filterInferRows,
@@ -70,6 +74,11 @@ const OTABLE = OP_TABLE as Record<
     }[]
   >
 >
+
+function firstOpKeyForPlat(platKey: string): string {
+  const keys = Object.keys(OTABLE[platKey] || {})
+  return keys[0] ?? 'CausalSoftmax'
+}
 
 type InferRowCore = {
   configKey: string
@@ -121,7 +130,7 @@ export function createInfiniDashboardStore() {
   const sortDesc = ref(true)
   const detailState = ref({
     platKey: 'nvidia',
-    opKey: 'CausalSoftmax',
+    opKey: firstOpKeyForPlat('nvidia'),
     prec: '全部',
     inferTab: 'prefill' as 'prefill' | 'decode',
   })
@@ -327,7 +336,12 @@ export function createInfiniDashboardStore() {
           canComputeOpRowScore(r.ic, r.pt, r.remarks ?? ''),
         )
         return valid.length
-          ? Math.round(valid.reduce((a, r) => a + (r.pt / r.ic) * 100, 0) / valid.length)
+          ? Math.round(
+              valid.reduce(
+                (a, r) => a + (computeOpRowScore(r.ic, r.pt, r.remarks ?? '') ?? 0),
+                0,
+              ) / valid.length,
+            )
           : 0
       })
       return buildOpBarAvgOption(opKeys, scores)
@@ -436,19 +450,49 @@ export function createInfiniDashboardStore() {
   const detailKpiCells = computed(() => {
     const platKey = detailState.value.platKey
     const dimKey = activeDimKey.value
+    if (dimKey === 'op') {
+      const opRows = opDetailRows.value
+      let bestScore = -1
+      let bestRow: (typeof opRows)[0] | null = null
+      for (const r of opRows) {
+        const s = computeOpRowScore(r.ic, r.pt, r.remarks ?? '')
+        if (s != null && s > bestScore) {
+          bestScore = s
+          bestRow = r
+        }
+      }
+      const cardRow = detailCard.value as CardRow & { extra?: string; opRecordSub?: string }
+      return [
+        {
+          val: bestScore >= 0 ? Math.round(bestScore) : '—',
+          lbl: '最优得分',
+          sub: 'InfiniCore vs PyTorch（全量测试中最高分所在行）',
+        },
+        {
+          val: opRows.length || '—',
+          lbl: '测试记录',
+          sub: cardRow.opRecordSub || cardRow.extra || '',
+        },
+        {
+          val: bestRow ? formatOpLatencyMs(bestRow.ic) : '—',
+          lbl: 'InfiniCore 代表延迟',
+          sub: '自研框架',
+          valSm: true,
+        },
+        {
+          val: bestRow ? formatOpLatencyMs(bestRow.pt) : '—',
+          lbl: 'PyTorch 代表延迟',
+          sub: '开源基准',
+          valSm: true,
+          muted: true,
+        },
+      ]
+    }
     const c = detailCard.value as CardRow & {
       ownVal?: string
       n?: number
       extra?: string
       ownScore?: number | null
-    }
-    if (dimKey === 'op') {
-      return [
-        { val: c.ownScore ?? '—', lbl: '最优得分', sub: 'InfiniCore vs PyTorch（全量测试中最高分所在行）' },
-        { val: c.n ?? '—', lbl: '测试记录', sub: c.extra || '' },
-        { val: c.ownVal ?? '—', lbl: 'InfiniCore 代表延迟', sub: '自研框架', valSm: true },
-        { val: c.openVal ?? '—', lbl: 'PyTorch 代表延迟', sub: '开源基准', valSm: true, muted: true },
-      ]
     }
     if (dimKey === 'infer') {
       const prefill = inferPrefillFiltered.value
@@ -591,7 +635,12 @@ export function createInfiniDashboardStore() {
   }
 
   function selectDomestic() {
-    selectedPlatKeys.value = PLATFORMS.filter((p) => p.domestic).map((p) => p.key)
+    const domesticKeys = PLATFORMS.filter((p) => p.domestic).map((p) => p.key)
+    const domesticSet = new Set(domesticKeys)
+    const sel = selectedPlatKeys.value
+    const isDomesticOnly =
+      sel.length === domesticKeys.length && sel.every((k) => domesticSet.has(k))
+    selectedPlatKeys.value = isDomesticOnly ? [] : domesticKeys
   }
 
   function setDim(i: number) {
@@ -608,7 +657,7 @@ export function createInfiniDashboardStore() {
     const pill = dim.filters[fi]?.pills[pi]
     if (currentView.value === 'detail' && k === 'op') {
       if (fi === 0 && pill && pill !== '全部') detailState.value.opKey = pill
-      if (fi === 1 && pill) detailState.value.prec = pill
+      if (fi === 1 && pill && pill !== '全部') detailState.value.prec = pill
     }
   }
 

@@ -3,12 +3,15 @@ import { Modal } from 'ant-design-vue'
 import { computed } from 'vue'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
+import { OP_TABLE, dtypesForOpPlatform } from '@/data'
 
 const store = useInfiniDashboard()
 const {
   DIMS,
   activeDim,
   filterState,
+  currentView,
+  detailState,
   sortDesc,
   comparePlatKeys,
   PLATFORMS,
@@ -30,6 +33,32 @@ function onOpenComparePage() {
 
 const dim = computed(() => DIMS[activeDim.value])
 const fs = computed(() => filterState.value[dim.value.key] || {})
+
+/** 顶栏 pills：`setFilter` 始终传并集维度下的索引；算子详情仅展示当前芯片在并集中的子集 */
+const filterBarFilterRows = computed(() => {
+  const d = dim.value
+  const view = currentView.value
+  const plat = detailState.value.platKey
+  const opTbl = OP_TABLE as Record<string, Record<string, unknown>>
+  return d.filters.map((f, fi) => {
+    const pills = f.pills.map((label, unionIndex) => ({ label, unionIndex }))
+    if (d.key === 'op' && fi === 0 && view === 'detail') {
+      const platKeys = new Set(Object.keys(opTbl[plat] || {}))
+      return {
+        label: f.label,
+        pills: pills.filter((x) => x.label !== '全部' && platKeys.has(x.label)),
+      }
+    }
+    if (d.key === 'op' && fi === 1 && view === 'detail') {
+      const platDtypes = dtypesForOpPlatform(OP_TABLE, plat)
+      return {
+        label: f.label,
+        pills: pills.filter((x) => x.label !== '全部' && platDtypes.has(x.label)),
+      }
+    }
+    return { label: f.label, pills }
+  })
+})
 
 const compareChosen = computed(() =>
   comparePlatKeys.value
@@ -56,7 +85,7 @@ const filterBarTheme = {
     :style="{ '--filter-bar-font-sm': `${filterBarTheme.token.fontSizeSM}px` }"
   >
     <div
-      v-for="(f, fi) in dim.filters"
+      v-for="(f, fi) in filterBarFilterRows"
       :key="f.label"
       class="filter-row"
     >
@@ -64,25 +93,29 @@ const filterBarTheme = {
       <div class="filter-pills">
         <a-space :size="[6, 4]" wrap>
           <a-button
-            v-for="(p, pi) in f.pills"
-            :key="`${fi}-${pi}-${p}`"
+            v-for="item in f.pills"
+            :key="`${fi}-${item.unionIndex}-${item.label}`"
             size="small"
-            :type="(fs[fi] ?? 0) === pi ? 'primary' : 'default'"
-            @click="setFilter(fi, pi)"
+            :type="(fs[fi] ?? 0) === item.unionIndex ? 'primary' : 'default'"
+            @click="setFilter(fi, item.unionIndex)"
           >
-            {{ p }}
+            {{ item.label }}
           </a-button>
         </a-space>
       </div>
-      <div v-if="fi === 0" class="filter-row-sort-wrap">
+      <div v-if="fi === 0 && currentView !== 'detail'" class="filter-row-sort-wrap">
         <a-button size="small" @click="toggleSort">
           ⇅ 按得分 {{ sortDesc ? '↓' : '↑' }}
         </a-button>
       </div>
     </div>
 
-    <!-- 对比条：与算子类型 / 精度等同在一卡片内 -->
-    <div class="compare-bar" :class="{ active: compareChosen.length > 0 }">
+    <!-- 概览 / 对比页展示；详情页不展示（业务上详情无「已选对比」） -->
+    <div
+      v-if="currentView !== 'detail'"
+      class="compare-bar"
+      :class="{ active: compareChosen.length > 0 }"
+    >
       <div class="compare-title">已选对比</div>
       <div class="compare-chips">
         <template v-if="compareChosen.length">

@@ -7896,7 +7896,8 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.026ms",
     "openVal": "0.350ms",
     "n": 57,
-    "extra": "7 算子",
+    "extra": "M=1, K=4096, N=4096 · FP16",
+    "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1234%"
   },
@@ -7909,7 +7910,8 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.094ms",
     "openVal": "1.045ms",
     "n": 105,
-    "extra": "6 算子",
+    "extra": "M=3, N=3 · FP16",
+    "opRecordSub": "6 算子",
     "adv": true,
     "advTxt": "自研快 1007%"
   },
@@ -7922,7 +7924,8 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.010ms",
     "openVal": "0.133ms",
     "n": 132,
-    "extra": "7 算子",
+    "extra": "M=32, N=512 · BF16",
+    "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1221%"
   },
@@ -7935,7 +7938,8 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.011ms",
     "openVal": "0.121ms",
     "n": 36,
-    "extra": "5 算子",
+    "extra": "bs=16, hidden=5632 · FP16",
+    "opRecordSub": "5 算子",
     "adv": true,
     "advTxt": "自研快 979%"
   },
@@ -7948,7 +7952,8 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.012ms",
     "openVal": "0.166ms",
     "n": 156,
-    "extra": "7 算子",
+    "extra": "M=16, N=2048, size=2048 · FP16",
+    "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1316%"
   },
@@ -7961,7 +7966,8 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.011ms",
     "openVal": "0.220ms",
     "n": 156,
-    "extra": "7 算子",
+    "extra": "M=16, N=2048, size=2048 · BF16",
+    "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1900%"
   },
@@ -7974,7 +7980,8 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.006ms",
     "openVal": "0.069ms",
     "n": 156,
-    "extra": "7 算子",
+    "extra": "bs=32, seq=5, hidden=5 · BF16",
+    "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 973%"
   }
@@ -14031,7 +14038,7 @@ export const BW_CARD_FROM_FILES = {
 } as Record<string, Record<string, unknown>>
 
 export const BENCHMARK_DATA_META = {
-  "generatedAt": "2026-05-11T10:51:19.412Z",
+  "generatedAt": "2026-05-12T07:00:46.388Z",
   "operatorSources": [
     "new_data\\operator\\ascend_operator_20260430.csv",
     "new_data\\operator\\cambricon_operator_20260506.csv",

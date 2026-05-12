@@ -83,26 +83,6 @@ export const PLATFORMS = [
   {key:'generic',   name:'阿里 PPU',   type:'国产',     color:'#ff6a00', domestic:true,  logo:'ALI'},
 ];
 
-export const DIMS = [
-  {key:'op',    label:'算子',     filters:[
-    {label:'算子类型', pills:['全部','CausalSoftmax','RMSNorm','Embedding','TopK','MatMul','Add','SiLU','Cast','Cat']},
-    {label:'精度',     pills:['全部','BF16','FP16','FP32']},
-  ]},
-  {key:'infer', label:'推理',     filters:[
-    {label:'Batch',   pills:['全部','1','4','16','64']},
-    {label:'In-len',  pills:['全部','32','256','4096']},
-  ]},
-  {key:'train', label:'训练',     filters:[
-    {label:'框架',    pills:['全部','Megatron','BMTrain']},
-  ]},
-  {key:'comm',  label:'通信',     filters:[
-    {label:'通信类型', pills:['全部','p2p','allreduce']},
-  ]},
-  {key:'bw',    label:'访存', filters:[
-    {label:'模式',    pills:['全部','add','copy','scale','triad']},
-  ]},
-];
-
 const CARD_DATA_OP_STATIC: CardRow[] = [
   {key:'nvidia',    ownScore:784,  openScore:100, ownVal:'0.0088ms', openVal:'0.0620ms', n:156, extra:'12 算子', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 973%'},
   {key:'mthreads',  ownScore:1245, openScore:100, ownVal:'0.0278ms', openVal:'0.1914ms', n:89,  extra:'8 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1458%'},
@@ -346,6 +326,87 @@ export const OP_TABLE = mergeByPlatform(
   OP_TABLE_STATIC as unknown as Record<string, unknown>,
   OP_TABLE_FROM_FILES as unknown as Partial<Record<string, unknown>>,
 ) as typeof OP_TABLE_STATIC
+
+/**
+ * 算子类型 pills（并集）：与 CSV `op_name` 经 `generate:data` → OP_TABLE 键一致（`opNameToKey`）。
+ * 用于概览 / 对比顶栏及 `filterState` 索引基准；详情页算子类型 UI 在 `DashboardFilterBar` 按当前平台再筛子集。
+ */
+function operatorTypePillsFromOpTable(tbl: typeof OP_TABLE): string[] {
+  const keys = new Set<string>()
+  for (const platOps of Object.values(tbl)) {
+    if (!platOps || typeof platOps !== 'object') continue
+    for (const opKey of Object.keys(platOps)) keys.add(opKey)
+  }
+  return [...keys].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+}
+
+/** 与 CSV `dtype` / 行内 `dtype` 一致：trim + 大写，用于 pills 与行比较 */
+function normalizeOpDtypeLabel(v: unknown): string {
+  return String(v ?? '').trim().toUpperCase()
+}
+
+/** 某平台算子表中出现过的精度（dtype）集合 */
+export function dtypesForOpPlatform(tbl: typeof OP_TABLE, platKey: string): Set<string> {
+  const set = new Set<string>()
+  const rowTbl = tbl as Record<string, Record<string, { dtype?: string }[] | undefined> | undefined>
+  const platOps = rowTbl[platKey]
+  if (!platOps) return set
+  for (const rows of Object.values(platOps)) {
+    if (!Array.isArray(rows)) continue
+    for (const row of rows) {
+      const d = normalizeOpDtypeLabel(row?.dtype)
+      if (d) set.add(d)
+    }
+  }
+  return set
+}
+
+/**
+ * 精度（dtype）pills（并集）：OP_TABLE 各行 `dtype` 去重，与 CSV 一致。
+ * 概览 / 对比用 DIMS 全量；详情顶栏在 `DashboardFilterBar` 按当前平台再筛子集。
+ */
+function dtypePrecPillsUnionFromOpTable(tbl: typeof OP_TABLE): string[] {
+  const keys = new Set<string>()
+  const rowTbl = tbl as Record<string, Record<string, { dtype?: string }[] | undefined>>
+  for (const pk of Object.keys(rowTbl)) {
+    for (const d of dtypesForOpPlatform(tbl, pk)) keys.add(d)
+  }
+  return [...keys].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+}
+
+export const DIMS = [
+  {
+    key: 'op',
+    label: '算子',
+    filters: [
+      { label: '算子类型', pills: ['全部', ...operatorTypePillsFromOpTable(OP_TABLE)] },
+      { label: '精度', pills: ['全部', ...dtypePrecPillsUnionFromOpTable(OP_TABLE)] },
+    ],
+  },
+  {
+    key: 'infer',
+    label: '推理',
+    filters: [
+      { label: 'Batch', pills: ['全部', '1', '4', '16', '64'] },
+      { label: 'In-len', pills: ['全部', '32', '256', '4096'] },
+    ],
+  },
+  {
+    key: 'train',
+    label: '训练',
+    filters: [{ label: '框架', pills: ['全部', 'Megatron', 'BMTrain'] }],
+  },
+  {
+    key: 'comm',
+    label: '通信',
+    filters: [{ label: '通信类型', pills: ['全部', 'p2p', 'allreduce'] }],
+  },
+  {
+    key: 'bw',
+    label: '访存',
+    filters: [{ label: '模式', pills: ['全部', 'add', 'copy', 'scale', 'triad'] }],
+  },
+]
 
 export const INFER_TABLE = mergeByPlatform(
   INFER_TABLE_STATIC as unknown as Record<string, unknown>,

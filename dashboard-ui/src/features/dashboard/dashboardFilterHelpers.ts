@@ -3,10 +3,13 @@ import { bwPlatHasMode, type BwDetailRow } from '@/features/dashboard/bwBenchmar
 import { commPlatHasCommType } from '@/features/dashboard/commBenchmark'
 import { inferPlatHasFilteredRow } from '@/features/dashboard/inferBenchmark'
 import { trainPlatHasFramework } from '@/features/dashboard/trainBenchmark'
+import { canComputeOpRowScore, computeOpRowScore } from '@/features/dashboard/operatorBenchmark'
 
 /** 卡片行（与各维度 CARD_DATA 元素一致的最小字段） */
 export type CardRow = {
   key: string
+  /** 算子维度：详情「测试记录」副标题，如「7 算子」（概览「配置」用 extra） */
+  opRecordSub?: string
   extra?: string
   ownScore?: number | null
   ownVal?: string | null
@@ -93,10 +96,14 @@ export function parseLatencyMs(v: string | null | undefined): number | null {
 export function avgOpScore(
   rows: { ic?: number; pt?: number; remarks?: string; scoreEligible?: boolean }[],
 ): number | null {
-  const v = rows.filter((r) => {
-    if (r.scoreEligible === false) return false
-    return r.ic && r.pt
-  })
+  const v = rows.filter((r) =>
+    canComputeOpRowScore(r.ic ?? NaN, r.pt ?? NaN, r.remarks ?? ''),
+  )
   if (!v.length) return null
-  return Math.round(v.reduce((a, r) => a + (r.pt! / r.ic!) * 100, 0) / v.length)
+  return Math.round(
+    v.reduce(
+      (a, r) => a + (computeOpRowScore(r.ic ?? NaN, r.pt ?? NaN, r.remarks ?? '') ?? 0),
+      0,
+    ) / v.length,
+  )
 }

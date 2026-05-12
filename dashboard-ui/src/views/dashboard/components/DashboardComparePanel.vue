@@ -119,6 +119,9 @@ const showLatencyChart = computed(
       </div>
       <div class="chart-card">
         <div class="chart-title">代表延迟对比（ms，越低越好）</div>
+        <div style="font-size: 11px; color: #aaa; margin: -10px 0 12px">
+          各平台代表算子延迟值 · 单位 ms · 越低越好
+        </div>
         <v-chart
           v-if="showLatencyChart"
           class="compare-chart"
@@ -219,7 +222,10 @@ const showLatencyChart = computed(
   text-align: left !important;
 }
 .compare-chart {
-  height: 260px;
+  height: 240px;
   width: 100%;
+}
+.charts-grid .chart-card {
+  padding-bottom: 12px;
 }
 </style>

@@ -77,8 +77,14 @@ export function buildCiLineOption(seriesData: number[]) {
 type OpRow = { shape: string; dtype: string; ic: number; pt: number; scoreEligible?: boolean }
 
 export function buildOpLineOption(rows: OpRow[]) {
-  const icSeries = rows.map((r) => (r.scoreEligible === false ? null : r.ic))
-  const ptSeries = rows.map((r) => (r.scoreEligible === false ? null : r.pt))
+  const icSeries = rows.map((r) => {
+    const ic = r.ic
+    return Number.isFinite(ic) && ic > 0 ? ic : null
+  })
+  const ptSeries = rows.map((r) => {
+    const pt = r.pt
+    return Number.isFinite(pt) && pt > 0 ? pt : null
+  })
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
@@ -492,14 +498,19 @@ type PlatLite = { key: string; name: string; color: string }
 export function buildCompareScoreBar(cards: CardLite[], plats: PlatLite[]) {
   const categories = plats.map((p) => p.name)
   const xUi = categoryBarXAxisUi(categories)
+  const compareGridBottom = Math.min(xUi.gridBottom, 28)
   return {
     tooltip: { trigger: 'axis' as const },
-    legend: { top: 2, right: 8, textStyle: { fontSize: 11 } },
-    grid: { left: 56, right: 24, top: 50, bottom: xUi.gridBottom },
+    legend: { top: 0, right: 8, textStyle: { fontSize: 11 } },
+    grid: { left: 68, right: 24, top: 36, bottom: compareGridBottom },
     xAxis: { type: 'category' as const, data: categories, axisLabel: xUi.axisLabel },
     yAxis: {
       type: 'value' as const,
       name: '提速倍率（× 相对开源基准）',
+      nameLocation: 'middle' as const,
+      nameRotate: 90,
+      nameGap: 40,
+      nameTextStyle: { fontSize: 11, color: '#666' },
       min: 0,
       axisLabel: { formatter: (v: number) => v + '×' },
       splitLine: { lineStyle: { color: '#f0f0f0' } },
@@ -533,13 +544,18 @@ export function buildCompareLatencyBar(
   colors: string[],
 ) {
   const xUi = categoryBarXAxisUi(names)
+  const compareGridBottom = Math.min(xUi.gridBottom, 28)
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { left: 52, right: 24, top: 28, bottom: xUi.gridBottom },
+    grid: { left: 76, right: 24, top: 36, bottom: compareGridBottom },
     xAxis: { type: 'category' as const, data: names, axisLabel: xUi.axisLabel },
     yAxis: {
       type: 'value' as const,
       name: 'ms，越低越好',
+      nameLocation: 'middle' as const,
+      nameRotate: 90,
+      nameGap: 56,
+      nameTextStyle: { fontSize: 11, color: '#666' },
       min: 0,
       splitLine: { lineStyle: { color: '#f0f0f0' } },
     },
