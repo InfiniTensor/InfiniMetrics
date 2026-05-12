@@ -28,7 +28,6 @@ export function applyDashboardRoute(
     store.detailState.value.opKey = 'CausalSoftmax'
     store.detailState.value.prec = '全部'
     store.detailState.value.inferTab = 'prefill'
-    store.detailTableTab.value = 'data'
     store.bcBrand.value = plat.name
     store.bcDim.value = DIMS[dimIdx].label
     store.switchMainView('detail')

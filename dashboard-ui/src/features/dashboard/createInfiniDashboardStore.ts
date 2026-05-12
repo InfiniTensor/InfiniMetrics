@@ -127,7 +127,6 @@ export function createInfiniDashboardStore() {
   })
   const bcBrand = ref('')
   const bcDim = ref('')
-  const detailTableTab = ref<'data' | 'score'>('data')
   const ciTabKey = ref('ci-stats')
 
   const activeDimKey = computed(() => DIMS[activeDim.value].key)
@@ -288,7 +287,7 @@ export function createInfiniDashboardStore() {
     if (dk === 'op') {
       const rows = opDetailRows.value
       if (!rows.length) return {}
-      return buildOpLineOption(rows, plat.color)
+      return buildOpLineOption(rows)
     }
     if (dk === 'infer') {
       const pre = inferPrefillFiltered.value
@@ -331,7 +330,7 @@ export function createInfiniDashboardStore() {
           ? Math.round(valid.reduce((a, r) => a + (r.pt / r.ic) * 100, 0) / valid.length)
           : 0
       })
-      return buildOpBarAvgOption(opKeys, scores, plat.color)
+      return buildOpBarAvgOption(opKeys, scores)
     }
     if (dk === 'infer') {
       const de = inferDecodeFiltered.value
@@ -397,20 +396,6 @@ export function createInfiniDashboardStore() {
     if (k === 'bw')
       return '访存带宽 GB/s · 行级 vs NVIDIA = bw_GBps÷1607.4561×100；详情表列出全部型号；折线/柱图均值对比第二根柱为 NVIDIA A100 固定基线；四模式柱取本平台 MAX(bw_GBps) 行 vs NVIDIA 参考行'
     return ''
-  })
-
-  const scoreTabHint = computed(() => {
-    const k = activeDimKey.value
-    const msgs: Record<string, string> = {
-      op: '每行得分 = PyTorch延迟 ÷ InfiniCore延迟 × 100；备注触发失败规则时该行不参与计分（与 CSV 规格一致）。柱状图为各算子类型下合格行的平均得分。',
-      infer:
-        'Prefill / Decode 吞吐（tokens/s）· vs NVIDIA 同配置百分比见表；顶栏筛选与表格、KPI、图表联动（交集）',
-      train:
-        '训练吞吐 tpps · vs NVIDIA 同配置百分比见表；顶栏「框架」筛选与表格、KPI、图表联动',
-      comm: '带宽 GB/s · vs NVIDIA 按 (comm_type, n_gpu) 对齐；顶栏筛选与表格、KPI、图表联动',
-      bw: '详情表列出该平台全部型号；vs NVIDIA = bw_GBps÷1607.4561×100（≥100 与 <100 分色）；KPI 与柱状图取 MAX(bw_GBps) 所在行，四模式对比柱与 NVIDIA A100 四模式参考行对齐',
-    }
-    return msgs[k] || ''
   })
 
   const comparePageTitle = computed(() => `${DIMS[activeDim.value].label} · 平台横向对比`)
@@ -688,7 +673,6 @@ export function createInfiniDashboardStore() {
     detailState,
     bcBrand,
     bcDim,
-    detailTableTab,
     ciTabKey,
     activeDimKey,
     overviewCards,
@@ -710,7 +694,6 @@ export function createInfiniDashboardStore() {
     compareLatencyOption,
     detailTitle,
     tableNotice,
-    scoreTabHint,
     comparePageTitle,
     comparePageSubtitle,
     compareKpiBlocks,

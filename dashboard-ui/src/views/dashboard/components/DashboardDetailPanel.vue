@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, h } from 'vue'
+import type { ColumnsType } from 'ant-design-vue/es/table'
+import type { TrainTableRow } from '@/features/dashboard/trainBenchmark'
+import type { CommImportRow } from '@/features/dashboard/commBenchmark'
+import type { BwDetailRow } from '@/features/dashboard/bwBenchmark'
 import { useRoute } from 'vue-router'
 import VChart from 'vue-echarts'
 import {
@@ -25,9 +29,7 @@ const {
   detailState,
   detailPlat,
   detailKpiCells,
-  detailTableTab,
   tableNotice,
-  scoreTabHint,
   opDetailRows,
   inferDetailTabRows,
   inferNvidiaTabRows,
@@ -170,6 +172,218 @@ const opLatencyMax = computed(() => {
   const m = Math.max(1e-9, ...rows.flatMap((x) => [x.ic, x.pt]))
   return m
 })
+
+/** 列宽总和与 scroll.x 一致，tableLayout=fixed 下各列更均匀 */
+const opTableColumns: ColumnsType<OpDetailRow> = [
+  { title: 'Shape 配置', dataIndex: 'shape', key: 'shape', width: 152, ellipsis: true },
+  { title: '精度', key: 'dtype', width: 84 },
+  { title: 'InfiniCore ✦', key: 'ic', width: 118 },
+  { title: 'PyTorch', key: 'pt', width: 118 },
+  { title: '得分', key: 'score', width: 92 },
+  { title: '延迟对比', key: 'dual', width: 268, minWidth: 240 },
+]
+
+function opRowKey(r: OpDetailRow, i?: number) {
+  return `${i ?? 0}-${r.shape}-${r.dtype}`
+}
+
+function opCustomRow(r: OpDetailRow) {
+  return {
+    class: opRowWarning(r) ? 'op-detail-row op-detail-row--warn' : 'op-detail-row',
+  }
+}
+
+const inferTableColumns = computed<ColumnsType<InferRow>>(() => {
+  const cols: ColumnsType<InferRow> = [
+    { title: '模型', key: 'model', minWidth: 160, width: 168 },
+    { title: 'Batch', dataIndex: 'batch', key: 'batch', width: 84 },
+    { title: 'In-len', dataIndex: 'inLen', key: 'inLen', width: 84 },
+    { title: 'Out-len', key: 'outLen', width: 84 },
+    { title: '精度', key: 'dtype', width: 88 },
+    { title: 'TPS', key: 'tps', width: 108 },
+  ]
+  if (detailState.value.inferTab === 'prefill') {
+    cols.push({ title: 'TTFT', key: 'ttft', width: 100 })
+  } else {
+    cols.push({ title: 'Decode 延迟', key: 'decodeLatency', width: 118 })
+  }
+  if (detailState.value.platKey !== 'nvidia') {
+    cols.push({ title: 'vs NVIDIA', key: 'vsNvidia', width: 100 })
+  }
+  cols.push({ title: '对比', key: 'compare', minWidth: 200, width: 220 })
+  return cols
+})
+
+const trainTableColumns = computed<ColumnsType<TrainTableRow>>(() => {
+  const cols: ColumnsType<TrainTableRow> = [
+    { title: '框架', key: 'framework', width: 104 },
+    { title: '模型', key: 'model', minWidth: 132, width: 140 },
+    { title: '并行配置', key: 'parallel', width: 132 },
+    { title: '精度', key: 'dtype', width: 88 },
+    { title: 'Flash Attn', key: 'flashAttn', width: 116 },
+    { title: '吞吐', key: 'tps', width: 132 },
+  ]
+  if (detailState.value.platKey !== 'nvidia') {
+    cols.push(
+      { title: 'NVIDIA 基线', key: 'baseline', width: 124 },
+      { title: 'vs NVIDIA', key: 'vsA100', width: 104 },
+    )
+  }
+  return cols
+})
+
+const commTableColumns = computed<ColumnsType<CommImportRow>>(() => {
+  const cols: ColumnsType<CommImportRow> = [
+    { title: 'Link 类型', key: 'linkType', width: 112 },
+    { title: '通信类型', key: 'commType', width: 112 },
+    { title: 'GPU 数', key: 'nGpu', width: 92 },
+    { title: '带宽', key: 'bw', width: 104 },
+  ]
+  if (detailState.value.platKey !== 'nvidia') {
+    cols.push(
+      { title: 'NVIDIA 基线', key: 'baseline', width: 116 },
+      { title: 'vs NVIDIA', key: 'vsA100', width: 104 },
+    )
+  }
+  cols.push({ title: '带宽对比', key: 'compare', minWidth: 200, width: 228 })
+  return cols
+})
+
+const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
+  const pc = platColor.value
+  const logo = detailPlat.value.logo
+  const pendingCell = (r: BwDetailRow) => (r.avg == null ? { colSpan: 0 } : {})
+
+  return [
+    {
+      title: '型号',
+      key: 'model',
+      dataIndex: 'model',
+      width: 120,
+      customRender: ({ record }) =>
+        h('span', { style: { color: pc, fontWeight: 600 } }, record.model),
+    },
+    {
+      title: 'add GB/s',
+      key: 'add',
+      width: 110,
+      customCell: (r: BwDetailRow) => (r.avg == null ? { colSpan: 7 } : {}),
+      customRender: ({ record }) =>
+        record.avg == null
+          ? h('span', { style: { color: '#aaa', fontStyle: 'italic' } }, '数据待补充')
+          : h('span', { style: { fontWeight: 600 } }, bwGbpsCell(record.add)),
+    },
+    {
+      title: 'copy GB/s',
+      key: 'copy',
+      customCell: pendingCell,
+      customRender: ({ record }) =>
+        record.avg == null ? null : bwGbpsCell(record.copy),
+    },
+    {
+      title: 'scale GB/s',
+      key: 'scale',
+      customCell: pendingCell,
+      customRender: ({ record }) =>
+        record.avg == null ? null : bwGbpsCell(record.scale),
+    },
+    {
+      title: 'triad GB/s',
+      key: 'triad',
+      customCell: pendingCell,
+      customRender: ({ record }) =>
+        record.avg == null ? null : bwGbpsCell(record.triad),
+    },
+    {
+      title: '均值 GB/s',
+      key: 'avg',
+      customCell: pendingCell,
+      customRender: ({ record }) =>
+        record.avg == null
+          ? null
+          : h('span', { style: { fontWeight: 700, color: pc } }, bwGbpsCell(record.avg)),
+    },
+    {
+      title: 'vs NVIDIA',
+      key: 'vsNvidia',
+      width: 110,
+      customCell: pendingCell,
+      customRender: ({ record }) =>
+        record.avg == null
+          ? null
+          : h(
+              'span',
+              {
+                style: {
+                  fontWeight: 700,
+                  color: record.vsNvidia >= 100 ? '#2e7d32' : '#e65100',
+                },
+              },
+              `${record.vsNvidia}%`,
+            ),
+    },
+    {
+      title: '带宽对比',
+      key: 'dual',
+      width: 260,
+      customCell: pendingCell,
+      customRender: ({ record }) => {
+        if (record.avg == null) return null
+        const denom = bwBarDenom(record)
+        const avgW =
+          Math.round((((record.avg ?? 0) / denom) || 0) * 100) + '%'
+        const nvW =
+          Math.round(((BW_NVIDIA_BASELINE_GBPS / denom) || 0) * 100) + '%'
+        const avgMs =
+          record.avg != null && Number.isFinite(record.avg)
+            ? Math.round(record.avg).toString()
+            : '—'
+        return h('div', { class: 'dual-bar' }, [
+          h('div', { class: 'dual-row' }, [
+            h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: pc } }, logo),
+            h('div', { class: 'dual-track' }, [
+              h('div', {
+                class: 'dual-fill',
+                style: { width: avgW, background: pc },
+              }),
+            ]),
+            h('span', { class: 'dual-ms', style: { color: pc } }, avgMs),
+          ]),
+          h('div', { class: 'dual-row' }, [
+            h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: '#aaa' } }, 'NVIDIA 基线'),
+            h('div', { class: 'dual-track' }, [
+              h('div', {
+                class: 'dual-fill',
+                style: { width: nvW, background: '#aaa' },
+              }),
+            ]),
+            h(
+              'span',
+              { class: 'dual-ms', style: { color: '#aaa' } },
+              BW_NVIDIA_BASELINE_GBPS.toFixed(1),
+            ),
+          ]),
+        ])
+      },
+    },
+  ]
+})
+
+function bwRowKey(r: BwDetailRow, i?: number) {
+  return `${i ?? 0}-${r.model}`
+}
+
+function trainRowKey(r: TrainTableRow, i?: number) {
+  return `${r.matchKey}-${i ?? 0}`
+}
+
+function commRowKey(r: CommImportRow) {
+  return `${r.commType}-${r.nGpu}`
+}
+
+function inferRowKey(r: InferRow) {
+  return r.configKey
+}
 </script>
 
 <template>
@@ -181,6 +395,15 @@ const opLatencyMax = computed(() => {
       </div>
     </header>
     <div class="detail-panel__scroll">
+      <!-- 测试环境横条（各维度：n_gpu · date · device，缺省项不展示）：紧接标题下方、KPI 卡片上方 -->
+      <div class="detail-test-env-bar">
+        <span class="detail-test-env-bar__icon" aria-hidden="true">🖥</span>
+        <span class="detail-test-env-bar__title">测试环境</span>
+        <span class="detail-test-env-bar__sep">|</span>
+        <span class="detail-test-env-bar__line">{{ detailTestEnvLine }}</span>
+        <span class="detail-test-env-bar__source">{{ detailTestEnvSourceHint }}</span>
+      </div>
+
       <div class="kpi-grid">
         <div
           v-for="(cell, idx) in detailKpiCells"
@@ -200,157 +423,111 @@ const opLatencyMax = computed(() => {
         </div>
       </div>
 
-      <!-- 测试环境 + 数据明细：用 flex gap 分隔，避免 margin 透出右侧栏灰底 -->
+      <!-- 数据明细：用 flex gap 分隔，避免 margin 透出右侧栏灰底 -->
       <div class="detail-env-table-gap">
-        <!-- 测试环境横条（各维度：n_gpu · date · device，缺省项不展示） -->
-        <div
-          style="
-            padding: 10px 20px;
-            background: #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 12px;
-            color: #888;
-          "
-        >
-          <span style="font-size: 14px">🖥</span>
-          <span style="font-weight: 600; color: #555">测试环境</span>
-          <span style="color: #ddd">|</span>
-          <span style="color: #667eea; font-weight: 500">{{ detailTestEnvLine }}</span>
-          <span style="margin-left: auto; font-size: 11px; color: #bbb; font-style: italic">
-            {{ detailTestEnvSourceHint }}
-          </span>
-        </div>
-
         <!-- 详情内算子筛选在 HTML 中为 display:none，此处不渲染 -->
 
         <div class="table-card">
       <div class="table-head-row">
         <div class="table-title">数据明细</div>
-        <div class="view-toggle">
-          <button
-            type="button"
-            class="vt-btn"
-            :class="{ active: detailTableTab === 'data' }"
-            @click="detailTableTab = 'data'"
-          >
-            数据明细
-          </button>
-          <button
-            type="button"
-            class="vt-btn"
-            :class="{ active: detailTableTab === 'score' }"
-            @click="detailTableTab = 'score'"
-          >
-            得分说明
-          </button>
-        </div>
       </div>
-      <div
-        style="
-          margin-bottom: 12px;
-          padding: 10px 14px;
-          background: #e8f0fe;
-          border-left: 4px solid #667eea;
-          border-radius: 0 4px 4px 0;
-          font-size: 12px;
-          color: #3d5afe;
-        "
-      >
-        {{ detailTableTab === 'data' ? tableNotice : scoreTabHint }}
+      <div class="detail-table-notice">
+        <div class="detail-table-notice__label">得分说明：</div>
+        <div class="detail-table-notice__body">{{ tableNotice }}</div>
       </div>
 
       <!-- 数据明细 -->
-      <div v-show="detailTableTab === 'data'" class="table-wrap">
+      <div class="table-wrap">
         <!-- 算子 -->
         <template v-if="activeDimKey === 'op'">
-          <table v-if="opDetailRows.length">
-            <thead>
-              <tr>
-                <th>Shape 配置</th>
-                <th>精度</th>
-                <th>InfiniCore ✦</th>
-                <th>PyTorch</th>
-                <th>得分</th>
-                <th>备注</th>
-                <th>延迟对比</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                v-for="(r, ri) in opDetailRows"
-                :key="ri"
-                class="op-detail-row"
-                :class="{ 'op-detail-row--warn': opRowWarning(r as OpDetailRow) }"
-              >
-                <td class="shape-cell">{{ r.shape }}</td>
-                <td>
-                  <span class="prec-badge" :class="precClass(r.dtype)">{{ r.dtype }}</span>
-                </td>
-                <td :style="{ color: platColor, fontWeight: 600 }">{{ r.ic.toFixed(4) }}ms</td>
-                <td style="color: #888">{{ r.pt.toFixed(4) }}ms</td>
-                <td class="score-cell">
-                  <template v-if="opDetailScore(r as OpDetailRow) != null">
+          <a-table
+            v-if="opDetailRows.length"
+            :columns="opTableColumns"
+            :data-source="(opDetailRows as OpDetailRow[])"
+            :pagination="false"
+            :bordered="false"
+            table-layout="fixed"
+            :scroll="{ x: 832 }"
+            :row-key="opRowKey"
+            :custom-row="opCustomRow"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'shape'">
+                <span class="shape-cell">{{ record.shape }}</span>
+              </template>
+              <template v-else-if="column.key === 'dtype'">
+                <span class="prec-badge" :class="precClass(record.dtype)">{{ record.dtype }}</span>
+              </template>
+              <template v-else-if="column.key === 'ic'">
+                <span :style="{ color: platColor, fontWeight: 600 }">{{ record.ic.toFixed(4) }}ms</span>
+              </template>
+              <template v-else-if="column.key === 'pt'">
+                <span style="color: #888">{{ record.pt.toFixed(4) }}ms</span>
+              </template>
+              <template v-else-if="column.key === 'score'">
+                <div class="score-cell">
+                  <template v-if="opDetailScore(record as OpDetailRow) != null">
                     <span
                       class="score-num"
-                      :style="{ color: scoreCellColor(Math.round(opDetailScore(r as OpDetailRow)!)) }"
+                      :style="{
+                        color: scoreCellColor(Math.round(opDetailScore(record as OpDetailRow)!)),
+                      }"
                     >
-                      {{ Math.round(opDetailScore(r as OpDetailRow)!) }}
+                      {{ Math.round(opDetailScore(record as OpDetailRow)!) }}
                     </span>
                     <span
                       :class="
-                        Math.round(opDetailScore(r as OpDetailRow)!) >= 100 ? 'score-up' : 'score-dn'
+                        Math.round(opDetailScore(record as OpDetailRow)!) >= 100
+                          ? 'score-up'
+                          : 'score-dn'
                       "
                     >
-                      {{ Math.round(opDetailScore(r as OpDetailRow)!) >= 100 ? '↑' : '↓' }}
+                      {{ Math.round(opDetailScore(record as OpDetailRow)!) >= 100 ? '↑' : '↓' }}
                     </span>
                   </template>
                   <template v-else>
                     <span class="score-num score-na">—</span>
-                    <span v-if="opRowWarning(r as OpDetailRow)" class="op-warn-icon" title="该行 InfiniCore 延迟不参与计分">⚠</span>
+                    <span
+                      v-if="opRowWarning(record as OpDetailRow)"
+                      class="op-warn-icon"
+                      title="该行 InfiniCore 延迟不参与计分"
+                      >⚠</span
+                    >
                   </template>
-                </td>
-                <td class="remarks-cell" :title="opRowRemarks(r as OpDetailRow)">
-                  {{ opRowRemarks(r as OpDetailRow) || '—' }}
-                </td>
-                <td>
-                  <div class="dual-bar">
-                    <div class="dual-row">
-                      <span class="dual-lbl" :style="{ color: platColor }">自研</span>
-                      <div class="dual-track">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width:
-                              Math.round(((r.ic as number) / opLatencyMax) * 100) + '%',
-                            background: platColor,
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" :style="{ color: platColor }">{{ r.ic.toFixed(4) }}ms</span>
+                </div>
+              </template>
+              <template v-else-if="column.key === 'dual'">
+                <div class="dual-bar">
+                  <div class="dual-row">
+                    <span class="dual-lbl" :style="{ color: platColor }">自研</span>
+                    <div class="dual-track">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width: Math.round(((record.ic as number) / opLatencyMax) * 100) + '%',
+                          background: platColor,
+                        }"
+                      />
                     </div>
-                    <div class="dual-row">
-                      <span class="dual-lbl" style="color: #aaa">开源</span>
-                      <div class="dual-track">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width:
-                              Math.round(((r.pt as number) / opLatencyMax) * 100) + '%',
-                            background: '#aaa',
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" style="color: #aaa">{{ r.pt.toFixed(4) }}ms</span>
-                    </div>
+                    <span class="dual-ms" :style="{ color: platColor }">{{ record.ic.toFixed(4) }}ms</span>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  <div class="dual-row">
+                    <span class="dual-lbl" style="color: #aaa">开源</span>
+                    <div class="dual-track">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width: Math.round(((record.pt as number) / opLatencyMax) * 100) + '%',
+                          background: '#aaa',
+                        }"
+                      />
+                    </div>
+                    <span class="dual-ms" style="color: #aaa">{{ record.pt.toFixed(4) }}ms</span>
+                  </div>
+                </div>
+              </template>
+            </template>
+          </a-table>
           <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该条件数据</p>
         </template>
 
@@ -374,349 +551,283 @@ const opLatencyMax = computed(() => {
               Decode 吞吐量
             </button>
           </div>
-          <table v-if="inferDetailTabRows.length">
-            <thead>
-              <tr>
-                <th>模型</th>
-                <th>Batch</th>
-                <th>In-len</th>
-                <th>Out-len</th>
-                <th>精度</th>
-                <th>TPS</th>
-                <th v-if="detailState.inferTab === 'prefill'">TTFT</th>
-                <th v-if="detailState.inferTab === 'decode'">Decode 延迟</th>
-                <th v-if="detailState.platKey !== 'nvidia'">vs NVIDIA</th>
-                <th>对比</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="r in inferDetailTabRows as InferRow[]" :key="r.configKey">
-                <td style="font-family: monospace; font-size: 12px" :style="{ color: platColor }">
-                  {{ r.model }}
-                </td>
-                <td>{{ r.batch }}</td>
-                <td>{{ r.inLen }}</td>
-                <td>{{ r.outLen ?? '—' }}</td>
-                <td>
-                  <span v-if="r.dtype" class="prec-badge" :class="precClass(r.dtype)">{{ r.dtype }}</span>
-                  <span v-else style="color: #ccc">—</span>
-                </td>
-                <td style="font-weight: 700" :style="{ color: platColor }">
-                  {{ r.tps.toLocaleString() }}
-                </td>
-                <td v-if="detailState.inferTab === 'prefill'" style="color: #888">
-                  {{ r.ttft ? r.ttft + 'ms' : '—' }}
-                </td>
-                <td v-if="detailState.inferTab === 'decode'" style="color: #888">
-                  {{ r.decodeLatencyMs != null ? r.decodeLatencyMs + 'ms' : '—' }}
-                </td>
-                <td
-                  v-if="detailState.platKey !== 'nvidia'"
+          <a-table
+            v-if="inferDetailTabRows.length"
+            :columns="inferTableColumns"
+            :data-source="(inferDetailTabRows as InferRow[])"
+            :pagination="false"
+            :bordered="false"
+            table-layout="fixed"
+            :scroll="{ x: 1080 }"
+            :row-key="inferRowKey"
+          >
+            <template #bodyCell="{ column, record, text }">
+              <template v-if="column.key === 'model'">
+                <span style="font-family: monospace" :style="{ color: platColor }">{{ record.model }}</span>
+              </template>
+              <template v-else-if="column.key === 'batch'">{{ text }}</template>
+              <template v-else-if="column.key === 'inLen'">{{ text }}</template>
+              <template v-else-if="column.key === 'outLen'">
+                {{ record.outLen ?? '—' }}
+              </template>
+              <template v-else-if="column.key === 'dtype'">
+                <span v-if="record.dtype" class="prec-badge" :class="precClass(record.dtype)">{{
+                  record.dtype
+                }}</span>
+                <span v-else style="color: #ccc">—</span>
+              </template>
+              <template v-else-if="column.key === 'tps'">
+                <span style="font-weight: 700" :style="{ color: platColor }">{{
+                  record.tps.toLocaleString()
+                }}</span>
+              </template>
+              <template v-else-if="column.key === 'ttft'">
+                <span style="color: #888">{{ record.ttft ? record.ttft + 'ms' : '—' }}</span>
+              </template>
+              <template v-else-if="column.key === 'decodeLatency'">
+                <span style="color: #888">{{
+                  record.decodeLatencyMs != null ? record.decodeLatencyMs + 'ms' : '—'
+                }}</span>
+              </template>
+              <template v-else-if="column.key === 'vsNvidia'">
+                <span
                   :style="{
                     color:
-                      r.vsNvidia != null
-                        ? r.vsNvidia >= 100
+                      record.vsNvidia != null
+                        ? record.vsNvidia >= 100
                           ? '#2e7d32'
                           : '#e65100'
                         : '#999',
                     fontWeight: 700,
                   }"
                 >
-                  {{ r.vsNvidia != null ? r.vsNvidia + '%' : '—' }}
-                </td>
-                <td>
-                  <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
-                    <div class="dual-row">
-                      <div class="dual-track" style="flex: 1">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width: Math.round((r.tps / inferMaxTps) * 100) + '%',
-                            background: platColor,
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" :style="{ color: platColor }">{{ r.tps.toLocaleString() }}</span>
+                  {{ record.vsNvidia != null ? record.vsNvidia + '%' : '—' }}
+                </span>
+              </template>
+              <template v-else-if="column.key === 'compare'">
+                <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
+                  <div class="dual-row">
+                    <div class="dual-track" style="flex: 1">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width: Math.round((record.tps / inferMaxTps) * 100) + '%',
+                          background: platColor,
+                        }"
+                      />
                     </div>
+                    <span class="dual-ms" :style="{ color: platColor }">{{
+                      record.tps.toLocaleString()
+                    }}</span>
                   </div>
-                  <div v-else class="dual-bar">
-                    <div class="dual-row">
-                      <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
-                      <div class="dual-track">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width: Math.round((r.tps / inferMaxTps) * 100) + '%',
-                            background: platColor,
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" :style="{ color: platColor }">{{ r.tps.toLocaleString() }}</span>
+                </div>
+                <div v-else class="dual-bar">
+                  <div class="dual-row">
+                    <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
+                    <div class="dual-track">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width: Math.round((record.tps / inferMaxTps) * 100) + '%',
+                          background: platColor,
+                        }"
+                      />
                     </div>
-                    <div v-if="nvInferMatch(r)" class="dual-row">
-                      <span class="dual-lbl" style="color: #aaa">NV</span>
-                      <div class="dual-track">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width:
-                              Math.round(
-                                ((nvInferMatch(r)!.tps || 0) / inferMaxTps) * 100,
-                              ) + '%',
-                            background: '#aaa',
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" style="color: #aaa">{{
-                        (nvInferMatch(r)!.tps ?? 0).toLocaleString()
-                      }}</span>
-                    </div>
+                    <span class="dual-ms" :style="{ color: platColor }">{{
+                      record.tps.toLocaleString()
+                    }}</span>
                   </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                  <div v-if="nvInferMatch(record as InferRow)" class="dual-row">
+                    <span class="dual-lbl" style="color: #aaa">NV</span>
+                    <div class="dual-track">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width:
+                            Math.round(
+                              ((nvInferMatch(record as InferRow)!.tps || 0) / inferMaxTps) * 100,
+                            ) + '%',
+                          background: '#aaa',
+                        }"
+                      />
+                    </div>
+                    <span class="dual-ms" style="color: #aaa">{{
+                      (nvInferMatch(record as InferRow)!.tps ?? 0).toLocaleString()
+                    }}</span>
+                  </div>
+                </div>
+              </template>
+              <template v-else>{{ text }}</template>
+            </template>
+          </a-table>
           <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
         </template>
 
         <!-- 训练 -->
         <template v-else-if="activeDimKey === 'train'">
-          <table v-if="trainDetailRows.length">
-            <thead>
-              <tr>
-                <th>框架</th>
-                <th>模型</th>
-                <th>并行配置</th>
-                <th>精度</th>
-                <th>Flash Attn</th>
-                <th>吞吐</th>
-                <template v-if="detailState.platKey !== 'nvidia'">
-                  <th>NVIDIA 基线</th>
-                  <th>vs NVIDIA</th>
-                </template>
-                <th>备注</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(r, ri) in trainDetailRows" :key="ri">
-                <td style="font-weight: 600">{{ r.framework }}</td>
-                <td style="font-family: monospace; font-size: 12px" :style="{ color: platColor }">
-                  {{ r.model }}
-                </td>
-                <td style="font-size: 12px">{{ r.parallel }}</td>
-                <td><span class="prec-badge" :class="precClass(r.dtype)">{{ r.dtype }}</span></td>
-                <td style="font-size: 12px">
-                  <span v-if="r.flashAttn === 'on'" style="color: #2e7d32">✓ on</span>
-                  <span v-else style="color: #aaa">{{ r.flashAttn }}</span>
-                </td>
-                <td style="font-weight: 700" :style="{ color: platColor }">
-                  {{ r.tps.toLocaleString() }} tpps
-                </td>
-                <template v-if="detailState.platKey !== 'nvidia'">
-                  <td style="color: #888">{{ r.baseline.toLocaleString() }} tpps</td>
-                  <td
-                    :style="{
-                      fontWeight: 700,
-                      color:
-                        r.vsA100 >= 100 ? '#2e7d32' : r.vsA100 >= 70 ? '#e65100' : '#c62828',
-                    }"
-                  >
-                    {{ r.vsA100 }}%
-                  </td>
-                </template>
-                <td style="font-size: 11px; color: #aaa">{{ r.note || '' }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <a-table
+            v-if="trainDetailRows.length"
+            :columns="trainTableColumns"
+            :data-source="trainDetailRows"
+            :pagination="false"
+            :bordered="false"
+            table-layout="fixed"
+            :scroll="{ x: 1040 }"
+            :row-key="trainRowKey"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'framework'">
+                <span style="font-weight: 600">{{ record.framework }}</span>
+              </template>
+              <template v-else-if="column.key === 'model'">
+                <span style="font-family: monospace" :style="{ color: platColor }">{{ record.model }}</span>
+              </template>
+              <template v-else-if="column.key === 'parallel'">
+                {{ record.parallel }}
+              </template>
+              <template v-else-if="column.key === 'dtype'">
+                <span class="prec-badge" :class="precClass(record.dtype)">{{ record.dtype }}</span>
+              </template>
+              <template v-else-if="column.key === 'flashAttn'">
+                <span v-if="record.flashAttn === 'on'" style="color: #2e7d32">✓ on</span>
+                <span v-else style="color: #aaa">{{ record.flashAttn }}</span>
+              </template>
+              <template v-else-if="column.key === 'tps'">
+                <span style="font-weight: 700" :style="{ color: platColor }">
+                  {{ record.tps.toLocaleString() }} tpps
+                </span>
+              </template>
+              <template v-else-if="column.key === 'baseline'">
+                <span style="color: #888">{{ record.baseline.toLocaleString() }} tpps</span>
+              </template>
+              <template v-else-if="column.key === 'vsA100'">
+                <span
+                  :style="{
+                    fontWeight: 700,
+                    color:
+                      record.vsA100 >= 100
+                        ? '#2e7d32'
+                        : record.vsA100 >= 70
+                          ? '#e65100'
+                          : '#c62828',
+                  }"
+                >
+                  {{ record.vsA100 }}%
+                </span>
+              </template>
+            </template>
+          </a-table>
           <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
         </template>
 
         <!-- 通信 -->
         <template v-else-if="activeDimKey === 'comm'">
-          <table v-if="commDetailRows.length">
-            <thead>
-              <tr>
-                <th>Link 类型</th>
-                <th>通信类型</th>
-                <th>GPU 数</th>
-                <th>带宽</th>
-                <template v-if="detailState.platKey !== 'nvidia'">
-                  <th>NVIDIA 基线</th>
-                  <th>vs NVIDIA</th>
-                </template>
-                <th>带宽对比</th>
-                <th>备注</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="r in commDetailRows" :key="r.commType + '-' + r.nGpu">
-                <td style="font-weight: 600" :style="{ color: platColor }">{{ r.linkType }}</td>
-                <td><span class="prec-badge p-fp16">{{ r.commType }}</span></td>
-                <td>{{ r.nGpu }} GPU</td>
-                <td style="font-weight: 700" :style="{ color: platColor }">{{ r.bw }} GB/s</td>
-                <td v-if="detailState.platKey !== 'nvidia'" style="color: #888">{{ r.baseline }} GB/s</td>
-                <td
-                  v-if="detailState.platKey !== 'nvidia'"
+          <a-table
+            v-if="commDetailRows.length"
+            :columns="commTableColumns"
+            :data-source="commDetailRows"
+            :pagination="false"
+            :bordered="false"
+            table-layout="fixed"
+            :scroll="{ x: 880 }"
+            :row-key="commRowKey"
+          >
+            <template #bodyCell="{ column, record }">
+              <template v-if="column.key === 'linkType'">
+                <span style="font-weight: 600" :style="{ color: platColor }">{{ record.linkType }}</span>
+              </template>
+              <template v-else-if="column.key === 'commType'">
+                <span class="prec-badge p-fp16">{{ record.commType }}</span>
+              </template>
+              <template v-else-if="column.key === 'nGpu'">{{ record.nGpu }} GPU</template>
+              <template v-else-if="column.key === 'bw'">
+                <span style="font-weight: 700" :style="{ color: platColor }">{{ record.bw }} GB/s</span>
+              </template>
+              <template v-else-if="column.key === 'baseline'">
+                <span style="color: #888">{{ record.baseline }} GB/s</span>
+              </template>
+              <template v-else-if="column.key === 'vsA100'">
+                <span
                   :style="{
                     fontWeight: 700,
                     color:
-                      r.vsA100 >= 100 ? '#2e7d32' : r.vsA100 >= 70 ? '#e65100' : '#c62828',
+                      record.vsA100 >= 100
+                        ? '#2e7d32'
+                        : record.vsA100 >= 70
+                          ? '#e65100'
+                          : '#c62828',
                   }"
                 >
-                  {{ r.vsA100 }}%
-                </td>
-                <td>
-                  <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
-                    <div class="dual-row">
-                      <div class="dual-track" style="flex: 1">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width:
-                              Math.round(
-                                (r.bw / commBwMax) *
-                                  100,
-                              ) + '%',
-                            background: platColor,
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" :style="{ color: platColor }">{{ r.bw }}</span>
+                  {{ record.vsA100 }}%
+                </span>
+              </template>
+              <template v-else-if="column.key === 'compare'">
+                <div v-if="detailState.platKey === 'nvidia'" class="dual-bar">
+                  <div class="dual-row">
+                    <div class="dual-track" style="flex: 1">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width: Math.round((record.bw / commBwMax) * 100) + '%',
+                          background: platColor,
+                        }"
+                      />
                     </div>
+                    <span class="dual-ms" :style="{ color: platColor }">{{ record.bw }}</span>
                   </div>
-                  <div v-else class="dual-bar">
-                    <div class="dual-row">
-                      <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
-                      <div class="dual-track">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width:
-                              Math.round(
-                                (r.bw / commBwMax) *
-                                  100,
-                              ) + '%',
-                            background: platColor,
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" :style="{ color: platColor }">{{ r.bw }}</span>
+                </div>
+                <div v-else class="dual-bar">
+                  <div class="dual-row">
+                    <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
+                    <div class="dual-track">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width: Math.round((record.bw / commBwMax) * 100) + '%',
+                          background: platColor,
+                        }"
+                      />
                     </div>
-                    <div v-if="nvCommMatch(r)" class="dual-row">
-                      <span class="dual-lbl" style="color: #aaa">NV</span>
-                      <div class="dual-track">
-                        <div
-                          class="dual-fill"
-                          :style="{
-                            width:
-                              Math.round(
-                                ((nvCommMatch(r)!.bw || 0) / commBwMax) *
-                                  100,
-                              ) + '%',
-                            background: '#aaa',
-                          }"
-                        />
-                      </div>
-                      <span class="dual-ms" style="color: #aaa">{{ nvCommMatch(r)!.bw }}</span>
-                    </div>
+                    <span class="dual-ms" :style="{ color: platColor }">{{ record.bw }}</span>
                   </div>
-                </td>
-                <td style="font-size: 11px; color: #aaa">{{ r.note || '' }}</td>
-              </tr>
-            </tbody>
-          </table>
+                  <div v-if="nvCommMatch(record as CommRowLite)" class="dual-row">
+                    <span class="dual-lbl" style="color: #aaa">NV</span>
+                    <div class="dual-track">
+                      <div
+                        class="dual-fill"
+                        :style="{
+                          width:
+                            Math.round(
+                              ((nvCommMatch(record as CommRowLite)!.bw || 0) / commBwMax) * 100,
+                            ) + '%',
+                          background: '#aaa',
+                        }"
+                      />
+                    </div>
+                    <span class="dual-ms" style="color: #aaa">{{
+                      nvCommMatch(record as CommRowLite)!.bw
+                    }}</span>
+                  </div>
+                </div>
+              </template>
+            </template>
+          </a-table>
           <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
         </template>
 
         <!-- 访存 -->
         <template v-else-if="activeDimKey === 'bw'">
-          <table v-if="bwRows.length">
-            <thead>
-              <tr>
-                <th>型号</th>
-                <th>add GB/s</th>
-                <th>copy GB/s</th>
-                <th>scale GB/s</th>
-                <th>triad GB/s</th>
-                <th>均值 GB/s</th>
-                <th>vs NVIDIA</th>
-                <th>带宽对比</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(r, ri) in bwRows" :key="ri">
-                <template v-if="r.avg == null">
-                  <td :style="{ color: platColor, fontWeight: 600 }">{{ r.model }}</td>
-                  <td colspan="7" style="color: #aaa; font-style: italic">数据待补充</td>
-                </template>
-                <template v-else>
-                  <td :style="{ color: platColor, fontWeight: 600 }">{{ r.model }}</td>
-                  <td style="font-weight: 600">{{ bwGbpsCell(r.add) }}</td>
-                  <td>{{ bwGbpsCell(r.copy) }}</td>
-                  <td>{{ bwGbpsCell(r.scale) }}</td>
-                  <td>{{ bwGbpsCell(r.triad) }}</td>
-                  <td style="font-weight: 700" :style="{ color: platColor }">{{ bwGbpsCell(r.avg) }}</td>
-                  <td
-                    :style="{
-                      fontWeight: 700,
-                      color: r.vsNvidia >= 100 ? '#2e7d32' : '#e65100',
-                    }"
-                  >
-                    {{ r.vsNvidia }}%
-                  </td>
-                  <td>
-                    <div class="dual-bar">
-                      <div class="dual-row">
-                        <span class="dual-lbl" :style="{ color: platColor }">{{ detailPlat.logo }}</span>
-                        <div class="dual-track">
-                          <div
-                            class="dual-fill"
-                            :style="{
-                              width:
-                                Math.round(
-                                  (((r.avg ?? 0) / bwBarDenom(r)) || 0) * 100,
-                                ) + '%',
-                              background: platColor,
-                            }"
-                          />
-                        </div>
-                        <span class="dual-ms" :style="{ color: platColor }">{{
-                          r.avg != null && Number.isFinite(r.avg) ? Math.round(r.avg).toString() : '—'
-                        }}</span>
-                      </div>
-                      <div class="dual-row">
-                        <span class="dual-lbl" style="color: #aaa">NVIDIA 基线</span>
-                        <div class="dual-track">
-                          <div
-                            class="dual-fill"
-                            :style="{
-                              width:
-                                Math.round(
-                                  ((BW_NVIDIA_BASELINE_GBPS / bwBarDenom(r)) || 0) * 100,
-                                ) + '%',
-                              background: '#aaa',
-                            }"
-                          />
-                        </div>
-                        <span class="dual-ms" style="color: #aaa">{{
-                          BW_NVIDIA_BASELINE_GBPS.toFixed(1)
-                        }}</span>
-                      </div>
-                    </div>
-                  </td>
-                </template>
-              </tr>
-            </tbody>
-          </table>
+          <a-table
+            v-if="bwRows.length"
+            :columns="bwTableColumns"
+            :data-source="bwRows"
+            :pagination="false"
+            :bordered="false"
+            :scroll="{ x: 'max-content' }"
+            :row-key="bwRowKey"
+          />
           <p v-else style="text-align: center; padding: 30px; color: #aaa">暂无该平台数据</p>
         </template>
-      </div>
-
-      <!-- 得分说明 Tab：仅文案 -->
-      <div v-show="detailTableTab === 'score'" class="table-wrap">
-        <p style="text-align: center; padding: 30px; color: #aaa; font-size: 13px">
-          {{ scoreTabHint }}
-        </p>
       </div>
         </div>
       </div>
@@ -809,6 +920,49 @@ const opLatencyMax = computed(() => {
   padding-bottom: 4px;
   background-color: #fff;
 }
+/* 与 Ant Design Alert type="info" 一致的提示条样式 */
+.detail-panel__scroll .detail-test-env-bar {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: #e6f7ff;
+  border-left: 4px solid #1890ff;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #0958d9;
+}
+.detail-test-env-bar__icon {
+  flex-shrink: 0;
+  opacity: 0.9;
+}
+.detail-test-env-bar__title {
+  flex-shrink: 0;
+  font-weight: 600;
+  color: #0958d9;
+}
+.detail-test-env-bar__sep {
+  flex-shrink: 0;
+  color: #69c0ff;
+  font-weight: 300;
+}
+.detail-test-env-bar__line {
+  flex: 1;
+  min-width: 0;
+  font-weight: 500;
+  color: #0958d9;
+}
+.detail-test-env-bar__source {
+  flex-shrink: 0;
+  margin-left: auto;
+  max-width: 42%;
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.45);
+  font-style: italic;
+  text-align: right;
+}
 .detail-panel__scroll .kpi-grid {
   margin-bottom: 16px;
 }
@@ -818,6 +972,41 @@ const opLatencyMax = computed(() => {
   gap: 16px;
   background-color: #ffffff;
 }
+/* 数据明细上方：左「得分说明」、右正文，两列 */
+.detail-table-notice {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  column-gap: 0;
+  align-items: start;
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #8c8c8c;
+}
+.detail-table-notice__label {
+  white-space: nowrap;
+  font-weight: 500;
+  color: #737373;
+  margin: 0;
+  padding: 0;
+}
+.detail-table-notice__body {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+/* 详情表格：表头与表体单元格一律左对齐 */
+.detail-panel__scroll :deep(.ant-table-thead > tr > th.ant-table-cell),
+.detail-panel__scroll :deep(.ant-table-tbody > tr > td.ant-table-cell) {
+  text-align: left !important;
+}
+/* 详情双图：略收标题与卡片底留白，配合 ECharts grid.bottom 收紧绘图区下方空白 */
+.detail-panel__scroll .charts-grid .chart-title {
+  margin-bottom: 8px;
+}
+.detail-panel__scroll .charts-grid .chart-card {
+  padding: 18px 22px 12px;
+}
 .detail-chart {
   height: 280px;
   width: 100%;
@@ -826,4 +1015,5 @@ const opLatencyMax = computed(() => {
   height: 160px;
   width: 100%;
 }
+
 </style>

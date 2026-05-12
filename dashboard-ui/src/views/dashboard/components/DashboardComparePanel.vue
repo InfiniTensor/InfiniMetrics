@@ -1,8 +1,39 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import type { ColumnsType } from 'ant-design-vue/es/table'
 import VChart from 'vue-echarts'
+import { PLATFORMS } from '@/data'
+import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
+
+type CompareTableRecord = {
+  plat: (typeof PLATFORMS)[number]
+  card: CardRow
+  delta: number | null
+}
+
+/** 列宽总和与 scroll.x 一致（与详情页数据明细 a-table 用法对齐） */
+const compareTableColumns: ColumnsType<CompareTableRecord> = [
+  { title: '平台', key: 'plat', width: 168, ellipsis: true },
+  { title: '类型', key: 'platType', width: 96, ellipsis: true },
+  { title: '平均得分', key: 'ownScore', width: 104 },
+  { title: '自研代表值', key: 'ownVal', minWidth: 120, width: 132, ellipsis: true },
+  { title: '开源/参考值', key: 'openVal', width: 132, ellipsis: true },
+  { title: '测试条数', key: 'n', width: 96 },
+  { title: '配置', key: 'extra', minWidth: 140, width: 200, ellipsis: true },
+  { title: '相对 A100', key: 'delta', width: 112 },
+]
+
+function compareRowKey(r: CompareTableRecord) {
+  return r.plat.key
+}
+
+function compareDeltaText(delta: number | null) {
+  if (delta == null) return '—'
+  if (delta >= 0) return `+${delta}%`
+  return `${delta}%`
+}
 
 const {
   comparePageTitle,
@@ -24,15 +55,17 @@ const showLatencyChart = computed(
 </script>
 
 <template>
-  <div>
-    <div class="compare-page-head">
-      <div class="compare-title-row">
+  <div class="compare-panel">
+    <header class="compare-panel__header">
+      <div class="detail-title-row">
         <div>
-          <div class="compare-page-title">{{ comparePageTitle }}</div>
+          <div class="detail-title">{{ comparePageTitle }}</div>
           <div class="compare-subtitle">{{ comparePageSubtitle }}</div>
         </div>
-        <button type="button" class="back-btn" @click="goOverview">← 返回概览</button>
+        <a-button type="primary" @click="goOverview">返回概览</a-button>
       </div>
+    </header>
+    <div class="compare-panel__scroll">
       <div class="compare-kpi-grid">
         <div
           v-for="row in compareKpiBlocks"
@@ -42,7 +75,7 @@ const showLatencyChart = computed(
             row.isBest
               ? {
                   border: '2px solid #2e7d32',
-                  background: 'linear-gradient(135deg,#e8f5e9,#f1f8f1)',
+                  background: '#F2F3F5',
                 }
               : {}
           "
@@ -70,7 +103,6 @@ const showLatencyChart = computed(
           </div>
         </div>
       </div>
-    </div>
 
     <div class="charts-grid">
       <div class="chart-card">
@@ -102,55 +134,90 @@ const showLatencyChart = computed(
         <div style="font-size: 12px; color: #888">数值来自当前维度卡片数据</div>
       </div>
       <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>平台</th>
-              <th>类型</th>
-              <th>平均得分</th>
-              <th>自研代表值</th>
-              <th>开源/参考值</th>
-              <th>测试条数</th>
-              <th>配置</th>
-              <th>相对 A100</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in compareTableRows" :key="row.plat.key">
-              <td>
-                <span
-                  class="compare-dot"
-                  style="display: inline-block; margin-right: 8px"
-                  :style="{ background: row.plat.color }"
-                />
-                {{ row.plat.name }}
-              </td>
-              <td>{{ row.plat.type }}</td>
-              <td style="font-weight: 700" :style="{ color: row.plat.color }">
-                {{ row.card.ownScore ?? '—' }}
-              </td>
-              <td>{{ row.card.ownVal || '—' }}</td>
-              <td>{{ row.card.openVal || '—' }}</td>
-              <td>{{ row.card.n ?? '—' }}</td>
-              <td>{{ row.card.extra || '—' }}</td>
-              <td>
-                {{
-                  row.delta == null
-                    ? '—'
-                    : row.delta >= 0
-                      ? `+${row.delta}%`
-                      : `${row.delta}%`
-                }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <a-table
+          v-if="compareTableRows.length"
+          :columns="compareTableColumns"
+          :data-source="(compareTableRows as CompareTableRecord[])"
+          :pagination="false"
+          :bordered="false"
+          table-layout="fixed"
+          :scroll="{ x: 1040 }"
+          :row-key="compareRowKey"
+        >
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'plat'">
+              <span
+                class="compare-dot"
+                style="display: inline-block; margin-right: 8px; vertical-align: middle"
+                :style="{ background: record.plat.color }"
+              />
+              {{ record.plat.name }}
+            </template>
+            <template v-else-if="column.key === 'platType'">
+              {{ record.plat.type }}
+            </template>
+            <template v-else-if="column.key === 'ownScore'">
+              <span class="score-num" :style="{ color: record.plat.color, fontWeight: 700 }">
+                {{ record.card.ownScore ?? '—' }}
+              </span>
+            </template>
+            <template v-else-if="column.key === 'ownVal'">
+              {{ record.card.ownVal || '—' }}
+            </template>
+            <template v-else-if="column.key === 'openVal'">
+              {{ record.card.openVal || '—' }}
+            </template>
+            <template v-else-if="column.key === 'n'">
+              {{ record.card.n ?? '—' }}
+            </template>
+            <template v-else-if="column.key === 'extra'">
+              {{ record.card.extra || '—' }}
+            </template>
+            <template v-else-if="column.key === 'delta'">
+              <span
+                v-if="record.delta != null"
+                :class="record.delta >= 0 ? 'score-up' : 'score-dn'"
+                class="score-num"
+              >
+                {{ compareDeltaText(record.delta) }}
+              </span>
+              <span v-else class="score-num score-na">—</span>
+            </template>
+          </template>
+        </a-table>
       </div>
+    </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.compare-panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  background-color: #fff;
+}
+.compare-panel__header {
+  flex-shrink: 0;
+}
+.compare-panel__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 4px;
+  background-color: #fff;
+}
+.compare-panel__scroll .compare-kpi-grid {
+  margin-bottom: 16px;
+}
+.compare-panel__scroll :deep(.ant-table-thead > tr > th.ant-table-cell),
+.compare-panel__scroll :deep(.ant-table-tbody > tr > td.ant-table-cell) {
+  text-align: left !important;
+}
 .compare-chart {
   height: 260px;
   width: 100%;
