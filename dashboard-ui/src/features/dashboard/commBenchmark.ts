@@ -1,6 +1,7 @@
 /**
- * 通信维度 XLSX 业务规则（与 comm 规格一致）。
- * 行级 vs NVIDIA：match (comm_type, n_gpu)；基线为 NVIDIA 同键 bw_GBps。
+ * 通信维度业务规则（`new_data/comm`）。
+ * 文件列 → 内存：`link_type`→linkType，`comm_type`→commType，`n_gpu`→nGpu，`bw_GBps`（表头规范化后为 `bw_gbps`）→bw，`remarks`→note，`date`→date。
+ * 行级 vs NVIDIA：`round(bw_GBps ÷ NVIDIA 同 (comm_type, n_gpu) 下行 bw_GBps × 100)`；NVIDIA 同键多行时基线取 **max(bw)**。
  */
 
 export type CommImportRow = {
@@ -11,6 +12,7 @@ export type CommImportRow = {
   bw: number
   baseline: number
   vsA100: number
+  /** 文件 `remarks` 列 */
   note: string
   date?: string
 }
@@ -40,7 +42,26 @@ export function commVsPercent(platBw: number, nvBw: number): number {
   return Math.round((platBw / nvBw) * 100)
 }
 
-function formatBwGb(x: number): string {
+/** 在 NVIDIA 表上按 (comm_type, n_gpu) 取用于对比的基线带宽（同键多行取 max，与 enrich 一致） */
+export function commNvidiaBaselineBw(
+  nvRows: { commType: string; nGpu: number; bw: number }[] | undefined,
+  commType: string,
+  nGpu: number,
+): number | undefined {
+  const want = normalizeCommType(commType)
+  let max = 0
+  let found = false
+  for (const r of nvRows || []) {
+    if (normalizeCommType(r.commType) !== want || r.nGpu !== nGpu) continue
+    if (!Number.isFinite(r.bw)) continue
+    found = true
+    max = Math.max(max, r.bw)
+  }
+  return found && max > 0 ? max : undefined
+}
+
+/** 详情 / KPI / 卡片：带宽 GB/s 展示（整数无小数，否则一位小数） */
+export function formatCommBandwidthGb(x: number): string {
   if (!Number.isFinite(x)) return '—'
   return Number.isInteger(x) ? String(Math.round(x)) : x.toFixed(1)
 }
@@ -90,9 +111,10 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
 
   const ownScore = p2p?.vsA100 ?? 100
   const openScore = ar?.vsA100 ?? 100
-  const ownVal = p2p ? `${formatBwGb(p2p.bw)} GB/s` : '—'
-  const openVal = ar ? `${formatBwGb(ar.bw)} GB/s` : '—'
-  const extra = (p2p || ar)!.linkType
+  const ownVal = p2p ? `${formatCommBandwidthGb(p2p.bw)} GB/s` : '—'
+  const openVal = ar ? `${formatCommBandwidthGb(ar.bw)} GB/s` : '—'
+  /** 概览「配置」：以 link_type 为准，优先 P2P 行 */
+  const extra = p2p?.linkType || ar?.linkType || '—'
 
   const adv = ownScore >= 100 || openScore >= 100
   let advTxt = `P2P ${ownScore}% · AllReduce ${openScore}%（相对 NVIDIA）`
@@ -133,4 +155,17 @@ export function filterCommRows<T extends { commType: string }>(
   if (!commTypePill || commTypePill === '全部') return list
   const want = normalizeCommType(commTypePill)
   return list.filter((r) => normalizeCommType(r.commType) === want)
+}
+
+/** 当前平台通信行内 `date` 字典序最大（与侧栏「数据更新于」一致） */
+export function maxCommCsvDateForPlatform(
+  commTable: Record<string, { date?: string }[] | undefined>,
+  platKey: string,
+): string | undefined {
+  let max = ''
+  for (const r of commTable[platKey] || []) {
+    const d = String(r.date ?? '').trim()
+    if (d && d > max) max = d
+  }
+  return max || undefined
 }

@@ -65,6 +65,49 @@ export function inferVsPercent(platTps: number, nvTps: number): number | null {
   return Math.round((platTps / nvTps) * 100)
 }
 
+/**
+ * 行级 vs NVIDIA：优先同 configKey；否则同 batch+input_tokens 下先同 output_tokens，再取 NVIDIA 同组 TPS 最大。
+ */
+export function enrichInferWithNvidiaBaseline(
+  prefill: InferPrefillRow[],
+  decode: InferDecodeRow[],
+  nvPrefill: InferPrefillRow[],
+  nvDecode: InferDecodeRow[],
+): void {
+  function nvPrefillBaseline(
+    row: Pick<InferPrefillRow, 'configKey' | 'batch' | 'inLen' | 'outLen'>,
+  ): number | null {
+    const exact = nvPrefill.find((r) => r.configKey === row.configKey)
+    if (exact) return exact.tps
+    const cand = nvPrefill.filter((r) => r.batch === row.batch && r.inLen === row.inLen)
+    if (!cand.length) return null
+    const sameOut = cand.find((r) => r.outLen === row.outLen)
+    if (sameOut) return sameOut.tps
+    return Math.max(...cand.map((r) => r.tps))
+  }
+  function nvDecodeBaseline(
+    row: Pick<InferDecodeRow, 'configKey' | 'batch' | 'inLen' | 'outLen'>,
+  ): number | null {
+    const exact = nvDecode.find((r) => r.configKey === row.configKey)
+    if (exact) return exact.tps
+    const cand = nvDecode.filter((r) => r.batch === row.batch && r.inLen === row.inLen)
+    if (!cand.length) return null
+    const sameOut = cand.find((r) => r.outLen === row.outLen)
+    if (sameOut) return sameOut.tps
+    return Math.max(...cand.map((r) => r.tps))
+  }
+  for (const row of prefill) {
+    const nb = nvPrefillBaseline(row)
+    row.nvidiaBaselineTps = nb ?? null
+    row.vsNvidia = nb != null && nb > 0 ? inferVsPercent(row.tps, nb) : null
+  }
+  for (const row of decode) {
+    const nb = nvDecodeBaseline(row)
+    row.nvidiaBaselineTps = nb ?? null
+    row.vsNvidia = nb != null && nb > 0 ? inferVsPercent(row.tps, nb) : null
+  }
+}
+
 export type InferFlatRow = {
   plat: string
   batch: number
@@ -87,14 +130,19 @@ export type InferCardMetrics = {
   ownVal: string
   openVal: string
   n: number
+  /** 概览「配置」：Prefill 峰值所在行的 batch + input_tokens（及可选 Decode 峰值行） */
   extra: string
+  /** 左列大分下方小字 */
+  inferOwnCaption?: string
+  /** 右列大分下方小字 */
+  inferOpenCaption?: string
   adv: boolean
   advTxt: string
   dataDate?: string
 }
 
 /**
- * 从扁平行计算概览卡（相对 NVIDIA 全表最大 Prefill / Decode）。
+ * 概览卡：Prefill/Decode 峰值与 NVIDIA 全表最大值的百分比；extra 记录峰值行 batch+in。
  */
 export function buildInferCardMetrics(
   rows: InferFlatRow[],
@@ -105,8 +153,7 @@ export function buildInferCardMetrics(
   let maxP: number | null = null
   let maxD: number | null = null
   let argP: InferFlatRow | null = null
-  let minTtft = Infinity
-  let argTtftRow: InferFlatRow | null = null
+  let argD: InferFlatRow | null = null
   const dates: string[] = []
 
   for (const r of rows) {
@@ -118,11 +165,10 @@ export function buildInferCardMetrics(
       }
     }
     if (r.decodeTps != null && Number.isFinite(r.decodeTps)) {
-      if (maxD == null || r.decodeTps > maxD) maxD = r.decodeTps
-    }
-    if (r.ttftMs != null && r.ttftMs > 0 && r.ttftMs < minTtft) {
-      minTtft = r.ttftMs
-      argTtftRow = r
+      if (maxD == null || r.decodeTps > maxD) {
+        maxD = r.decodeTps
+        argD = r
+      }
     }
   }
 
@@ -135,12 +181,13 @@ export function buildInferCardMetrics(
   const openScore = maxD != null ? Math.round((maxD / nvD) * 100) : 0
   const ownVal = maxP != null ? formatInferTokPerS(maxP) : '—'
   const openVal = maxD != null ? formatInferTokPerS(maxD) : '—'
+
+  const pBi = argP ? `batch=${argP.batch} in=${argP.inLen}` : ''
+  const dBi = argD ? `batch=${argD.batch} in=${argD.inLen}` : ''
   const extra =
-    argP != null
-      ? `batch=${argP.batch} in=${argP.inLen} out=${argP.outLen}`
-      : argTtftRow != null
-        ? `batch=${argTtftRow.batch} in=${argTtftRow.inLen}`
-        : ''
+    pBi && dBi && (argP!.batch !== argD!.batch || argP!.inLen !== argD!.inLen)
+      ? `Prefill ${pBi} · Decode ${dBi}`
+      : pBi || dBi || ''
 
   const adv = ownScore >= 100
   const advTxt =
@@ -150,7 +197,19 @@ export function buildInferCardMetrics(
         ? `Prefill 相对 NVIDIA ${ownScore}%（可优化）`
         : `Prefill 相对 NVIDIA ${ownScore}%`
 
-  return { ownScore, openScore, ownVal, openVal, n, extra, adv, advTxt, dataDate }
+  return {
+    ownScore,
+    openScore,
+    ownVal,
+    openVal,
+    n,
+    extra,
+    inferOwnCaption: maxP != null ? 'Prefill 最优' : undefined,
+    inferOpenCaption: maxD != null ? 'Decode 最优' : undefined,
+    adv,
+    advTxt,
+    dataDate,
+  }
 }
 
 /** 供图表：按 configKey 排序后对齐两类行（缺失填 0） */
@@ -179,9 +238,11 @@ export function alignInferSeries<
   }
 }
 
-export function filterInferRows<
-  T extends { batch: number; inLen: number },
->(rows: T[], batchPill: string | undefined, inLenPill: string | undefined): T[] {
+export function filterInferRows<T extends { batch: number; inLen: number }>(
+  rows: T[],
+  batchPill: string | undefined,
+  inLenPill: string | undefined,
+): T[] {
   return rows.filter((r) => {
     if (batchPill && batchPill !== '全部' && r.batch !== Number(batchPill)) return false
     if (inLenPill && inLenPill !== '全部' && r.inLen !== Number(inLenPill)) return false
@@ -189,12 +250,69 @@ export function filterInferRows<
   })
 }
 
+/** 推理表：用于筛选项并集 / 按平台子集 */
+export type InferTablePack = {
+  prefill?: { batch: number; inLen: number; dtype?: string; date?: string }[]
+  decode?: { batch: number; inLen: number; dtype?: string; date?: string }[]
+}
+
+function inferRowsBothTabs(pack: InferTablePack | undefined) {
+  return [...(pack?.prefill ?? []), ...(pack?.decode ?? [])]
+}
+
+export function inferNumericSetForPlatform(
+  tbl: Record<string, InferTablePack | undefined>,
+  platKey: string,
+  field: 'batch' | 'inLen',
+): Set<number> {
+  const set = new Set<number>()
+  for (const r of inferRowsBothTabs(tbl[platKey])) {
+    const v = r[field]
+    if (Number.isFinite(v)) set.add(v)
+  }
+  return set
+}
+
+export function inferBatchPillsUnion(tbl: Record<string, InferTablePack | undefined>): string[] {
+  const s = new Set<number>()
+  for (const pk of Object.keys(tbl)) {
+    for (const n of inferNumericSetForPlatform(tbl, pk, 'batch')) s.add(n)
+  }
+  return [...s].sort((a, b) => a - b).map(String)
+}
+
+export function inferInLenPillsUnion(tbl: Record<string, InferTablePack | undefined>): string[] {
+  const s = new Set<number>()
+  for (const pk of Object.keys(tbl)) {
+    for (const n of inferNumericSetForPlatform(tbl, pk, 'inLen')) s.add(n)
+  }
+  return [...s].sort((a, b) => a - b).map(String)
+}
+
+/** 当前平台 prefill ∪ decode 行内 `date` 字典序最大（CSV date） */
+export function maxInferCsvDateForPlatform(
+  tbl: Record<string, InferTablePack | undefined>,
+  platKey: string,
+): string | undefined {
+  let max = ''
+  for (const r of inferRowsBothTabs(tbl[platKey])) {
+    const d = String(r.date ?? '').trim()
+    if (d && d > max) max = d
+  }
+  return max || undefined
+}
+
 export function inferPlatHasFilteredRow(
   platKey: string,
-  inferTable: Record<string, { prefill?: { batch: number; inLen: number }[] } | undefined>,
+  inferTable: Record<string, InferTablePack | undefined>,
   batchPill: string | undefined,
   inLenPill: string | undefined,
 ): boolean {
-  const pre = inferTable[platKey]?.prefill || []
-  return filterInferRows(pre, batchPill, inLenPill).length > 0
+  const pack = inferTable[platKey]
+  const pre = pack?.prefill || []
+  const dec = pack?.decode || []
+  return (
+    filterInferRows(pre, batchPill, inLenPill).length > 0 ||
+    filterInferRows(dec, batchPill, inLenPill).length > 0
+  )
 }

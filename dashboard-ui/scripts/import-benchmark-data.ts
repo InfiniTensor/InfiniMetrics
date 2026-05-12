@@ -4,8 +4,8 @@
  * 前端读的是本脚本生成进 `generatedFromFiles.ts` 的数据，不会在浏览器里直接打开 Excel/CSV。
  * 改 `new_data/**` 后必须执行：`npm run generate:data`（`npm run dev` / `npm run build` 已配置为执行前自动生成）。
  *
- * 通信：`new_data/comm/{plat}_comm_YYYYMMDD.xlsx` 或同名的 `.csv`（同平台同时存在时优先 CSV）；文件名 8 位日期会参与行内日期的对齐。
- * 访存：`{plat}_bw_YYYYMMDD.csv` 与可选的 `bw/bw_template.csv`（多平台、含 platform 列）。
+ * 通信：`new_data/comm/{plat}_comm_YYYYMMDD.xlsx` 或同名的 `.csv`（同平台同时存在时优先 CSV）；文件名 8 位日期会参与行内日期的对齐。列：link_type、comm_type、n_gpu、bw_GBps（表头规范化后为 bw_gbps）、date、remarks。
+ * 访存：`{plat}_bw_YYYYMMDD.csv` 或 `.xlsx`（同平台同时存在时优先 CSV）、可选的 `bw/bw_template.csv`（多平台、含 platform 列）。列：model、add_bw_GBps、copy_bw_GBps、scale_bw_GBps、triad_bw_GBps、bw_GBps、date、tester、remarks（表头规范化后为下划线小写）。
  * 算子 / 推理 / 训练 / 通信规则见各 `*Benchmark.ts`。
  */
 import { parse } from 'csv-parse/sync'
@@ -20,8 +20,8 @@ const XLSX =
     : ((XLSXImport as unknown as { default: typeof import('xlsx') }).default as typeof import('xlsx'))
 import {
   buildInferCardMetrics,
+  enrichInferWithNvidiaBaseline,
   inferConfigKey,
-  inferVsPercent,
   INFER_FRAMEWORK,
   normalizeInferModel,
   type InferDecodeRow,
@@ -172,13 +172,21 @@ type OperatorFlat = {
 
 function pickPrefillDecodeKeys(sample: Record<string, string>): { pk: string; dk: string } | null {
   const keys = Object.keys(sample)
-  const pk = keys.find((k) => /prefill/i.test(k) && (/token/i.test(k) || /tokens/i.test(k)))
-  const dk = keys.find(
-    (k) =>
-      /^decode/i.test(k) &&
-      (/token/i.test(k) || /tokens/i.test(k)) &&
-      !/il_decode|decode_ms|vl_decode/i.test(k),
-  )
+  const pk =
+    keys.find((k) => {
+      const kl = k.toLowerCase()
+      return /prefill/i.test(kl) && (/token/i.test(kl) || /tokens/i.test(kl) || /吞吐/.test(kl))
+    }) ??
+    keys.find((k) => /prefill吞吐/i.test(k))
+  const dk =
+    keys.find((k) => {
+      const kl = k.toLowerCase()
+      return (
+        /^decode/i.test(kl) &&
+        (/token/i.test(kl) || /tokens/i.test(kl) || /吞吐/.test(kl)) &&
+        !/il_decode|decode_ms|vl_decode/i.test(kl)
+      )
+    }) ?? keys.find((k) => /decode吞吐/i.test(k))
   if (pk && dk) return { pk, dk }
   return null
 }
@@ -318,26 +326,6 @@ function parseInferCsvNew(
   return { flats, prefill, decode }
 }
 
-function enrichInferWithNvidiaBaseline(
-  prefill: InferPrefillRow[],
-  decode: InferDecodeRow[],
-  nvPrefill: InferPrefillRow[],
-  nvDecode: InferDecodeRow[],
-) {
-  const pm = new Map(nvPrefill.map((r) => [r.configKey, r.tps]))
-  const dm = new Map(nvDecode.map((r) => [r.configKey, r.tps]))
-  for (const row of prefill) {
-    const nb = pm.get(row.configKey)
-    row.nvidiaBaselineTps = nb ?? null
-    row.vsNvidia = nb != null && nb > 0 ? inferVsPercent(row.tps, nb) : null
-  }
-  for (const row of decode) {
-    const nb = dm.get(row.configKey)
-    row.nvidiaBaselineTps = nb ?? null
-    row.vsNvidia = nb != null && nb > 0 ? inferVsPercent(row.tps, nb) : null
-  }
-}
-
 function maxInferMetric(rows: InferFlatRow[], key: 'prefillTps' | 'decodeTps'): number {
   let m = 0
   for (const r of rows) {
@@ -467,11 +455,13 @@ function trainCell(o: Record<string, string>, ...keys: string[]): string {
 
 function trainRowFromRecord(o: Record<string, string>): TrainTableRow | null {
   const framework = trainCell(o, 'framework').toLowerCase()
-  const model = trainCell(o, 'model').toLowerCase()
+  const modelRaw = trainCell(o, 'model').trim()
+  const modelKey = modelRaw.toLowerCase()
   const nGpu = Math.round(parseNum(trainCell(o, 'n_gpu', 'ngpu')))
   const seqLen = Math.round(parseNum(trainCell(o, 'seq_len', 'seqlen', 'seq_length')))
   const tps = parseNum(trainCell(o, 'throughput_tpps', 'throughput', 'tpps'))
-  if (!framework || !model || !Number.isFinite(nGpu) || !Number.isFinite(seqLen) || !Number.isFinite(tps)) return null
+  if (!framework || !modelKey || !Number.isFinite(nGpu) || !Number.isFinite(seqLen) || !Number.isFinite(tps))
+    return null
 
   const mbsRaw = parseNum(trainCell(o, 'micro_batch_size', 'microbatchsize', 'mbs'))
   const dtype = normalizeTrainDtype(trainCell(o, 'dtype'))
@@ -488,12 +478,12 @@ function trainRowFromRecord(o: Record<string, string>): TrainTableRow | null {
     '测试时间',
   )
   const date = normalizeImportedCalendarDateString(dateRaw)
-  const mk = trainMatchKey(framework, model, nGpu, seqLen, dtype)
+  const mk = trainMatchKey(framework, modelKey, nGpu, seqLen, dtype)
 
   const row: TrainTableRow = {
     matchKey: mk,
     framework,
-    model,
+    model: modelRaw || modelKey,
     parallel: formatTrainParallel(nGpu, seqLen),
     dtype,
     flashAttn: flashRaw,
@@ -512,6 +502,8 @@ function trainRowFromRecord(o: Record<string, string>): TrainTableRow | null {
 function ingestTrainFile(filePath: string, forcedPlat: string, acc: Record<string, TrainTableRow[]>) {
   const records = readFirstSheetStringRecords(filePath)
   for (const o of records) {
+    const platCell = normalizePlatform(trainCell(o, 'platform', 'plat', 'vendor', 'chip'))
+    if (platCell && platCell !== forcedPlat) continue
     const row = trainRowFromRecord(o)
     if (!row) continue
     if (!acc[forcedPlat]) acc[forcedPlat] = []
@@ -519,6 +511,7 @@ function ingestTrainFile(filePath: string, forcedPlat: string, acc: Record<strin
   }
 }
 
+/** 按 matchKey = (framework, model, n_gpu, seq_len, dtype) 对齐 NVIDIA：同键取 NVIDIA 最大 tpps 为基线，行级 vs = throughput_tpps ÷ 基线 × 100 */
 function enrichTrainBaselines(byPlat: Record<string, TrainTableRow[]>) {
   const nv = byPlat.nvidia || []
   const baselineMap = new Map<string, number>()
@@ -556,6 +549,7 @@ function commRowFromRecord(o: Record<string, string>, fileHintIso?: string): Com
   const commType = normalizeCommType(commCell(o, 'comm_type', 'commtype', 'type'))
   if (commType !== 'p2p' && commType !== 'allreduce') return null
   const nGpu = Math.round(parseNum(commCell(o, 'n_gpu', 'ngpu')))
+  /** 规范列名 `bw_GBps`；normalizeXlsxHeaderKey / CSV 列名统一为小写下划线后为 `bw_gbps` */
   const bw = parseNum(commCell(o, 'bw_gbps', 'bw', 'bandwidth_gbps', 'bandwidth'))
   if (!Number.isFinite(nGpu) || !Number.isFinite(bw)) return null
   const linkRaw = commCell(o, 'link_type', 'linktype', 'link')
@@ -654,14 +648,35 @@ function bwCsvCell(o: Record<string, string>, ...keys: string[]): string {
   return ''
 }
 
+function appendBwDetailMeta(row: BwDetailRow, o: Record<string, string>) {
+  const remarks = bwCsvCell(o, 'remarks', 'remark').trim()
+  const tester = bwCsvCell(o, 'tester', '测试者', 'operator').trim()
+  const dateRaw = bwCsvCell(
+    o,
+    'date',
+    'test_date',
+    'run_date',
+    'data_date',
+    'experiment_date',
+    '测试日期',
+    '测试时间',
+  )
+  const date = normalizeImportedCalendarDateString(dateRaw)
+  if (remarks) row.remarks = remarks
+  if (tester) row.tester = tester
+  if (date) row.date = date
+}
+
 function bwRowFromCsvRecord(o: Record<string, string>): BwDetailRow | null {
   const model = bwCsvCell(o, 'model').trim()
   if (!model) return null
 
-  const add = parseNum(bwCsvCell(o, 'add_bw_gbps', 'add'))
-  const copy = parseNum(bwCsvCell(o, 'copy_bw_gbps', 'copy'))
-  const scale = parseNum(bwCsvCell(o, 'scale_bw_gbps', 'scale'))
-  const triad = parseNum(bwCsvCell(o, 'triad_bw_gbps', 'triad'))
+  /** 文件列 `*_bw_GBps`；规范化后为 `*_bw_gbps` */
+  const add = parseNum(bwCsvCell(o, 'add_bw_gbps', 'add_bw_g', 'add'))
+  const copy = parseNum(bwCsvCell(o, 'copy_bw_gbps', 'copy_bw_g', 'copy'))
+  const scale = parseNum(bwCsvCell(o, 'scale_bw_gbps', 'scale_bw_g', 'scale'))
+  const triad = parseNum(bwCsvCell(o, 'triad_bw_gbps', 'triad_bw_g', 'triad'))
+  /** 文件列 `bw_GBps`（均值）；规范化后为 `bw_gbps` */
   const avgRaw = parseNum(bwCsvCell(o, 'bw_gbps', 'bw', 'hbm_mean_gbps', 'mean_bw_gbps'))
 
   const addN = Number.isFinite(add) ? add : null
@@ -677,17 +692,6 @@ function bwRowFromCsvRecord(o: Record<string, string>): BwDetailRow | null {
 
   const modesKnown = [addN, copyN, scaleN, triadN].filter((x) => x != null).length
   if (avg == null && modesKnown === 0) {
-    const remarks = bwCsvCell(o, 'remarks', 'remark')
-    const date = bwCsvCell(
-      o,
-      'date',
-      'test_date',
-      'run_date',
-      'data_date',
-      'experiment_date',
-      '测试日期',
-      '测试时间',
-    )
     const row: BwDetailRow = {
       model,
       add: addN,
@@ -697,23 +701,11 @@ function bwRowFromCsvRecord(o: Record<string, string>): BwDetailRow | null {
       avg: null,
       vsNvidia: 100,
     }
-    if (remarks) row.remarks = remarks
-    if (date) row.date = date
+    appendBwDetailMeta(row, o)
     return row
   }
 
   const vsNvidia = avg != null ? bwVsNvidiaPercent(avg) : 100
-  const remarks = bwCsvCell(o, 'remarks', 'remark')
-  const date = bwCsvCell(
-    o,
-    'date',
-    'test_date',
-    'run_date',
-    'data_date',
-    'experiment_date',
-    '测试日期',
-    '测试时间',
-  )
   const row: BwDetailRow = {
     model,
     add: addN,
@@ -723,8 +715,7 @@ function bwRowFromCsvRecord(o: Record<string, string>): BwDetailRow | null {
     avg,
     vsNvidia,
   }
-  if (remarks) row.remarks = remarks
-  if (date) row.date = date
+  appendBwDetailMeta(row, o)
   return row
 }
 
@@ -742,6 +733,37 @@ function parseBwCsv(filePath: string): BwDetailRow[] {
     const o = normalizeCsvRowKeys(rec)
     const row = bwRowFromCsvRecord(o)
     if (row) out.push(row)
+  }
+  return out
+}
+
+/** 访存表：CSV 与首 sheet 的 xlsx，列名经 `readFirstSheetStringRecords` 与 CSV 归一化后一致 */
+function parseBwDataFile(filePath: string): BwDetailRow[] {
+  if (!filePath.toLowerCase().endsWith('.csv')) {
+    const records = readFirstSheetStringRecords(filePath)
+    const out: BwDetailRow[] = []
+    for (const o of records) {
+      const row = bwRowFromCsvRecord(o)
+      if (row) out.push(row)
+    }
+    return out
+  }
+  return parseBwCsv(filePath)
+}
+
+/** 同平台 `{plat}_bw_*.csv` 与 `{plat}_bw_*.xlsx` 取文件名日期较新者；同日优先 CSV */
+function pickLatestBwFilePerPlatform(): Record<string, { date: string; full: string }> {
+  const csvMap = pickLatestByPlatform(DATA_BW, /^(.+)_bw_(\d+)\.csv$/i)
+  const xlsxMap = pickLatestByPlatform(DATA_BW, /^(.+)_bw_(\d+)\.xlsx$/i)
+  const plats = new Set([...Object.keys(csvMap), ...Object.keys(xlsxMap)])
+  const out: Record<string, { date: string; full: string }> = {}
+  for (const plat of plats) {
+    const c = csvMap[plat]
+    const x = xlsxMap[plat]
+    if (!c) out[plat] = x!
+    else if (!x) out[plat] = c
+    else if (c.date !== x.date) out[plat] = c.date > x.date ? c : x
+    else out[plat] = c
   }
   return out
 }
@@ -1025,7 +1047,7 @@ function main() {
   const BW_TABLE_FROM_FILES: Record<string, BwDetailRow[]> = {}
   const BW_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
 
-  const datedBw = pickLatestByPlatform(DATA_BW, /^(.+)_bw_(\d+)\.csv$/i)
+  const datedBw = pickLatestBwFilePerPlatform()
   const bwFileDateByPlat: Record<string, string> = {}
   for (const [plat, { date: stamp }] of Object.entries(datedBw)) {
     const iso = fileStampYmdToIso(stamp)
@@ -1033,7 +1055,7 @@ function main() {
   }
 
   for (const [plat, { full }] of Object.entries(datedBw)) {
-    const rows = parseBwCsv(full)
+    const rows = parseBwDataFile(full)
     if (rows.length) {
       BW_TABLE_FROM_FILES[plat] = rows
       meta.bwSources.push(full.replace(ROOT + path.sep, ''))

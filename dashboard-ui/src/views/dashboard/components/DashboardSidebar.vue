@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { BENCHMARK_DATA_META, DATA_UPDATED_AT, OP_TABLE } from '@/data'
+import { BENCHMARK_DATA_META, DATA_UPDATED_AT, INFER_TABLE, OP_TABLE, TRAIN_TABLE, COMM_TABLE, BW_TABLE } from '@/data'
 import {
   formatOperatorCsvDateDisplay,
   maxOperatorCsvDateForPlatform,
   type OperatorTableRow,
 } from '@/features/dashboard/operatorBenchmark'
+import { maxInferCsvDateForPlatform, type InferTablePack } from '@/features/dashboard/inferBenchmark'
+import { maxTrainCsvDateForPlatform } from '@/features/dashboard/trainBenchmark'
+import { maxCommCsvDateForPlatform } from '@/features/dashboard/commBenchmark'
+import { maxBwCsvDateForPlatform } from '@/features/dashboard/bwBenchmark'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 
@@ -21,7 +25,7 @@ const {
   selectDomestic,
   setDim,
 } = useInfiniDashboard()
-const { goOverview } = useDashboardNavigation()
+const { goOverview, leaveCompareOrSyncOverview } = useDashboardNavigation()
 
 /** public 下文件名与 PLATFORMS.key 对应（Vite BASE_URL 兼容子路径部署） */
 const PLAT_ICON_FILE: Record<string, string> = {
@@ -62,6 +66,21 @@ function onSetDim(i: number) {
   void goOverview()
 }
 
+function onTogglePlat(key: string) {
+  togglePlat(key)
+  leaveCompareOrSyncOverview()
+}
+
+function onSelectAll() {
+  selectAll()
+  leaveCompareOrSyncOverview()
+}
+
+function onSelectDomestic() {
+  selectDomestic()
+  leaveCompareOrSyncOverview()
+}
+
 function isBrandActive(key: string) {
   return selectedPlatKeys.value.includes(key)
 }
@@ -73,9 +92,62 @@ function platLineName(p: (typeof PLATFORMS)[number]) {
   return p.name
 }
 
-/** 算子维度：侧栏日期来自 CSV `date`（详情=当前平台行内最大；概览=生成数据写入的算子集最大日期） */
+/** 侧栏「数据更新于」：算子 / 推理维度走 CSV date 与生成元数据；其余用全局占位 */
 const dataUpdatedAtDisplay = computed(() => {
-  if (DIMS[activeDim.value]?.key !== 'op') return DATA_UPDATED_AT
+  const dimKey = DIMS[activeDim.value]?.key
+  if (dimKey === 'infer') {
+    const meta = (BENCHMARK_DATA_META as { inferDatasetUpdatedAt?: string }).inferDatasetUpdatedAt
+    if (currentView.value === 'detail') {
+      const plat = detailState.value.platKey
+      const maxRow = maxInferCsvDateForPlatform(
+        INFER_TABLE as Record<string, InferTablePack | undefined>,
+        plat,
+      )
+      if (maxRow) return formatOperatorCsvDateDisplay(maxRow)
+    }
+    if (meta) return formatOperatorCsvDateDisplay(meta)
+    return formatOperatorCsvDateDisplay(DATA_UPDATED_AT)
+  }
+  if (dimKey === 'train') {
+    const meta = (BENCHMARK_DATA_META as { trainDatasetUpdatedAt?: string }).trainDatasetUpdatedAt
+    if (currentView.value === 'detail') {
+      const plat = detailState.value.platKey
+      const maxRow = maxTrainCsvDateForPlatform(
+        TRAIN_TABLE as Record<string, { date?: string }[] | undefined>,
+        plat,
+      )
+      if (maxRow) return formatOperatorCsvDateDisplay(maxRow)
+    }
+    if (meta) return formatOperatorCsvDateDisplay(meta)
+    return formatOperatorCsvDateDisplay(DATA_UPDATED_AT)
+  }
+  if (dimKey === 'comm') {
+    const meta = (BENCHMARK_DATA_META as { commDatasetUpdatedAt?: string }).commDatasetUpdatedAt
+    if (currentView.value === 'detail') {
+      const plat = detailState.value.platKey
+      const maxRow = maxCommCsvDateForPlatform(
+        COMM_TABLE as Record<string, { date?: string }[] | undefined>,
+        plat,
+      )
+      if (maxRow) return formatOperatorCsvDateDisplay(maxRow)
+    }
+    if (meta) return formatOperatorCsvDateDisplay(meta)
+    return formatOperatorCsvDateDisplay(DATA_UPDATED_AT)
+  }
+  if (dimKey === 'bw') {
+    const meta = (BENCHMARK_DATA_META as { bwDatasetUpdatedAt?: string }).bwDatasetUpdatedAt
+    if (currentView.value === 'detail') {
+      const plat = detailState.value.platKey
+      const maxRow = maxBwCsvDateForPlatform(
+        BW_TABLE as Record<string, { date?: string }[] | undefined>,
+        plat,
+      )
+      if (maxRow) return formatOperatorCsvDateDisplay(maxRow)
+    }
+    if (meta) return formatOperatorCsvDateDisplay(meta)
+    return formatOperatorCsvDateDisplay(DATA_UPDATED_AT)
+  }
+  if (dimKey !== 'op') return formatOperatorCsvDateDisplay(DATA_UPDATED_AT)
   const meta = (BENCHMARK_DATA_META as { opDatasetUpdatedAt?: string }).opDatasetUpdatedAt
   if (currentView.value === 'detail') {
     const plat = detailState.value.platKey
@@ -83,8 +155,8 @@ const dataUpdatedAtDisplay = computed(() => {
     const maxRow = maxOperatorCsvDateForPlatform(tbl[plat])
     if (maxRow) return formatOperatorCsvDateDisplay(maxRow)
   }
-  if (meta) return meta
-  return DATA_UPDATED_AT
+  if (meta) return formatOperatorCsvDateDisplay(meta)
+  return formatOperatorCsvDateDisplay(DATA_UPDATED_AT)
 })
 </script>
 
@@ -102,7 +174,7 @@ const dataUpdatedAtDisplay = computed(() => {
               type="button"
               class="q-btn"
               :class="{ active: quickSelectAllActive }"
-              @click="selectAll"
+              @click="onSelectAll"
             >
               全选
             </button>
@@ -110,7 +182,7 @@ const dataUpdatedAtDisplay = computed(() => {
               type="button"
               class="q-btn"
               :class="{ active: quickDomesticActive }"
-              @click="selectDomestic"
+              @click="onSelectDomestic"
             >
               国产
             </button>
@@ -123,9 +195,9 @@ const dataUpdatedAtDisplay = computed(() => {
               :class="{ active: isBrandActive(p.key) }"
               role="button"
               tabindex="0"
-              @click="togglePlat(p.key)"
-              @keydown.enter.prevent="togglePlat(p.key)"
-              @keydown.space.prevent="togglePlat(p.key)"
+              @click="onTogglePlat(p.key)"
+              @keydown.enter.prevent="onTogglePlat(p.key)"
+              @keydown.space.prevent="onTogglePlat(p.key)"
             >
               <div class="brand-icon-wrap" aria-hidden="true">
                 <img class="brand-icon-img" :src="platIconSrc(p.key)" alt="" loading="lazy" />

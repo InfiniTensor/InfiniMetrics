@@ -5,6 +5,10 @@ import { CI_CHART_LABELS } from '@/data'
 /** 详情区算子延迟/得分柱/CI 折线统一主蓝（与各算子平均得分柱同色） */
 const CHART_PRIMARY_BLUE = '#3182ce'
 
+/** 推理详情 Prefill / Decode 双柱：平台 TPS 固定主蓝、NVIDIA 固定浅绿（不随当前平台 brand 色变化） */
+const INFER_COMPARE_BAR_PLATFORM = CHART_PRIMARY_BLUE
+const INFER_COMPARE_BAR_NVIDIA = '#B5D6A7'
+
 /** 详情页柱状图单柱最大宽度（px） */
 const DETAIL_BAR_MAX_WIDTH = 20
 
@@ -52,6 +56,20 @@ function categoryBarXAxisUi(categories: string[]): {
   return {
     gridBottom: 112,
     axisLabel: { interval: 0, rotate: 55, fontSize: 8, margin: 10 },
+  }
+}
+
+/** 详情页推理 / 训练等柱图：底边与轴边距收紧（类目相对算子表更短） */
+function compactDetailBarXAxisUi(categories: string[]): {
+  gridBottom: number
+  axisLabel: { interval: 0; rotate: number; fontSize: number; margin: number }
+} {
+  const xUi = categoryBarXAxisUi(categories)
+  const b =
+    xUi.gridBottom <= 46 ? 32 : xUi.gridBottom <= 62 ? 44 : xUi.gridBottom <= 82 ? 56 : 72
+  return {
+    gridBottom: b,
+    axisLabel: { ...xUi.axisLabel, margin: Math.min(6, xUi.axisLabel.margin) },
   }
 }
 
@@ -140,13 +158,9 @@ export function buildOpBarAvgOption(opKeys: string[], scores: number[]) {
 
 type InferRow = { batch: number; inLen: number; tps: number; ttft?: number }
 
-export function buildInferPrefillBarOption(
-  prefillRows: InferRow[],
-  nvPrefill: InferRow[],
-  platColor: string,
-) {
+export function buildInferPrefillBarOption(prefillRows: InferRow[], nvPrefill: InferRow[]) {
   const cats = prefillRows.map((r) => `bs${r.batch} in${r.inLen}`)
-  const xUi = categoryBarXAxisUi(cats)
+  const xUi = compactDetailBarXAxisUi(cats)
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
@@ -163,26 +177,22 @@ export function buildInferPrefillBarOption(
         name: 'Prefill TPS',
         data: prefillRows.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'A100 Prefill',
         data: nvPrefill.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: '#76b90044', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
 }
 
-export function buildInferDecodeBarOption(
-  decodeRows: InferRow[],
-  nvDecode: InferRow[],
-  platColor: string,
-) {
+export function buildInferDecodeBarOption(decodeRows: InferRow[], nvDecode: InferRow[]) {
   const cats = decodeRows.map((r) => `bs${r.batch} in${r.inLen}`)
-  const xUi = categoryBarXAxisUi(cats)
+  const xUi = compactDetailBarXAxisUi(cats)
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
@@ -199,14 +209,14 @@ export function buildInferDecodeBarOption(
         name: 'Decode TPS',
         data: decodeRows.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: platColor + '99', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'A100 Decode',
         data: nvDecode.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: '#76b90044', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -216,9 +226,8 @@ export function buildInferPrefillBarAligned(
   categories: string[],
   platVals: number[],
   nvVals: number[],
-  platColor: string,
 ) {
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
@@ -231,14 +240,14 @@ export function buildInferPrefillBarAligned(
         name: 'Prefill TPS',
         data: platVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'NVIDIA Prefill',
         data: nvVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: '#76b90044', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -248,9 +257,8 @@ export function buildInferDecodeBarAligned(
   categories: string[],
   platVals: number[],
   nvVals: number[],
-  platColor: string,
 ) {
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
@@ -263,14 +271,14 @@ export function buildInferDecodeBarAligned(
         name: 'Decode TPS',
         data: platVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: platColor + '99', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'NVIDIA Decode',
         data: nvVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: '#76b90044', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -290,15 +298,19 @@ type TrainRow = {
 
 export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
   const categories = rows.map((r) => `${r.framework}·${r.model}`)
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
+  const n = categories.length
+  const boundaryGap = n <= 3 ? (['4%', '4%'] as [string, string]) : true
+  const barCategoryGap = n <= 3 ? '14%' : '36%'
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 64, right: 24, top: 56, bottom: xUi.gridBottom },
+    grid: { left: 12, right: 12, top: 48, bottom: xUi.gridBottom, containLabel: true },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
+      boundaryGap,
     },
     yAxis: { type: 'value' as const, name: 'tokens/process/s' },
     series: [
@@ -307,6 +319,7 @@ export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
         name: '实测吞吐 tpps',
         data: rows.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+        barCategoryGap,
         itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
       },
       {
@@ -314,6 +327,7 @@ export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
         name: 'NVIDIA 基线',
         data: rows.map((r) => r.baseline),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+        barCategoryGap,
         itemStyle: { color: '#76b90055', borderRadius: [2, 2, 0, 0] },
       },
     ],
@@ -322,14 +336,18 @@ export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
 
 export function buildTrainBarVs(rows: TrainRow[]) {
   const categories = rows.map((r) => `${r.framework}·${r.model}`)
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
+  const n = categories.length
+  const boundaryGap = n <= 3 ? (['4%', '4%'] as [string, string]) : true
+  const barCategoryGap = n <= 3 ? '14%' : '36%'
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { left: 56, right: 24, top: 28, bottom: xUi.gridBottom },
+    grid: { left: 10, right: 10, top: 22, bottom: xUi.gridBottom, containLabel: true },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
+      boundaryGap,
     },
     yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0 },
     series: [
@@ -337,10 +355,11 @@ export function buildTrainBarVs(rows: TrainRow[]) {
         type: 'bar' as const,
         name: 'vs NVIDIA (%)',
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+        barCategoryGap,
         data: rows.map((r) => ({
           value: r.vsA100,
           itemStyle: {
-            color: r.vsA100 >= 100 ? '#2e7d32cc' : '#e6510099',
+            color: r.vsA100 >= 100 ? '#2e7d32cc' : '#c62828aa',
             borderRadius: [2, 2, 0, 0],
           },
         })),
@@ -407,7 +426,7 @@ export function buildCommBarVs(rows: CommRow[]) {
         data: rows.map((r) => ({
           value: r.vsA100,
           itemStyle: {
-            color: r.vsA100 >= 100 ? '#2e7d32cc' : '#e6510099',
+            color: r.vsA100 >= 100 ? '#2e7d32cc' : '#c62828aa',
             borderRadius: [2, 2, 0, 0],
           },
         })),

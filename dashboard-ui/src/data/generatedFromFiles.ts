@@ -13655,7 +13655,9 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "6.2K tok/s",
     "openVal": "3.3K tok/s",
     "n": 30,
-    "extra": "batch=64 in=32 out=4096",
+    "extra": "batch=64 in=32",
+    "inferOwnCaption": "Prefill 最优",
+    "inferOpenCaption": "Decode 最优",
     "adv": false,
     "advTxt": "Prefill 相对 NVIDIA 48%"
   },
@@ -13668,7 +13670,9 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "1.4K tok/s",
     "openVal": "555 tok/s",
     "n": 23,
-    "extra": "batch=64 in=32 out=256",
+    "extra": "Prefill batch=64 in=32 · Decode batch=64 in=256",
+    "inferOwnCaption": "Prefill 最优",
+    "inferOpenCaption": "Decode 最优",
     "adv": false,
     "advTxt": "Prefill 相对 NVIDIA 11%"
   },
@@ -13681,7 +13685,9 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "13.3K tok/s",
     "openVal": "238 tok/s",
     "n": 30,
-    "extra": "batch=64 in=256 out=1024",
+    "extra": "batch=64 in=256",
+    "inferOwnCaption": "Prefill 最优",
+    "inferOpenCaption": "Decode 最优",
     "adv": true,
     "advTxt": "Prefill 相对 NVIDIA 103%"
   },
@@ -13694,7 +13700,9 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "10.3K tok/s",
     "openVal": "3.0K tok/s",
     "n": 30,
-    "extra": "batch=1 in=4096 out=256",
+    "extra": "Prefill batch=1 in=4096 · Decode batch=64 in=32",
+    "inferOwnCaption": "Prefill 最优",
+    "inferOpenCaption": "Decode 最优",
     "adv": false,
     "advTxt": "Prefill 相对 NVIDIA 80%（可优化）"
   },
@@ -13707,7 +13715,9 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "7.3K tok/s",
     "openVal": "1.8K tok/s",
     "n": 30,
-    "extra": "batch=64 in=32 out=1024",
+    "extra": "Prefill batch=64 in=32 · Decode batch=64 in=256",
+    "inferOwnCaption": "Prefill 最优",
+    "inferOpenCaption": "Decode 最优",
     "adv": false,
     "advTxt": "Prefill 相对 NVIDIA 56%"
   },
@@ -13720,7 +13730,9 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "12.9K tok/s",
     "openVal": "3.7K tok/s",
     "n": 30,
-    "extra": "batch=4 in=4096 out=4096",
+    "extra": "Prefill batch=4 in=4096 · Decode batch=64 in=32",
+    "inferOwnCaption": "Prefill 最优",
+    "inferOpenCaption": "Decode 最优",
     "adv": true,
     "advTxt": "Prefill 相对 NVIDIA 100%"
   }
@@ -13731,7 +13743,7 @@ export const TRAIN_TABLE_FROM_FILES = {
     {
       "framework": "megatron",
       "model": "llama3-8b",
-      "parallel": "8 GPU · seq8192",
+      "parallel": "8 GPU · seq 8192",
       "dtype": "BF16",
       "flashAttn": "off（不支持 fused attn）",
       "tps": 438,
@@ -13748,7 +13760,7 @@ export const TRAIN_TABLE_FROM_FILES = {
     {
       "framework": "megatron",
       "model": "llama3-8b",
-      "parallel": "8 GPU · seq8192",
+      "parallel": "8 GPU · seq 8192",
       "dtype": "BF16",
       "flashAttn": "on",
       "tps": 2564,
@@ -13773,7 +13785,7 @@ export const TRAIN_CARD_FROM_FILES = {
     "ownScore": 17,
     "ownVal": "438 tpps",
     "n": 1,
-    "extra": "Megatron - llama3-8b - 8 GPU",
+    "extra": "Megatron · llama3-8b · 8 GPU",
     "adv": false,
     "advTxt": "相对 NVIDIA 17%"
   },
@@ -13784,9 +13796,9 @@ export const TRAIN_CARD_FROM_FILES = {
     "openScore": null,
     "openVal": null,
     "ownScore": 100,
-    "ownVal": "2564 tpps",
+    "ownVal": "2,564 tpps",
     "n": 1,
-    "extra": "Megatron - llama3-8b - 8 GPU",
+    "extra": "Megatron · llama3-8b · 8 GPU",
     "adv": true,
     "advTxt": "相对 NVIDIA 同配置 100%"
   }
@@ -13869,16 +13881,15 @@ export const COMM_CARD_FROM_FILES = {
 } as Record<string, Record<string, unknown>>
 
 export const BW_TABLE_FROM_FILES = {
-  "nvidia": [
+  "ascend": [
     {
-      "model": "A100",
-      "add": 1630.7558,
-      "copy": 1585.1489,
-      "scale": 1579.7755,
-      "triad": 1634.1444,
-      "avg": 1607.4561,
-      "vsNvidia": 100,
-      "date": "2026-04-29"
+      "model": "910B3",
+      "add": 1540,
+      "copy": null,
+      "scale": null,
+      "triad": null,
+      "avg": 1540,
+      "vsNvidia": 96
     }
   ],
   "cambricon": [
@@ -13901,15 +13912,24 @@ export const BW_TABLE_FROM_FILES = {
       "vsNvidia": 16
     }
   ],
-  "ascend": [
+  "iluvatar": [
     {
-      "model": "910B3",
-      "add": 1540,
+      "model": "TG150",
+      "add": 586,
       "copy": null,
       "scale": null,
       "triad": null,
-      "avg": 1540,
-      "vsNvidia": 96
+      "avg": 586,
+      "vsNvidia": 36
+    },
+    {
+      "model": "TG200",
+      "add": null,
+      "copy": null,
+      "scale": null,
+      "triad": null,
+      "avg": null,
+      "vsNvidia": 100
     }
   ],
   "metax": [
@@ -13934,41 +13954,33 @@ export const BW_TABLE_FROM_FILES = {
       "vsNvidia": 87
     }
   ],
-  "iluvatar": [
+  "nvidia": [
     {
-      "model": "TG150",
-      "add": 586,
-      "copy": null,
-      "scale": null,
-      "triad": null,
-      "avg": 586,
-      "vsNvidia": 36
-    },
-    {
-      "model": "TG200",
-      "add": null,
-      "copy": null,
-      "scale": null,
-      "triad": null,
-      "avg": null,
-      "vsNvidia": 100
+      "model": "A100",
+      "add": 1630.7558,
+      "copy": 1585.1489,
+      "scale": 1579.7755,
+      "triad": 1634.1444,
+      "avg": 1607.4561,
+      "vsNvidia": 100,
+      "date": "2026-04-29"
     }
   ]
 } as Record<string, Array<Record<string, unknown>>>
 
 export const BW_CARD_FROM_FILES = {
-  "nvidia": {
-    "key": "nvidia",
+  "ascend": {
+    "key": "ascend",
     "ownFw": "HBM均值",
     "openFw": "",
     "openScore": null,
     "openVal": null,
-    "ownScore": 100,
-    "ownVal": "1607.5 GB/s",
+    "ownScore": 96,
+    "ownVal": "1540.0 GB/s",
     "n": 1,
-    "extra": "A100",
-    "adv": true,
-    "advTxt": "HBM 均值相对 NVIDIA A100 基线 100%"
+    "extra": "910B3",
+    "adv": false,
+    "advTxt": "相对 NVIDIA A100 基线 96%"
   },
   "cambricon": {
     "key": "cambricon",
@@ -13983,18 +13995,18 @@ export const BW_CARD_FROM_FILES = {
     "adv": true,
     "advTxt": "HBM 均值相对 NVIDIA A100 基线 133%"
   },
-  "ascend": {
-    "key": "ascend",
+  "iluvatar": {
+    "key": "iluvatar",
     "ownFw": "HBM均值",
     "openFw": "",
     "openScore": null,
     "openVal": null,
-    "ownScore": 96,
-    "ownVal": "1540.0 GB/s",
-    "n": 1,
-    "extra": "910B3",
+    "ownScore": 36,
+    "ownVal": "586.0 GB/s",
+    "n": 2,
+    "extra": "TG150",
     "adv": false,
-    "advTxt": "相对 NVIDIA A100 基线 96%"
+    "advTxt": "相对 NVIDIA A100 基线 36%"
   },
   "metax": {
     "key": "metax",
@@ -14022,23 +14034,23 @@ export const BW_CARD_FROM_FILES = {
     "adv": false,
     "advTxt": "相对 NVIDIA A100 基线 87%"
   },
-  "iluvatar": {
-    "key": "iluvatar",
+  "nvidia": {
+    "key": "nvidia",
     "ownFw": "HBM均值",
     "openFw": "",
     "openScore": null,
     "openVal": null,
-    "ownScore": 36,
-    "ownVal": "586.0 GB/s",
-    "n": 2,
-    "extra": "TG150",
-    "adv": false,
-    "advTxt": "相对 NVIDIA A100 基线 36%"
+    "ownScore": 100,
+    "ownVal": "1607.5 GB/s",
+    "n": 1,
+    "extra": "A100",
+    "adv": true,
+    "advTxt": "HBM 均值相对 NVIDIA A100 基线 100%"
   }
 } as Record<string, Record<string, unknown>>
 
 export const BENCHMARK_DATA_META = {
-  "generatedAt": "2026-05-12T07:00:46.388Z",
+  "generatedAt": "2026-05-12T09:07:32.097Z",
   "operatorSources": [
     "new_data\\operator\\ascend_operator_20260430.csv",
     "new_data\\operator\\cambricon_operator_20260506.csv",
@@ -14065,12 +14077,12 @@ export const BENCHMARK_DATA_META = {
     "new_data\\comm\\nvidia_comm_20250428.xlsx"
   ],
   "bwSources": [
-    "new_data\\bw\\bw_template.csv",
-    "new_data\\bw\\bw_template.csv",
-    "new_data\\bw\\bw_template.csv",
-    "new_data\\bw\\bw_template.csv",
-    "new_data\\bw\\bw_template.csv",
-    "new_data\\bw\\bw_template.csv"
+    "new_data\\bw\\ascend_bw_20260429.xlsx",
+    "new_data\\bw\\cambricon_bw_20260429.xlsx",
+    "new_data\\bw\\iluvatar_bw_20260429.xlsx",
+    "new_data\\bw\\metax_bw_20260429.xlsx",
+    "new_data\\bw\\mthreads_bw_20260429.xlsx",
+    "new_data\\bw\\nvidia_bw_20260429.xlsx"
   ],
   "opDatasetUpdatedAt": "2026-05-06",
   "inferDatasetUpdatedAt": "2026-05-06",
@@ -14085,12 +14097,12 @@ export const BENCHMARK_DATA_META = {
   },
   "commDatasetUpdatedAt": "2025-04-28",
   "bwSourceFileDateByPlatform": {
-    "nvidia": "2026-04-29",
-    "cambricon": "2026-04-29",
     "ascend": "2026-04-29",
+    "cambricon": "2026-04-29",
+    "iluvatar": "2026-04-29",
     "metax": "2026-04-29",
     "mthreads": "2026-04-29",
-    "iluvatar": "2026-04-29"
+    "nvidia": "2026-04-29"
   },
   "bwDatasetUpdatedAt": "2026-04-29"
 }

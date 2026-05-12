@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, h } from 'vue'
 import type { ColumnsType } from 'ant-design-vue/es/table'
-import type { TrainTableRow } from '@/features/dashboard/trainBenchmark'
-import type { CommImportRow } from '@/features/dashboard/commBenchmark'
+import type { TrainDetailRow } from '@/data'
+import { trainMatchKey, parseTrainFlashAttnParts } from '@/features/dashboard/trainBenchmark'
+import { formatCommBandwidthGb, type CommImportRow } from '@/features/dashboard/commBenchmark'
 import type { BwDetailRow } from '@/features/dashboard/bwBenchmark'
 import { useRoute } from 'vue-router'
 import VChart from 'vue-echarts'
@@ -89,6 +90,37 @@ type InferRow = {
 
 function nvInferMatch(r: InferRow) {
   return (inferNvidiaTabRows.value as InferRow[]).find((x) => x.configKey === r.configKey)
+}
+
+function inferSortTps(a: InferRow, b: InferRow) {
+  return (a.tps ?? 0) - (b.tps ?? 0)
+}
+
+function inferSortTtft(a: InferRow, b: InferRow) {
+  const va = a.ttft
+  const vb = b.ttft
+  if (va == null && vb == null) return 0
+  if (va == null) return 1
+  if (vb == null) return -1
+  return va - vb
+}
+
+function inferSortDecodeMs(a: InferRow, b: InferRow) {
+  const va = a.decodeLatencyMs
+  const vb = b.decodeLatencyMs
+  if (va == null && vb == null) return 0
+  if (va == null) return 1
+  if (vb == null) return -1
+  return va - vb
+}
+
+function inferSortVsNvidia(a: InferRow, b: InferRow) {
+  const va = a.vsNvidia
+  const vb = b.vsNvidia
+  if (va == null && vb == null) return 0
+  if (va == null) return 1
+  if (vb == null) return -1
+  return va - vb
 }
 
 type CommRowLite = { commType: string; nGpu: number; bw: number }
@@ -217,28 +249,54 @@ const inferTableColumns = computed<ColumnsType<InferRow>>(() => {
     { title: 'In-len', dataIndex: 'inLen', key: 'inLen', width: 84 },
     { title: 'Out-len', key: 'outLen', width: 84 },
     { title: '精度', key: 'dtype', width: 88 },
-    { title: 'TPS', key: 'tps', width: 108 },
+    {
+      title: 'TPS',
+      key: 'tps',
+      width: 108,
+      sorter: inferSortTps,
+      sortDirections: ['descend', 'ascend'],
+    },
   ]
   if (detailState.value.inferTab === 'prefill') {
-    cols.push({ title: 'TTFT', key: 'ttft', width: 100 })
+    cols.push({
+      title: 'TTFT',
+      key: 'ttft',
+      width: 100,
+      sorter: inferSortTtft,
+      sortDirections: ['ascend', 'descend'],
+    })
   } else {
-    cols.push({ title: 'Decode 延迟', key: 'decodeLatency', width: 118 })
+    cols.push({
+      title: '单次 Decode（ms）',
+      key: 'decodeLatency',
+      width: 132,
+      sorter: inferSortDecodeMs,
+      sortDirections: ['ascend', 'descend'],
+    })
   }
   if (detailState.value.platKey !== 'nvidia') {
-    cols.push({ title: 'vs NVIDIA', key: 'vsNvidia', width: 100 })
+    cols.push({
+      title: 'vs NVIDIA',
+      key: 'vsNvidia',
+      width: 100,
+      sorter: inferSortVsNvidia,
+      sortDirections: ['descend', 'ascend'],
+    })
   }
   cols.push({ title: '对比', key: 'compare', minWidth: 200, width: 220 })
   return cols
 })
 
-const trainTableColumns = computed<ColumnsType<TrainTableRow>>(() => {
-  const cols: ColumnsType<TrainTableRow> = [
+const trainTableColumns = computed<ColumnsType<TrainDetailRow>>(() => {
+  const cols: ColumnsType<TrainDetailRow> = [
     { title: '框架', key: 'framework', width: 104 },
     { title: '模型', key: 'model', minWidth: 132, width: 140 },
-    { title: '并行配置', key: 'parallel', width: 132 },
+    { title: '并行配置', key: 'parallel', width: 148 },
+    { title: '参考', key: 'trainRef', width: 72 },
     { title: '精度', key: 'dtype', width: 88 },
     { title: 'Flash Attn', key: 'flashAttn', width: 116 },
     { title: '吞吐', key: 'tps', width: 132 },
+    { title: '备注', key: 'note', minWidth: 120, width: 140 },
   ]
   if (detailState.value.platKey !== 'nvidia') {
     cols.push(
@@ -255,6 +313,7 @@ const commTableColumns = computed<ColumnsType<CommImportRow>>(() => {
     { title: '通信类型', key: 'commType', width: 112 },
     { title: 'GPU 数', key: 'nGpu', width: 92 },
     { title: '带宽', key: 'bw', width: 104 },
+    { title: '备注', key: 'note', minWidth: 120, width: 148 },
   ]
   if (detailState.value.platKey !== 'nvidia') {
     cols.push(
@@ -284,7 +343,7 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
       title: 'add GB/s',
       key: 'add',
       width: 110,
-      customCell: (r: BwDetailRow) => (r.avg == null ? { colSpan: 7 } : {}),
+      customCell: (r: BwDetailRow) => (r.avg == null ? { colSpan: 8 } : {}),
       customRender: ({ record }) =>
         record.avg == null
           ? h('span', { style: { color: '#aaa', fontStyle: 'italic' } }, '数据待补充')
@@ -333,11 +392,30 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
               {
                 style: {
                   fontWeight: 700,
-                  color: record.vsNvidia >= 100 ? '#2e7d32' : '#e65100',
+                  color: record.vsNvidia >= 100 ? '#2e7d32' : '#c62828',
                 },
               },
               `${record.vsNvidia}%`,
             ),
+    },
+    {
+      title: '测试者',
+      key: 'tester',
+      width: 100,
+      customCell: pendingCell,
+      customRender: ({ record }) =>
+        record.avg == null
+          ? null
+          : h('span', { style: { color: '#666' } }, record.tester || '—'),
+    },
+    {
+      title: '备注',
+      key: 'remarks',
+      minWidth: 100,
+      width: 120,
+      customCell: pendingCell,
+      customRender: ({ record }) =>
+        record.avg == null ? null : h('span', { style: { color: '#666' } }, record.remarks || '—'),
     },
     {
       title: '带宽对比',
@@ -390,8 +468,8 @@ function bwRowKey(r: BwDetailRow, i?: number) {
   return `${i ?? 0}-${r.model}`
 }
 
-function trainRowKey(r: TrainTableRow, i?: number) {
-  return `${r.matchKey}-${i ?? 0}`
+function trainRowKey(r: TrainDetailRow, i?: number) {
+  return `${trainMatchKey(r.framework, r.model, r.nGpu ?? 0, r.seqLen ?? 0, r.dtype)}-${i ?? 0}`
 }
 
 function commRowKey(r: CommImportRow) {
@@ -451,6 +529,22 @@ function inferRowKey(r: InferRow) {
       <div class="detail-table-notice">
         <div class="detail-table-notice__label">得分说明：</div>
         <div class="detail-table-notice__body">{{ tableNotice }}</div>
+      </div>
+      <div v-if="activeDimKey === 'infer'" class="infer-throughput-tab-row">
+        <a-space :size="8">
+          <a-button
+            :type="detailState.inferTab === 'prefill' ? 'primary' : 'default'"
+            @click="setInferTab('prefill')"
+          >
+            Prefill 吞吐量
+          </a-button>
+          <a-button
+            :type="detailState.inferTab === 'decode' ? 'primary' : 'default'"
+            @click="setInferTab('decode')"
+          >
+            Decode 吞吐量
+          </a-button>
+        </a-space>
       </div>
 
       <!-- 数据明细 -->
@@ -558,24 +652,6 @@ function inferRowKey(r: InferRow) {
 
         <!-- 推理 -->
         <template v-else-if="activeDimKey === 'infer'">
-          <div style="display: flex; gap: 6px; margin-bottom: 14px">
-            <button
-              type="button"
-              class="fpill"
-              :class="{ active: detailState.inferTab === 'prefill' }"
-              @click="setInferTab('prefill')"
-            >
-              Prefill 吞吐量
-            </button>
-            <button
-              type="button"
-              class="fpill"
-              :class="{ active: detailState.inferTab === 'decode' }"
-              @click="setInferTab('decode')"
-            >
-              Decode 吞吐量
-            </button>
-          </div>
           <a-table
             v-if="inferDetailTabRows.length"
             :columns="inferTableColumns"
@@ -697,7 +773,7 @@ function inferRowKey(r: InferRow) {
             :pagination="false"
             :bordered="false"
             table-layout="fixed"
-            :scroll="{ x: 1040 }"
+            :scroll="{ x: 1200 }"
             :row-key="trainRowKey"
           >
             <template #bodyCell="{ column, record }">
@@ -710,17 +786,29 @@ function inferRowKey(r: InferRow) {
               <template v-else-if="column.key === 'parallel'">
                 {{ record.parallel }}
               </template>
+              <template v-else-if="column.key === 'trainRef'">
+                <span v-if="(record.microBatchSize ?? 0) > 0">{{ record.microBatchSize }}</span>
+                <span v-else style="color: #aaa">—</span>
+              </template>
               <template v-else-if="column.key === 'dtype'">
                 <span class="prec-badge" :class="precClass(record.dtype)">{{ record.dtype }}</span>
               </template>
               <template v-else-if="column.key === 'flashAttn'">
-                <span v-if="record.flashAttn === 'on'" style="color: #2e7d32">✓ on</span>
-                <span v-else style="color: #aaa">{{ record.flashAttn }}</span>
+                <template v-for="p in [parseTrainFlashAttnParts(record.flashAttn)]" :key="record.flashAttn">
+                  <span v-if="p.kind === 'on'" style="color: #2e7d32">✓</span>
+                  <template v-else>
+                    <span style="color: #aaa">off</span>
+                    <span v-if="p.rest">{{ ' ' + p.rest }}</span>
+                  </template>
+                </template>
               </template>
               <template v-else-if="column.key === 'tps'">
                 <span style="font-weight: 700" :style="{ color: platColor }">
                   {{ record.tps.toLocaleString() }} tpps
                 </span>
+              </template>
+              <template v-else-if="column.key === 'note'">
+                <span style="color: #666">{{ record.note || '—' }}</span>
               </template>
               <template v-else-if="column.key === 'baseline'">
                 <span style="color: #888">{{ record.baseline.toLocaleString() }} tpps</span>
@@ -729,12 +817,7 @@ function inferRowKey(r: InferRow) {
                 <span
                   :style="{
                     fontWeight: 700,
-                    color:
-                      record.vsA100 >= 100
-                        ? '#2e7d32'
-                        : record.vsA100 >= 70
-                          ? '#e65100'
-                          : '#c62828',
+                    color: record.vsA100 >= 100 ? '#2e7d32' : '#c62828',
                   }"
                 >
                   {{ record.vsA100 }}%
@@ -754,7 +837,7 @@ function inferRowKey(r: InferRow) {
             :pagination="false"
             :bordered="false"
             table-layout="fixed"
-            :scroll="{ x: 880 }"
+            :scroll="{ x: 1040 }"
             :row-key="commRowKey"
           >
             <template #bodyCell="{ column, record }">
@@ -766,21 +849,21 @@ function inferRowKey(r: InferRow) {
               </template>
               <template v-else-if="column.key === 'nGpu'">{{ record.nGpu }} GPU</template>
               <template v-else-if="column.key === 'bw'">
-                <span style="font-weight: 700" :style="{ color: platColor }">{{ record.bw }} GB/s</span>
+                <span style="font-weight: 700" :style="{ color: platColor }">
+                  {{ formatCommBandwidthGb(record.bw) }} GB/s
+                </span>
+              </template>
+              <template v-else-if="column.key === 'note'">
+                <span style="color: #666">{{ record.note || '—' }}</span>
               </template>
               <template v-else-if="column.key === 'baseline'">
-                <span style="color: #888">{{ record.baseline }} GB/s</span>
+                <span style="color: #888">{{ formatCommBandwidthGb(record.baseline) }} GB/s</span>
               </template>
               <template v-else-if="column.key === 'vsA100'">
                 <span
                   :style="{
                     fontWeight: 700,
-                    color:
-                      record.vsA100 >= 100
-                        ? '#2e7d32'
-                        : record.vsA100 >= 70
-                          ? '#e65100'
-                          : '#c62828',
+                    color: record.vsA100 >= 100 ? '#2e7d32' : '#c62828',
                   }"
                 >
                   {{ record.vsA100 }}%
@@ -798,7 +881,9 @@ function inferRowKey(r: InferRow) {
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: platColor }">{{ record.bw }}</span>
+                    <span class="dual-ms" :style="{ color: platColor }">{{
+                      formatCommBandwidthGb(record.bw)
+                    }}</span>
                   </div>
                 </div>
                 <div v-else class="dual-bar">
@@ -813,7 +898,9 @@ function inferRowKey(r: InferRow) {
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: platColor }">{{ record.bw }}</span>
+                    <span class="dual-ms" :style="{ color: platColor }">{{
+                      formatCommBandwidthGb(record.bw)
+                    }}</span>
                   </div>
                   <div v-if="nvCommMatch(record as CommRowLite)" class="dual-row">
                     <span class="dual-lbl" style="color: #aaa">NV</span>
@@ -830,7 +917,7 @@ function inferRowKey(r: InferRow) {
                       />
                     </div>
                     <span class="dual-ms" style="color: #aaa">{{
-                      nvCommMatch(record as CommRowLite)!.bw
+                      formatCommBandwidthGb(nvCommMatch(record as CommRowLite)!.bw)
                     }}</span>
                   </div>
                 </div>
@@ -1019,6 +1106,12 @@ function inferRowKey(r: InferRow) {
   min-width: 0;
   margin: 0;
   padding: 0;
+}
+/* 推理：得分说明下方，Prefill / Decode 切换（默认尺寸按钮，右对齐） */
+.infer-throughput-tab-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
 }
 /* 详情表格：表头与表体单元格一律左对齐 */
 .detail-panel__scroll :deep(.ant-table-thead > tr > th.ant-table-cell),

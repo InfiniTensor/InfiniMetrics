@@ -1,7 +1,7 @@
 import { DIMS, INFER_TABLE, OP_TABLE, TRAIN_TABLE, COMM_TABLE, BW_TABLE } from '@/data'
 import { bwPlatHasMode, type BwDetailRow } from '@/features/dashboard/bwBenchmark'
 import { commPlatHasCommType } from '@/features/dashboard/commBenchmark'
-import { inferPlatHasFilteredRow } from '@/features/dashboard/inferBenchmark'
+import { inferPlatHasFilteredRow, type InferTablePack } from '@/features/dashboard/inferBenchmark'
 import { trainPlatHasFramework } from '@/features/dashboard/trainBenchmark'
 import { canComputeOpRowScore, computeOpRowScore } from '@/features/dashboard/operatorBenchmark'
 
@@ -18,6 +18,9 @@ export type CardRow = {
   n?: number
   ownFw?: string
   openFw?: string
+  /** 推理概览：左/右列大分下方小字 */
+  inferOwnCaption?: string
+  inferOpenCaption?: string
   adv?: boolean
   advTxt?: string
 }
@@ -32,10 +35,7 @@ export function applyCardFilter(
   const fs = filterState[dim.key] || {}
   let result = [...cards]
   const tbl = OP_TABLE as Record<string, Record<string, { dtype: string }[]>>
-  const inferTbl = INFER_TABLE as Record<
-    string,
-    { prefill?: { batch: number; inLen: number }[] } | undefined
-  >
+  const inferTbl = INFER_TABLE as Record<string, InferTablePack | undefined>
   const trainTbl = TRAIN_TABLE as Record<string, { framework: string }[] | undefined>
   const commTbl = COMM_TABLE as Record<string, { commType: string }[] | undefined>
   const bwTbl = BW_TABLE as Record<string, BwDetailRow[] | undefined>
@@ -59,16 +59,12 @@ export function applyCardFilter(
     } else if (fi === 0 && dim.key === 'infer') {
       if (pill !== '全部') {
         const inPill = dim.filters[1]?.pills[fs[1] ?? 0]
-        result = result.filter((c) =>
-          inferPlatHasFilteredRow(c.key, inferTbl, pill, inPill),
-        )
+        result = result.filter((c) => inferPlatHasFilteredRow(c.key, inferTbl, pill, inPill))
       }
     } else if (fi === 1 && dim.key === 'infer') {
       if (pill !== '全部') {
         const batchPill = dim.filters[0]?.pills[fs[0] ?? 0]
-        result = result.filter((c) =>
-          inferPlatHasFilteredRow(c.key, inferTbl, batchPill, pill),
-        )
+        result = result.filter((c) => inferPlatHasFilteredRow(c.key, inferTbl, batchPill, pill))
       }
     } else if (fi === 0 && dim.key === 'train') {
       if (pill !== '全部') {

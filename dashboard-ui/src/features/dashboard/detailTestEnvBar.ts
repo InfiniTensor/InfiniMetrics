@@ -2,6 +2,7 @@
  * 详情页「测试环境」横条：n_gpu · date · device（无则省略前三项中有缺失的项；device 按维度规则必填展示）。
  */
 
+import { formatDisplayDateYmd } from '@/utils/formatDisplayDate'
 import type { BwDetailRow } from '@/features/dashboard/bwBenchmark'
 import { pickBestBwRow } from '@/features/dashboard/bwBenchmark'
 
@@ -34,6 +35,14 @@ export const DETAIL_TEST_ENV_COMM_DEVICE: Record<string, string> = {
 
 function joinParts(parts: Array<string | undefined | null | false>): string {
   return parts.filter((x) => x != null && String(x).trim() !== '').join(' · ')
+}
+
+/** 横条内日期展示：YYYY-MM-DD；无法识别时保留原文 */
+function barDateDisplay(raw: string): string {
+  const s = String(raw).trim()
+  if (!s) return ''
+  const ymd = formatDisplayDateYmd(s)
+  return ymd || s
 }
 
 /** 多行里的 date 去重后取字典序最后（与算子/训练 CSV 常见格式一致） */
@@ -101,7 +110,7 @@ export function buildInferTestEnvLine(
   const device = String(r.remarks ?? '').trim()
   return joinParts([
     ngpuPart(r.nGpu),
-    dateStr || undefined,
+    dateStr ? barDateDisplay(dateStr) : undefined,
     device || undefined,
   ])
 }
@@ -121,7 +130,7 @@ export function buildOpTestEnvLine(
     DETAIL_TEST_ENV_OP_DEVICE[platKey] ?? DETAIL_TEST_ENV_OP_DEVICE.generic ?? '—'
   let dateStr = pickBarDateFromRows(rows)
   if (!dateStr && platformWideRows?.length) dateStr = pickBarDateFromRows(platformWideRows)
-  return joinParts([dateStr, device])
+  return joinParts([dateStr ? barDateDisplay(dateStr) : undefined, device])
 }
 
 export type TrainTestEnvRow = { tps: number; nGpu?: number; date?: string }
@@ -148,14 +157,18 @@ export function buildTrainTestEnvLine(
   if (!dateStr) dateStr = pickBarDateFromRows(primary)
   if (!dateStr && platformWideRows?.length && rows.length) dateStr = pickBarDateFromRows(platformWideRows)
   if (!dateStr) dateStr = String(sourceFileDate ?? '').trim()
-  return joinParts([ngpuPart(r.nGpu), dateStr || undefined, device])
+  return joinParts([
+    ngpuPart(r.nGpu),
+    dateStr ? barDateDisplay(dateStr) : undefined,
+    device,
+  ])
 }
 
 export type CommTestEnvRow = { bw: number; nGpu?: number; date?: string }
 
 /**
  * 通信横条：优先当前「通信类型」筛选；无行则退回全表。
- * 日期仅使用「代表行」（当前集合下 bw 最高行）自身的 `date`，不从其它行借日期、也不用文件名，避免与表格单元格不一致。
+ * 日期优先代表行（bw 最高）的 `date`；若为空则在当前集合 / 全表行上取行内 `date` 字典序最大（与侧栏、文件 `date` 列一致）。
  */
 export function buildCommTestEnvLine(
   platKey: string,
@@ -171,23 +184,32 @@ export function buildCommTestEnvLine(
     DETAIL_TEST_ENV_COMM_DEVICE[platKey] ??
     DETAIL_TEST_ENV_OP_DEVICE[platKey] ??
     '—'
-  const dateStr = String(r.date ?? '').trim()
-  return joinParts([ngpuPart(r.nGpu), dateStr || undefined, device])
+  let dateStr = String(r.date ?? '').trim()
+  if (!dateStr) dateStr = pickBarDateFromRows(primary)
+  if (!dateStr && platformWideRows?.length && rows.length) dateStr = pickBarDateFromRows(platformWideRows)
+  return joinParts([ngpuPart(r.nGpu), dateStr ? barDateDisplay(dateStr) : undefined, device])
 }
 
 export function buildBwTestEnvLine(
   platKey: string,
   rows: BwDetailRow[],
-  /** 保留参数供调用方兼容；访存横条仅以 CSV 行内 `date` 为准，不回退文件名日期 */
+  /** 保留参数供调用方兼容；日期优先代表行，缺省则取行内 date 最大（与其它维度一致） */
   _sourceFileDate?: string,
 ): string {
   if (!rows.length) return '暂无访存数据'
   const models = rows.map((x) => x.model)
   const device = bwModelsLineForPlatform(platKey, models)
-  const best = pickBestBwRow(rows)
-  /** 仅展示代表行（MAX 均值）在 CSV 中的 `date`；无 date 时仍展示型号，不用文件名或其它行借日期 */
-  const dateStr = String(best?.date ?? '').trim()
-  return joinParts([dateStr || undefined, device])
+  const best = pickBestBwRow(rows) ?? rows[0]
+  let dateStr = String(best?.date ?? '').trim()
+  if (!dateStr) dateStr = pickBarDateFromRows(rows)
+  const remarks = String(best?.remarks ?? '').trim()
+  const tester = String(best?.tester ?? '').trim()
+  return joinParts([
+    dateStr ? barDateDisplay(dateStr) : undefined,
+    device || undefined,
+    remarks || undefined,
+    tester || undefined,
+  ])
 }
 
 /** 详情页「测试环境」横条下方来源说明（固定文案） */

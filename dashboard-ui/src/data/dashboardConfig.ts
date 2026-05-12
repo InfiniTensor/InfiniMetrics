@@ -1,4 +1,10 @@
 import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
+import {
+  inferBatchPillsUnion,
+  inferInLenPillsUnion,
+  type InferTablePack,
+} from '@/features/dashboard/inferBenchmark'
+import { trainFrameworkPillsUnion } from '@/features/dashboard/trainBenchmark'
 import { bwVsNvidiaPercent, type BwDetailRow } from '@/features/dashboard/bwBenchmark'
 import {
   BENCHMARK_DATA_META,
@@ -58,6 +64,8 @@ function bwStaticRow(r: {
   triad: number | null
   avg: number | null
   date?: string
+  remarks?: string
+  tester?: string
 }): BwDetailRow {
   const out: BwDetailRow = {
     model: r.model,
@@ -69,6 +77,8 @@ function bwStaticRow(r: {
     vsNvidia: r.avg != null ? bwVsNvidiaPercent(r.avg) : 100,
   }
   if (r.date) out.date = r.date
+  if (r.remarks) out.remarks = r.remarks
+  if (r.tester) out.tester = r.tester
   return out
 }
 
@@ -290,34 +300,34 @@ const OP_TABLE_STATIC = {
   },
 };
 
-// ── 推理详情数据
+// ── 推理详情数据（静态占位；dtype / remarks / date 与 CSV 字段对齐）
 const INFER_TABLE_STATIC = {
   nvidia:{
     prefill:[
-      {batch:1,  inLen:32,   outLen:128, model:'9G8B', tps:3800,  ttft:8.2,  framework:'InfiniLM'},
-      {batch:4,  inLen:32,   outLen:128, model:'9G8B', tps:8200,  ttft:9.1,  framework:'InfiniLM'},
-      {batch:16, inLen:256,  outLen:128, model:'9G8B', tps:11400, ttft:12.3, framework:'InfiniLM'},
-      {batch:64, inLen:256,  outLen:128, model:'9G8B', tps:12900, ttft:24.1, framework:'InfiniLM'},
-      {batch:64, inLen:4096, outLen:128, model:'9G8B', tps:9800,  ttft:89.5, framework:'InfiniLM'},
+      {batch:1,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:3800,  ttft:8.2,  framework:'InfiniLM'},
+      {batch:4,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:8200,  ttft:9.1,  framework:'InfiniLM'},
+      {batch:16, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:11400, ttft:12.3, framework:'InfiniLM'},
+      {batch:64, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:12900, ttft:24.1, framework:'InfiniLM'},
+      {batch:64, inLen:4096, outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:9800,  ttft:89.5, framework:'InfiniLM'},
     ],
     decode:[
-      {batch:1,  inLen:32,   outLen:128, model:'9G8B', tps:1200, framework:'InfiniLM'},
-      {batch:4,  inLen:32,   outLen:128, model:'9G8B', tps:2800, framework:'InfiniLM'},
-      {batch:16, inLen:256,  outLen:128, model:'9G8B', tps:3100, framework:'InfiniLM'},
-      {batch:64, inLen:256,  outLen:128, model:'9G8B', tps:3700, framework:'InfiniLM'},
-      {batch:64, inLen:4096, outLen:128, model:'9G8B', tps:2900, framework:'InfiniLM'},
+      {batch:1,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:1200, framework:'InfiniLM'},
+      {batch:4,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:2800, framework:'InfiniLM'},
+      {batch:16, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:3100, framework:'InfiniLM'},
+      {batch:64, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:3700, framework:'InfiniLM'},
+      {batch:64, inLen:4096, outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:2900, framework:'InfiniLM'},
     ],
   },
   mthreads:{
     prefill:[
-      {batch:1,  inLen:32,  outLen:128, model:'9G8B', tps:1800, ttft:18.4, framework:'InfiniLM'},
-      {batch:4,  inLen:32,  outLen:128, model:'9G8B', tps:4200, ttft:22.1, framework:'InfiniLM'},
-      {batch:64, inLen:32,  outLen:128, model:'9G8B', tps:7300, ttft:38.6, framework:'InfiniLM'},
+      {batch:1,  inLen:32,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'摩尔 MTT S5000', date:'2026-04-29', tps:1800, ttft:18.4, framework:'InfiniLM'},
+      {batch:4,  inLen:32,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'摩尔 MTT S5000', date:'2026-04-29', tps:4200, ttft:22.1, framework:'InfiniLM'},
+      {batch:64, inLen:32,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'摩尔 MTT S5000', date:'2026-04-29', tps:7300, ttft:38.6, framework:'InfiniLM'},
     ],
     decode:[
-      {batch:1,  inLen:32,  outLen:128, model:'9G8B', tps:580,  framework:'InfiniLM'},
-      {batch:4,  inLen:32,  outLen:128, model:'9G8B', tps:1200, framework:'InfiniLM'},
-      {batch:64, inLen:32,  outLen:128, model:'9G8B', tps:1800, framework:'InfiniLM'},
+      {batch:1,  inLen:32,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'摩尔 MTT S5000', date:'2026-04-29', tps:580,  framework:'InfiniLM'},
+      {batch:4,  inLen:32,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'摩尔 MTT S5000', date:'2026-04-29', tps:1200, framework:'InfiniLM'},
+      {batch:64, inLen:32,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'摩尔 MTT S5000', date:'2026-04-29', tps:1800, framework:'InfiniLM'},
     ],
   },
 };
@@ -374,44 +384,12 @@ function dtypePrecPillsUnionFromOpTable(tbl: typeof OP_TABLE): string[] {
   return [...keys].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
 }
 
-export const DIMS = [
-  {
-    key: 'op',
-    label: '算子',
-    filters: [
-      { label: '算子类型', pills: ['全部', ...operatorTypePillsFromOpTable(OP_TABLE)] },
-      { label: '精度', pills: ['全部', ...dtypePrecPillsUnionFromOpTable(OP_TABLE)] },
-    ],
-  },
-  {
-    key: 'infer',
-    label: '推理',
-    filters: [
-      { label: 'Batch', pills: ['全部', '1', '4', '16', '64'] },
-      { label: 'In-len', pills: ['全部', '32', '256', '4096'] },
-    ],
-  },
-  {
-    key: 'train',
-    label: '训练',
-    filters: [{ label: '框架', pills: ['全部', 'Megatron', 'BMTrain'] }],
-  },
-  {
-    key: 'comm',
-    label: '通信',
-    filters: [{ label: '通信类型', pills: ['全部', 'p2p', 'allreduce'] }],
-  },
-  {
-    key: 'bw',
-    label: '访存',
-    filters: [{ label: '模式', pills: ['全部', 'add', 'copy', 'scale', 'triad'] }],
-  },
-]
-
 export const INFER_TABLE = mergeByPlatform(
   INFER_TABLE_STATIC as unknown as Record<string, unknown>,
   INFER_TABLE_FROM_FILES as unknown as Partial<Record<string, unknown>>,
 ) as typeof INFER_TABLE_STATIC
+
+const INFER_FOR_DIMS = INFER_TABLE as Record<string, InferTablePack | undefined>
 
 // ── 训练详情数据（`new_data/train/{platform}_train_{date}.xlsx` 经 generate:data 覆盖同 key 平台）
 export interface TrainDetailRow {
@@ -431,14 +409,80 @@ export interface TrainDetailRow {
 }
 
 const TRAIN_TABLE_STATIC: Record<string, TrainDetailRow[]> = {
-  nvidia:[
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:2564, baseline:2564, vsA100:100, note:'global_bs=128', nGpu:8, seqLen:8192, date:'2026-04-29'},
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq4096', dtype:'BF16', flashAttn:'on',  tps:2890, baseline:2890, vsA100:100, note:'', nGpu:8, seqLen:4096, date:'2026-04-29'},
-    {framework:'megatron', model:'llama3-70b',parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on',  tps:312,  baseline:312,  vsA100:100, note:'pipeline=4', nGpu:8, seqLen:8192, date:'2026-04-29'},
-    {framework:'bmtrain',  model:'llama3-8b', parallel:'8 GPU · seq2048', dtype:'BF16', flashAttn:'off', tps:1820, baseline:1820, vsA100:100, note:'', nGpu:8, seqLen:2048, date:'2026-04-29'},
+  nvidia: [
+    {
+      framework: 'megatron',
+      model: 'llama3-8b',
+      parallel: '8 GPU · seq 8192',
+      dtype: 'BF16',
+      flashAttn: 'on',
+      tps: 2564,
+      baseline: 2564,
+      vsA100: 100,
+      note: '',
+      nGpu: 8,
+      seqLen: 8192,
+      microBatchSize: 128,
+      date: '2026-04-29',
+    },
+    {
+      framework: 'megatron',
+      model: 'llama3-8b',
+      parallel: '8 GPU · seq 4096',
+      dtype: 'BF16',
+      flashAttn: 'on',
+      tps: 2890,
+      baseline: 2890,
+      vsA100: 100,
+      note: '',
+      nGpu: 8,
+      seqLen: 4096,
+      date: '2026-04-29',
+    },
+    {
+      framework: 'megatron',
+      model: 'llama3-70b',
+      parallel: '8 GPU · seq 8192',
+      dtype: 'BF16',
+      flashAttn: 'on',
+      tps: 312,
+      baseline: 312,
+      vsA100: 100,
+      note: 'pipeline=4',
+      nGpu: 8,
+      seqLen: 8192,
+      date: '2026-04-29',
+    },
+    {
+      framework: 'bmtrain',
+      model: 'llama3-8b',
+      parallel: '8 GPU · seq 2048',
+      dtype: 'BF16',
+      flashAttn: 'off',
+      tps: 1820,
+      baseline: 1820,
+      vsA100: 100,
+      note: '',
+      nGpu: 8,
+      seqLen: 2048,
+      date: '2026-04-29',
+    },
   ],
-  metax:[
-    {framework:'megatron', model:'llama3-8b', parallel:'8 GPU · seq8192', dtype:'BF16', flashAttn:'on', tps:438, baseline:2564, vsA100:17, note:'', nGpu:8, seqLen:8192, date:'2026-04-29'},
+  metax: [
+    {
+      framework: 'megatron',
+      model: 'llama3-8b',
+      parallel: '8 GPU · seq 8192',
+      dtype: 'BF16',
+      flashAttn: 'on',
+      tps: 438,
+      baseline: 2564,
+      vsA100: 17,
+      note: '',
+      nGpu: 8,
+      seqLen: 8192,
+      date: '2026-04-29',
+    },
   ],
 }
 
@@ -446,6 +490,43 @@ export const TRAIN_TABLE = mergeTrainTableByPlatform(
   TRAIN_TABLE_STATIC,
   TRAIN_TABLE_FROM_FILES as unknown as Partial<Record<string, TrainDetailRow[]>>,
 ) as Record<string, TrainDetailRow[]>
+
+const TRAIN_FOR_DIMS = TRAIN_TABLE as Record<string, { framework: string }[] | undefined>
+
+/** 测试维度与顶栏筛选（推理 Batch / In-len 来自 INFER_TABLE 并集；训练框架 pills 来自 TRAIN_TABLE 并集） */
+export const DIMS = [
+  {
+    key: 'op',
+    label: '算子',
+    filters: [
+      { label: '算子类型', pills: ['全部', ...operatorTypePillsFromOpTable(OP_TABLE)] },
+      { label: '精度', pills: ['全部', ...dtypePrecPillsUnionFromOpTable(OP_TABLE)] },
+    ],
+  },
+  {
+    key: 'infer',
+    label: '推理',
+    filters: [
+      { label: 'Batch', pills: ['全部', ...inferBatchPillsUnion(INFER_FOR_DIMS)] },
+      { label: 'In-len', pills: ['全部', ...inferInLenPillsUnion(INFER_FOR_DIMS)] },
+    ],
+  },
+  {
+    key: 'train',
+    label: '训练',
+    filters: [{ label: '框架', pills: ['全部', ...trainFrameworkPillsUnion(TRAIN_FOR_DIMS)] }],
+  },
+  {
+    key: 'comm',
+    label: '通信',
+    filters: [{ label: '通信类型', pills: ['全部', 'p2p', 'allreduce'] }],
+  },
+  {
+    key: 'bw',
+    label: '访存',
+    filters: [{ label: '模式', pills: ['全部', 'add', 'copy', 'scale', 'triad'] }],
+  },
+]
 
 // ── 通信详情数据（`new_data/comm/{platform}_comm_{date}.xlsx` 经 generate:data 覆盖同 key 平台）
 export interface CommDetailRow {
@@ -455,6 +536,7 @@ export interface CommDetailRow {
   bw: number
   baseline: number
   vsA100: number
+  /** 文件 `remarks`，详情表「备注」列 */
   note: string
   date?: string
 }

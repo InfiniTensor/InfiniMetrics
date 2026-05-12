@@ -40,9 +40,51 @@ export function trainMatchKey(
   ].join('|')
 }
 
-/** 详情表「并行配置」：`{n_gpu} GPU · seq{seq_len}` */
+/** 详情表「并行配置」展示：`str(n_gpu) + " GPU · seq " + str(seq_len)` */
 export function formatTrainParallel(nGpu: number, seqLen: number): string {
-  return `${nGpu} GPU · seq${seqLen}`
+  return `${String(Math.round(nGpu))} GPU · seq ${String(Math.round(seqLen))}`
+}
+
+/** 顶栏「框架」pills：全平台训练表 framework 去重（首字母大写展示，与筛选比较仍用 toLowerCase） */
+export function trainFrameworkPillsUnion(
+  trainTable: Record<string, { framework: string }[] | undefined>,
+): string[] {
+  const set = new Set<string>()
+  for (const rows of Object.values(trainTable)) {
+    for (const r of rows || []) {
+      const raw = String(r.framework || '').trim()
+      if (!raw) continue
+      const label = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase()
+      set.add(label)
+    }
+  }
+  return [...set].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+}
+
+/** 当前平台训练行内 `date` 字典序最大 */
+export function maxTrainCsvDateForPlatform(
+  trainTable: Record<string, { date?: string }[] | undefined>,
+  platKey: string,
+): string | undefined {
+  let max = ''
+  for (const r of trainTable[platKey] || []) {
+    const d = String(r.date ?? '').trim()
+    if (d && d > max) max = d
+  }
+  return max || undefined
+}
+
+/**
+ * 详情表「Flash Attn」列展示拆分：on → 仅彩色 ✓；off → 灰色 off 前缀 + 原因（保留原文）。
+ */
+export function parseTrainFlashAttnParts(
+  flashAttn: string,
+): { kind: 'on' } | { kind: 'off'; rest: string } {
+  const s = String(flashAttn ?? '').trim()
+  if (s === 'on' || /^on$/i.test(s)) return { kind: 'on' }
+  const m = /^off\b(.*)$/i.exec(s)
+  if (m) return { kind: 'off', rest: String(m[1] ?? '').trim() }
+  return { kind: 'off', rest: s }
 }
 
 export function normalizeTrainDtype(dtype: string): string {
@@ -65,6 +107,7 @@ export function parseFlashAttnCell(raw: string): string {
   return s || 'off'
 }
 
+/** 行级 vs NVIDIA：本行 throughput_tpps ÷ NVIDIA 同 (framework, model, n_gpu, seq_len, dtype) 下 tpps × 100，四舍五入为整数百分比 */
 export function trainVsPercent(platTps: number, nvTps: number): number {
   if (!Number.isFinite(platTps) || !Number.isFinite(nvTps) || nvTps <= 0) return 100
   return Math.round((platTps / nvTps) * 100)
@@ -80,15 +123,17 @@ export type TrainCardMetrics = {
 }
 
 /**
- * 概览卡：代表行为吞吐最高行；ownScore 取该行 vs NVIDIA。
+ * 概览卡：代表行为全平台有效行中 throughput_tpps 最高的一行；
+ * ownVal = 该行 tpps；ownScore = 该行 vs NVIDIA；extra = framework · model · n_gpu GPU；n = 有效行数。
  */
 export function buildTrainCardMetrics(rows: TrainTableRow[]): TrainCardMetrics | null {
-  if (!rows.length) return null
-  const best = rows.reduce((a, b) => (a.tps >= b.tps ? a : b))
+  const valid = rows.filter((r) => Number.isFinite(r.tps))
+  if (!valid.length) return null
+  const best = valid.reduce((a, b) => (a.tps >= b.tps ? a : b))
   const ownScore = best.vsA100
-  const ownVal = `${Math.round(best.tps)} tpps`
+  const ownVal = `${Math.round(best.tps).toLocaleString()} tpps`
   const fw = best.framework.charAt(0).toUpperCase() + best.framework.slice(1).toLowerCase()
-  const extra = `${fw} - ${best.model} - ${best.nGpu} GPU`
+  const extra = `${fw} · ${best.model} · ${String(Math.round(best.nGpu))} GPU`
   const adv = ownScore >= 100
   const advTxt =
     ownScore >= 100
@@ -99,7 +144,7 @@ export function buildTrainCardMetrics(rows: TrainTableRow[]): TrainCardMetrics |
   return {
     ownScore,
     ownVal,
-    n: rows.length,
+    n: valid.length,
     extra,
     adv,
     advTxt,

@@ -100,11 +100,13 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
         <div class="score-col own">
           <div class="sc-label" :style="{ color: platOf(c).color }">{{ c.ownFw }}</div>
           <div class="sc-num" :style="{ color: scoreColor(c) }">{{ c.ownScore }}</div>
+          <div v-if="c.inferOwnCaption" class="sc-cap">{{ c.inferOwnCaption }}</div>
           <div class="sc-val" :style="{ color: platOf(c).color }">{{ c.ownVal }}</div>
         </div>
         <div v-if="c.openScore != null" class="score-col base">
           <div class="sc-label sc-label--base">{{ c.openFw }}</div>
           <div class="sc-num sc-num--base">{{ c.openScore }}</div>
+          <div v-if="c.inferOpenCaption" class="sc-cap sc-cap--base">{{ c.inferOpenCaption }}</div>
           <div class="sc-val sc-val--base">{{ c.openVal || '—' }}</div>
         </div>
         <div
@@ -334,6 +336,17 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   font-size: 14px;
   font-weight: 700;
   margin-bottom: 2px;
+}
+
+.sc-cap {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.sc-cap--base {
+  color: #8c8c8c;
 }
 
 .score-col.own .sc-num {

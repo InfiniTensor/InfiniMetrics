@@ -25,6 +25,10 @@ export function applyDashboardRoute(
     /** 进入详情前概览顶栏的算子筛选（勿在清空 filterState 之后再读） */
     const preservedOpBar = store.filterState.value.op
 
+    const prevDimIdx = store.activeDim.value
+    if (dimIdx !== prevDimIdx) {
+      store.resetCompareToDefault()
+    }
     store.activeDim.value = dimIdx
     store.filterState.value = {}
     store.detailState.value.platKey = plat.key

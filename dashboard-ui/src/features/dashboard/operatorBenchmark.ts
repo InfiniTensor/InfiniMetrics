@@ -3,6 +3,8 @@
  * 由 `scripts/import-benchmark-data.ts` 与界面层共用。
  */
 
+import { formatDisplayDateYmd } from '../../utils/formatDisplayDate'
+
 export type OperatorTableRow = {
   shape: string
   dtype: string
@@ -160,8 +162,7 @@ export function maxOperatorCsvDateForPlatform(
   return max || undefined
 }
 
-/** 侧栏等展示：YYYY/MM/DD → YYYY-MM-DD */
+/** 侧栏等展示：统一为 YYYY-MM-DD */
 export function formatOperatorCsvDateDisplay(d: string | undefined): string {
-  if (!d) return ''
-  return d.replace(/\//g, '-')
+  return formatDisplayDateYmd(d)
 }

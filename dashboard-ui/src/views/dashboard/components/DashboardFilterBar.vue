@@ -3,7 +3,8 @@ import { Modal } from 'ant-design-vue'
 import { computed } from 'vue'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
-import { OP_TABLE, dtypesForOpPlatform } from '@/data'
+import { OP_TABLE, INFER_TABLE, TRAIN_TABLE, dtypesForOpPlatform } from '@/data'
+import { inferNumericSetForPlatform, type InferTablePack } from '@/features/dashboard/inferBenchmark'
 
 const store = useInfiniDashboard()
 const {
@@ -21,7 +22,22 @@ const {
   compareCards,
   toggleCompare,
 } = store
-const { goCompare } = useDashboardNavigation()
+const { goCompare, leaveCompareOrSyncOverview } = useDashboardNavigation()
+
+function onSetFilter(fi: number, pi: number) {
+  setFilter(fi, pi)
+  leaveCompareOrSyncOverview()
+}
+
+function onToggleCompareClose(platKey: string) {
+  toggleCompare(platKey)
+  leaveCompareOrSyncOverview()
+}
+
+function onClearCompare() {
+  clearCompare()
+  leaveCompareOrSyncOverview()
+}
 
 function onOpenComparePage() {
   if (compareCards.value.length < 2) {
@@ -34,7 +50,10 @@ function onOpenComparePage() {
 const dim = computed(() => DIMS[activeDim.value])
 const fs = computed(() => filterState.value[dim.value.key] || {})
 
-/** 顶栏 pills：`setFilter` 始终传并集维度下的索引；算子详情仅展示当前芯片在并集中的子集 */
+const inferTableForBar = INFER_TABLE as Record<string, InferTablePack | undefined>
+const trainTableForBar = TRAIN_TABLE as Record<string, { framework: string }[] | undefined>
+
+/** 顶栏 pills：`setFilter` 始终传并集维度下的索引；算子 / 推理详情仅展示当前芯片在并集中的子集 */
 const filterBarFilterRows = computed(() => {
   const d = dim.value
   const view = currentView.value
@@ -54,6 +73,31 @@ const filterBarFilterRows = computed(() => {
       return {
         label: f.label,
         pills: pills.filter((x) => x.label !== '全部' && platDtypes.has(x.label)),
+      }
+    }
+    if (d.key === 'infer' && fi === 0 && view === 'detail') {
+      const batches = inferNumericSetForPlatform(inferTableForBar, plat, 'batch')
+      return {
+        label: f.label,
+        pills: pills.filter((x) => x.label === '全部' || batches.has(Number(x.label))),
+      }
+    }
+    if (d.key === 'infer' && fi === 1 && view === 'detail') {
+      const lens = inferNumericSetForPlatform(inferTableForBar, plat, 'inLen')
+      return {
+        label: f.label,
+        pills: pills.filter((x) => x.label === '全部' || lens.has(Number(x.label))),
+      }
+    }
+    if (d.key === 'train' && fi === 0 && view === 'detail') {
+      const fwOnPlat = new Set(
+        (trainTableForBar[plat] || [])
+          .map((r) => String(r.framework || '').trim().toLowerCase())
+          .filter(Boolean),
+      )
+      return {
+        label: f.label,
+        pills: pills.filter((x) => x.label === '全部' || fwOnPlat.has(x.label.toLowerCase())),
       }
     }
     return { label: f.label, pills }
@@ -97,13 +141,13 @@ const filterBarTheme = {
             :key="`${fi}-${item.unionIndex}-${item.label}`"
             size="small"
             :type="(fs[fi] ?? 0) === item.unionIndex ? 'primary' : 'default'"
-            @click="setFilter(fi, item.unionIndex)"
+            @click="onSetFilter(fi, item.unionIndex)"
           >
             {{ item.label }}
           </a-button>
         </a-space>
       </div>
-      <div v-if="fi === 0 && currentView !== 'detail'" class="filter-row-sort-wrap">
+      <div v-if="fi === 0 && currentView === 'overview'" class="filter-row-sort-wrap">
         <a-button size="small" @click="toggleSort">
           ⇅ 按得分 {{ sortDesc ? '↓' : '↑' }}
         </a-button>
@@ -123,7 +167,7 @@ const filterBarTheme = {
             v-for="p in compareChosen"
             :key="p.key"
             closable
-            @close="() => toggleCompare(p.key)"
+            @close="() => onToggleCompareClose(p.key)"
           >
             {{ p.name }}
           </a-tag>
@@ -132,7 +176,7 @@ const filterBarTheme = {
       </div>
       <div class="compare-bar-actions">
         <a-space wrap>
-          <a-button @click="clearCompare">清空</a-button>
+          <a-button @click="onClearCompare">清空</a-button>
           <a-button type="primary" @click="onOpenComparePage">开始对比</a-button>
         </a-space>
       </div>

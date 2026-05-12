@@ -30,8 +30,8 @@ import {
   alignInferSeries,
   filterInferRows,
 } from '@/features/dashboard/inferBenchmark'
-import { filterCommRows } from '@/features/dashboard/commBenchmark'
-import { BW_NVIDIA_BASELINE_GBPS, pickBestBwRow } from '@/features/dashboard/bwBenchmark'
+import { filterCommRows, formatCommBandwidthGb, commNvidiaBaselineBw, commVsPercent } from '@/features/dashboard/commBenchmark'
+import { BW_NVIDIA_BASELINE_GBPS, bwVsNvidiaPercent, pickBestBwRow } from '@/features/dashboard/bwBenchmark'
 import { filterTrainRows } from '@/features/dashboard/trainBenchmark'
 import {
   buildBwTestEnvLine,
@@ -121,9 +121,12 @@ function benchSourceFileDate(plat: string, dim: keyof BenchMetaFileDates): strin
   return m[dim]?.[plat]
 }
 
+/** 各维度「已选对比」默认态（行业基线）；切换维度时恢复至此。「清空」按钮仍为 [] */
+const DEFAULT_COMPARE_PLAT_KEYS: readonly string[] = ['nvidia']
+
 export function createInfiniDashboardStore() {
   const selectedPlatKeys = ref<string[]>(PLATFORMS.map((p) => p.key))
-  const comparePlatKeys = ref<string[]>(['nvidia'])
+  const comparePlatKeys = ref<string[]>([...DEFAULT_COMPARE_PLAT_KEYS])
   const currentView = ref<MainView>('overview')
   const activeDim = ref(0)
   const filterState = ref<Record<string, Record<number, number> | undefined>>({})
@@ -303,7 +306,7 @@ export function createInfiniDashboardStore() {
       const nv = inferNvidiaPrefillFiltered.value
       if (!pre.length && !nv.length) return {}
       const al = alignInferSeries(pre, nv)
-      return buildInferPrefillBarAligned(al.categories, al.platVals, al.nvVals, plat.color)
+      return buildInferPrefillBarAligned(al.categories, al.platVals, al.nvVals)
     }
     if (dk === 'train') {
       const rows = trainDetailRows.value
@@ -351,7 +354,7 @@ export function createInfiniDashboardStore() {
       const nvDe = inferNvidiaDecodeFiltered.value
       if (!de.length && !nvDe.length) return {}
       const al = alignInferSeries(de, nvDe)
-      return buildInferDecodeBarAligned(al.categories, al.platVals, al.nvVals, plat.color)
+      return buildInferDecodeBarAligned(al.categories, al.platVals, al.nvVals)
     }
     if (dk === 'train') {
       const rows = trainDetailRows.value
@@ -495,24 +498,30 @@ export function createInfiniDashboardStore() {
       ownScore?: number | null
     }
     if (dimKey === 'infer') {
-      const prefill = inferPrefillFiltered.value
-      const decode = inferDecodeFiltered.value
-      const peakPrefill = prefill.length ? Math.max(...prefill.map((r) => r.tps)) : null
-      const peakDecode = decode.length ? Math.max(...decode.map((r) => r.tps)) : null
-      const minTTFT = prefill.filter((r) => r.ttft).length
-        ? Math.min(...prefill.filter((r) => r.ttft).map((r) => r.ttft!))
+      const pack = ITABLE[platKey]
+      const prefillAll = pack?.prefill || []
+      const decodeAll = pack?.decode || []
+      const preTps = prefillAll.map((r) => r.tps).filter((t) => Number.isFinite(t))
+      const decTps = decodeAll.map((r) => r.tps).filter((t) => Number.isFinite(t))
+      const peakPrefill = preTps.length ? Math.max(...preTps) : null
+      const peakDecode = decTps.length ? Math.max(...decTps) : null
+      const ttftVals = prefillAll
+        .map((r) => r.ttft)
+        .filter((x): x is number => x != null && Number.isFinite(x) && x > 0)
+      const minTTFT = ttftVals.length ? Math.min(...ttftVals) : null
+      const argPrefAll = prefillAll.filter((r) => Number.isFinite(r.tps)).length
+        ? prefillAll.filter((r) => Number.isFinite(r.tps)).reduce((a, b) => (a.tps >= b.tps ? a : b))
         : null
-      const argPref = prefill.length
-        ? prefill.reduce((a, b) => (a.tps >= b.tps ? a : b))
-        : null
-      const model = argPref?.model || prefill[0]?.model || c.extra || ''
-      const cfgSub = argPref ? `batch=${argPref.batch} in=${argPref.inLen}` : ''
-      const nConfigs = new Set([...prefill.map((r) => r.configKey), ...decode.map((r) => r.configKey)])
+      const model = argPrefAll?.model || prefillAll[0]?.model || c.extra || ''
+      const nConfigs = new Set([
+        ...prefillAll.map((r) => r.configKey),
+        ...decodeAll.map((r) => r.configKey),
+      ])
       return [
         {
           val: peakPrefill != null ? peakPrefill.toLocaleString() : c.ownVal || '—',
           lbl: 'Prefill 峰值 TPS',
-          sub: `InfiniLM · ${model}${cfgSub ? ' · ' + cfgSub : ''}`,
+          sub: `InfiniLM · ${model}`,
           valSm: true,
         },
         {
@@ -524,22 +533,23 @@ export function createInfiniDashboardStore() {
         {
           val: minTTFT != null ? minTTFT + 'ms' : '—',
           lbl: '最低 TTFT',
-          sub: '首 token 延迟（当前筛选下）',
+          sub: '全表 · il_ttft_ms（有效值取最小）',
           valSm: true,
         },
         {
           val: (nConfigs.size || c.n || '—') as string | number,
           lbl: '测试配置数',
-          sub: 'Prefill ∪ Decode 配置键',
+          sub: '全表 Prefill ∪ Decode 配置键',
         },
       ]
     }
     if (dimKey === 'train') {
       const rows = trainDetailRows.value
-      const best = rows?.length ? rows.reduce((a, b) => (a.tps > b.tps ? a : b)) : undefined
+      const finite = (rows || []).filter((r) => Number.isFinite(r.tps))
+      const best = finite.length ? finite.reduce((a, b) => (a.tps >= b.tps ? a : b)) : undefined
       return [
         {
-          val: best?.tps ? best.tps.toLocaleString() + ' tpps' : c.ownVal || '—',
+          val: best?.tps != null ? best.tps.toLocaleString() + ' tpps' : c.ownVal || '—',
           lbl: '最高训练吞吐',
           sub: `${best?.framework || ''} · ${best?.model || ''}`,
           valSm: true,
@@ -550,7 +560,7 @@ export function createInfiniDashboardStore() {
           sub: '同配置吞吐比',
           valSm: true,
         },
-        { val: rows?.length || '—', lbl: '测试条数', sub: c.extra || '' },
+        { val: finite.length || '—', lbl: '测试条数', sub: c.extra || '' },
         {
           val: best?.parallel || '—',
           lbl: '代表配置',
@@ -561,29 +571,40 @@ export function createInfiniDashboardStore() {
     }
     if (dimKey === 'comm') {
       const rows = commDetailRows.value
-      const p2p = rows?.find((r) => r.commType === 'p2p')
-      const ar = rows?.find((r) => r.commType === 'allreduce')
+      const nvRows = commNvidiaBaselineRows.value
+      const sorted = [...(rows || [])].sort((a, b) => {
+        if (a.commType !== b.commType) return a.commType.localeCompare(b.commType)
+        return a.nGpu - b.nGpu
+      })
+      const p2p = sorted.find((r) => r.commType === 'p2p')
+      const ar = sorted.find((r) => r.commType === 'allreduce')
+      const p2pNvBw = p2p ? commNvidiaBaselineBw(nvRows, 'p2p', p2p.nGpu) : undefined
+      const arNvBw = ar ? commNvidiaBaselineBw(nvRows, 'allreduce', ar.nGpu) : undefined
+      const p2pVsPct =
+        p2p && p2pNvBw != null && p2pNvBw > 0 ? commVsPercent(p2p.bw, p2pNvBw) : p2p != null ? p2p.vsA100 : null
+      const arVsPct =
+        ar && arNvBw != null && arNvBw > 0 ? commVsPercent(ar.bw, arNvBw) : ar != null ? ar.vsA100 : null
       return [
         {
-          val: p2p ? p2p.bw + ' GB/s' : '—',
+          val: p2p ? formatCommBandwidthGb(p2p.bw) + ' GB/s' : '—',
           lbl: 'P2P 带宽',
           sub: p2p ? p2p.linkType + ' · ' + p2p.nGpu + ' GPU' : '',
           valSm: true,
         },
         {
-          val: ar ? ar.bw + ' GB/s' : '—',
+          val: ar ? formatCommBandwidthGb(ar.bw) + ' GB/s' : '—',
           lbl: 'AllReduce 带宽',
           sub: ar ? ar.linkType + ' · ' + ar.nGpu + ' GPU' : '',
           valSm: true,
         },
         {
-          val: p2p ? p2p.vsA100 + '%' : '—',
+          val: p2pVsPct != null ? p2pVsPct + '%' : '—',
           lbl: 'P2P vs NVIDIA',
           sub: '同 comm_type + n_gpu 基线',
           valSm: true,
         },
         {
-          val: ar ? ar.vsA100 + '%' : '—',
+          val: arVsPct != null ? arVsPct + '%' : '—',
           lbl: 'AllReduce vs NVIDIA',
           sub: '同 comm_type + n_gpu 基线',
           valSm: true,
@@ -601,7 +622,7 @@ export function createInfiniDashboardStore() {
           valSm: true,
         },
         {
-          val: best != null ? best.vsNvidia + '%' : '—',
+          val: best?.avg != null ? bwVsNvidiaPercent(best.avg) + '%' : '—',
           lbl: 'vs NVIDIA',
           sub: `A100 基线 ${BW_NVIDIA_BASELINE_GBPS} GB/s`,
           valSm: true,
@@ -644,6 +665,9 @@ export function createInfiniDashboardStore() {
   }
 
   function setDim(i: number) {
+    if (i !== activeDim.value) {
+      resetCompareToDefault()
+    }
     activeDim.value = i
     filterState.value = {}
     switchMainView('overview')
@@ -679,6 +703,10 @@ export function createInfiniDashboardStore() {
 
   function clearCompare() {
     comparePlatKeys.value = []
+  }
+
+  function resetCompareToDefault() {
+    comparePlatKeys.value = [...DEFAULT_COMPARE_PLAT_KEYS]
   }
 
   function switchMainView(v: MainView) {
@@ -757,6 +785,7 @@ export function createInfiniDashboardStore() {
     toggleSort,
     toggleCompare,
     clearCompare,
+    resetCompareToDefault,
     switchMainView,
     opTagKeys,
     setOp,
