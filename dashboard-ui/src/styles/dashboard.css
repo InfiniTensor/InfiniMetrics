@@ -363,8 +363,18 @@ tr:hover > td:not(.ant-table-cell){background:#fff;}
 .op-detail-row--warn td:first-child{box-shadow:inset 3px 0 0 #c62828;}
 .dual-bar{display:flex;flex-direction:column;gap:3px;min-width:110px;}
 .dual-row{display:flex;align-items:center;gap:4px;}
-.dual-lbl{font-size:12px;font-weight:400;flex-shrink:0;min-width:28px;text-align:left;white-space:nowrap;}
-/* 访存数据明细·带宽对比：标签列固定宽度并右对齐，与条形起点对齐 */
+.dual-lbl{
+  font-size:12px;
+  font-weight:400;
+  flex-shrink:0;
+  flex:0 0 88px;
+  min-width:88px;
+  max-width:88px;
+  text-align:right;
+  white-space:nowrap;
+  box-sizing:border-box;
+}
+/* 访存带宽对比等：显式标记（样式与 .dual-lbl 一致，保留类名便于语义） */
 .dual-lbl.dual-lbl--bw{flex:0 0 88px;text-align:right;}
 .dual-track{flex:1;height:4px;background:#f0f0f0;border-radius:2px;overflow:hidden;}
 .dual-fill{height:100%;border-radius:2px;}

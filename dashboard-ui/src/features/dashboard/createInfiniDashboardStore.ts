@@ -59,8 +59,10 @@ import {
   buildInferPrefillBarAligned,
   buildOpBarAvgOption,
   buildOpLineOption,
+  opDetailTwinGridBottom,
   buildTrainBarThroughput,
   buildTrainBarVs,
+  maxCompactDetailBarGridBottom,
 } from '@/utils/echartsInfini'
 
 export type MainView = 'overview' | 'detail' | 'compare'
@@ -115,6 +117,21 @@ const TTRAIN = TRAIN_TABLE as Record<string, TrainRow[] | undefined>
 const CTABLE = COMM_TABLE as Record<string, CommDetailRow[] | undefined>
 
 const BTABLE = BW_TABLE as Record<string, BwDetailRow[] | undefined>
+
+/** 访存详情左右柱图：与折线/柱图类目一致，用于统一 grid.bottom */
+function bwTwinBarCategoryLists(
+  mk: BwModeKey | null,
+  rows: BwDetailRow[],
+): { left: string[]; right: string[] } | null {
+  if (mk) {
+    const mapped = rows.filter((r) => r[mk] != null && Number.isFinite(r[mk] as number))
+    if (!mapped.length) return null
+    return { left: mapped.map((r) => r.model), right: [mk] }
+  }
+  const filtered = rows.filter((r) => r.avg != null)
+  if (!filtered.length) return null
+  return { left: filtered.map((r) => r.model), right: ['add', 'copy', 'scale', 'triad'] }
+}
 
 type BenchMetaFileDates = {
   trainSourceFileDateByPlatform?: Record<string, string>
@@ -272,6 +289,19 @@ export function createInfiniDashboardStore() {
       : inferNvidiaDecodeFiltered.value,
   )
 
+  /** Prefill / Decode 柱图共用下边距，左右绘图区底边与 X 轴对齐 */
+  const inferDetailTwinGridBottom = computed(() => {
+    const pk = detailState.value.platKey
+    const { batchPill } = inferPills()
+    const pre = filterInferRows(ITABLE[pk]?.prefill || [], batchPill, undefined)
+    const nv = filterInferRows(ITABLE.nvidia?.prefill || [], batchPill, undefined)
+    const de = filterInferRows(ITABLE[pk]?.decode || [], batchPill, undefined)
+    const nvDe = filterInferRows(ITABLE.nvidia?.decode || [], batchPill, undefined)
+    const alPre = alignInferBarByBatchIn(pre, nv)
+    const alDec = alignInferBarByBatchIn(de, nvDe)
+    return maxCompactDetailBarGridBottom(alPre.categories, alDec.categories)
+  })
+
   function trainFrameworkPill() {
     const dim = DIMS.find((d) => d.key === 'train')!
     const fs = filterState.value.train || {}
@@ -371,7 +401,11 @@ export function createInfiniDashboardStore() {
     if (dk === 'op') {
       const rows = opDetailRows.value
       if (!rows.length) return {}
-      return buildOpLineOption(rows)
+      const platOps = OTABLE[detailState.value.platKey] || {}
+      const opKeys = Object.keys(platOps)
+      const shapes = rows.map((r) => r.shape)
+      const gridBottom = opDetailTwinGridBottom(shapes, opKeys)
+      return buildOpLineOption(rows, { gridBottom })
     }
     if (dk === 'infer') {
       const pk = detailState.value.platKey
@@ -387,21 +421,30 @@ export function createInfiniDashboardStore() {
         al.nvVals,
         plat.name,
         'NVIDIA',
+        { gridBottom: inferDetailTwinGridBottom.value },
       )
     }
     if (dk === 'train') {
       const rows = trainDetailRows.value
       if (!rows?.length) return {}
-      return buildTrainBarThroughput(rows, plat.color)
+      const categories = rows.map((r) => `${r.framework}·${r.model}`)
+      const gridBottom = maxCompactDetailBarGridBottom(categories)
+      return buildTrainBarThroughput(rows, { gridBottom })
     }
     if (dk === 'comm') {
       const rows = commDetailRows.value
       if (!rows?.length) return {}
-      return buildCommBarBw(rows, plat.color)
+      const catsBw = rows.map((r) => r.commType + ' ' + r.nGpu + 'GPU')
+      const catsVs = rows.map((r) => r.commType)
+      const gridBottom = maxCompactDetailBarGridBottom(catsBw, catsVs)
+      return buildCommBarBw(rows, { gridBottom })
     }
     if (dk === 'bw') {
       const mk = bwModeKey.value
       const rows = bwDetailRows.value
+      const pair = bwTwinBarCategoryLists(mk, rows)
+      if (!pair) return {}
+      const gridBottom = maxCompactDetailBarGridBottom(pair.left, pair.right)
       if (mk) {
         const mapped = rows
           .filter((r) => r[mk] != null && Number.isFinite(r[mk]))
@@ -410,11 +453,11 @@ export function createInfiniDashboardStore() {
         const nv = bwNvidiaRefRow.value?.[mk]
         const baseline =
           nv != null && Number.isFinite(nv) && nv > 0 ? nv : BW_NVIDIA_BASELINE_GBPS
-        return buildBwBarAvg(mapped, plat.color, baseline, `${mk} GB/s`)
+        return buildBwBarAvg(mapped, baseline, `${mk} GB/s`, { gridBottom })
       }
       const filtered = rows.filter((r) => r.avg != null)
       if (!filtered.length) return {}
-      return buildBwBarAvg(filtered, plat.color, BW_NVIDIA_BASELINE_GBPS)
+      return buildBwBarAvg(filtered, BW_NVIDIA_BASELINE_GBPS, '均值 GB/s', { gridBottom })
     }
     return {}
   })
@@ -439,7 +482,10 @@ export function createInfiniDashboardStore() {
             )
           : 0
       })
-      return buildOpBarAvgOption(opKeys, scores)
+      const rows = opDetailRows.value
+      const shapes = rows.map((r) => r.shape)
+      const gridBottom = opDetailTwinGridBottom(shapes, opKeys)
+      return buildOpBarAvgOption(opKeys, scores, { gridBottom })
     }
     if (dk === 'infer') {
       const pk = detailState.value.platKey
@@ -454,25 +500,36 @@ export function createInfiniDashboardStore() {
         al.nvVals,
         plat.name,
         'NVIDIA',
+        { gridBottom: inferDetailTwinGridBottom.value },
       )
     }
     if (dk === 'train') {
       const rows = trainDetailRows.value
       if (!rows?.length) return {}
-      return buildTrainBarVs(rows)
+      const categories = rows.map((r) => `${r.framework}·${r.model}`)
+      const gridBottom = maxCompactDetailBarGridBottom(categories)
+      return buildTrainBarVs(rows, { gridBottom })
     }
     if (dk === 'comm') {
       const rows = commDetailRows.value
       if (!rows?.length) return {}
-      return buildCommBarVs(rows)
+      const catsBw = rows.map((r) => r.commType + ' ' + r.nGpu + 'GPU')
+      const catsVs = rows.map((r) => r.commType)
+      const gridBottom = maxCompactDetailBarGridBottom(catsBw, catsVs)
+      return buildCommBarVs(rows, { gridBottom })
     }
     if (dk === 'bw') {
       const platKey = detailState.value.platKey
-      const rows = BTABLE[platKey] || []
-      const best = pickBestBwRowByMode(rows, bwModeKey.value)
+      const rowsFull = BTABLE[platKey] || []
+      const rowsDetail = bwDetailRows.value
+      const mk = bwModeKey.value
+      const pair = bwTwinBarCategoryLists(mk, rowsDetail)
+      if (!pair) return {}
+      const gridBottom = maxCompactDetailBarGridBottom(pair.left, pair.right)
+      const best = pickBestBwRowByMode(rowsFull, mk)
       const nvidiaRow = bwNvidiaRefRow.value
       if (!best || !nvidiaRow) return {}
-      return buildBwBarModes(best, nvidiaRow, plat.color, bwModeKey.value)
+      return buildBwBarModes(best, nvidiaRow, mk, { gridBottom })
     }
     return {}
   })

@@ -5,6 +5,7 @@ import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
 import { platIconSrc } from '@/features/dashboard/platPublicIcon'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
+import { scoreTierColor, scoreTierTagPreset } from '@/utils/scoreColor'
 
 const { PLATFORMS, overviewCards, comparePlatKeys, toggleCompare } = useInfiniDashboard()
 const { goDetail } = useDashboardNavigation()
@@ -15,41 +16,18 @@ function platOf(card: CardRow) {
   return PLATFORMS.find((p) => p.key === card.key)!
 }
 
-type ScoreTier = 'high' | 'mid' | 'low' | 'none'
-
-/** 与产品规则一致：≥100% 绿、60–99% 橙、<60% 红 */
-function scoreTier(ownScore: number | null | undefined): ScoreTier {
-  if (ownScore == null) return 'none'
-  if (ownScore >= 100) return 'high'
-  if (ownScore >= 60) return 'mid'
-  return 'low'
-}
-
+/** 概览卡得分前景色与 advTxt 标签色：数字等用 scoreTierColor；adv 标签高分档用 scoreTierTagPreset（蓝） */
 function scoreColor(card: CardRow) {
-  switch (scoreTier(card.ownScore)) {
-    case 'high':
-      return '#2e7d32'
-    case 'mid':
-      return '#e65100'
-    case 'low':
-      return '#c62828'
-    default:
-      return '#8c8c8c'
-  }
+  return scoreTierColor(card.ownScore)
 }
 
-/** 概览卡 advTxt 与得分同色阶（Ant Tag 预设） */
+/** 自研列（标签 / 得分 / 副标题 / 指标值）与得分同色，避免品牌色与分档色混用 */
+function ownScoreColStyle(card: CardRow) {
+  return { color: scoreColor(card) }
+}
+
 function scoreTagPreset(card: CardRow) {
-  switch (scoreTier(card.ownScore)) {
-    case 'high':
-      return 'green'
-    case 'mid':
-      return 'orange'
-    case 'low':
-      return 'red'
-    default:
-      return 'default'
-  }
+  return scoreTierTagPreset(card.ownScore)
 }
 
 function inCompare(key: string) {
@@ -127,13 +105,15 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
         <div class="card-head-row card-head-row--tag">
           <a-tag
             size="small"
-            :color="platOf(c).domestic ? 'green' : 'blue'"
+            :class="{ 'overview-tag--theme-blue': platOf(c).domestic }"
+            :color="platOf(c).domestic ? 'blue' : 'green'"
           >
             {{ platOf(c).type }}
           </a-tag>
           <a-tag
             v-if="c.advTxt"
             size="small"
+            :class="{ 'overview-tag--theme-blue': scoreTagPreset(c) === 'blue' }"
             :color="scoreTagPreset(c)"
           >
             <template v-for="(seg, idx) in advTxtSegments(c.advTxt)" :key="idx">
@@ -148,12 +128,14 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
         :class="{ 'card-scores--single': c.openScore == null }"
       >
         <div class="score-col own">
-          <div class="sc-label" :style="{ color: platOf(c).color }">{{ c.ownFw }}</div>
-          <div class="sc-num" :style="{ color: scoreColor(c) }">{{
+          <div class="sc-label" :style="ownScoreColStyle(c)">{{ c.ownFw }}</div>
+          <div class="sc-num" :style="ownScoreColStyle(c)">{{
             c.ownScore != null ? c.ownScore : '—'
           }}</div>
-          <div v-if="c.inferOwnCaption" class="sc-cap">{{ c.inferOwnCaption }}</div>
-          <div class="sc-val" :style="{ color: platOf(c).color }">{{ c.ownVal }}</div>
+          <div v-if="c.inferOwnCaption" class="sc-cap" :style="ownScoreColStyle(c)">{{
+            c.inferOwnCaption
+          }}</div>
+          <div class="sc-val" :style="ownScoreColStyle(c)">{{ c.ownVal }}</div>
         </div>
         <div v-if="c.openScore != null" class="score-col base">
           <div class="sc-label sc-label--base">{{ c.openFw }}</div>
@@ -186,7 +168,8 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 /* 概览平台卡片：扁平描边容器（业务逻辑未改，仅 UI） */
 .dashboard-overview-cards {
   --overview-card-border: #e5e8ef;
-  --overview-card-border-in-compare: #81c784;
+  /* 已加入对比：与「移除对比」浅蓝底、标签同系描边 */
+  --overview-card-border-in-compare: color-mix(in srgb, var(--blue) 40%, #e8eaf2);
   --overview-card-shadow-hover: 0 4px 14px rgba(22, 43, 117, 0.12);
   --overview-card-radius: 4px;
 
@@ -229,10 +212,10 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 /* 双类链提高优先级，避免 scoped 下与 .score-card 的 border 简写权重拉扯导致仍为灰边 */
 .score-card.score-card--in-compare {
   border: 1px solid var(--overview-card-border-in-compare);
-  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.18);
+  box-shadow: 0 2px 10px rgba(91, 126, 201, 0.14);
 }
 
-/* 悬停一律主题蓝 + 轻阴影（覆盖已加入对比时的绿阴影） */
+/* 悬停一律主题蓝 + 轻阴影（覆盖已加入对比时的描边/阴影） */
 .score-card:hover {
   transform: none;
   box-shadow: var(--overview-card-shadow-hover);
@@ -311,24 +294,28 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   color: inherit;
 }
 
-/* 与 .ant-btn-text 同优先级，保证「移除对比」浅绿底不被 transparent 盖掉 */
+/* 已加入对比：主题色文字，无底色、无边框 */
 .card-head-compare-btn--in.ant-btn.ant-btn-text {
-  color: #4e5969;
-  background: #e8f5e9;
+  color: var(--purple);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none;
 }
 
 .card-head-compare-btn--in.ant-btn.ant-btn-text:hover,
 .card-head-compare-btn--in.ant-btn.ant-btn-text:focus-visible {
-  color: #4e5969;
-  background: #c8e6c9;
+  color: var(--purple);
+  background: transparent !important;
+  border: none !important;
 }
 
 .card-head-compare-btn--in.ant-btn.ant-btn-text:focus:not(:focus-visible):not(:hover) {
-  color: #4e5969;
-  background: #e8f5e9;
+  color: var(--purple);
+  background: transparent !important;
+  border: none !important;
 }
 
-/* 第二行：国产/国际与「自研快」等并列，与头像左对齐；圆角 6px */
+/* 第二行：国产（蓝）/ 国际标杆（绿）与「自研快」等并列，与头像左对齐；圆角 6px */
 .card-head-row--tag {
   display: flex;
   flex-wrap: wrap;
@@ -339,6 +326,17 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 .card-head-row--tag :deep(.ant-tag) {
   border-radius: 6px;
   font-size: 14px !important;
+}
+
+/* 国产 + adv 高分档：覆盖 Ant preset blue，贴近 :root --blue / --purple */
+.card-head-row--tag :deep(.overview-tag--theme-blue.ant-tag) {
+  color: var(--purple) !important;
+  background: color-mix(in srgb, var(--blue) 13%, #ffffff) !important;
+  border-color: color-mix(in srgb, var(--blue) 40%, #e8eaf2) !important;
+}
+
+.card-head-row--tag :deep(.overview-tag--theme-blue .adv-txt-num) {
+  color: var(--blue) !important;
 }
 
 .adv-txt-num {
@@ -415,7 +413,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 }
 
 .sc-num {
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
   margin-bottom: 2px;
 }
@@ -431,9 +429,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   color: #8c8c8c;
 }
 
-.score-col.own .sc-num {
-  color: var(--blue, #5b7ec9);
-}
+/* 自研列字色由模板内 ownScoreColStyle（与得分同档）控制 */
 
 /* 灰底列：字色加深，保证在 #F2F3F5 上可读 */
 .sc-label.sc-label--base {

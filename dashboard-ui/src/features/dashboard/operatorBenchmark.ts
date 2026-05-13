@@ -129,12 +129,13 @@ export function buildOpPlatformOverview(
   const ownVal = best != null ? formatOpOverviewIcLatency(best.ic) : '—'
   const openVal = best != null ? formatOpOverviewPtLatency(best.pt) : '—'
   const adv = ownScore >= 100
+  /** ownScore < 100 时不显示 advTxt：产品要求概览算子卡禁止再展示「部分配置待优化」之类弱化文案 */
   const advTxt =
     ownScore > 100
       ? `自研快 ${ownScore - 100}%`
       : ownScore >= 100
         ? '自研优于 PyTorch 基线'
-        : '部分配置待优化'
+        : ''
 
   return {
     ownScore,

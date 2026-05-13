@@ -82,9 +82,9 @@ function onBcOverview() {
               <span class="bc-item cur">平台对比</span>
             </template>
           </div>
-          <DashboardCard class="right-panel-card-filter">
+          <div class="right-panel-filter-shell">
             <DashboardFilterBar />
-          </DashboardCard>
+          </div>
           <DashboardCard class="right-panel-card-main">
             <div class="content-panel">
               <div class="overview-panel" :class="{ active: currentView === 'overview' }">
@@ -106,16 +106,46 @@ function onBcOverview() {
 
 <style scoped>
 .right-panel {
-  /* 右侧主栏衬底（面包屑、卡片间距、左右留白）；与 #app.ib-dashboard-root 同色 */
+  /* 右侧主栏衬底；顶 padding 与侧栏 .sidebar-scroll 一致，便于与「平台筛选」下 1px 横线对齐 */
   background: #f7f8fa;
-  padding: 16px;
+  padding: 18px 16px 16px;
   gap: 16px;
   min-width: 0;
 }
 
-.right-panel :deep(.dashboard-card.right-panel-card-filter) {
+/*
+ * 面包屑下横线：与侧栏 .sb-section-line 同为 1px，并用 padding-top 对齐其纵向位置
+ * （侧栏：18 + title≈19.5 + line margin 10；此处：18 + pt + 文≈14.4 + pb → pt≈5）
+ */
+.right-panel > .global-bc.visible {
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #162b75;
+}
+
+.right-panel > .global-bc.visible .bc-item {
+  color: #162b75;
+}
+
+.right-panel > .global-bc.visible .bc-item.cur {
+  color: #162b75;
+  font-weight: 700;
+}
+
+.right-panel > .global-bc.visible .bc-sep {
+  color: rgba(22, 43, 117, 0.32);
+}
+
+.right-panel > .global-bc.visible .bc-item:hover {
+  color: #1a3488;
+}
+
+.right-panel .right-panel-filter-shell {
   flex: 0 0 auto;
   height: auto;
+  min-width: 0;
 }
 
 .right-panel :deep(.dashboard-card.right-panel-card-main) {

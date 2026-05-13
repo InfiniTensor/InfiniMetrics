@@ -2,12 +2,14 @@
 
 import { CI_CHART_LABELS } from '@/data'
 
-/** 详情区算子延迟/得分柱/CI 折线统一主蓝（与各算子平均得分柱同色） */
-const CHART_PRIMARY_BLUE = '#3182ce'
+/**
+ * 详情页折线/柱图：单系列用主蓝；双系列用主蓝 + 浅绿（与主图例「NVIDIA A100 / NVIDIA」一致，勿改用平台 brand 色）
+ */
+export const DETAIL_CHART_PRIMARY = '#3381cc'
+export const DETAIL_CHART_SECONDARY = '#b9d9a8'
 
-/** 推理详情 Prefill / Decode 双柱：平台 TPS 固定主蓝、NVIDIA 固定浅绿（不随当前平台 brand 色变化） */
-const INFER_COMPARE_BAR_PLATFORM = CHART_PRIMARY_BLUE
-const INFER_COMPARE_BAR_NVIDIA = '#B5D6A7'
+const DETAIL_CHART_PRIMARY_SOFT = `${DETAIL_CHART_PRIMARY}cc`
+const DETAIL_CHART_SECONDARY_SOFT = `${DETAIL_CHART_SECONDARY}cc`
 
 /** 详情页柱状图单柱最大宽度（px） */
 const DETAIL_BAR_MAX_WIDTH = 20
@@ -18,6 +20,49 @@ const DETAIL_BAR_GRID = {
   right: 22,
   containLabel: true,
 } as const
+
+/** 对比页柱图：略大于默认 grid.left，竖排 Y 轴名与刻度不裁切；勿过大以免左侧留白 */
+const COMPARE_BAR_GRID_LEFT = 30
+
+/** 对比页 Y 轴竖排名与刻度间距（nameGap 为轴名到轴线法向距离，过小会贴数字） */
+const COMPARE_Y_NAME_GAP_SCORE = 48
+const COMPARE_Y_NAME_GAP_LATENCY = 56
+
+/** 算子详情页「延迟趋势」折线 +「各算子平均得分」柱图：统一 grid，使绘图区垂直范围一致 */
+const OP_DETAIL_TWIN_GRID_TOP = 54
+/** 类目轴横向截断省略后，底部一行标签即可 */
+const OP_DETAIL_TWIN_GRID_BOTTOM = 28
+
+/**
+ * 算子详情 X 轴：与其它维度柱图一致横向展示，过长省略（tooltip 仍显示完整类目）
+ * ECharts `overflow: 'truncate'` + `width`
+ */
+const OP_DETAIL_CATEGORY_AXIS_LABEL = {
+  interval: 0 as const,
+  rotate: 0,
+  fontSize: 11,
+  margin: 4,
+  overflow: 'truncate' as const,
+  width: 56,
+}
+
+/** 推理 / 训练 / 通信 / 访存详情双柱图：统一上边距（含双系列图例），左右绘图区上下对齐 */
+export const DETAIL_DIM_TWIN_BAR_GRID_TOP = 56
+
+/** 详情页数值轴：单位文案在 Y 轴顶端横排（对比页仍用轴左侧竖排 middle + rotate） */
+const DETAIL_VALUE_AXIS_NAME = {
+  nameLocation: 'end' as const,
+  nameRotate: 0,
+  nameGap: 12,
+  nameTextStyle: { fontSize: 11 },
+}
+
+export type OpDetailTwinOpts = { gridBottom?: number }
+
+/** 算子详情双图：左右固定同一 grid.bottom（X 轴标签已截断，不再为斜排预留大空白） */
+export function opDetailTwinGridBottom(_shapeLabels: string[], _operatorKeys: string[]): number {
+  return OP_DETAIL_TWIN_GRID_BOTTOM
+}
 
 /** 类目轴首尾留白：少类目时略加大，避免柱与 y 轴重叠、右侧贴边 */
 function detailBarBoundaryGap(catCount: number): boolean | [string, string] {
@@ -52,53 +97,70 @@ function categoryBarXAxisUi(categories: string[]): {
   const n = categories.length
   if (categoryBarLabelsFitHorizontal(categories)) {
     return {
-      gridBottom: 46,
-      axisLabel: { interval: 0, rotate: 0, fontSize: 11, margin: 8 },
+      gridBottom: 38,
+      axisLabel: { interval: 0, rotate: 0, fontSize: 11, margin: 6 },
     }
   }
   if (n <= 8) {
     return {
-      gridBottom: 62,
-      axisLabel: { interval: 0, rotate: 28, fontSize: 10, margin: 8 },
+      gridBottom: 50,
+      axisLabel: { interval: 0, rotate: 28, fontSize: 10, margin: 6 },
     }
   }
   if (n <= 15) {
     return {
-      gridBottom: 82,
-      axisLabel: { interval: 0, rotate: 42, fontSize: 9, margin: 10 },
+      gridBottom: 68,
+      axisLabel: { interval: 0, rotate: 42, fontSize: 9, margin: 8 },
     }
   }
   return {
-    gridBottom: 112,
-    axisLabel: { interval: 0, rotate: 55, fontSize: 8, margin: 10 },
+    gridBottom: 90,
+    axisLabel: { interval: 0, rotate: 55, fontSize: 8, margin: 8 },
   }
 }
 
 /** 详情页推理 / 训练等柱图：底边与轴边距收紧（类目相对算子表更短） */
-function compactDetailBarXAxisUi(categories: string[]): {
+export function compactDetailBarXAxisUi(categories: string[]): {
   gridBottom: number
   axisLabel: { interval: 0; rotate: number; fontSize: number; margin: number }
 } {
   const xUi = categoryBarXAxisUi(categories)
   const b =
-    xUi.gridBottom <= 46 ? 32 : xUi.gridBottom <= 62 ? 44 : xUi.gridBottom <= 82 ? 56 : 72
+    xUi.gridBottom <= 38 ? 26 : xUi.gridBottom <= 50 ? 34 : xUi.gridBottom <= 68 ? 44 : 56
   return {
     gridBottom: b,
-    axisLabel: { ...xUi.axisLabel, margin: Math.min(6, xUi.axisLabel.margin) },
+    axisLabel: { ...xUi.axisLabel, margin: Math.min(5, xUi.axisLabel.margin) },
   }
 }
+
+/** 详情双柱图：取左右类目轴所需下边距的较大者，保证绘图区底边与 X 刻度线对齐 */
+export function maxCompactDetailBarGridBottom(...categoryLists: (string[] | undefined)[]): number {
+  let m = 0
+  for (const c of categoryLists) {
+    if (c?.length) m = Math.max(m, compactDetailBarXAxisUi(c).gridBottom)
+  }
+  return m
+}
+
+export type DetailDimBarChartOpts = { gridTop?: number; gridBottom?: number }
 
 export function buildCiLineOption(seriesData: number[]) {
   const cats = [...CI_CHART_LABELS]
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { ...DETAIL_BAR_GRID, top: 28, bottom: 32 },
+    grid: { ...DETAIL_BAR_GRID, top: 28, bottom: 18 },
     xAxis: {
       type: 'category' as const,
       data: cats,
       boundaryGap: detailBarBoundaryGap(cats.length),
+      axisLabel: { fontSize: 11, margin: 4 },
     },
-    yAxis: { type: 'value' as const, min: 0 },
+    yAxis: {
+      type: 'value' as const,
+      min: 0,
+      name: '运行次数',
+      ...DETAIL_VALUE_AXIS_NAME,
+    },
     series: [
       {
         type: 'line' as const,
@@ -106,7 +168,7 @@ export function buildCiLineOption(seriesData: number[]) {
         data: seriesData,
         smooth: true,
         symbolSize: 3,
-        lineStyle: { color: CHART_PRIMARY_BLUE, width: 1 },
+        lineStyle: { color: DETAIL_CHART_PRIMARY, width: 1 },
       },
     ],
   }
@@ -114,7 +176,7 @@ export function buildCiLineOption(seriesData: number[]) {
 
 type OpRow = { shape: string; dtype: string; ic: number; pt: number; scoreEligible?: boolean }
 
-export function buildOpLineOption(rows: OpRow[]) {
+export function buildOpLineOption(rows: OpRow[], opts?: OpDetailTwinOpts) {
   const icSeries = rows.map((r) => {
     const ic = r.ic
     return Number.isFinite(ic) && ic > 0 ? ic : null
@@ -124,16 +186,23 @@ export function buildOpLineOption(rows: OpRow[]) {
     return Number.isFinite(pt) && pt > 0 ? pt : null
   })
   const shapes = rows.map((r) => r.shape)
+  const gridBottom = opts?.gridBottom ?? OP_DETAIL_TWIN_GRID_BOTTOM
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { ...DETAIL_BAR_GRID, top: 54, bottom: 36 },
+    grid: { ...DETAIL_BAR_GRID, top: OP_DETAIL_TWIN_GRID_TOP, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: shapes,
       boundaryGap: detailBarBoundaryGap(shapes.length),
+      axisLabel: OP_DETAIL_CATEGORY_AXIS_LABEL,
     },
-    yAxis: { type: 'value' as const, name: '延迟 (ms)' },
+    yAxis: {
+      type: 'value' as const,
+      name: '延迟 (ms)',
+      min: 0,
+      ...DETAIL_VALUE_AXIS_NAME,
+    },
     series: [
       {
         type: 'line' as const,
@@ -142,7 +211,7 @@ export function buildOpLineOption(rows: OpRow[]) {
         smooth: true,
         symbolSize: 3,
         connectNulls: false,
-        lineStyle: { color: CHART_PRIMARY_BLUE, width: 1 },
+        lineStyle: { color: DETAIL_CHART_PRIMARY, width: 1 },
       },
       {
         type: 'line' as const,
@@ -151,24 +220,33 @@ export function buildOpLineOption(rows: OpRow[]) {
         smooth: true,
         symbolSize: 3,
         connectNulls: false,
-        lineStyle: { color: '#999', width: 1 },
+        lineStyle: { color: DETAIL_CHART_SECONDARY, width: 1 },
       },
     ],
   }
 }
 
-export function buildOpBarAvgOption(opKeys: string[], scores: number[]) {
-  const xUi = categoryBarXAxisUi(opKeys)
+export function buildOpBarAvgOption(opKeys: string[], scores: number[], opts?: OpDetailTwinOpts) {
+  const gridBottom = opts?.gridBottom ?? OP_DETAIL_TWIN_GRID_BOTTOM
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { ...DETAIL_BAR_GRID, top: 28, bottom: xUi.gridBottom },
+    grid: {
+      ...DETAIL_BAR_GRID,
+      top: OP_DETAIL_TWIN_GRID_TOP,
+      bottom: gridBottom,
+    },
     xAxis: {
       type: 'category' as const,
       data: opKeys,
-      axisLabel: xUi.axisLabel,
+      axisLabel: OP_DETAIL_CATEGORY_AXIS_LABEL,
       boundaryGap: detailBarBoundaryGap(opKeys.length),
     },
-    yAxis: { type: 'value' as const, name: '得分', min: 0 },
+    yAxis: {
+      type: 'value' as const,
+      name: '得分',
+      min: 0,
+      ...DETAIL_VALUE_AXIS_NAME,
+    },
     series: [
       {
         type: 'bar' as const,
@@ -176,7 +254,7 @@ export function buildOpBarAvgOption(opKeys: string[], scores: number[]) {
         data: scores,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         barCategoryGap: '42%',
-        itemStyle: { color: CHART_PRIMARY_BLUE + 'cc', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -197,21 +275,21 @@ export function buildInferPrefillBarOption(prefillRows: InferRow[], nvPrefill: I
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(cats.length),
     },
-    yAxis: { type: 'value' as const, name: 'tokens/s' },
+    yAxis: { type: 'value' as const, name: 'tokens/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: 'Prefill TPS',
         data: prefillRows.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'A100 Prefill',
         data: nvPrefill.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -230,21 +308,21 @@ export function buildInferDecodeBarOption(decodeRows: InferRow[], nvDecode: Infe
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(cats.length),
     },
-    yAxis: { type: 'value' as const, name: 'tokens/s' },
+    yAxis: { type: 'value' as const, name: 'tokens/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: 'Decode TPS',
         data: decodeRows.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'A100 Decode',
         data: nvDecode.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -256,33 +334,36 @@ export function buildInferPrefillBarAligned(
   nvVals: number[],
   platSeriesName = '当前平台',
   nvSeriesName = 'NVIDIA',
+  opts?: DetailDimBarChartOpts,
 ) {
   const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(categories.length),
     },
-    yAxis: { type: 'value' as const, name: 'tokens/s' },
+    yAxis: { type: 'value' as const, name: 'tokens/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: platSeriesName,
         data: platVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: nvSeriesName,
         data: nvVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -294,33 +375,36 @@ export function buildInferDecodeBarAligned(
   nvVals: number[],
   platSeriesName = '当前平台',
   nvSeriesName = 'NVIDIA',
+  opts?: DetailDimBarChartOpts,
 ) {
   const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(categories.length),
     },
-    yAxis: { type: 'value' as const, name: 'tokens/s' },
+    yAxis: { type: 'value' as const, name: 'tokens/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: platSeriesName,
         data: platVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: nvSeriesName,
         data: nvVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -338,23 +422,25 @@ type TrainRow = {
   note: string
 }
 
-export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
+export function buildTrainBarThroughput(rows: TrainRow[], opts?: DetailDimBarChartOpts) {
   const categories = rows.map((r) => `${r.framework}·${r.model}`)
   const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   const n = categories.length
   const boundaryGap = detailBarBoundaryGap(n)
   const barCategoryGap = n <= 3 ? '14%' : '36%'
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { ...DETAIL_BAR_GRID, top: 48, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap,
     },
-    yAxis: { type: 'value' as const, name: 'tokens/process/s' },
+    yAxis: { type: 'value' as const, name: 'tokens/process/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
@@ -362,7 +448,7 @@ export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
         data: rows.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         barCategoryGap,
-        itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
@@ -370,41 +456,38 @@ export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
         data: rows.map((r) => r.baseline),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         barCategoryGap,
-        itemStyle: { color: '#76b90055', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
 }
 
-export function buildTrainBarVs(rows: TrainRow[]) {
+export function buildTrainBarVs(rows: TrainRow[], opts?: DetailDimBarChartOpts) {
   const categories = rows.map((r) => `${r.framework}·${r.model}`)
   const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   const n = categories.length
   const boundaryGap = detailBarBoundaryGap(n)
   const barCategoryGap = n <= 3 ? '14%' : '36%'
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { ...DETAIL_BAR_GRID, top: 22, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap,
     },
-    yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0 },
+    yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0, ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: 'vs NVIDIA (%)',
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         barCategoryGap,
-        data: rows.map((r) => ({
-          value: r.vsA100,
-          itemStyle: {
-            color: r.vsA100 >= 100 ? '#2e7d32cc' : '#c62828aa',
-            borderRadius: [2, 2, 0, 0],
-          },
-        })),
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        data: rows.map((r) => r.vsA100),
       },
     ],
   }
@@ -420,64 +503,63 @@ type CommRow = {
   note: string
 }
 
-export function buildCommBarBw(rows: CommRow[], platColor: string) {
+export function buildCommBarBw(rows: CommRow[], opts?: DetailDimBarChartOpts) {
   const categories = rows.map((r) => r.commType + ' ' + r.nGpu + 'GPU')
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(categories.length),
     },
-    yAxis: { type: 'value' as const, name: 'GB/s' },
+    yAxis: { type: 'value' as const, name: 'GB/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: '自研带宽 GB/s',
         data: rows.map((r) => r.bw),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'NVIDIA 基线',
         data: rows.map((r) => r.baseline),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: '#76b90055', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
 }
 
-export function buildCommBarVs(rows: CommRow[]) {
+export function buildCommBarVs(rows: CommRow[], opts?: DetailDimBarChartOpts) {
   const categories = rows.map((r) => r.commType)
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { ...DETAIL_BAR_GRID, top: 28, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(categories.length),
     },
-    yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0 },
+    yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0, ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: 'vs NVIDIA (%)',
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        data: rows.map((r) => ({
-          value: r.vsA100,
-          itemStyle: {
-            color: r.vsA100 >= 100 ? '#2e7d32cc' : '#c62828aa',
-            borderRadius: [2, 2, 0, 0],
-          },
-        })),
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        data: rows.map((r) => r.vsA100),
       },
     ],
   }
@@ -494,38 +576,40 @@ type BwRow = {
 
 export function buildBwBarAvg(
   rows: BwRow[],
-  platColor: string,
   nvidiaAvg: number,
   platSeriesName = '均值 GB/s',
+  opts?: DetailDimBarChartOpts,
 ) {
   const valid = rows.filter((r) => r.avg != null)
   const categories = valid.map((r) => r.model)
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(categories.length),
     },
-    yAxis: { type: 'value' as const, name: 'GB/s' },
+    yAxis: { type: 'value' as const, name: 'GB/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: platSeriesName,
         data: valid.map((r) => r.avg as number),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: 'NVIDIA A100 基线',
         data: valid.map(() => nvidiaAvg),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: '#76b90055', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -536,12 +620,14 @@ type BwBarMode = 'add' | 'copy' | 'scale' | 'triad'
 export function buildBwBarModes(
   bestRow: BwRow,
   nvidiaRow: BwRow,
-  platColor: string,
   singleMode?: BwBarMode | null,
+  opts?: DetailDimBarChartOpts,
 ) {
   const modes = (singleMode ? [singleMode] : (['add', 'copy', 'scale', 'triad'] as const))
   const categories = [...modes]
-  const xUi = categoryBarXAxisUi(categories)
+  const xUi = compactDetailBarXAxisUi(categories)
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+  const gridBottom = opts?.gridBottom ?? xUi.gridBottom
   const platSeriesName = singleMode
     ? `${bestRow.model || '自研'}（${singleMode}）`
     : bestRow.model || '自研'
@@ -551,28 +637,28 @@ export function buildBwBarModes(
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(categories.length),
     },
-    yAxis: { type: 'value' as const, name: 'GB/s' },
+    yAxis: { type: 'value' as const, name: 'GB/s', ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: platSeriesName,
         data: modes.map((m) => bestRow[m] as number),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: nvSeriesName,
         data: modes.map((m) => nvidiaRow[m] as number),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: '#76b90055', borderRadius: [2, 2, 0, 0] },
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
     ],
   }
@@ -593,7 +679,7 @@ export function buildCompareScoreBar(cards: CardLite[], plats: PlatLite[]) {
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 0, right: 8, textStyle: { fontSize: 11 } },
-    grid: { ...DETAIL_BAR_GRID, top: 36, bottom: compareGridBottom },
+    grid: { ...DETAIL_BAR_GRID, left: COMPARE_BAR_GRID_LEFT, top: 36, bottom: compareGridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
@@ -602,10 +688,10 @@ export function buildCompareScoreBar(cards: CardLite[], plats: PlatLite[]) {
     },
     yAxis: {
       type: 'value' as const,
-      name: '提速倍率（× 相对开源基准）',
+      name: '提速倍率（×）',
       nameLocation: 'middle' as const,
       nameRotate: 90,
-      nameGap: 40,
+      nameGap: COMPARE_Y_NAME_GAP_SCORE,
       nameTextStyle: { fontSize: 11, color: '#666' },
       min: 0,
       axisLabel: { formatter: (v: number) => v + '×' },
@@ -643,7 +729,7 @@ export function buildCompareLatencyBar(
   const compareGridBottom = Math.min(xUi.gridBottom, 28)
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { ...DETAIL_BAR_GRID, top: 36, bottom: compareGridBottom },
+    grid: { ...DETAIL_BAR_GRID, left: COMPARE_BAR_GRID_LEFT, top: 36, bottom: compareGridBottom },
     xAxis: {
       type: 'category' as const,
       data: names,
@@ -655,7 +741,7 @@ export function buildCompareLatencyBar(
       name: 'ms，越低越好',
       nameLocation: 'middle' as const,
       nameRotate: 90,
-      nameGap: 56,
+      nameGap: COMPARE_Y_NAME_GAP_LATENCY,
       nameTextStyle: { fontSize: 11, color: '#666' },
       min: 0,
       splitLine: { lineStyle: { color: '#f0f0f0' } },

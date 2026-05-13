@@ -141,7 +141,8 @@ export function overlayOpOverviewCardFromFilters(
       extra: scope ? `${scope} · 无测试数据` : '无测试数据',
       opRecordSub: '0 算子',
       adv: false,
-      advTxt: '暂无该筛选数据',
+      /** 产品要求：概览卡禁止再展示「暂无该筛选数据」之类弱化文案，留空让 a-tag 不渲染 */
+      advTxt: '',
     }
   }
   const built = buildOpPlatformOverview(flat)!
@@ -172,7 +173,8 @@ function overviewCardNoFilterData(card: CardRow, scope: string): CardRow {
     inferOwnCaption: undefined,
     inferOpenCaption: undefined,
     adv: false,
-    advTxt: '暂无该筛选数据',
+    /** 产品要求：概览卡禁止再展示「暂无该筛选数据」之类弱化文案，留空让 a-tag 不渲染 */
+    advTxt: '',
   }
 }
 

@@ -133,13 +133,13 @@ const compareChosen = computed(() =>
     .filter(Boolean),
 )
 
-/** 筛选区（含已选对比）Ant Design 主题：圆角 2px；fontSizeSM 供 Tag 与 small 按钮对齐 */
+/** 筛选区（含已选对比）Ant Design 主题：圆角与字号仅影响外观 */
 const filterBarTheme = {
   token: {
     colorPrimary: '#162b75',
-    borderRadius: 2,
-    borderRadiusLG: 2,
-    borderRadiusSM: 2,
+    borderRadius: 10,
+    borderRadiusLG: 10,
+    borderRadiusSM: 10,
     fontSizeSM: 12,
   },
 }
@@ -152,57 +152,68 @@ const filterBarTheme = {
     class="filter-bar-root"
     :style="{ '--filter-bar-font-sm': `${filterBarTheme.token.fontSizeSM}px` }"
   >
-    <div
-      v-for="(f, fi) in filterBarFilterRows"
-      :key="f.label"
-      class="filter-row"
-    >
-      <span class="filter-label">{{ f.label }}</span>
-      <div class="filter-pills">
-        <a-space :size="[6, 4]" wrap>
+    <div class="filter-bar-body">
+      <div
+        v-for="(f, fi) in filterBarFilterRows"
+        :key="f.label"
+        class="filter-row"
+      >
+        <span class="filter-label">{{ f.label }}</span>
+        <div class="filter-pills">
+          <a-space :size="[8, 6]" wrap>
+            <a-button
+              v-for="item in f.pills"
+              :key="`${fi}-${item.unionIndex}-${item.label}`"
+              size="small"
+              :type="(fs[fi] ?? 0) === item.unionIndex ? 'primary' : 'default'"
+              @click="onSetFilter(fi, item.unionIndex)"
+            >
+              {{ item.label }}
+            </a-button>
+          </a-space>
+        </div>
+        <div class="filter-row-aside">
           <a-button
-            v-for="item in f.pills"
-            :key="`${fi}-${item.unionIndex}-${item.label}`"
+            v-if="fi === 0 && currentView === 'overview'"
+            class="filter-sort-btn"
             size="small"
-            :type="(fs[fi] ?? 0) === item.unionIndex ? 'primary' : 'default'"
-            @click="onSetFilter(fi, item.unionIndex)"
+            @click="toggleSort"
           >
-            {{ item.label }}
+            <span class="filter-sort-lead" aria-hidden="true">⇅</span>
+            <span class="filter-sort-text">按得分</span>
+            <span class="filter-sort-dir" aria-hidden="true">{{ sortDesc ? '↓' : '↑' }}</span>
           </a-button>
-        </a-space>
+        </div>
       </div>
-      <div v-if="fi === 0 && currentView === 'overview'" class="filter-row-sort-wrap">
-        <a-button size="small" @click="toggleSort">
-          ⇅ 按得分 {{ sortDesc ? '↓' : '↑' }}
-        </a-button>
-      </div>
-    </div>
 
-    <!-- 概览 / 对比页展示；详情页不展示（业务上详情无「已选对比」） -->
-    <div
-      v-if="currentView !== 'detail'"
-      class="compare-bar"
-      :class="{ active: compareChosen.length > 0 }"
-    >
-      <div class="compare-title">已选对比</div>
-      <div class="compare-chips">
-        <template v-if="compareChosen.length">
-          <a-tag
-            v-for="p in compareChosen"
-            :key="p.key"
-            closable
-            @close="() => onToggleCompareClose(p.key)"
-          >
-            {{ p.name }}
-          </a-tag>
-        </template>
-        <span v-else class="compare-empty">从卡片中加入 2–4 个平台进行横向对比</span>
-      </div>
-      <div class="compare-bar-actions">
-        <a-space wrap>
-          <a-button @click="onClearCompare">清空</a-button>
-          <a-button type="primary" @click="onOpenComparePage">开始对比</a-button>
-        </a-space>
+      <!-- 概览 / 对比页展示；详情页不展示（业务上详情无「已选对比」） -->
+      <div
+        v-if="currentView !== 'detail'"
+        class="compare-bar"
+        :class="{ active: compareChosen.length > 0 }"
+      >
+        <div class="compare-bar-left">
+          <div class="filter-label compare-title">已选对比</div>
+          <div class="compare-chips">
+            <template v-if="compareChosen.length">
+              <a-tag
+                v-for="p in compareChosen"
+                :key="p.key"
+                closable
+                @close="() => onToggleCompareClose(p.key)"
+              >
+                {{ p.name }}
+              </a-tag>
+            </template>
+            <span v-else class="compare-empty">从卡片中加入 2–4 个平台进行横向对比</span>
+          </div>
+        </div>
+        <div class="compare-bar-actions">
+          <a-space :size="8" :wrap="false">
+            <a-button size="small" @click="onClearCompare">清空</a-button>
+            <a-button type="primary" size="small" @click="onOpenComparePage">开始对比</a-button>
+          </a-space>
+        </div>
       </div>
     </div>
   </div>
@@ -210,13 +221,241 @@ const filterBarTheme = {
 </template>
 
 <style scoped>
-/* 仅布局：排序按钮靠右，不改变 Ant Design 按钮外观 */
-.filter-row-sort-wrap {
-  margin-left: auto;
+.filter-bar-root {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-/* small 按钮默认仍用 fontSize(14)；Tag 用 fontSizeSM — 筛选行内 small 与 Tag 字号一致 */
+.filter-bar-body {
+  --filter-label-col: 76px;
+  --filter-label-gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+/* 三列：固定宽标签列，保证各行选项区左缘对齐 */
+.filter-bar-root .filter-row {
+  display: grid;
+  grid-template-columns: var(--filter-label-col) minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: var(--filter-label-gap);
+  row-gap: 8px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.filter-bar-root .filter-row + .filter-row {
+  margin-top: 0;
+}
+
+.filter-bar-root .filter-label {
+  width: 100%;
+  min-width: 0;
+  max-width: var(--filter-label-col);
+  font-size: 14px;
+  font-weight: 700;
+  color: #000000;
+  flex-shrink: 0;
+  text-align: left;
+}
+
+.filter-bar-root .filter-pills {
+  flex: unset;
+  min-width: 0;
+}
+
+.filter-row-aside {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 28px;
+}
+
+/* 排序：白底圆角，类下拉样式 */
+.filter-sort-btn.filter-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: var(--filter-bar-font-sm);
+  font-weight: 500;
+  color: #162b75;
+  background: #fff;
+  border: 1px solid rgba(22, 43, 117, 0.12);
+  box-shadow: none;
+}
+
+.filter-sort-btn:hover,
+.filter-sort-btn:focus {
+  color: #162b75;
+  border-color: rgba(22, 43, 117, 0.22);
+  background: #fff;
+}
+
+.filter-sort-lead {
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+.filter-sort-text {
+  flex: 1;
+  text-align: center;
+  min-width: 3em;
+}
+
+.filter-sort-dir {
+  font-size: 12px;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+/* 已选对比行：与筛选行同列宽，并覆盖全局 .compare-bar 的 display 规则 */
+.filter-bar-root .compare-bar {
+  display: none;
+  margin-top: 0;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.filter-bar-root .compare-bar.active {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 16px;
+  flex-wrap: nowrap;
+}
+
+.compare-bar-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--filter-label-gap);
+  min-width: 0;
+  flex: 1;
+}
+
+.filter-bar-root .compare-title {
+  flex: 0 0 var(--filter-label-col);
+  width: var(--filter-label-col);
+  min-width: var(--filter-label-col);
+  max-width: var(--filter-label-col);
+  white-space: nowrap;
+  text-align: left;
+}
+
+.filter-bar-root .compare-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.filter-bar-root .compare-empty {
+  font-size: 12px;
+  color: #94a0b8;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter-bar-root .compare-bar-actions {
+  margin-left: 0;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* 筛选 pill：未选中白底深蓝字；选中深蓝底白字 */
 .filter-bar-root :deep(.filter-row .ant-btn-sm) {
   font-size: var(--filter-bar-font-sm);
+  height: 28px;
+  padding: 0 14px;
+  line-height: 26px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.filter-bar-root :deep(.filter-row .ant-btn-default.ant-btn-sm) {
+  color: #162b75;
+  background: #fff;
+  border-color: rgba(22, 43, 117, 0.14);
+  box-shadow: none;
+}
+
+.filter-bar-root :deep(.filter-row .ant-btn-default.ant-btn-sm:hover) {
+  color: #162b75;
+  border-color: rgba(22, 43, 117, 0.28);
+  background: #fff;
+}
+
+.filter-bar-root :deep(.filter-row .ant-btn-primary.ant-btn-sm) {
+  color: #fff;
+  background: #162b75;
+  border-color: #162b75;
+  box-shadow: none;
+}
+
+.filter-bar-root :deep(.filter-row .ant-btn-primary.ant-btn-sm:hover) {
+  color: #fff;
+  background: #1a3488;
+  border-color: #1a3488;
+}
+
+/* 对比区按钮与筛选 pill 视觉一致 */
+.filter-bar-root :deep(.compare-bar-actions .ant-btn-sm) {
+  font-size: var(--filter-bar-font-sm);
+  height: 28px;
+  padding: 0 16px;
+  line-height: 26px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.filter-bar-root :deep(.compare-bar-actions .ant-btn-default.ant-btn-sm) {
+  color: #162b75;
+  background: #fff;
+  border-color: rgba(22, 43, 117, 0.14);
+  box-shadow: none;
+}
+
+.filter-bar-root :deep(.compare-bar-actions .ant-btn-primary.ant-btn-sm) {
+  color: #fff;
+  background: #162b75;
+  border-color: #162b75;
+  box-shadow: none;
+}
+
+/* 已选平台 Tag：白底圆角深蓝字 */
+.filter-bar-root :deep(.compare-chips .ant-tag) {
+  margin-inline-end: 0;
+  font-size: var(--filter-bar-font-sm);
+  line-height: 22px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  color: #162b75;
+  background: #fff;
+  border: 1px solid rgba(22, 43, 117, 0.14);
+}
+
+.filter-bar-root :deep(.compare-chips .ant-tag .anticon-close) {
+  color: rgba(22, 43, 117, 0.45);
+}
+
+.filter-bar-root :deep(.compare-chips .ant-tag .anticon-close:hover) {
+  color: #162b75;
 }
 </style>
