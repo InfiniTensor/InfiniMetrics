@@ -7896,7 +7896,7 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.026ms",
     "openVal": "0.350ms",
     "n": 57,
-    "extra": "M=1, K=4096, N=4096 · FP16",
+    "extra": "M=1,K=4096,N=4096 · FP16",
     "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1234%"
@@ -7910,7 +7910,7 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.094ms",
     "openVal": "1.045ms",
     "n": 105,
-    "extra": "M=3, N=3 · FP16",
+    "extra": "M=3,N=3 · FP16",
     "opRecordSub": "6 算子",
     "adv": true,
     "advTxt": "自研快 1007%"
@@ -7924,7 +7924,7 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.010ms",
     "openVal": "0.133ms",
     "n": 132,
-    "extra": "M=32, N=512 · BF16",
+    "extra": "M=32,N=512 · BF16",
     "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1221%"
@@ -7938,7 +7938,7 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.011ms",
     "openVal": "0.121ms",
     "n": 36,
-    "extra": "bs=16, hidden=5632 · FP16",
+    "extra": "bs=16,hidden=5632 · FP16",
     "opRecordSub": "5 算子",
     "adv": true,
     "advTxt": "自研快 979%"
@@ -7952,7 +7952,7 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.012ms",
     "openVal": "0.166ms",
     "n": 156,
-    "extra": "M=16, N=2048, size=2048 · FP16",
+    "extra": "M=16,N=2048,size=2048 · FP16",
     "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1316%"
@@ -7966,7 +7966,7 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.011ms",
     "openVal": "0.220ms",
     "n": 156,
-    "extra": "M=16, N=2048, size=2048 · BF16",
+    "extra": "M=16,N=2048,size=2048 · BF16",
     "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1900%"
@@ -7980,7 +7980,7 @@ export const OP_CARD_FROM_FILES = {
     "ownVal": "0.006ms",
     "openVal": "0.069ms",
     "n": 156,
-    "extra": "bs=32, seq=5, hidden=5 · BF16",
+    "extra": "bs=32,seq=5,hidden=5 · BF16",
     "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 973%"
@@ -13655,7 +13655,7 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "6.2K tok/s",
     "openVal": "3.3K tok/s",
     "n": 30,
-    "extra": "batch=64 in=32",
+    "extra": "batch=64 in=32 out=256",
     "inferOwnCaption": "Prefill 最优",
     "inferOpenCaption": "Decode 最优",
     "adv": false,
@@ -13670,7 +13670,7 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "1.4K tok/s",
     "openVal": "555 tok/s",
     "n": 23,
-    "extra": "Prefill batch=64 in=32 · Decode batch=64 in=256",
+    "extra": "batch=64 in=256 out=256",
     "inferOwnCaption": "Prefill 最优",
     "inferOpenCaption": "Decode 最优",
     "adv": false,
@@ -13685,7 +13685,7 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "13.3K tok/s",
     "openVal": "238 tok/s",
     "n": 30,
-    "extra": "batch=64 in=256",
+    "extra": "batch=64 in=256 out=1024",
     "inferOwnCaption": "Prefill 最优",
     "inferOpenCaption": "Decode 最优",
     "adv": true,
@@ -13700,7 +13700,7 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "10.3K tok/s",
     "openVal": "3.0K tok/s",
     "n": 30,
-    "extra": "Prefill batch=1 in=4096 · Decode batch=64 in=32",
+    "extra": "batch=1 in=4096 out=256",
     "inferOwnCaption": "Prefill 最优",
     "inferOpenCaption": "Decode 最优",
     "adv": false,
@@ -13715,7 +13715,7 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "7.3K tok/s",
     "openVal": "1.8K tok/s",
     "n": 30,
-    "extra": "Prefill batch=64 in=32 · Decode batch=64 in=256",
+    "extra": "batch=64 in=32 out=1024",
     "inferOwnCaption": "Prefill 最优",
     "inferOpenCaption": "Decode 最优",
     "adv": false,
@@ -13730,7 +13730,7 @@ export const INFER_CARD_FROM_FILES = {
     "ownVal": "12.9K tok/s",
     "openVal": "3.7K tok/s",
     "n": 30,
-    "extra": "Prefill batch=4 in=4096 · Decode batch=64 in=32",
+    "extra": "batch=4 in=4096 out=4096",
     "inferOwnCaption": "Prefill 最优",
     "inferOpenCaption": "Decode 最优",
     "adv": true,
@@ -13785,7 +13785,7 @@ export const TRAIN_CARD_FROM_FILES = {
     "ownScore": 17,
     "ownVal": "438 tpps",
     "n": 1,
-    "extra": "Megatron · llama3-8b · 8 GPU",
+    "extra": "llama3-8b · 8GPU · seq8192 · BF16",
     "adv": false,
     "advTxt": "相对 NVIDIA 17%"
   },
@@ -13798,7 +13798,7 @@ export const TRAIN_CARD_FROM_FILES = {
     "ownScore": 100,
     "ownVal": "2,564 tpps",
     "n": 1,
-    "extra": "Megatron · llama3-8b · 8 GPU",
+    "extra": "llama3-8b · 8GPU · seq8192 · BF16",
     "adv": true,
     "advTxt": "相对 NVIDIA 同配置 100%"
   }
@@ -13861,7 +13861,7 @@ export const COMM_CARD_FROM_FILES = {
     "ownVal": "53.1 GB/s",
     "openVal": "45.8 GB/s",
     "n": 2,
-    "extra": "MetaxLink",
+    "extra": "metaxlink · 2GPU",
     "adv": true,
     "advTxt": "AllReduce 相对 NVIDIA 131%（P2P 20%）"
   },
@@ -13874,7 +13874,7 @@ export const COMM_CARD_FROM_FILES = {
     "ownVal": "270 GB/s",
     "openVal": "35 GB/s",
     "n": 2,
-    "extra": "NVLink",
+    "extra": "nvlink · 2GPU",
     "adv": true,
     "advTxt": "P2P / AllReduce 均达或超过 NVIDIA 基线"
   }
@@ -13991,7 +13991,7 @@ export const BW_CARD_FROM_FILES = {
     "ownScore": 133,
     "ownVal": "2131.4 GB/s",
     "n": 2,
-    "extra": "MLU590",
+    "extra": "MLU370 / MLU590",
     "adv": true,
     "advTxt": "HBM 均值相对 NVIDIA A100 基线 133%"
   },
@@ -14004,7 +14004,7 @@ export const BW_CARD_FROM_FILES = {
     "ownScore": 36,
     "ownVal": "586.0 GB/s",
     "n": 2,
-    "extra": "TG150",
+    "extra": "TG150 / TG200",
     "adv": false,
     "advTxt": "相对 NVIDIA A100 基线 36%"
   },
@@ -14050,7 +14050,7 @@ export const BW_CARD_FROM_FILES = {
 } as Record<string, Record<string, unknown>>
 
 export const BENCHMARK_DATA_META = {
-  "generatedAt": "2026-05-12T09:07:32.097Z",
+  "generatedAt": "2026-05-13T08:01:18.762Z",
   "operatorSources": [
     "new_data\\operator\\ascend_operator_20260430.csv",
     "new_data\\operator\\cambricon_operator_20260506.csv",

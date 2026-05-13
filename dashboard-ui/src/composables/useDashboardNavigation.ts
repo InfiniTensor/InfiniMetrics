@@ -24,9 +24,9 @@ export function useDashboardNavigation() {
   }
 
   /**
-   * 侧栏或顶栏改动平台筛选 / 维度筛选 / 已选对比后，非「仅概览」路由时一律回到概览。
-   * - 对比页、详情页：`replace` 到概览 URL（由路由 watch 同步 store）。
-   * - 概览页：仅 `switchMainView('overview')`，避免对 `/` 重复 push 导致导航不触发。
+   * 侧栏或顶栏改动平台筛选 / 维度筛选 / 已选对比后，非概览路由时回到概览。
+   * - 对比页、详情页：`replace` 到概览（侧栏切换平台等需跳转；顶栏筛选项在详情见 FilterBar 内单独处理）。
+   * - 概览页：仅 `switchMainView('overview')`，避免对 `/` 重复 push。
    */
   function leaveCompareOrSyncOverview() {
     const name = router.currentRoute.value.name

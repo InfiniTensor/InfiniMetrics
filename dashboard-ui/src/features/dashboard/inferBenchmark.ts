@@ -130,7 +130,7 @@ export type InferCardMetrics = {
   ownVal: string
   openVal: string
   n: number
-  /** 概览「配置」：Prefill 峰值所在行的 batch + input_tokens（及可选 Decode 峰值行） */
+  /** 概览「配置」：Prefill / Decode 各自峰值相对 NVIDIA 的百分数较高者所在行的 batch · in-len · out-len；平局取 Prefill 行 */
   extra: string
   /** 左列大分下方小字 */
   inferOwnCaption?: string
@@ -141,8 +141,114 @@ export type InferCardMetrics = {
   dataDate?: string
 }
 
+/** 与 import 脚本一致：扁平行上取 Prefill / Decode TPS 峰值（供概览按筛选项重算分母） */
+export function maxInferMetric(rows: InferFlatRow[], key: 'prefillTps' | 'decodeTps'): number {
+  let m = 0
+  for (const r of rows) {
+    const v = r[key]
+    if (v != null && Number.isFinite(v) && v > m) m = v
+  }
+  return m
+}
+
 /**
- * 概览卡：Prefill/Decode 峰值与 NVIDIA 全表最大值的百分比；extra 记录峰值行 batch+in。
+ * 由 INFER_TABLE 的 prefill / decode 拼回与 `parseInferCsvNew` 一致的 InferFlatRow[]，
+ * 供概览在切换 Batch / In-len 后按 `buildInferCardMetrics` 重算卡片。
+ */
+export function inferFlatsFromTablePack(
+  platKey: string,
+  pack: InferTablePack | undefined,
+): InferFlatRow[] {
+  if (!pack) return []
+  /** 静态 INFER_TABLE 与 CSV 导入行字段超集（部分行无 configKey） */
+  type PackRow = {
+    configKey?: string
+    batch: number
+    inLen: number
+    outLen?: number
+    model?: string
+    dtype?: string
+    nGpu?: number
+    remarks?: string
+    date?: string
+    tps?: number
+    ttft?: number
+    decodeLatencyMs?: number
+  }
+  const prefill = (pack.prefill ?? []) as PackRow[]
+  const decodeRows = (pack.decode ?? []) as PackRow[]
+  const decByKey = new Map(
+    decodeRows.map((r) => [r.configKey ?? inferConfigKey(r.batch, r.inLen, r.outLen ?? 0), r]),
+  )
+  const seen = new Set<string>()
+  const flats: InferFlatRow[] = []
+
+  for (const pr of prefill) {
+    const ck = pr.configKey ?? inferConfigKey(pr.batch, pr.inLen, pr.outLen ?? 0)
+    seen.add(ck)
+    const dr = decByKey.get(ck)
+    const prefillTps = pr.tps != null && Number.isFinite(pr.tps) ? pr.tps : null
+    const decodeTps = dr?.tps != null && Number.isFinite(dr.tps) ? dr.tps : null
+    if (prefillTps == null && decodeTps == null) continue
+    flats.push({
+      plat: platKey,
+      batch: pr.batch,
+      inLen: pr.inLen,
+      outLen: pr.outLen ?? dr?.outLen ?? 0,
+      model: normalizeInferModel(pr.model ?? ''),
+      dtype: String(pr.dtype || '').trim().toUpperCase(),
+      nGpu: pr.nGpu ?? 0,
+      remarks: String(pr.remarks ?? '').trim(),
+      date: String(pr.date ?? '').trim(),
+      ttftMs: pr.ttft != null && Number.isFinite(pr.ttft) && pr.ttft > 0 ? pr.ttft : null,
+      decodeMs:
+        pr.decodeLatencyMs != null &&
+        Number.isFinite(pr.decodeLatencyMs) &&
+        pr.decodeLatencyMs > 0
+          ? pr.decodeLatencyMs
+          : null,
+      prefillTps,
+      decodeTps,
+    })
+  }
+
+  for (const dr of decodeRows) {
+    const ck = dr.configKey ?? inferConfigKey(dr.batch, dr.inLen, dr.outLen ?? 0)
+    if (seen.has(ck)) continue
+    const decodeTps = dr.tps != null && Number.isFinite(dr.tps) ? dr.tps : null
+    if (decodeTps == null) continue
+    flats.push({
+      plat: platKey,
+      batch: dr.batch,
+      inLen: dr.inLen,
+      outLen: dr.outLen ?? 0,
+      model: normalizeInferModel(dr.model ?? ''),
+      dtype: String(dr.dtype || '').trim().toUpperCase(),
+      nGpu: dr.nGpu ?? 0,
+      remarks: String(dr.remarks ?? '').trim(),
+      date: String(dr.date ?? '').trim(),
+      ttftMs: null,
+      decodeMs:
+        dr.decodeLatencyMs != null &&
+        Number.isFinite(dr.decodeLatencyMs) &&
+        dr.decodeLatencyMs > 0
+          ? dr.decodeLatencyMs
+          : null,
+      prefillTps: null,
+      decodeTps,
+    })
+  }
+
+  flats.sort((a, b) => {
+    if (a.batch !== b.batch) return a.batch - b.batch
+    if (a.inLen !== b.inLen) return a.inLen - b.inLen
+    return a.outLen - b.outLen
+  })
+  return flats
+}
+
+/**
+ * 概览卡：Prefill/Decode 峰值与 NVIDIA 全表最大值的百分比；extra 为两路得分中较高者对应峰值行的 batch · in-len · out-len（平局取 Prefill）。
  */
 export function buildInferCardMetrics(
   rows: InferFlatRow[],
@@ -182,12 +288,11 @@ export function buildInferCardMetrics(
   const ownVal = maxP != null ? formatInferTokPerS(maxP) : '—'
   const openVal = maxD != null ? formatInferTokPerS(maxD) : '—'
 
-  const pBi = argP ? `batch=${argP.batch} in=${argP.inLen}` : ''
-  const dBi = argD ? `batch=${argD.batch} in=${argD.inLen}` : ''
-  const extra =
-    pBi && dBi && (argP!.batch !== argD!.batch || argP!.inLen !== argD!.inLen)
-      ? `Prefill ${pBi} · Decode ${dBi}`
-      : pBi || dBi || ''
+  const arg =
+    argP && argD ? (ownScore >= openScore ? argP : argD) : (argP ?? argD)
+  const extra = arg
+    ? `batch=${arg.batch} in=${arg.inLen} out=${arg.outLen}`
+    : ''
 
   const adv = ownScore >= 100
   const advTxt =
@@ -209,6 +314,42 @@ export function buildInferCardMetrics(
     adv,
     advTxt,
     dataDate,
+  }
+}
+
+/**
+ * 详情吞吐柱图：按 batch+inLen 归并（同一组多 out_len 取各侧 TPS 最大），
+ * 类目 `bs{batch} in{inLen}`，与产品 X 轴格式一致。
+ */
+export function alignInferBarByBatchIn<
+  T extends { batch: number; inLen: number; tps: number },
+>(plat: T[], nv: T[]): { categories: string[]; platVals: number[]; nvVals: number[] } {
+  const biKey = (batch: number, inLen: number) => `${batch}:${inLen}`
+  function mergeMax(rows: T[]) {
+    const m = new Map<string, number>()
+    for (const r of rows) {
+      if (!Number.isFinite(r.tps)) continue
+      const k = biKey(r.batch, r.inLen)
+      m.set(k, Math.max(m.get(k) ?? 0, r.tps))
+    }
+    return m
+  }
+  const pm = mergeMax(plat)
+  const nm = mergeMax(nv)
+  const keys = new Set<string>([...pm.keys(), ...nm.keys()])
+  const sorted = [...keys].sort((a, b) => {
+    const [ab, ai] = a.split(':').map(Number)
+    const [bb, bi] = b.split(':').map(Number)
+    if (ab !== bb) return ab - bb
+    return ai - bi
+  })
+  return {
+    categories: sorted.map((k) => {
+      const [b, i] = k.split(':')
+      return `bs${b} in${i}`
+    }),
+    platVals: sorted.map((k) => pm.get(k) ?? 0),
+    nvVals: sorted.map((k) => nm.get(k) ?? 0),
   }
 }
 

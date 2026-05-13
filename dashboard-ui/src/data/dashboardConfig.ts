@@ -94,12 +94,12 @@ export const PLATFORMS = [
 ];
 
 const CARD_DATA_OP_STATIC: CardRow[] = [
-  {key:'nvidia',    ownScore:784,  openScore:100, ownVal:'0.0088ms', openVal:'0.0620ms', n:156, extra:'12 算子', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 973%'},
-  {key:'mthreads',  ownScore:1245, openScore:100, ownVal:'0.0278ms', openVal:'0.1914ms', n:89,  extra:'8 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1458%'},
-  {key:'cambricon', ownScore:1107, openScore:100, ownVal:'0.0170ms', openVal:'0.9489ms', n:134, extra:'10 算子', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1007%'},
-  {key:'metax',     ownScore:581,  openScore:100, ownVal:'0.0245ms', openVal:'0.1198ms', n:156, extra:'7 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 481%'},
-  {key:'iluvatar',  ownScore:542,  openScore:100, ownVal:'0.0194ms', openVal:'0.0905ms', n:45,  extra:'5 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 442%'},
-  {key:'hygon',     ownScore:1013, openScore:100, ownVal:'0.0122ms', openVal:'0.1232ms', n:156, extra:'7 算子',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 913%'},
+  {key:'nvidia',    ownScore:784,  openScore:100, ownVal:'0.0088ms', openVal:'0.0620ms', n:156, extra:'M=3,N=3 · FP16', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 973%'},
+  {key:'mthreads',  ownScore:1245, openScore:100, ownVal:'0.0278ms', openVal:'0.1914ms', n:89,  extra:'M=3,N=3 · FP16',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1458%'},
+  {key:'cambricon', ownScore:1107, openScore:100, ownVal:'0.0170ms', openVal:'0.9489ms', n:134, extra:'M=32,N=512 · FP16', ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 1007%'},
+  {key:'metax',     ownScore:581,  openScore:100, ownVal:'0.0245ms', openVal:'0.1198ms', n:156, extra:'M=3,N=3 · FP16',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 481%'},
+  {key:'iluvatar',  ownScore:542,  openScore:100, ownVal:'0.0194ms', openVal:'0.0905ms', n:45,  extra:'M=1,N=4096 · FP16',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 442%'},
+  {key:'hygon',     ownScore:1013, openScore:100, ownVal:'0.0122ms', openVal:'0.1232ms', n:156, extra:'M=3,N=3 · FP16',  ownFw:'InfiniCore ✦', openFw:'PyTorch', adv:true,  advTxt:'自研快 913%'},
 ]
 
 function mergeOpDimensionCards(staticCards: CardRow[]): CardRow[] {
@@ -139,18 +139,18 @@ function mergeTrainDimensionCards(staticCards: CardRow[]): CardRow[] {
 }
 
 const CARD_DATA_INFER_STATIC: CardRow[] = [
-  {key:'nvidia',    ownScore:100, openScore:100, ownVal:'13.5K tok/s', openVal:'3.3K tok/s', n:30, extra:'batch=64 in=256', ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'基准平台'},
-  {key:'mthreads',  ownScore:90,  openScore:52,  ownVal:'7.3K tok/s',  openVal:'1.8K tok/s', n:30, extra:'batch=64 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 10% vs A100'},
-  {key:'cambricon', ownScore:17,  openScore:20,  ownVal:'1.4K tok/s',  openVal:'221 tok/s',  n:30, extra:'batch=16 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 83% vs A100'},
-  {key:'hygon',     ownScore:103, openScore:45,  ownVal:'8.4K tok/s',  openVal:'33.4K tok/s',n:30, extra:'batch=64 in=32',  ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 3% vs A100'},
-  {key:'metax',     ownScore:82,  openScore:88,  ownVal:'1.4K tok/s',  openVal:'66.8K tok/s',n:30, extra:'batch=1 in=32',   ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 18% vs A100'},
-  {key:'generic',   ownScore:140, openScore:110, ownVal:'2.5K tok/s',  openVal:'83.7K tok/s',n:30, extra:'batch=1 in=32',   ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 40% vs A100'},
+  {key:'nvidia',    ownScore:100, openScore:100, ownVal:'13.5K tok/s', openVal:'3.3K tok/s', n:30, extra:'batch=64 in=256 out=128', ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'基准平台'},
+  {key:'mthreads',  ownScore:90,  openScore:52,  ownVal:'7.3K tok/s',  openVal:'1.8K tok/s', n:30, extra:'batch=64 in=32 out=128',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 10% vs A100'},
+  {key:'cambricon', ownScore:17,  openScore:20,  ownVal:'1.4K tok/s',  openVal:'221 tok/s',  n:30, extra:'batch=16 in=32 out=128',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 83% vs A100'},
+  {key:'hygon',     ownScore:103, openScore:45,  ownVal:'8.4K tok/s',  openVal:'33.4K tok/s',n:30, extra:'batch=64 in=32 out=256',  ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 3% vs A100'},
+  {key:'metax',     ownScore:82,  openScore:88,  ownVal:'1.4K tok/s',  openVal:'66.8K tok/s',n:30, extra:'batch=1 in=32 out=256',   ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 18% vs A100'},
+  {key:'generic',   ownScore:140, openScore:110, ownVal:'2.5K tok/s',  openVal:'83.7K tok/s',n:30, extra:'batch=1 in=32 out=256',   ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 40% vs A100'},
 ]
 
 // Card data per dimension — ownFw=自研框架 label, openFw=开源框架 label
 const CARD_DATA_TRAIN_STATIC: CardRow[] = [
-  {key:'nvidia', ownScore:100, openScore:null, ownVal:'2564 tpps', openVal:null, n:4, extra:'Megatron · llama3-8b · 8 GPU', ownFw:'Megatron', openFw:'', adv:true,  advTxt:'训练基准'},
-  {key:'metax',  ownScore:17,  openScore:null, ownVal:'438 tpps',  openVal:null, n:1, extra:'Megatron · llama3-8b · 8 GPU', ownFw:'Megatron', openFw:'', adv:false, advTxt:'落后 83% vs NVIDIA'},
+  {key:'nvidia', ownScore:100, openScore:null, ownVal:'2564 tpps', openVal:null, n:4, extra:'llama3-8b · 8GPU · seq4096 · BF16', ownFw:'Megatron', openFw:'', adv:true,  advTxt:'训练基准'},
+  {key:'metax',  ownScore:17,  openScore:null, ownVal:'438 tpps',  openVal:null, n:1, extra:'llama3-8b · 8GPU · seq8192 · BF16', ownFw:'Megatron', openFw:'', adv:false, advTxt:'落后 83% vs NVIDIA'},
 ]
 
 function mergeCommDimensionCards(staticCards: CardRow[]): CardRow[] {
@@ -166,8 +166,8 @@ function mergeCommDimensionCards(staticCards: CardRow[]): CardRow[] {
 }
 
 const CARD_DATA_COMM_STATIC: CardRow[] = [
-  {key:'nvidia', ownScore:100, openScore:100, ownVal:'270 GB/s', openVal:'35 GB/s', n:2, extra:'NVLink',      ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'通信基准'},
-  {key:'metax',  ownScore:20,  openScore:131, ownVal:'53.1 GB/s',openVal:'45.8 GB/s',n:2, extra:'MetaxLink',  ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'allreduce 超越基准'},
+  {key:'nvidia', ownScore:100, openScore:100, ownVal:'270 GB/s', openVal:'35 GB/s', n:2, extra:'nvlink · 2GPU',      ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'通信基准'},
+  {key:'metax',  ownScore:20,  openScore:131, ownVal:'53.1 GB/s',openVal:'45.8 GB/s',n:2, extra:'metaxlink · 2GPU',  ownFw:'p2p',      openFw:'allreduce', adv:true,  advTxt:'allreduce 超越基准'},
 ]
 
 function mergeBwDimensionCards(staticCards: CardRow[]): CardRow[] {
@@ -183,8 +183,8 @@ function mergeBwDimensionCards(staticCards: CardRow[]): CardRow[] {
 }
 
 const CARD_DATA_BW_STATIC: CardRow[] = [
-  {key:'nvidia',    ownScore:null, openScore:null, ownVal:'1607.5 GB/s', openVal:null, n:4, extra:'A100 · add/copy/scale/triad', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'访存基准'},
-  {key:'cambricon', ownScore:null, openScore:null, ownVal:'2131.4 GB/s', openVal:null, n:4, extra:'MLU590', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100'},
+  {key:'nvidia',    ownScore:null, openScore:null, ownVal:'1607.5 GB/s', openVal:null, n:4, extra:'A100', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'访存基准'},
+  {key:'cambricon', ownScore:null, openScore:null, ownVal:'2131.4 GB/s', openVal:null, n:4, extra:'MLU370 / MLU590', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100'},
   {key:'mthreads',  ownScore:null, openScore:null, ownVal:'1400.9 GB/s', openVal:null, n:4, extra:'S5000', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 13%'},
   {key:'ascend',    ownScore:null, openScore:null, ownVal:'1540.0 GB/s', openVal:null, n:1, extra:'910B3', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 4%'},
   {key:'metax',     ownScore:null, openScore:null, ownVal:'1677.7 GB/s', openVal:null, n:4, extra:'C500', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100 4%'},
@@ -566,7 +566,7 @@ const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
       copy: 1585.1489,
       scale: 1579.7755,
       triad: 1634.1444,
-      avg: 1607.4561,
+      avg: 1607.46,
       date: '2026-04-29',
     }),
   ],

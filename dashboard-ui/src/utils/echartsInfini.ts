@@ -12,6 +12,21 @@ const INFER_COMPARE_BAR_NVIDIA = '#B5D6A7'
 /** 详情页柱状图单柱最大宽度（px） */
 const DETAIL_BAR_MAX_WIDTH = 20
 
+/** 详情各维度柱图：含 y 轴刻度与名称，左右留白避免贴轴/右侧溢出 */
+const DETAIL_BAR_GRID = {
+  left: 10,
+  right: 22,
+  containLabel: true,
+} as const
+
+/** 类目轴首尾留白：少类目时略加大，避免柱与 y 轴重叠、右侧贴边 */
+function detailBarBoundaryGap(catCount: number): boolean | [string, string] {
+  if (catCount <= 1) return ['14%', '14%']
+  if (catCount <= 3) return ['10%', '10%']
+  if (catCount <= 6) return ['6%', '6%']
+  return true
+}
+
 function maxCategoryLabelLen(categories: string[]): number {
   return categories.reduce((m, s) => Math.max(m, String(s).length), 0)
 }
@@ -74,10 +89,15 @@ function compactDetailBarXAxisUi(categories: string[]): {
 }
 
 export function buildCiLineOption(seriesData: number[]) {
+  const cats = [...CI_CHART_LABELS]
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { left: 48, right: 24, top: 28, bottom: 32 },
-    xAxis: { type: 'category' as const, data: [...CI_CHART_LABELS], boundaryGap: false },
+    grid: { ...DETAIL_BAR_GRID, top: 28, bottom: 32 },
+    xAxis: {
+      type: 'category' as const,
+      data: cats,
+      boundaryGap: detailBarBoundaryGap(cats.length),
+    },
     yAxis: { type: 'value' as const, min: 0 },
     series: [
       {
@@ -103,11 +123,16 @@ export function buildOpLineOption(rows: OpRow[]) {
     const pt = r.pt
     return Number.isFinite(pt) && pt > 0 ? pt : null
   })
+  const shapes = rows.map((r) => r.shape)
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 48, right: 24, top: 54, bottom: 36 },
-    xAxis: { type: 'category' as const, data: rows.map((r) => r.shape), boundaryGap: false },
+    grid: { ...DETAIL_BAR_GRID, top: 54, bottom: 36 },
+    xAxis: {
+      type: 'category' as const,
+      data: shapes,
+      boundaryGap: detailBarBoundaryGap(shapes.length),
+    },
     yAxis: { type: 'value' as const, name: '延迟 (ms)' },
     series: [
       {
@@ -136,11 +161,12 @@ export function buildOpBarAvgOption(opKeys: string[], scores: number[]) {
   const xUi = categoryBarXAxisUi(opKeys)
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { left: 48, right: 24, top: 28, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: 28, bottom: xUi.gridBottom },
     xAxis: {
       type: 'category' as const,
       data: opKeys,
       axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(opKeys.length),
     },
     yAxis: { type: 'value' as const, name: '得分', min: 0 },
     series: [
@@ -164,11 +190,12 @@ export function buildInferPrefillBarOption(prefillRows: InferRow[], nvPrefill: I
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 56, right: 24, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
     xAxis: {
       type: 'category' as const,
       data: cats,
       axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(cats.length),
     },
     yAxis: { type: 'value' as const, name: 'tokens/s' },
     series: [
@@ -196,11 +223,12 @@ export function buildInferDecodeBarOption(decodeRows: InferRow[], nvDecode: Infe
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 56, right: 24, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
     xAxis: {
       type: 'category' as const,
       data: cats,
       axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(cats.length),
     },
     yAxis: { type: 'value' as const, name: 'tokens/s' },
     series: [
@@ -226,25 +254,32 @@ export function buildInferPrefillBarAligned(
   categories: string[],
   platVals: number[],
   nvVals: number[],
+  platSeriesName = '当前平台',
+  nvSeriesName = 'NVIDIA',
 ) {
   const xUi = compactDetailBarXAxisUi(categories)
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 56, right: 24, top: 56, bottom: xUi.gridBottom },
-    xAxis: { type: 'category' as const, data: categories, axisLabel: xUi.axisLabel },
+    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    xAxis: {
+      type: 'category' as const,
+      data: categories,
+      axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(categories.length),
+    },
     yAxis: { type: 'value' as const, name: 'tokens/s' },
     series: [
       {
         type: 'bar' as const,
-        name: 'Prefill TPS',
+        name: platSeriesName,
         data: platVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
-        name: 'NVIDIA Prefill',
+        name: nvSeriesName,
         data: nvVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
@@ -257,25 +292,32 @@ export function buildInferDecodeBarAligned(
   categories: string[],
   platVals: number[],
   nvVals: number[],
+  platSeriesName = '当前平台',
+  nvSeriesName = 'NVIDIA',
 ) {
   const xUi = compactDetailBarXAxisUi(categories)
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 56, right: 24, top: 56, bottom: xUi.gridBottom },
-    xAxis: { type: 'category' as const, data: categories, axisLabel: xUi.axisLabel },
+    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    xAxis: {
+      type: 'category' as const,
+      data: categories,
+      axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(categories.length),
+    },
     yAxis: { type: 'value' as const, name: 'tokens/s' },
     series: [
       {
         type: 'bar' as const,
-        name: 'Decode TPS',
+        name: platSeriesName,
         data: platVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: INFER_COMPARE_BAR_PLATFORM, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
-        name: 'NVIDIA Decode',
+        name: nvSeriesName,
         data: nvVals,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: INFER_COMPARE_BAR_NVIDIA, borderRadius: [2, 2, 0, 0] },
@@ -300,12 +342,12 @@ export function buildTrainBarThroughput(rows: TrainRow[], platColor: string) {
   const categories = rows.map((r) => `${r.framework}·${r.model}`)
   const xUi = compactDetailBarXAxisUi(categories)
   const n = categories.length
-  const boundaryGap = n <= 3 ? (['4%', '4%'] as [string, string]) : true
+  const boundaryGap = detailBarBoundaryGap(n)
   const barCategoryGap = n <= 3 ? '14%' : '36%'
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 12, right: 12, top: 48, bottom: xUi.gridBottom, containLabel: true },
+    grid: { ...DETAIL_BAR_GRID, top: 48, bottom: xUi.gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
@@ -338,11 +380,11 @@ export function buildTrainBarVs(rows: TrainRow[]) {
   const categories = rows.map((r) => `${r.framework}·${r.model}`)
   const xUi = compactDetailBarXAxisUi(categories)
   const n = categories.length
-  const boundaryGap = n <= 3 ? (['4%', '4%'] as [string, string]) : true
+  const boundaryGap = detailBarBoundaryGap(n)
   const barCategoryGap = n <= 3 ? '14%' : '36%'
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { left: 10, right: 10, top: 22, bottom: xUi.gridBottom, containLabel: true },
+    grid: { ...DETAIL_BAR_GRID, top: 22, bottom: xUi.gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
@@ -384,11 +426,12 @@ export function buildCommBarBw(rows: CommRow[], platColor: string) {
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 52, right: 24, top: 56, bottom: xUi.gridBottom },
+    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(categories.length),
     },
     yAxis: { type: 'value' as const, name: 'GB/s' },
     series: [
@@ -415,8 +458,13 @@ export function buildCommBarVs(rows: CommRow[]) {
   const xUi = categoryBarXAxisUi(categories)
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { left: 52, right: 24, top: 28, bottom: xUi.gridBottom },
-    xAxis: { type: 'category' as const, data: categories, axisLabel: xUi.axisLabel },
+    grid: { ...DETAIL_BAR_GRID, top: 28, bottom: xUi.gridBottom },
+    xAxis: {
+      type: 'category' as const,
+      data: categories,
+      axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(categories.length),
+    },
     yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0 },
     series: [
       {
@@ -448,6 +496,7 @@ export function buildBwBarAvg(
   rows: BwRow[],
   platColor: string,
   nvidiaAvg: number,
+  platSeriesName = '均值 GB/s',
 ) {
   const valid = rows.filter((r) => r.avg != null)
   const categories = valid.map((r) => r.model)
@@ -455,13 +504,18 @@ export function buildBwBarAvg(
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 52, right: 24, top: 56, bottom: xUi.gridBottom },
-    xAxis: { type: 'category' as const, data: categories, axisLabel: xUi.axisLabel },
+    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    xAxis: {
+      type: 'category' as const,
+      data: categories,
+      axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(categories.length),
+    },
     yAxis: { type: 'value' as const, name: 'GB/s' },
     series: [
       {
         type: 'bar' as const,
-        name: '均值 GB/s',
+        name: platSeriesName,
         data: valid.map((r) => r.avg as number),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
@@ -477,27 +531,45 @@ export function buildBwBarAvg(
   }
 }
 
-export function buildBwBarModes(bestRow: BwRow, nvidiaRow: BwRow, platColor: string) {
-  const modes = ['add', 'copy', 'scale', 'triad'] as const
-  const categories = ['add', 'copy', 'scale', 'triad']
+type BwBarMode = 'add' | 'copy' | 'scale' | 'triad'
+
+export function buildBwBarModes(
+  bestRow: BwRow,
+  nvidiaRow: BwRow,
+  platColor: string,
+  singleMode?: BwBarMode | null,
+) {
+  const modes = (singleMode ? [singleMode] : (['add', 'copy', 'scale', 'triad'] as const))
+  const categories = [...modes]
   const xUi = categoryBarXAxisUi(categories)
+  const platSeriesName = singleMode
+    ? `${bestRow.model || '自研'}（${singleMode}）`
+    : bestRow.model || '自研'
+  const nvSeriesName = singleMode
+    ? `NVIDIA A100（${singleMode}）`
+    : 'NVIDIA A100（四模式参考）'
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 2, right: 8 },
-    grid: { left: 52, right: 24, top: 56, bottom: xUi.gridBottom },
-    xAxis: { type: 'category' as const, data: categories, axisLabel: xUi.axisLabel },
+    grid: { ...DETAIL_BAR_GRID, top: 56, bottom: xUi.gridBottom },
+    xAxis: {
+      type: 'category' as const,
+      data: categories,
+      axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(categories.length),
+    },
     yAxis: { type: 'value' as const, name: 'GB/s' },
     series: [
       {
         type: 'bar' as const,
-        name: bestRow.model || '自研',
+        name: platSeriesName,
         data: modes.map((m) => bestRow[m] as number),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: platColor + 'cc', borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
-        name: 'NVIDIA A100（四模式参考）',
+        name: nvSeriesName,
         data: modes.map((m) => nvidiaRow[m] as number),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: '#76b90055', borderRadius: [2, 2, 0, 0] },
@@ -521,8 +593,13 @@ export function buildCompareScoreBar(cards: CardLite[], plats: PlatLite[]) {
   return {
     tooltip: { trigger: 'axis' as const },
     legend: { top: 0, right: 8, textStyle: { fontSize: 11 } },
-    grid: { left: 68, right: 24, top: 36, bottom: compareGridBottom },
-    xAxis: { type: 'category' as const, data: categories, axisLabel: xUi.axisLabel },
+    grid: { ...DETAIL_BAR_GRID, top: 36, bottom: compareGridBottom },
+    xAxis: {
+      type: 'category' as const,
+      data: categories,
+      axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(categories.length),
+    },
     yAxis: {
       type: 'value' as const,
       name: '提速倍率（× 相对开源基准）',
@@ -566,8 +643,13 @@ export function buildCompareLatencyBar(
   const compareGridBottom = Math.min(xUi.gridBottom, 28)
   return {
     tooltip: { trigger: 'axis' as const },
-    grid: { left: 76, right: 24, top: 36, bottom: compareGridBottom },
-    xAxis: { type: 'category' as const, data: names, axisLabel: xUi.axisLabel },
+    grid: { ...DETAIL_BAR_GRID, top: 36, bottom: compareGridBottom },
+    xAxis: {
+      type: 'category' as const,
+      data: names,
+      axisLabel: xUi.axisLabel,
+      boundaryGap: detailBarBoundaryGap(names.length),
+    },
     yAxis: {
       type: 'value' as const,
       name: 'ms，越低越好',

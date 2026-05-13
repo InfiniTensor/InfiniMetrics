@@ -3,7 +3,7 @@
  */
 
 export type TrainTableRow = {
-  /** 与 NVIDIA 对齐用：(framework, model, n_gpu, seq_len, dtype) */
+  /** 行唯一键（导入）：framework + model + n_gpu + seq_len + dtype；得分 vs NVIDIA 对齐见 `trainNvidiaJoinKey` */
   matchKey: string
   framework: string
   model: string
@@ -37,6 +37,18 @@ export function trainMatchKey(
     String(nGpu),
     String(seqLen),
     String(dtype || '').trim().toLowerCase(),
+  ].join('|')
+}
+
+/**
+ * 训练得分 vs NVIDIA 的 join key（与详情表「vs NVIDIA」一致）：**framework + model + n_gpu**。
+ * NVIDIA 侧同键多行时基线取 max(throughput_tpps)；当前行得分 = 本行 tpps ÷ 基线 × 100。
+ */
+export function trainNvidiaJoinKey(framework: string, model: string, nGpu: number): string {
+  return [
+    String(framework || '').trim().toLowerCase(),
+    String(model || '').trim().toLowerCase(),
+    String(Math.round(nGpu)),
   ].join('|')
 }
 
@@ -107,7 +119,7 @@ export function parseFlashAttnCell(raw: string): string {
   return s || 'off'
 }
 
-/** 行级 vs NVIDIA：本行 throughput_tpps ÷ NVIDIA 同 (framework, model, n_gpu, seq_len, dtype) 下 tpps × 100，四舍五入为整数百分比 */
+/** 行级 vs NVIDIA：本行 throughput_tpps ÷ NVIDIA 同 (framework, model, n_gpu) 基线 tpps × 100，四舍五入为整数百分比 */
 export function trainVsPercent(platTps: number, nvTps: number): number {
   if (!Number.isFinite(platTps) || !Number.isFinite(nvTps) || nvTps <= 0) return 100
   return Math.round((platTps / nvTps) * 100)
@@ -118,13 +130,15 @@ export type TrainCardMetrics = {
   ownVal: string
   n: number
   extra: string
+  /** 概览卡左列标签：代表行 framework（首字母大写） */
+  ownFwLabel: string
   adv: boolean
   advTxt: string
 }
 
 /**
- * 概览卡：代表行为全平台有效行中 throughput_tpps 最高的一行；
- * ownVal = 该行 tpps；ownScore = 该行 vs NVIDIA；extra = framework · model · n_gpu GPU；n = 有效行数。
+ * 概览卡：代表行为当前子集中 throughput_tpps 最高的一行；
+ * ownVal = 该行 tpps；ownScore = 详情表同口径 vs（`vsA100`）；extra = model · 并行（nGPU+seq）· dtype；ownFwLabel = 该行框架展示名；n = 有效行数。
  */
 export function buildTrainCardMetrics(rows: TrainTableRow[]): TrainCardMetrics | null {
   const valid = rows.filter((r) => Number.isFinite(r.tps))
@@ -132,8 +146,12 @@ export function buildTrainCardMetrics(rows: TrainTableRow[]): TrainCardMetrics |
   const best = valid.reduce((a, b) => (a.tps >= b.tps ? a : b))
   const ownScore = best.vsA100
   const ownVal = `${Math.round(best.tps).toLocaleString()} tpps`
-  const fw = best.framework.charAt(0).toUpperCase() + best.framework.slice(1).toLowerCase()
-  const extra = `${fw} · ${best.model} · ${String(Math.round(best.nGpu))} GPU`
+  const parCompact = `${Math.round(best.nGpu)}GPU · seq${best.seqLen}`
+  const extra = `${best.model} · ${parCompact} · ${normalizeTrainDtype(best.dtype)}`
+  const fw = String(best.framework || '').trim()
+  const ownFwLabel = fw
+    ? fw.charAt(0).toUpperCase() + fw.slice(1).toLowerCase()
+    : ''
   const adv = ownScore >= 100
   const advTxt =
     ownScore >= 100
@@ -146,6 +164,7 @@ export function buildTrainCardMetrics(rows: TrainTableRow[]): TrainCardMetrics |
     ownVal,
     n: valid.length,
     extra,
+    ownFwLabel,
     adv,
     advTxt,
   }

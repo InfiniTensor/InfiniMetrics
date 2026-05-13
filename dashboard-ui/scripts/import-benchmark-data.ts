@@ -48,6 +48,7 @@ import {
   normalizeTrainDtype,
   parseFlashAttnCell,
   trainMatchKey,
+  trainNvidiaJoinKey,
   trainVsPercent,
   type TrainTableRow,
 } from '../src/features/dashboard/trainBenchmark'
@@ -511,17 +512,19 @@ function ingestTrainFile(filePath: string, forcedPlat: string, acc: Record<strin
   }
 }
 
-/** 按 matchKey = (framework, model, n_gpu, seq_len, dtype) 对齐 NVIDIA：同键取 NVIDIA 最大 tpps 为基线，行级 vs = throughput_tpps ÷ 基线 × 100 */
+/** 按 trainNvidiaJoinKey = (framework, model, n_gpu) 对齐 NVIDIA：同键取 NVIDIA 最大 tpps 为基线，行级 vs = throughput_tpps ÷ 基线 × 100 */
 function enrichTrainBaselines(byPlat: Record<string, TrainTableRow[]>) {
   const nv = byPlat.nvidia || []
   const baselineMap = new Map<string, number>()
   for (const r of nv) {
-    const prev = baselineMap.get(r.matchKey) ?? 0
-    baselineMap.set(r.matchKey, Math.max(prev, r.tps))
+    const k = trainNvidiaJoinKey(r.framework, r.model, r.nGpu)
+    const prev = baselineMap.get(k) ?? 0
+    baselineMap.set(k, Math.max(prev, r.tps))
   }
   for (const plat of Object.keys(byPlat)) {
     for (const row of byPlat[plat]) {
-      const b = baselineMap.get(row.matchKey)
+      const k = trainNvidiaJoinKey(row.framework, row.model, row.nGpu)
+      const b = baselineMap.get(k)
       if (b != null && b > 0) {
         row.baseline = b
         row.vsA100 = trainVsPercent(row.tps, b)
@@ -964,16 +967,18 @@ function main() {
     TRAIN_TABLE_FROM_FILES[plat] = stripTrainMatchKey(rows)
     const m = buildTrainCardMetrics(rows)
     if (m) {
-      const best = rows.reduce((a, b) => (a.tps >= b.tps ? a : b))
-      const fwLabel =
-        best.framework.charAt(0).toUpperCase() + best.framework.slice(1).toLowerCase()
       TRAIN_CARD_FROM_FILES[plat] = {
         key: plat,
-        ownFw: fwLabel,
+        ownFw: m.ownFwLabel,
         openFw: '',
         openScore: null,
         openVal: null,
-        ...m,
+        ownScore: m.ownScore,
+        ownVal: m.ownVal,
+        n: m.n,
+        extra: m.extra,
+        adv: m.adv,
+        advTxt: m.advTxt,
       }
     }
   }
@@ -1035,11 +1040,12 @@ function main() {
     COMM_TABLE_FROM_FILES[plat] = stripCommMatchKey(rows)
     const m = buildCommCardMetrics(rows)
     if (m) {
+      const { overviewOwnFw, overviewOpenFw, ...cardMetrics } = m
       COMM_CARD_FROM_FILES[plat] = {
         key: plat,
-        ownFw: 'p2p',
-        openFw: 'allreduce',
-        ...m,
+        ownFw: overviewOwnFw,
+        openFw: overviewOpenFw ?? '',
+        ...cardMetrics,
       }
     }
   }

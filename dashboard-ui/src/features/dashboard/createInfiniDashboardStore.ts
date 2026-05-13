@@ -16,10 +16,15 @@ import {
   type TrainDetailRow,
 } from '@/data'
 import {
-  applyCardFilter,
   avgOpScore,
+  overlayBwOverviewCardFromFilters,
+  overlayCommOverviewCardFromFilters,
+  overlayInferOverviewCardFromFilters,
+  overlayOpOverviewCardFromFilters,
+  overlayTrainOverviewCardFromFilters,
   parseLatencyMs,
   type CardRow,
+  type OpTableForOverlay,
 } from '@/features/dashboard/dashboardFilterHelpers'
 import {
   canComputeOpRowScore,
@@ -27,11 +32,12 @@ import {
   formatOpLatencyMs,
 } from '@/features/dashboard/operatorBenchmark'
 import {
-  alignInferSeries,
+  alignInferBarByBatchIn,
   filterInferRows,
+  type InferTablePack,
 } from '@/features/dashboard/inferBenchmark'
 import { filterCommRows, formatCommBandwidthGb, commNvidiaBaselineBw, commVsPercent } from '@/features/dashboard/commBenchmark'
-import { BW_NVIDIA_BASELINE_GBPS, bwVsNvidiaPercent, pickBestBwRow } from '@/features/dashboard/bwBenchmark'
+import { BW_NVIDIA_BASELINE_GBPS, bwVsNvidiaPercent, pickBestBwRow, pickBestBwRowByMode, type BwModeKey } from '@/features/dashboard/bwBenchmark'
 import { filterTrainRows } from '@/features/dashboard/trainBenchmark'
 import {
   buildBwTestEnvLine,
@@ -147,7 +153,51 @@ export function createInfiniDashboardStore() {
     const dim = DIMS[activeDim.value]
     const raw = (CARD_DATA as Record<string, CardRow[]>)[dim.key] || []
     let data = raw.filter((c) => selectedPlatKeys.value.includes(c.key))
-    data = applyCardFilter(data, activeDim.value, filterState.value) as CardRow[]
+    if (dim.key === 'op') {
+      const fs = filterState.value.op || {}
+      const opPill = dim.filters[0]?.pills[fs[0] ?? 0] ?? '全部'
+      const dtypePill = dim.filters[1]?.pills[fs[1] ?? 0] ?? '全部'
+      const hasSpecific = (fs[0] ?? 0) !== 0 || (fs[1] ?? 0) !== 0
+      if (hasSpecific) {
+        data = data.map((c) =>
+          overlayOpOverviewCardFromFilters(c, OTABLE as OpTableForOverlay, opPill, dtypePill),
+        )
+      }
+    } else if (dim.key === 'infer') {
+      const fs = filterState.value.infer || {}
+      const batchPill = dim.filters[0]?.pills[fs[0] ?? 0]
+      const inLenPill = dim.filters[1]?.pills[fs[1] ?? 0]
+      const hasSpecific = (fs[0] ?? 0) !== 0 || (fs[1] ?? 0) !== 0
+      if (hasSpecific) {
+        const inferTbl = INFER_TABLE as Record<string, InferTablePack | undefined>
+        data = data.map((c) =>
+          overlayInferOverviewCardFromFilters(c, inferTbl, batchPill, inLenPill),
+        )
+      }
+    } else if (dim.key === 'train') {
+      const fs = filterState.value.train || {}
+      const fwPill = dim.filters[0]?.pills[fs[0] ?? 0]
+      const hasSpecific = (fs[0] ?? 0) !== 0
+      if (hasSpecific) {
+        data = data.map((c) =>
+          overlayTrainOverviewCardFromFilters(c, TTRAIN, fwPill),
+        )
+      }
+    } else if (dim.key === 'comm') {
+      const fs = filterState.value.comm || {}
+      const typePill = dim.filters[0]?.pills[fs[0] ?? 0]
+      const hasSpecific = (fs[0] ?? 0) !== 0
+      if (hasSpecific) {
+        data = data.map((c) => overlayCommOverviewCardFromFilters(c, CTABLE, typePill))
+      }
+    } else if (dim.key === 'bw') {
+      const fs = filterState.value.bw || {}
+      const modePill = dim.filters[0]?.pills[fs[0] ?? 0]
+      const hasSpecific = (fs[0] ?? 0) !== 0
+      if (hasSpecific) {
+        data = data.map((c) => overlayBwOverviewCardFromFilters(c, BTABLE, modePill))
+      }
+    }
     const sorted = [...data].sort((a, b) => {
       const va = a.ownScore ?? 0
       const vb = b.ownScore ?? 0
@@ -244,6 +294,28 @@ export function createInfiniDashboardStore() {
     return filterCommRows(CTABLE[plat], pill)
   })
 
+  /** 访存详情表：顶栏「模式」非「全部」时仅保留该列有数值的型号行 */
+  const bwModeKey = computed((): BwModeKey | null => {
+    const dim = DIMS.find((d) => d.key === 'bw')!
+    const fs = filterState.value.bw || {}
+    const p = dim.filters[0]?.pills[fs[0] ?? 0]
+    if (!p || p === '全部') return null
+    const m = String(p).toLowerCase()
+    if (m === 'add' || m === 'copy' || m === 'scale' || m === 'triad') return m
+    return null
+  })
+
+  const bwDetailRows = computed(() => {
+    const plat = detailState.value.platKey
+    const rows = BTABLE[plat] || []
+    const mk = bwModeKey.value
+    if (!mk) return rows
+    return rows.filter((r) => {
+      const v = r[mk]
+      return v != null && Number.isFinite(v)
+    })
+  })
+
   const bwNvidiaRefRow = computed(() => {
     const rows = BTABLE.nvidia || []
     return pickBestBwRow(rows) ?? rows[0] ?? null
@@ -302,11 +374,20 @@ export function createInfiniDashboardStore() {
       return buildOpLineOption(rows)
     }
     if (dk === 'infer') {
-      const pre = inferPrefillFiltered.value
-      const nv = inferNvidiaPrefillFiltered.value
+      const pk = detailState.value.platKey
+      const { batchPill } = inferPills()
+      /** 柱图：仅随 Batch pill；列出该 batch 下全部 in_len（不受 In-len pill 收窄） */
+      const pre = filterInferRows(ITABLE[pk]?.prefill || [], batchPill, undefined)
+      const nv = filterInferRows(ITABLE.nvidia?.prefill || [], batchPill, undefined)
       if (!pre.length && !nv.length) return {}
-      const al = alignInferSeries(pre, nv)
-      return buildInferPrefillBarAligned(al.categories, al.platVals, al.nvVals)
+      const al = alignInferBarByBatchIn(pre, nv)
+      return buildInferPrefillBarAligned(
+        al.categories,
+        al.platVals,
+        al.nvVals,
+        plat.name,
+        'NVIDIA',
+      )
     }
     if (dk === 'train') {
       const rows = trainDetailRows.value
@@ -319,7 +400,18 @@ export function createInfiniDashboardStore() {
       return buildCommBarBw(rows, plat.color)
     }
     if (dk === 'bw') {
-      const rows = BTABLE[detailState.value.platKey] || []
+      const mk = bwModeKey.value
+      const rows = bwDetailRows.value
+      if (mk) {
+        const mapped = rows
+          .filter((r) => r[mk] != null && Number.isFinite(r[mk]))
+          .map((r) => ({ ...r, avg: r[mk] as number }))
+        if (!mapped.length) return {}
+        const nv = bwNvidiaRefRow.value?.[mk]
+        const baseline =
+          nv != null && Number.isFinite(nv) && nv > 0 ? nv : BW_NVIDIA_BASELINE_GBPS
+        return buildBwBarAvg(mapped, plat.color, baseline, `${mk} GB/s`)
+      }
       const filtered = rows.filter((r) => r.avg != null)
       if (!filtered.length) return {}
       return buildBwBarAvg(filtered, plat.color, BW_NVIDIA_BASELINE_GBPS)
@@ -350,11 +442,19 @@ export function createInfiniDashboardStore() {
       return buildOpBarAvgOption(opKeys, scores)
     }
     if (dk === 'infer') {
-      const de = inferDecodeFiltered.value
-      const nvDe = inferNvidiaDecodeFiltered.value
+      const pk = detailState.value.platKey
+      const { batchPill } = inferPills()
+      const de = filterInferRows(ITABLE[pk]?.decode || [], batchPill, undefined)
+      const nvDe = filterInferRows(ITABLE.nvidia?.decode || [], batchPill, undefined)
       if (!de.length && !nvDe.length) return {}
-      const al = alignInferSeries(de, nvDe)
-      return buildInferDecodeBarAligned(al.categories, al.platVals, al.nvVals)
+      const al = alignInferBarByBatchIn(de, nvDe)
+      return buildInferDecodeBarAligned(
+        al.categories,
+        al.platVals,
+        al.nvVals,
+        plat.name,
+        'NVIDIA',
+      )
     }
     if (dk === 'train') {
       const rows = trainDetailRows.value
@@ -367,11 +467,12 @@ export function createInfiniDashboardStore() {
       return buildCommBarVs(rows)
     }
     if (dk === 'bw') {
-      const rows = BTABLE[detailState.value.platKey] || []
-      const best = pickBestBwRow(rows)
+      const platKey = detailState.value.platKey
+      const rows = BTABLE[platKey] || []
+      const best = pickBestBwRowByMode(rows, bwModeKey.value)
       const nvidiaRow = bwNvidiaRefRow.value
       if (!best || !nvidiaRow) return {}
-      return buildBwBarModes(best, nvidiaRow, plat.color)
+      return buildBwBarModes(best, nvidiaRow, plat.color, bwModeKey.value)
     }
     return {}
   })
@@ -411,7 +512,7 @@ export function createInfiniDashboardStore() {
     if (k === 'comm')
       return '带宽 GB/s · 行级 vs NVIDIA = 同 (comm_type, n_gpu) 下本机 bw ÷ NVIDIA bw ×100；顶栏「通信类型」与表格、KPI、柱状图联动'
     if (k === 'bw')
-      return '访存带宽 GB/s · 行级 vs NVIDIA = bw_GBps÷1607.4561×100；详情表列出全部型号；折线/柱图均值对比第二根柱为 NVIDIA A100 固定基线；四模式柱取本平台 MAX(bw_GBps) 行 vs NVIDIA 参考行'
+      return '访存带宽 GB/s · 行级 vs NVIDIA = 当前带宽÷A100 基线(1607.46 GB/s)×100；顶栏「模式」与详情表、KPI、折线/柱图联动；「全部」下详情表列出全部型号，折线第二根柱为 A100 固定基线；指定模式时柱图为该模式对比、折线为各型号该列带宽'
     return ''
   })
 
@@ -498,9 +599,9 @@ export function createInfiniDashboardStore() {
       ownScore?: number | null
     }
     if (dimKey === 'infer') {
-      const pack = ITABLE[platKey]
-      const prefillAll = pack?.prefill || []
-      const decodeAll = pack?.decode || []
+      /** 与表格 / 柱状图一致：顶栏 Batch、In-len 筛选后的子集 */
+      const prefillAll = inferPrefillFiltered.value
+      const decodeAll = inferDecodeFiltered.value
       const preTps = prefillAll.map((r) => r.tps).filter((t) => Number.isFinite(t))
       const decTps = decodeAll.map((r) => r.tps).filter((t) => Number.isFinite(t))
       const peakPrefill = preTps.length ? Math.max(...preTps) : null
@@ -517,6 +618,10 @@ export function createInfiniDashboardStore() {
         ...prefillAll.map((r) => r.configKey),
         ...decodeAll.map((r) => r.configKey),
       ])
+      const fsInf = filterState.value.infer || {}
+      const inferFiltered =
+        (fsInf[0] ?? 0) !== 0 || (fsInf[1] ?? 0) !== 0
+      const scopeLbl = inferFiltered ? '当前筛选 · ' : '全表 · '
       return [
         {
           val: peakPrefill != null ? peakPrefill.toLocaleString() : c.ownVal || '—',
@@ -533,13 +638,13 @@ export function createInfiniDashboardStore() {
         {
           val: minTTFT != null ? minTTFT + 'ms' : '—',
           lbl: '最低 TTFT',
-          sub: '全表 · il_ttft_ms（有效值取最小）',
+          sub: `${scopeLbl}il_ttft_ms（有效值取最小）`,
           valSm: true,
         },
         {
           val: (nConfigs.size || c.n || '—') as string | number,
           lbl: '测试配置数',
-          sub: '全表 Prefill ∪ Decode 配置键',
+          sub: `${scopeLbl}Prefill ∪ Decode 配置键`,
         },
       ]
     }
@@ -612,32 +717,67 @@ export function createInfiniDashboardStore() {
       ]
     }
     if (dimKey === 'bw') {
-      const rows = BTABLE[platKey] || []
-      const best = pickBestBwRow(rows)
+      const allRows = BTABLE[platKey] || []
+      const mk = bwModeKey.value
+      const nvRef = bwNvidiaRefRow.value
+      if (!mk) {
+        const best = pickBestBwRow(allRows)
+        return [
+          {
+            val: best?.avg != null ? best.avg.toFixed(1) + ' GB/s' : '—',
+            lbl: 'HBM 均值带宽',
+            sub: `${best?.model || ''} · 4模式均值`,
+            valSm: true,
+          },
+          {
+            val: best?.avg != null ? bwVsNvidiaPercent(best.avg) + '%' : '—',
+            lbl: 'vs NVIDIA',
+            sub: `A100 基线 ${BW_NVIDIA_BASELINE_GBPS} GB/s`,
+            valSm: true,
+          },
+          {
+            val: best?.add != null ? best.add.toFixed(1) : '—',
+            lbl: 'add GB/s',
+            sub: '读写混合模式',
+            valSm: true,
+          },
+          {
+            val: best?.triad != null ? best.triad.toFixed(1) : '—',
+            lbl: 'triad GB/s',
+            sub: '综合压力模式',
+            valSm: true,
+          },
+        ]
+      }
+      const bestM = pickBestBwRowByMode(allRows, mk)
+      const v = bestM?.[mk]
+      const nvV = nvRef?.[mk]
+      const vsPct =
+        v != null && nvV != null && nvV > 0 ? Math.round((v / nvV) * 100) : null
+      const nValid = bwDetailRows.value.length
       return [
         {
-          val: best?.avg != null ? best.avg.toFixed(1) + ' GB/s' : '—',
-          lbl: 'HBM 均值带宽',
-          sub: `${best?.model || ''} · 4模式均值`,
+          val: v != null ? v.toFixed(1) + ' GB/s' : '—',
+          lbl: `${mk} 带宽`,
+          sub: `${bestM?.model ?? ''} · 当前模式最优`,
           valSm: true,
         },
         {
-          val: best?.avg != null ? bwVsNvidiaPercent(best.avg) + '%' : '—',
+          val: vsPct != null ? vsPct + '%' : '—',
           lbl: 'vs NVIDIA',
-          sub: `A100 基线 ${BW_NVIDIA_BASELINE_GBPS} GB/s`,
+          sub: '参考行同模式列对比',
           valSm: true,
         },
         {
-          val: best?.add != null ? best.add.toFixed(1) : '—',
-          lbl: 'add GB/s',
-          sub: '读写混合模式',
+          val: bestM?.avg != null ? bestM.avg.toFixed(1) + ' GB/s' : '—',
+          lbl: '四模式均值',
+          sub: '同行 HBM 均值',
           valSm: true,
         },
         {
-          val: best?.triad != null ? best.triad.toFixed(1) : '—',
-          lbl: 'triad GB/s',
-          sub: '综合压力模式',
-          valSm: true,
+          val: nValid || '—',
+          lbl: '有效型号数',
+          sub: `含「${mk}」实测数据`,
         },
       ]
     }
@@ -675,10 +815,14 @@ export function createInfiniDashboardStore() {
 
   function setFilter(fi: number, pi: number) {
     const k = DIMS[activeDim.value].key
-    if (!filterState.value[k]) filterState.value[k] = {}
-    filterState.value[k]![fi] = pi
     const dim = DIMS[activeDim.value]
     const pill = dim.filters[fi]?.pills[pi]
+    const prevFs = filterState.value[k] || {}
+    /** 整体替换，避免嵌套原地改导致部分订阅（如表格）不刷新 */
+    filterState.value = {
+      ...filterState.value,
+      [k]: { ...prevFs, [fi]: pi },
+    }
     if (currentView.value === 'detail' && k === 'op') {
       if (fi === 0 && pill && pill !== '全部') detailState.value.opKey = pill
       if (fi === 1 && pill && pill !== '全部') detailState.value.prec = pill
@@ -764,6 +908,9 @@ export function createInfiniDashboardStore() {
     trainDetailRows,
     commDetailRows,
     commNvidiaBaselineRows,
+    bwDetailRows,
+    bwModeKey,
+    bwNvidiaRefRow,
     lineChartOption,
     barChartOption,
     ciChartOption,

@@ -4,11 +4,10 @@ import type { ColumnsType } from 'ant-design-vue/es/table'
 import type { TrainDetailRow } from '@/data'
 import { trainMatchKey, parseTrainFlashAttnParts } from '@/features/dashboard/trainBenchmark'
 import { formatCommBandwidthGb, type CommImportRow } from '@/features/dashboard/commBenchmark'
-import type { BwDetailRow } from '@/features/dashboard/bwBenchmark'
+import type { BwDetailRow, BwModeKey } from '@/features/dashboard/bwBenchmark'
 import { useRoute } from 'vue-router'
 import VChart from 'vue-echarts'
 import {
-  BW_TABLE,
   CI_SUMMARY,
   DIMS,
   PLATFORMS,
@@ -21,7 +20,7 @@ import {
   opRemarksContainsFailed,
   remarksExcludeIcFromScore,
 } from '@/features/dashboard/operatorBenchmark'
-import { BW_NVIDIA_BASELINE_GBPS } from '@/features/dashboard/bwBenchmark'
+import { BW_NVIDIA_BASELINE_GBPS, bwVsNvidiaPercent } from '@/features/dashboard/bwBenchmark'
 
 const route = useRoute()
 const store = useInfiniDashboard()
@@ -40,6 +39,9 @@ const {
   trainDetailRows,
   commDetailRows,
   commNvidiaBaselineRows,
+  bwDetailRows,
+  bwModeKey,
+  bwNvidiaRefRow,
   lineChartOption,
   barChartOption,
   ciChartOption,
@@ -137,25 +139,17 @@ const commBwMax = computed(() => {
   return Math.max(1, ...a, ...b)
 })
 
-const bwRows = computed(
-  () =>
-    (BW_TABLE[detailState.value.platKey as keyof typeof BW_TABLE] as
-      | typeof BW_TABLE.nvidia
-      | undefined) ?? [],
-)
-
-/** 访存表单元格：仅有 bw_GBps（avg）而四模式为空时，避免对 null 调用 toFixed */
-function bwGbpsCell(n: number | null | undefined): string {
-  if (n == null || !Number.isFinite(n)) return '—'
-  return n.toFixed(2)
-}
-
 function bwBarDenom(r: {
   add: number | null
   copy: number | null
   scale: number | null
   triad: number | null
 }): number {
+  const mk = bwModeKey.value
+  if (mk) {
+    const a = Number(r[mk] ?? 0)
+    return Math.max(a, BW_NVIDIA_BASELINE_GBPS, BW_NVIDIA_BASELINE_GBPS * 0.02)
+  }
   return Math.max(
     r.add ?? 0,
     r.copy ?? 0,
@@ -165,9 +159,50 @@ function bwBarDenom(r: {
   )
 }
 
+/** 访存表单元格：仅有 bw_GBps（avg）而四模式为空时，避免对 null 调用 toFixed */
+function bwGbpsCell(n: number | null | undefined): string {
+  if (n == null || !Number.isFinite(n)) return '—'
+  return n.toFixed(2)
+}
+
 function hasChart(opt: object) {
   return opt && Object.keys(opt).length > 0
 }
+
+/** 详情区主图标题（推理维度不用算子文案） */
+const detailChartLeftTitle = computed(() => {
+  switch (activeDimKey.value) {
+    case 'op':
+      return '延迟趋势对比'
+    case 'infer':
+      return 'Prefill 吞吐对比（tokens/s）'
+    case 'train':
+      return '训练吞吐对比（tpps）'
+    case 'comm':
+      return '通信带宽对比（GB/s）'
+    case 'bw':
+      return '访存带宽对比（GB/s）'
+    default:
+      return ''
+  }
+})
+
+const detailChartRightTitle = computed(() => {
+  switch (activeDimKey.value) {
+    case 'op':
+      return '各算子平均得分'
+    case 'infer':
+      return 'Decode 吞吐对比（tokens/s）'
+    case 'train':
+      return '相对 NVIDIA（%）'
+    case 'comm':
+      return '相对 NVIDIA（%）'
+    case 'bw':
+      return '访存模式对比'
+    default:
+      return ''
+  }
+})
 
 function precClass(dtype: string) {
   if (dtype === 'FP16') return 'p-fp16'
@@ -326,53 +361,56 @@ const commTableColumns = computed<ColumnsType<CommImportRow>>(() => {
 })
 
 const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
+  const mk = bwModeKey.value
   const pc = platColor.value
   const logo = detailPlat.value.logo
+  const nv = bwNvidiaRefRow.value
+  const emptyRowColSpan = mk ? 6 : 8
   const pendingCell = (r: BwDetailRow) => (r.avg == null ? { colSpan: 0 } : {})
 
-  return [
-    {
-      title: '型号',
-      key: 'model',
-      dataIndex: 'model',
-      width: 120,
-      customRender: ({ record }) =>
-        h('span', { style: { color: pc, fontWeight: 600 } }, record.model),
-    },
-    {
-      title: 'add GB/s',
-      key: 'add',
-      width: 110,
-      customCell: (r: BwDetailRow) => (r.avg == null ? { colSpan: 8 } : {}),
-      customRender: ({ record }) =>
-        record.avg == null
+  const vsPct = (record: BwDetailRow): number => {
+    if (mk) {
+      const v = record[mk]
+      if (v != null && Number.isFinite(v)) return bwVsNvidiaPercent(v)
+    }
+    return record.vsNvidia
+  }
+
+  const modeColumn = (
+    mode: BwModeKey,
+    opts: { firstMode: boolean },
+  ): ColumnsType<BwDetailRow>[number] => ({
+    title: `${mode} GB/s`,
+    key: mode,
+    width: 110,
+    customCell: (r: BwDetailRow) =>
+      r.avg == null ? (opts.firstMode ? { colSpan: emptyRowColSpan } : { colSpan: 0 }) : {},
+    customRender: ({ record }) => {
+      if (record.avg == null) {
+        return opts.firstMode
           ? h('span', { style: { color: '#aaa', fontStyle: 'italic' } }, '数据待补充')
-          : h('span', { style: { fontWeight: 600 } }, bwGbpsCell(record.add)),
+          : null
+      }
+      return h(
+        'span',
+        { style: { fontWeight: mk === mode ? 700 : 600 } },
+        bwGbpsCell(record[mode]),
+      )
     },
-    {
-      title: 'copy GB/s',
-      key: 'copy',
-      customCell: pendingCell,
-      customRender: ({ record }) =>
-        record.avg == null ? null : bwGbpsCell(record.copy),
-    },
-    {
-      title: 'scale GB/s',
-      key: 'scale',
-      customCell: pendingCell,
-      customRender: ({ record }) =>
-        record.avg == null ? null : bwGbpsCell(record.scale),
-    },
-    {
-      title: 'triad GB/s',
-      key: 'triad',
-      customCell: pendingCell,
-      customRender: ({ record }) =>
-        record.avg == null ? null : bwGbpsCell(record.triad),
-    },
+  })
+
+  const modeCols: ColumnsType<BwDetailRow> = mk
+    ? [modeColumn(mk, { firstMode: true })]
+    : (['add', 'copy', 'scale', 'triad'] as const).map((mode, i) =>
+        modeColumn(mode, { firstMode: i === 0 }),
+      )
+
+  const tailCols: ColumnsType<BwDetailRow> = [
     {
       title: '均值 GB/s',
       key: 'avg',
+      width: 110,
+      align: 'right',
       customCell: pendingCell,
       customRender: ({ record }) =>
         record.avg == null
@@ -380,23 +418,24 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
           : h('span', { style: { fontWeight: 700, color: pc } }, bwGbpsCell(record.avg)),
     },
     {
-      title: 'vs NVIDIA',
+      title: mk ? `vs NVIDIA（${mk}）` : 'vs NVIDIA',
       key: 'vsNvidia',
-      width: 110,
+      width: mk ? 128 : 110,
       customCell: pendingCell,
-      customRender: ({ record }) =>
-        record.avg == null
-          ? null
-          : h(
-              'span',
-              {
-                style: {
-                  fontWeight: 700,
-                  color: record.vsNvidia >= 100 ? '#2e7d32' : '#c62828',
-                },
-              },
-              `${record.vsNvidia}%`,
-            ),
+      customRender: ({ record }) => {
+        if (record.avg == null) return null
+        const pct = vsPct(record)
+        return h(
+          'span',
+          {
+            style: {
+              fontWeight: 700,
+              color: pct >= 100 ? '#2e7d32' : '#c62828',
+            },
+          },
+          `${pct}%`,
+        )
+      },
     },
     {
       title: '测试者',
@@ -404,9 +443,7 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
       width: 100,
       customCell: pendingCell,
       customRender: ({ record }) =>
-        record.avg == null
-          ? null
-          : h('span', { style: { color: '#666' } }, record.tester || '—'),
+        record.avg == null ? null : h('span', { style: { color: '#666' } }, record.tester || '—'),
     },
     {
       title: '备注',
@@ -425,24 +462,30 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
       customRender: ({ record }) => {
         if (record.avg == null) return null
         const denom = bwBarDenom(record)
-        const avgW =
-          Math.round((((record.avg ?? 0) / denom) || 0) * 100) + '%'
-        const nvW =
-          Math.round(((BW_NVIDIA_BASELINE_GBPS / denom) || 0) * 100) + '%'
-        const avgMs =
-          record.avg != null && Number.isFinite(record.avg)
-            ? Math.round(record.avg).toString()
-            : '—'
+        const platVal =
+          mk && record[mk] != null && Number.isFinite(record[mk])
+            ? Number(record[mk])
+            : Number(record.avg ?? 0)
+        const nvShow =
+          mk != null
+            ? BW_NVIDIA_BASELINE_GBPS
+            : nv?.avg != null && Number.isFinite(nv.avg)
+              ? Number(nv.avg)
+              : BW_NVIDIA_BASELINE_GBPS
+        const platW = Math.round(((platVal / denom) || 0) * 100) + '%'
+        const nvW = Math.round(((nvShow / denom) || 0) * 100) + '%'
+        const platMs = Number.isFinite(platVal) ? Math.round(platVal).toString() : '—'
+        const nvMs = Number.isFinite(nvShow) ? nvShow.toFixed(1) : BW_NVIDIA_BASELINE_GBPS.toFixed(1)
         return h('div', { class: 'dual-bar' }, [
           h('div', { class: 'dual-row' }, [
             h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: pc } }, logo),
             h('div', { class: 'dual-track' }, [
               h('div', {
                 class: 'dual-fill',
-                style: { width: avgW, background: pc },
+                style: { width: platW, background: pc },
               }),
             ]),
-            h('span', { class: 'dual-ms', style: { color: pc } }, avgMs),
+            h('span', { class: 'dual-ms', style: { color: pc } }, platMs),
           ]),
           h('div', { class: 'dual-row' }, [
             h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: '#aaa' } }, 'NVIDIA 基线'),
@@ -452,20 +495,30 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
                 style: { width: nvW, background: '#aaa' },
               }),
             ]),
-            h(
-              'span',
-              { class: 'dual-ms', style: { color: '#aaa' } },
-              BW_NVIDIA_BASELINE_GBPS.toFixed(1),
-            ),
+            h('span', { class: 'dual-ms', style: { color: '#aaa' } }, nvMs),
           ]),
         ])
       },
     },
   ]
+
+  return [
+    {
+      title: '型号',
+      key: 'model',
+      dataIndex: 'model',
+      width: 120,
+      customRender: ({ record }) =>
+        h('span', { style: { color: pc, fontWeight: 600 } }, record.model),
+    },
+    ...modeCols,
+    ...tailCols,
+  ]
 })
 
 function bwRowKey(r: BwDetailRow, i?: number) {
-  return `${i ?? 0}-${r.model}`
+  const mk = bwModeKey.value ?? 'all'
+  return `${mk}-${i ?? 0}-${r.model}`
 }
 
 function trainRowKey(r: TrainDetailRow, i?: number) {
@@ -930,9 +983,10 @@ function inferRowKey(r: InferRow) {
         <!-- 访存 -->
         <template v-else-if="activeDimKey === 'bw'">
           <a-table
-            v-if="bwRows.length"
+            v-if="bwDetailRows.length"
+            :key="`bw-${bwModeKey ?? 'all'}`"
             :columns="bwTableColumns"
-            :data-source="bwRows"
+            :data-source="bwDetailRows"
             :pagination="false"
             :bordered="false"
             :scroll="{ x: 'max-content' }"
@@ -947,7 +1001,7 @@ function inferRowKey(r: InferRow) {
     <!-- 主图（与 HTML 标题文案一致） -->
     <div class="charts-grid">
       <div class="chart-card">
-        <div class="chart-title">延迟趋势对比</div>
+        <div class="chart-title">{{ detailChartLeftTitle }}</div>
         <v-chart
           v-if="hasChart(lineChartOption)"
           class="detail-chart"
@@ -956,7 +1010,7 @@ function inferRowKey(r: InferRow) {
         />
       </div>
       <div class="chart-card">
-        <div class="chart-title">各算子平均得分</div>
+        <div class="chart-title">{{ detailChartRightTitle }}</div>
         <v-chart
           v-if="hasChart(barChartOption)"
           class="detail-chart"

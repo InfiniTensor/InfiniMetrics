@@ -67,7 +67,7 @@ export type OpPlatformOverview = {
   ownVal: string
   openVal: string
   n: number
-  /** 概览卡「配置」：最优得分行的 shape_config · dtype */
+  /** 概览卡「配置」：最优得分行的 shape · dtype */
   extra: string
   /** 详情「测试记录」副标题：全表 op_name 去重数，如「7 算子」 */
   opRecordSub: string
@@ -81,7 +81,7 @@ export type OpPlatformOverview = {
  * 从扁平行列表生成算子维度概览卡指标：
  * - 左/右列延迟：得分最高行的 ic / pt，格式见 formatOpOverviewIcLatency / formatOpOverviewPtLatency
  * - 测试条数：CSV 行数减去 remarks 含 failed 的行
- * - 配置（extra）：得分最高行的 shape_config · dtype
+ * - 配置（extra）：得分最高行的 shape · dtype（如 M=3,N=3 · FP16）
  * - opRecordSub：全表 op 去重数「N 算子」（供详情「测试记录」副标题）
  */
 export function buildOpPlatformOverview(
@@ -110,12 +110,14 @@ export function buildOpPlatformOverview(
   const n = flatRows.filter((r) => !opRemarksContainsFailed(r.remarks)).length
   const opKeys = new Set(flatRows.map((r) => r.opKey))
   const opRecordSub = `${opKeys.size} 算子`
+  const shapeDisp = String(best?.shape ?? '')
+    .trim()
+    .replace(/,\s*/g, ',')
+  const dtypeDisp = String(best?.dtype ?? '')
+    .trim()
+    .toUpperCase()
   const extra =
-    best != null
-      ? [String(best.shape ?? '').trim(), String(best.dtype ?? '').trim()]
-          .filter(Boolean)
-          .join(' · ') || '—'
-      : '—'
+    best != null ? [shapeDisp, dtypeDisp].filter(Boolean).join(' · ') || '—' : '—'
 
   const dates = flatRows
     .map((r) => r.date)

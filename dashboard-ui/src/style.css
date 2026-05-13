@@ -1,6 +1,6 @@
 :root {
-  /* 与 ant-design-vue 默认 Design Token `colorPrimary`（themes/seed.js）一致，供全局 CSS 引用 */
-  --color-primary: #1677ff;
+  /* 与仪表盘 ant-design-vue `colorPrimary`（App.vue ConfigProvider）一致，供全局 CSS 引用 */
+  --color-primary: #162b75;
 
   --text: #6b6375;
   --text-h: #08060d;

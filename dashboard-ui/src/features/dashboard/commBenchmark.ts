@@ -1,7 +1,7 @@
 /**
  * 通信维度业务规则（`new_data/comm`）。
  * 文件列 → 内存：`link_type`→linkType，`comm_type`→commType，`n_gpu`→nGpu，`bw_GBps`（表头规范化后为 `bw_gbps`）→bw，`remarks`→note，`date`→date。
- * 行级 vs NVIDIA：`round(bw_GBps ÷ NVIDIA 同 (comm_type, n_gpu) 下行 bw_GBps × 100)`；NVIDIA 同键多行时基线取 **max(bw)**。
+ * 得分：`round(当前 bw ÷ NVIDIA 同 (comm_type, n_gpu) 基线 bw × 100)`，与详情表「vs NVIDIA」一致；NVIDIA 同键多行时基线取 **max(bw)**。
  */
 
 export type CommImportRow = {
@@ -87,34 +87,103 @@ export function enrichCommBaselines(byPlat: Record<string, CommImportRow[]>) {
   }
 }
 
+function commPickMaxBwRow(rows: CommImportRow[], want: 'p2p' | 'allreduce'): CommImportRow | null {
+  const list = rows.filter((r) => normalizeCommType(r.commType) === want)
+  if (!list.length) return null
+  return list.reduce((a, b) => (a.bw >= b.bw ? a : b))
+}
+
 /**
- * 概览卡：ownVal / openVal 为 P2P / AllReduce 带宽；ownScore / openScore 为各自 vs NVIDIA。
+ * 概览卡：
+ * - 子集仅含一种 comm_type（如顶栏筛成 p2p / allreduce）：大分 = 该类型下 **bw 最高** 一行的 `vsA100`，`openScore` 为空。
+ * - 同时含 p2p 与 allreduce：左/右大分为各自类型 max-bw 行的 `vsA100`。
  */
 export function buildCommCardMetrics(rows: CommImportRow[]): {
   ownScore: number
-  openScore: number
+  openScore: number | null
   ownVal: string
-  openVal: string
+  openVal: string | null
   n: number
   extra: string
   adv: boolean
   advTxt: string
+  overviewOwnFw: string
+  overviewOpenFw: string | null
 } | null {
   if (!rows.length) return null
   const sorted = [...rows].sort((a, b) => {
     if (a.commType !== b.commType) return a.commType.localeCompare(b.commType)
     return a.nGpu - b.nGpu
   })
-  const p2p = sorted.find((r) => r.commType === 'p2p')
-  const ar = sorted.find((r) => r.commType === 'allreduce')
+  const p2p = commPickMaxBwRow(sorted, 'p2p')
+  const ar = commPickMaxBwRow(sorted, 'allreduce')
   if (!p2p && !ar) return null
 
-  const ownScore = p2p?.vsA100 ?? 100
-  const openScore = ar?.vsA100 ?? 100
-  const ownVal = p2p ? `${formatCommBandwidthGb(p2p.bw)} GB/s` : '—'
-  const openVal = ar ? `${formatCommBandwidthGb(ar.bw)} GB/s` : '—'
-  /** 概览「配置」：以 link_type 为准，优先 P2P 行 */
-  const extra = p2p?.linkType || ar?.linkType || '—'
+  if (p2p && !ar) {
+    const ownScore = p2p.vsA100
+    const ownVal = `${formatCommBandwidthGb(p2p.bw)} GB/s`
+    const linkRaw = String(p2p.linkType ?? '')
+      .replace(/\s+/g, '')
+      .toLowerCase()
+    const extra = `${linkRaw || '—'} · ${p2p.nGpu}GPU`
+    const adv = ownScore >= 100
+    const advTxt =
+      ownScore >= 100
+        ? `P2P 相对 NVIDIA ${ownScore}%`
+        : ownScore >= 70
+          ? `P2P 相对 NVIDIA ${ownScore}%（可优化）`
+          : `P2P 相对 NVIDIA ${ownScore}%`
+    return {
+      ownScore,
+      openScore: null,
+      ownVal,
+      openVal: null,
+      n: rows.length,
+      extra,
+      adv,
+      advTxt,
+      overviewOwnFw: 'p2p',
+      overviewOpenFw: null,
+    }
+  }
+
+  if (ar && !p2p) {
+    const ownScore = ar.vsA100
+    const ownVal = `${formatCommBandwidthGb(ar.bw)} GB/s`
+    const linkRaw = String(ar.linkType ?? '')
+      .replace(/\s+/g, '')
+      .toLowerCase()
+    const extra = `${linkRaw || '—'} · ${ar.nGpu}GPU`
+    const adv = ownScore >= 100
+    const advTxt =
+      ownScore >= 100
+        ? `AllReduce 相对 NVIDIA ${ownScore}%`
+        : ownScore >= 70
+          ? `AllReduce 相对 NVIDIA ${ownScore}%（可优化）`
+          : `AllReduce 相对 NVIDIA ${ownScore}%`
+    return {
+      ownScore,
+      openScore: null,
+      ownVal,
+      openVal: null,
+      n: rows.length,
+      extra,
+      adv,
+      advTxt,
+      overviewOwnFw: 'allreduce',
+      overviewOpenFw: null,
+    }
+  }
+
+  const ownScore = p2p!.vsA100
+  const openScore = ar!.vsA100
+  const ownVal = `${formatCommBandwidthGb(p2p!.bw)} GB/s`
+  const openVal = `${formatCommBandwidthGb(ar!.bw)} GB/s`
+  const rep = (p2p!.bw >= ar!.bw ? p2p! : ar!)
+  const linkRaw = String(rep.linkType ?? '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
+  const extra = `${linkRaw || '—'} · ${rep.nGpu}GPU`
 
   const adv = ownScore >= 100 || openScore >= 100
   let advTxt = `P2P ${ownScore}% · AllReduce ${openScore}%（相对 NVIDIA）`
@@ -133,6 +202,8 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
     extra,
     adv,
     advTxt,
+    overviewOwnFw: 'p2p',
+    overviewOpenFw: 'allreduce',
   }
 }
 

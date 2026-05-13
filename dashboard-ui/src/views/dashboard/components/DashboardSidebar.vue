@@ -12,6 +12,7 @@ import { maxCommCsvDateForPlatform } from '@/features/dashboard/commBenchmark'
 import { maxBwCsvDateForPlatform } from '@/features/dashboard/bwBenchmark'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
+import { platIconSrc } from '@/features/dashboard/platPublicIcon'
 
 const {
   PLATFORMS,
@@ -26,25 +27,6 @@ const {
   setDim,
 } = useInfiniDashboard()
 const { goOverview, leaveCompareOrSyncOverview } = useDashboardNavigation()
-
-/** public 下文件名与 PLATFORMS.key 对应（Vite BASE_URL 兼容子路径部署） */
-const PLAT_ICON_FILE: Record<string, string> = {
-  nvidia: 'nvidia.png',
-  mthreads: 'moore.png',
-  cambricon: 'cambricon.png',
-  metax: 'metax.png',
-  iluvatar: 'iluvatar.png',
-  ascend: 'ascend.png',
-  hygon: 'hygon.png',
-  generic: 'ali.png',
-}
-
-function platIconSrc(key: string) {
-  const file = PLAT_ICON_FILE[key]
-  if (!file) return ''
-  const b = import.meta.env.BASE_URL
-  return b.endsWith('/') ? `${b}${file}` : `${b}/${file}`
-}
 
 /** 与 store 中「全选」语义一致：当前已包含全部平台 */
 const quickSelectAllActive = computed(() => {

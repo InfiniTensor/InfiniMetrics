@@ -2,6 +2,7 @@
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import { computed } from 'vue'
 import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
+import { platIconSrc } from '@/features/dashboard/platPublicIcon'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 
@@ -14,9 +15,41 @@ function platOf(card: CardRow) {
   return PLATFORMS.find((p) => p.key === card.key)!
 }
 
+type ScoreTier = 'high' | 'mid' | 'low' | 'none'
+
+/** 与产品规则一致：≥100% 绿、60–99% 橙、<60% 红 */
+function scoreTier(ownScore: number | null | undefined): ScoreTier {
+  if (ownScore == null) return 'none'
+  if (ownScore >= 100) return 'high'
+  if (ownScore >= 60) return 'mid'
+  return 'low'
+}
+
 function scoreColor(card: CardRow) {
-  const s = card.ownScore ?? 0
-  return s >= 100 ? '#2e7d32' : s >= 60 ? '#e65100' : '#c62828'
+  switch (scoreTier(card.ownScore)) {
+    case 'high':
+      return '#2e7d32'
+    case 'mid':
+      return '#e65100'
+    case 'low':
+      return '#c62828'
+    default:
+      return '#8c8c8c'
+  }
+}
+
+/** 概览卡 advTxt 与得分同色阶（Ant Tag 预设） */
+function scoreTagPreset(card: CardRow) {
+  switch (scoreTier(card.ownScore)) {
+    case 'high':
+      return 'green'
+    case 'mid':
+      return 'orange'
+    case 'low':
+      return 'red'
+    default:
+      return 'default'
+  }
 }
 
 function inCompare(key: string) {
@@ -53,11 +86,25 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
       v-else
       :key="c.key"
       class="score-card"
+      :class="{ 'score-card--in-compare': inCompare(c.key) }"
       @click="goDetail(c.key)"
     >
       <div class="card-head">
         <div class="card-head-row card-head-row--top">
-          <div class="card-logo" :style="{ background: platOf(c).color }">{{ platOf(c).logo }}</div>
+          <div class="card-logo" aria-hidden="true">
+            <img
+              v-if="platIconSrc(c.key)"
+              class="card-logo-img"
+              :src="platIconSrc(c.key)"
+              alt=""
+              loading="lazy"
+            />
+            <span
+              v-else
+              class="card-logo-fallback"
+              :style="{ background: platOf(c).color }"
+            >{{ platOf(c).logo }}</span>
+          </div>
           <div class="card-brand-name">{{ platOf(c).name }}</div>
           <a-button
             type="text"
@@ -87,7 +134,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
           <a-tag
             v-if="c.advTxt"
             size="small"
-            :color="c.adv ? 'green' : 'red'"
+            :color="scoreTagPreset(c)"
           >
             <template v-for="(seg, idx) in advTxtSegments(c.advTxt)" :key="idx">
               <strong v-if="seg.bold" class="adv-txt-num">{{ seg.text }}</strong>
@@ -96,10 +143,15 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
           </a-tag>
         </div>
       </div>
-      <div class="card-scores">
+      <div
+        class="card-scores"
+        :class="{ 'card-scores--single': c.openScore == null }"
+      >
         <div class="score-col own">
           <div class="sc-label" :style="{ color: platOf(c).color }">{{ c.ownFw }}</div>
-          <div class="sc-num" :style="{ color: scoreColor(c) }">{{ c.ownScore }}</div>
+          <div class="sc-num" :style="{ color: scoreColor(c) }">{{
+            c.ownScore != null ? c.ownScore : '—'
+          }}</div>
           <div v-if="c.inferOwnCaption" class="sc-cap">{{ c.inferOwnCaption }}</div>
           <div class="sc-val" :style="{ color: platOf(c).color }">{{ c.ownVal }}</div>
         </div>
@@ -109,13 +161,6 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
           <div v-if="c.inferOpenCaption" class="sc-cap sc-cap--base">{{ c.inferOpenCaption }}</div>
           <div class="sc-val sc-val--base">{{ c.openVal || '—' }}</div>
         </div>
-        <div
-          v-else
-          class="score-col base"
-          style="display: flex; align-items: center; justify-content: center"
-        >
-          <span class="sc-base-pending">待测</span>
-        </div>
       </div>
       <div class="card-stats">
         <div class="stat-item">
@@ -124,11 +169,13 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
         </div>
         <div class="stat-item">
           <div class="stat-lbl">配置</div>
-          <div class="stat-val">{{ c.extra }}</div>
+          <div class="stat-val stat-val--wrap">{{ c.extra }}</div>
         </div>
         <div class="stat-item">
           <div class="stat-lbl">得分</div>
-          <div class="stat-val" :style="{ color: scoreColor(c) }">{{ c.ownScore }}</div>
+          <div class="stat-val" :style="{ color: scoreColor(c) }">{{
+            c.ownScore != null ? c.ownScore : '—'
+          }}</div>
         </div>
       </div>
     </div>
@@ -139,6 +186,8 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 /* 概览平台卡片：扁平描边容器（业务逻辑未改，仅 UI） */
 .dashboard-overview-cards {
   --overview-card-border: #e5e8ef;
+  --overview-card-border-in-compare: #81c784;
+  --overview-card-shadow-hover: 0 4px 14px rgba(22, 43, 117, 0.12);
   --overview-card-radius: 4px;
 
   display: grid;
@@ -171,14 +220,22 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   cursor: pointer;
   transition:
     border-color 0.2s ease,
-    background-color 0.2s ease;
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
   position: relative;
   overflow: hidden;
 }
 
+/* 双类链提高优先级，避免 scoped 下与 .score-card 的 border 简写权重拉扯导致仍为灰边 */
+.score-card.score-card--in-compare {
+  border: 1px solid var(--overview-card-border-in-compare);
+  box-shadow: 0 2px 8px rgba(56, 142, 60, 0.18);
+}
+
+/* 悬停一律主题蓝 + 轻阴影（覆盖已加入对比时的绿阴影） */
 .score-card:hover {
   transform: none;
-  box-shadow: none;
+  box-shadow: var(--overview-card-shadow-hover);
   background: #fafbfc;
   border-color: var(--color-primary);
 }
@@ -188,7 +245,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 }
 
 .card-head {
-  --card-logo-size: 32px;
+  --card-logo-size: 40px;
   --card-head-inline-gap: 10px;
   display: flex;
   flex-direction: column;
@@ -292,13 +349,34 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   width: var(--card-logo-size);
   height: var(--card-logo-size);
   flex-shrink: 0;
+  padding: 0;
   border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.card-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0;
+  display: block;
+}
+
+.card-logo-fallback {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   font-size: 14px;
   font-weight: 700;
+  border-radius: inherit;
 }
 
 .card-brand-name {
@@ -317,6 +395,10 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   margin-bottom: 16px;
+}
+
+.card-scores--single {
+  grid-template-columns: 1fr;
 }
 
 .score-col {
@@ -366,11 +448,6 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   color: #595959;
 }
 
-.sc-base-pending {
-  color: #8c8c8c;
-  font-style: italic;
-}
-
 .sc-val {
   font-size: 14px;
   color: #666;
@@ -379,6 +456,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 .card-stats {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   padding: 0;
   margin: 0;
   background: transparent;
@@ -387,6 +465,8 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 }
 
 .stat-item {
+  flex: 1 1 0;
+  min-width: 0;
   text-align: center;
 }
 
@@ -394,12 +474,19 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   font-size: 14px;
   color: #aaa;
   margin-bottom: 3px;
+  white-space: nowrap;
 }
 
 .stat-val {
   font-size: 14px;
   font-weight: 600;
   color: #1a1a2e;
+}
+
+.stat-val--wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 @media (max-width: 1024px) {

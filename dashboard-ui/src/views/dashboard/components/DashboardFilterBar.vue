@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Modal } from 'ant-design-vue'
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
-import { OP_TABLE, INFER_TABLE, TRAIN_TABLE, dtypesForOpPlatform } from '@/data'
+import { OP_TABLE, INFER_TABLE, TRAIN_TABLE, COMM_TABLE, BW_TABLE, dtypesForOpPlatform } from '@/data'
+import { bwPlatHasMode } from '@/features/dashboard/bwBenchmark'
+import { commPlatHasCommType } from '@/features/dashboard/commBenchmark'
 import { inferNumericSetForPlatform, type InferTablePack } from '@/features/dashboard/inferBenchmark'
 
 const store = useInfiniDashboard()
@@ -22,11 +25,15 @@ const {
   compareCards,
   toggleCompare,
 } = store
+const router = useRouter()
 const { goCompare, leaveCompareOrSyncOverview } = useDashboardNavigation()
 
+/** 顶栏 pills：详情页只改筛选不跳路由；概览/对比仍走 leaveCompareOrSyncOverview */
 function onSetFilter(fi: number, pi: number) {
   setFilter(fi, pi)
-  leaveCompareOrSyncOverview()
+  if (router.currentRoute.value.name !== 'detail') {
+    leaveCompareOrSyncOverview()
+  }
 }
 
 function onToggleCompareClose(platKey: string) {
@@ -52,6 +59,8 @@ const fs = computed(() => filterState.value[dim.value.key] || {})
 
 const inferTableForBar = INFER_TABLE as Record<string, InferTablePack | undefined>
 const trainTableForBar = TRAIN_TABLE as Record<string, { framework: string }[] | undefined>
+const commTableForBar = COMM_TABLE as Record<string, { commType: string }[] | undefined>
+const bwTableForBar = BW_TABLE as Parameters<typeof bwPlatHasMode>[1]
 
 /** 顶栏 pills：`setFilter` 始终传并集维度下的索引；算子 / 推理详情仅展示当前芯片在并集中的子集 */
 const filterBarFilterRows = computed(() => {
@@ -79,14 +88,14 @@ const filterBarFilterRows = computed(() => {
       const batches = inferNumericSetForPlatform(inferTableForBar, plat, 'batch')
       return {
         label: f.label,
-        pills: pills.filter((x) => x.label === '全部' || batches.has(Number(x.label))),
+        pills: pills.filter((x) => x.label !== '全部' && batches.has(Number(x.label))),
       }
     }
     if (d.key === 'infer' && fi === 1 && view === 'detail') {
       const lens = inferNumericSetForPlatform(inferTableForBar, plat, 'inLen')
       return {
         label: f.label,
-        pills: pills.filter((x) => x.label === '全部' || lens.has(Number(x.label))),
+        pills: pills.filter((x) => x.label !== '全部' && lens.has(Number(x.label))),
       }
     }
     if (d.key === 'train' && fi === 0 && view === 'detail') {
@@ -97,7 +106,21 @@ const filterBarFilterRows = computed(() => {
       )
       return {
         label: f.label,
-        pills: pills.filter((x) => x.label === '全部' || fwOnPlat.has(x.label.toLowerCase())),
+        pills: pills.filter((x) => x.label !== '全部' && fwOnPlat.has(x.label.toLowerCase())),
+      }
+    }
+    if (d.key === 'comm' && fi === 0 && view === 'detail') {
+      return {
+        label: f.label,
+        pills: pills.filter(
+          (x) => x.label !== '全部' && commPlatHasCommType(plat, commTableForBar, x.label),
+        ),
+      }
+    }
+    if (d.key === 'bw' && fi === 0 && view === 'detail') {
+      return {
+        label: f.label,
+        pills: pills.filter((x) => x.label !== '全部' && bwPlatHasMode(plat, bwTableForBar, x.label)),
       }
     }
     return { label: f.label, pills }
@@ -113,6 +136,7 @@ const compareChosen = computed(() =>
 /** 筛选区（含已选对比）Ant Design 主题：圆角 2px；fontSizeSM 供 Tag 与 small 按钮对齐 */
 const filterBarTheme = {
   token: {
+    colorPrimary: '#162b75',
     borderRadius: 2,
     borderRadiusLG: 2,
     borderRadiusSM: 2,
