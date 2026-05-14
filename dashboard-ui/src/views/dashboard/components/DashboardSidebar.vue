@@ -63,8 +63,9 @@ function onSelectDomestic() {
   leaveCompareOrSyncOverview()
 }
 
-function isBrandActive(key: string) {
-  return selectedPlatKeys.value.includes(key)
+/** 标题下小字：国际标杆 / 国产（与 PLATFORMS.type 一致，缺省时按 domestic 推断） */
+function platTagline(p: (typeof PLATFORMS)[number]) {
+  return p.type || (p.domestic ? '国产' : '国际标杆')
 }
 
 /** 侧栏主文案与设计稿一致（不改 PLATFORMS 数据，仅展示层） */
@@ -174,7 +175,7 @@ const dataUpdatedAtDisplay = computed(() => {
               v-for="p in PLATFORMS"
               :key="p.key"
               class="brand-item"
-              :class="{ active: isBrandActive(p.key) }"
+              :class="{ active: selectedPlatKeys.includes(p.key) }"
               role="button"
               tabindex="0"
               @click="onTogglePlat(p.key)"
@@ -186,7 +187,7 @@ const dataUpdatedAtDisplay = computed(() => {
               </div>
               <div class="brand-text">
                 <div class="brand-name">{{ platLineName(p) }}</div>
-                <div class="brand-type">{{ p.type }}</div>
+                <div class="brand-tagline">{{ platTagline(p) }}</div>
               </div>
               <div class="brand-radio" aria-hidden="true" />
             </div>

@@ -107,7 +107,7 @@ function onBcOverview() {
 <style scoped>
 .right-panel {
   /* 右侧主栏衬底；顶 padding 与侧栏 .sidebar-scroll 一致，便于与「平台筛选」下 1px 横线对齐 */
-  background: #f7f8fa;
+  background: var(--page-bg);
   padding: 18px 16px 16px;
   gap: 16px;
   min-width: 0;

@@ -147,6 +147,8 @@ function benchSourceFileDate(plat: string, dim: keyof BenchMetaFileDates): strin
 /** 各维度「已选对比」默认态（行业基线）；切换维度时恢复至此。「清空」按钮仍为 [] */
 const DEFAULT_COMPARE_PLAT_KEYS: readonly string[] = ['nvidia']
 
+type DashboardDim = (typeof DIMS)[number]
+
 export function createInfiniDashboardStore() {
   const selectedPlatKeys = ref<string[]>(PLATFORMS.map((p) => p.key))
   const comparePlatKeys = ref<string[]>([...DEFAULT_COMPARE_PLAT_KEYS])
@@ -166,17 +168,15 @@ export function createInfiniDashboardStore() {
 
   const activeDimKey = computed(() => DIMS[activeDim.value].key)
 
-  const overviewCards = computed(() => {
-    const dim = DIMS[activeDim.value]
-    const raw = (CARD_DATA as Record<string, CardRow[]>)[dim.key] || []
-    let data = raw.filter((c) => selectedPlatKeys.value.includes(c.key))
+  /** 概览 / 对比共用：按顶栏 `filterState` 将卡片 KPI 叠成与当前筛选项一致 */
+  function applyDimFilterOverlays(dim: DashboardDim, data: CardRow[]): CardRow[] {
     if (dim.key === 'op') {
       const fs = filterState.value.op || {}
       const opPill = dim.filters[0]?.pills[fs[0] ?? 0] ?? '全部'
       const dtypePill = dim.filters[1]?.pills[fs[1] ?? 0] ?? '全部'
       const hasSpecific = (fs[0] ?? 0) !== 0 || (fs[1] ?? 0) !== 0
       if (hasSpecific) {
-        data = data.map((c) =>
+        return data.map((c) =>
           overlayOpOverviewCardFromFilters(c, OTABLE as OpTableForOverlay, opPill, dtypePill),
         )
       }
@@ -187,7 +187,7 @@ export function createInfiniDashboardStore() {
       const hasSpecific = (fs[0] ?? 0) !== 0 || (fs[1] ?? 0) !== 0
       if (hasSpecific) {
         const inferTbl = INFER_TABLE as Record<string, InferTablePack | undefined>
-        data = data.map((c) =>
+        return data.map((c) =>
           overlayInferOverviewCardFromFilters(c, inferTbl, batchPill, inLenPill),
         )
       }
@@ -196,25 +196,31 @@ export function createInfiniDashboardStore() {
       const fwPill = dim.filters[0]?.pills[fs[0] ?? 0]
       const hasSpecific = (fs[0] ?? 0) !== 0
       if (hasSpecific) {
-        data = data.map((c) =>
-          overlayTrainOverviewCardFromFilters(c, TTRAIN, fwPill),
-        )
+        return data.map((c) => overlayTrainOverviewCardFromFilters(c, TTRAIN, fwPill))
       }
     } else if (dim.key === 'comm') {
       const fs = filterState.value.comm || {}
       const typePill = dim.filters[0]?.pills[fs[0] ?? 0]
       const hasSpecific = (fs[0] ?? 0) !== 0
       if (hasSpecific) {
-        data = data.map((c) => overlayCommOverviewCardFromFilters(c, CTABLE, typePill))
+        return data.map((c) => overlayCommOverviewCardFromFilters(c, CTABLE, typePill))
       }
     } else if (dim.key === 'bw') {
       const fs = filterState.value.bw || {}
       const modePill = dim.filters[0]?.pills[fs[0] ?? 0]
       const hasSpecific = (fs[0] ?? 0) !== 0
       if (hasSpecific) {
-        data = data.map((c) => overlayBwOverviewCardFromFilters(c, BTABLE, modePill))
+        return data.map((c) => overlayBwOverviewCardFromFilters(c, BTABLE, modePill))
       }
     }
+    return data
+  }
+
+  const overviewCards = computed(() => {
+    const dim = DIMS[activeDim.value]
+    const raw = (CARD_DATA as Record<string, CardRow[]>)[dim.key] || []
+    let data = raw.filter((c) => selectedPlatKeys.value.includes(c.key))
+    data = applyDimFilterOverlays(dim, data)
     const sorted = [...data].sort((a, b) => {
       const va = a.ownScore ?? 0
       const vb = b.ownScore ?? 0
@@ -228,7 +234,9 @@ export function createInfiniDashboardStore() {
   const compareCards = computed(() => {
     const dim = DIMS[activeDim.value]
     const raw = (CARD_DATA as Record<string, CardRow[]>)[dim.key] || []
-    return raw.filter((c) => comparePlatKeys.value.includes(c.key))
+    let data = raw.filter((c) => comparePlatKeys.value.includes(c.key))
+    data = applyDimFilterOverlays(dim, data)
+    return data
   })
 
   const detailPlat = computed(() => PLATFORMS.find((p) => p.key === detailState.value.platKey)!)

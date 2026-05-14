@@ -8,10 +8,12 @@ html,body{
 }
 body{
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
-  background:#fff;
+  background:var(--page-bg);
   min-height:100vh;padding:0;color:#1a1a2e;
 }
 :root{
+  --page-bg:hsl(234.55deg 33.33% 93.53%);
+  --sidebar-col:240px;
   --blue:#5b7ec9;--purple:#4a6ab8;
   --grad:linear-gradient(160deg,#3d5499 0%,#4a6ab8 55%,#6080cc 100%);
   --grad-green:linear-gradient(135deg,#00c853 0%,#00e676 100%);
@@ -36,23 +38,23 @@ body{
   overflow:hidden;
 }
 
-/* ══ Header ══ */
+/* ══ Header（整图 banner；顶栏容器不加 padding，由图片自身留白） ══ */
 .header{
   flex-shrink:0;
   position:sticky;top:0;z-index:30;
-  background:#fff;border-radius:0;
-  padding:16px 32px;margin-bottom:0;
+  background:var(--page-bg);
+  border-radius:0;
+  padding:0;
+  margin-bottom:0;
   box-shadow:0 2px 12px rgba(0,0,0,0.08);
-  display:flex;justify-content:space-between;align-items:center;
+  display:block;
+  min-width:0;
 }
-.logo-wrap{display:flex;align-items:center;gap:12px;}
 .logo-icon{
   width:44px;height:44px;border-radius:12px;background:var(--grad);
   display:flex;align-items:center;justify-content:center;
   color:#fff;font-weight:700;font-size:12px;letter-spacing:-.5px;
 }
-.logo-title{font-size:20px;font-weight:700;color:#1a1a2e;}
-.logo-sub{font-size:11px;color:#888;margin-top:2px;}
 .nav-tabs{display:flex;gap:6px;}
 .nav-tab{
   padding:9px 18px;border-radius:9px;border:none;
@@ -67,18 +69,20 @@ body{
   flex:1;
   min-height:0;
   display:grid;
-  grid-template-columns:260px 1fr;
+  grid-template-columns:var(--sidebar-col) 1fr;
   grid-template-rows:minmax(0,1fr);
   gap:0;
   overflow:hidden;
 }
 
-/* ══ Sidebar（设计稿：深蓝底 #162b75；图一默认态 / 图二选中态） ══ */
+/* ══ Sidebar（蓝灰底 + 灰蓝未选块 + 白底深字选中态，与导航稿一致） ══ */
 .sidebar{
-  --sb-navy:#162b75;
-  --sb-glass:rgba(255,255,255,0.15);
-  --sb-glass-hover:rgba(255,255,255,0.22);
-  background:var(--sb-navy);border-radius:0;padding:0;
+  --sb-bg:hsl(228.95deg 21.11% 64.71%);
+  --sb-surface:hsl(228.46deg 20.63% 75.29%);
+  --sb-surface-hover:hsl(228.46deg 20.63% 79%);
+  --sb-muted-text:#b0b8c8;
+  --sb-active-text:#333e5a;
+  background:var(--sb-bg);border-radius:0;padding:0;
   box-shadow:2px 0 16px rgba(0,0,0,0.18);
   min-height:0;
   height:100%;
@@ -88,7 +92,7 @@ body{
 .sidebar-scroll{
   flex:1;overflow-y:auto;min-height:0;
   /* 不用 flex 列 + 子项 flex:1，否则子项撑满视口时底部 padding 观感上常像「贴底」 */
-  padding:18px 16px 0;
+  padding:18px 12px 0;
 }
 .sidebar-scroll::-webkit-scrollbar{width:4px;}
 .sidebar-scroll::-webkit-scrollbar-track{background:transparent;}
@@ -103,7 +107,7 @@ body{
   display:block;font-size:15px;font-weight:700;color:#fff;line-height:1.3;
 }
 .sb-section-line{
-  margin-top:10px;height:1px;background:rgba(255,255,255,0.45);
+  margin-top:10px;height:1px;background:rgba(255,255,255,0.28);
   width:100%;
 }
 
@@ -111,31 +115,31 @@ body{
 .quick-btns{display:flex;gap:8px;margin-bottom:14px;}
 .q-btn{
   flex:1;padding:8px 10px;border-radius:8px;border:1px solid transparent;
-  background:var(--sb-glass);font-size:13px;color:#fff;cursor:pointer;
+  background:var(--sb-surface);font-size:13px;color:#fff;cursor:pointer;
   transition:background .2s,color .2s,border-color .2s,box-shadow .2s;font-weight:600;
 }
-.q-btn:hover:not(.active){background:var(--sb-glass-hover);color:#fff;}
+.q-btn:hover:not(.active){background:var(--sb-surface-hover);color:#fff;}
 .q-btn:focus-visible{outline:2px solid rgba(255,255,255,0.65);outline-offset:2px;}
-/* 与 .dim-item.active 一致：白底深蓝字 */
+/* 与 .dim-item.active 一致：白底深灰蓝字 */
 .q-btn.active{
-  background:#fff;color:var(--sb-navy);font-weight:700;
+  background:#fff;color:var(--sb-active-text);font-weight:700;
   border-color:rgba(255,255,255,0.35);
   box-shadow:0 2px 10px rgba(0,0,0,0.12);
 }
-.q-btn.active:hover{background:#fff;color:var(--sb-navy);}
+.q-btn.active:hover{background:#fff;color:var(--sb-active-text);}
 
 /* brand list：图一未选行 + 图二选中行（卡片底 + 实心圆点） */
 .brand-list{display:flex;flex-direction:column;gap:10px;}
 .brand-item{
-  display:flex;align-items:center;gap:12px;padding:10px 12px;
+  display:flex;align-items:center;gap:10px;padding:10px 10px;
   border-radius:8px;cursor:pointer;transition:background .2s,border-color .2s,box-shadow .2s;
   border:1px solid transparent;background:transparent;
 }
-.brand-item:hover{background:rgba(255,255,255,0.06);}
-/* 选中态：半透卡片 + 右侧实心指示（对应设计稿图二） */
+.brand-item:hover{background:rgba(255,255,255,0.08);}
+/* 选中态：灰蓝底块（与未选快捷按钮同色系） */
 .brand-item.active{
-  background:rgba(255,255,255,0.12);
-  border-color:rgba(255,255,255,0.18);
+  background:var(--sb-surface);
+  border-color:rgba(255,255,255,0.14);
   box-shadow:none;
 }
 .brand-icon-wrap{
@@ -149,9 +153,12 @@ body{
   padding:4px;
   display:block;
 }
-.brand-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;}
-.brand-name{font-size:14px;font-weight:600;color:#fff;line-height:1.25;}
-.brand-type{font-size:11px;font-weight:500;color:rgba(255,255,255,0.62);line-height:1.2;}
+.brand-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}
+.brand-name{font-size:15px;font-weight:600;color:#fff;line-height:1.25;}
+.brand-tagline{
+  font-size:12px;font-weight:400;color:rgba(255,255,255,0.78);line-height:1.25;
+  letter-spacing:0.02em;
+}
 /* 图一默认：空心圆环 */
 .brand-radio{
   width:18px;height:18px;border-radius:50%;flex-shrink:0;box-sizing:border-box;
@@ -162,7 +169,7 @@ body{
 .brand-item.active .brand-radio{
   border-color:#fff;
   background:#fff;
-  box-shadow:inset 0 0 0 4px var(--sb-navy);
+  box-shadow:inset 0 0 0 4px var(--sb-bg);
 }
 
 /* 测试维度：两列栅格；图一未选 + 图二选中（白底深字） */
@@ -175,12 +182,12 @@ body{
   padding:9px 10px;border-radius:8px;font-size:13px;font-weight:600;text-align:center;
   cursor:pointer;border:1px solid transparent;transition:all .2s;
   color:#fff;
-  background:var(--sb-glass);
+  background:var(--sb-surface);
 }
-.dim-item:hover{background:var(--sb-glass-hover);color:#fff;}
+.dim-item:hover{background:var(--sb-surface-hover);color:#fff;}
 .dim-item:focus-visible{outline:2px solid rgba(255,255,255,0.65);outline-offset:2px;}
 .dim-item.active{
-  background:#fff;color:var(--sb-navy);font-weight:700;
+  background:#fff;color:var(--sb-active-text);font-weight:700;
   border-color:rgba(255,255,255,0.35);
   box-shadow:0 2px 10px rgba(0,0,0,0.12);
 }
@@ -189,7 +196,7 @@ body{
 .sidebar-foot{
   margin-top:24px;
   padding-bottom:20px;
-  font-size:11px;font-weight:500;color:rgba(255,255,255,0.52);
+  font-size:11px;font-weight:500;color:var(--sb-muted-text);
   text-align:left;line-height:1.45;
 }
 
@@ -462,6 +469,6 @@ tr:hover > td:not(.ant-table-cell){background:#fff;}
   max-height:100svh;
   overflow:hidden;
   box-sizing:border-box;
-  /* 仪表盘整体衬底（与右侧 .right-panel 一致）；白卡片、侧栏渐变叠在上面 */
-  background:#f7f8fa;
+  /* 仪表盘整体衬底（与 body / 右侧主栏一致）；白卡片、侧栏叠在上面 */
+  background:var(--page-bg);
 }

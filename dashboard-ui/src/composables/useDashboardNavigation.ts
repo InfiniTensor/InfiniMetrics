@@ -24,13 +24,17 @@ export function useDashboardNavigation() {
   }
 
   /**
-   * 侧栏或顶栏改动平台筛选 / 维度筛选 / 已选对比后，非概览路由时回到概览。
-   * - 对比页、详情页：`replace` 到概览（侧栏切换平台等需跳转；顶栏筛选项在详情见 FilterBar 内单独处理）。
+   * 侧栏或顶栏改动平台筛选 / 维度筛选 / 已选对比后，与路由同步。
+   * - 对比页：顶栏筛选项仅改 store，**不跳转**（与详情顶栏一致地留在当前视图）。
+   * - 详情页：`replace` 到概览（侧栏切换平台等需退出详情 URL）。
    * - 概览页：仅 `switchMainView('overview')`，避免对 `/` 重复 push。
    */
   function leaveCompareOrSyncOverview() {
     const name = router.currentRoute.value.name
-    if (name === 'compare' || name === 'detail') {
+    if (name === 'compare') {
+      return
+    }
+    if (name === 'detail') {
       void router.replace({ name: 'overview' })
       return
     }
