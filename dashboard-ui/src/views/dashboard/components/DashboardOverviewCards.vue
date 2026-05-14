@@ -16,6 +16,13 @@ function platOf(card: CardRow) {
   return PLATFORMS.find((p) => p.key === card.key)!
 }
 
+/** NVIDIA 基准：仅保留「国际标杆」一条 tag，不展示 advTxt 第二条 */
+function isNvidiaIntlOnlyOverviewTags(card: CardRow) {
+  if (card.key.toLowerCase() === 'nvidia') return true
+  const name = (platOf(card).name || '').trim().toLowerCase()
+  return name === 'nvidia a100' || name === 'nvidia'
+}
+
 /** 概览卡自研列与 ownScoreColStyle 用 scoreTierColor；adv 标签高分档用 scoreTierTagPreset（蓝）。底部「得分」数值与两侧统计同色 */
 function scoreColor(card: CardRow) {
   return scoreTierColor(card.ownScore)
@@ -94,7 +101,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
                 {{ platOf(c).type }}
               </a-tag>
               <a-tag
-                v-if="c.advTxt"
+                v-if="c.advTxt && !isNvidiaIntlOnlyOverviewTags(c)"
                 size="small"
                 :class="{ 'overview-tag--theme-blue': scoreTagPreset(c) === 'blue' }"
                 :color="scoreTagPreset(c)"
@@ -483,7 +490,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 
 .score-col {
   text-align: center;
-  padding: 16px 12px 14px;
+  padding: 5px 12px;
   border-radius: 8px;
   background: #fff;
   border: none;
@@ -493,7 +500,6 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 .sc-label {
   font-size: 14px;
   font-weight: 600;
-  margin-bottom: 8px;
 }
 
 .sc-num {
