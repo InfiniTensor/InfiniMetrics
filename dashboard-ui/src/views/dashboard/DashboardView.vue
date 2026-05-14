@@ -146,6 +146,8 @@ function onBcOverview() {
   flex: 0 0 auto;
   height: auto;
   min-width: 0;
+  /* 与白卡片主区拉近 3px（不改变面包屑与筛选区间距） */
+  margin-bottom: -5px;
 }
 
 .right-panel :deep(.dashboard-card.right-panel-card-main) {

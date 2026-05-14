@@ -160,7 +160,7 @@ const filterBarTheme = {
       >
         <span class="filter-label">{{ f.label }}</span>
         <div class="filter-pills">
-          <a-space :size="[6, 6]" wrap>
+          <a-space :size="[9, 4]" wrap>
             <a-button
               v-for="item in f.pills"
               :key="`${fi}-${item.unionIndex}-${item.label}`"
@@ -243,12 +243,12 @@ const filterBarTheme = {
 }
 
 .filter-bar-body {
-  --filter-label-col: 92px;
-  --filter-label-gap: 10px;
+  --filter-label-col: 88px;
+  --filter-label-gap: 12px;
   display: grid;
   grid-template-columns: var(--filter-label-col) minmax(0, 1fr) auto;
   column-gap: var(--filter-label-gap);
-  row-gap: 12px;
+  row-gap: 10px;
   align-items: start;
   width: 100%;
   min-width: 0;
@@ -303,14 +303,14 @@ const filterBarTheme = {
   font-weight: 500;
   color: var(--fb-label);
   background: #fff;
-  border: 1px solid var(--fb-muted-border);
+  border: none !important;
   box-shadow: none;
 }
 
 .filter-sort-btn:hover,
 .filter-sort-btn:focus {
   color: var(--fb-label);
-  border-color: rgba(51, 62, 90, 0.24);
+  border: none !important;
   background: #fff;
 }
 
@@ -378,7 +378,7 @@ const filterBarTheme = {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   min-width: 0;
 }
 
@@ -430,27 +430,27 @@ const filterBarTheme = {
 .filter-bar-root :deep(.filter-row .ant-btn-default.ant-btn-sm) {
   color: var(--fb-inactive-text);
   background: #fff;
-  border-color: var(--fb-muted-border);
+  border: none !important;
   box-shadow: none;
 }
 
 .filter-bar-root :deep(.filter-row .ant-btn-default.ant-btn-sm:hover) {
   color: var(--fb-inactive-text);
-  border-color: rgba(51, 62, 90, 0.26);
+  border: none !important;
   background: #fff;
 }
 
 .filter-bar-root :deep(.filter-row .ant-btn-primary.ant-btn-sm) {
   color: #fff;
   background: var(--fb-active-bg);
-  border-color: var(--fb-active-bg);
+  border: none !important;
   box-shadow: none;
 }
 
 .filter-bar-root :deep(.filter-row .ant-btn-primary.ant-btn-sm:hover) {
   color: #fff;
   background: var(--fb-active-bg-hover);
-  border-color: var(--fb-active-bg-hover);
+  border: none !important;
 }
 
 /* 对比区按钮与筛选 pill 视觉一致 */
@@ -470,27 +470,27 @@ const filterBarTheme = {
 .filter-bar-root :deep(.compare-bar-actions .ant-btn-default.ant-btn-sm) {
   color: var(--fb-inactive-text);
   background: #fff;
-  border-color: var(--fb-muted-border);
+  border: none !important;
   box-shadow: none;
 }
 
 .filter-bar-root :deep(.compare-bar-actions .ant-btn-default.ant-btn-sm:hover) {
   color: var(--fb-inactive-text);
-  border-color: rgba(51, 62, 90, 0.26);
+  border: none !important;
   background: #fff;
 }
 
 .filter-bar-root :deep(.compare-bar-actions .ant-btn-primary.ant-btn-sm) {
   color: #fff;
   background: var(--fb-active-bg);
-  border-color: var(--fb-active-bg);
+  border: none !important;
   box-shadow: none;
 }
 
 .filter-bar-root :deep(.compare-bar-actions .ant-btn-primary.ant-btn-sm:hover) {
   color: #fff;
   background: var(--fb-active-bg-hover);
-  border-color: var(--fb-active-bg-hover);
+  border: none !important;
 }
 
 /* 已选平台 Tag：白底 + 浅蓝灰字；字重与筛选项 pill 一致（ant-tag 默认偏细） */
@@ -502,7 +502,7 @@ const filterBarTheme = {
   border-radius: 6px;
   color: var(--fb-inactive-text);
   background: #fff;
-  border: 1px solid var(--fb-muted-border);
+  border: none !important;
   font-weight: 600;
 }
 
