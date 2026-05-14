@@ -6,6 +6,7 @@ import { PLATFORMS } from '@/data'
 import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
+import { SCORE_TIER_COLOR } from '@/utils/scoreColor'
 
 type CompareTableRecord = {
   plat: (typeof PLATFORMS)[number]
@@ -74,7 +75,7 @@ const showLatencyChart = computed(
           :style="
             row.isBest
               ? {
-                  border: '2px solid #2e7d32',
+                  border: `2px solid ${SCORE_TIER_COLOR.high}`,
                   background: '#F2F3F5',
                 }
               : {}
@@ -85,14 +86,14 @@ const showLatencyChart = computed(
             {{ row.plat.name }}
             <span
               v-if="row.isBest"
-              style="
-                margin-left: auto;
-                font-size: 10px;
-                background: #2e7d32;
-                color: #fff;
-                padding: 2px 7px;
-                border-radius: 10px;
-              "
+              :style="{
+                marginLeft: 'auto',
+                fontSize: '10px',
+                background: SCORE_TIER_COLOR.high,
+                color: '#fff',
+                padding: '2px 7px',
+                borderRadius: '10px',
+              }"
             >最高</span>
           </div>
           <div class="compare-kpi-score" :style="{ color: row.plat.color }">

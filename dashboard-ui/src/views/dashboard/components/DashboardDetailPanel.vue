@@ -21,7 +21,7 @@ import {
   remarksExcludeIcFromScore,
 } from '@/features/dashboard/operatorBenchmark'
 import { BW_NVIDIA_BASELINE_GBPS, bwVsNvidiaPercent } from '@/features/dashboard/bwBenchmark'
-import { scoreTierColor } from '@/utils/scoreColor'
+import { scoreTierColor, SCORE_TIER_COLOR } from '@/utils/scoreColor'
 import { DETAIL_CHART_PRIMARY, DETAIL_CHART_SECONDARY } from '@/utils/echartsInfini'
 
 const route = useRoute()
@@ -887,7 +887,7 @@ function inferRowKey(r: InferRow) {
               </template>
               <template v-else-if="column.key === 'flashAttn'">
                 <template v-for="p in [parseTrainFlashAttnParts(record.flashAttn)]" :key="record.flashAttn">
-                  <span v-if="p.kind === 'on'" style="color: #2e7d32">✓</span>
+                  <span v-if="p.kind === 'on'" :style="{ color: SCORE_TIER_COLOR.high }">✓</span>
                   <template v-else>
                     <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">off</span>
                     <span v-if="p.rest">{{ ' ' + p.rest }}</span>
@@ -1073,15 +1073,15 @@ function inferRowKey(r: InferRow) {
               <div class="ci-stat-lbl">CI 运行次数</div>
             </div>
             <div class="ci-stat">
-              <div class="ci-stat-val" style="color: #2e7d32">{{ CI_SUMMARY.avgSuccessRate }}</div>
+              <div class="ci-stat-val" :style="{ color: SCORE_TIER_COLOR.high }">{{ CI_SUMMARY.avgSuccessRate }}</div>
               <div class="ci-stat-lbl">平均成功率</div>
             </div>
             <div class="ci-stat">
-              <div class="ci-stat-val" style="color: #2e7d32">{{ CI_SUMMARY.last10SuccessRate }}</div>
+              <div class="ci-stat-val" :style="{ color: SCORE_TIER_COLOR.high }">{{ CI_SUMMARY.last10SuccessRate }}</div>
               <div class="ci-stat-lbl">最近10次成功率</div>
             </div>
             <div class="ci-stat">
-              <div class="ci-stat-val" style="color: #ef5350">{{ CI_SUMMARY.failureCount }}</div>
+              <div class="ci-stat-val" :style="{ color: SCORE_TIER_COLOR.low }">{{ CI_SUMMARY.failureCount }}</div>
               <div class="ci-stat-lbl">失败用例</div>
             </div>
           </div>

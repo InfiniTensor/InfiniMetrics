@@ -16,12 +16,21 @@
 
 export type ScoreTier = 'high' | 'mid' | 'low' | 'none'
 
-/** 与 Ant Design 色板对齐的统一色值 */
+/** 全站统一得分分档色（概览 / 详情各维度 / 图表前景等） */
 export const SCORE_TIER_COLOR: Record<ScoreTier, string> = {
-  high: '#2e7d32',
-  mid: '#e65100',
-  low: '#c62828',
+  high: 'hsl(128.43deg 84.62% 28.04%)',
+  mid: 'hsl(24.11deg 100% 58.04%)',
+  low: 'hsl(0deg 100% 50%)',
   none: '#8c8c8c',
+}
+
+/** 柱图等填充：与旧 hex 追加 `cc`（≈80% 不透明）等效 */
+const SCORE_TIER_BAR_ALPHA = 0.8
+
+const SCORE_TIER_BAR_COLOR: Record<Exclude<ScoreTier, 'none'>, string> = {
+  high: `hsl(128.43deg 84.62% 28.04% / ${SCORE_TIER_BAR_ALPHA})`,
+  mid: `hsl(24.11deg 100% 58.04% / ${SCORE_TIER_BAR_ALPHA})`,
+  low: `hsl(0deg 100% 50% / ${SCORE_TIER_BAR_ALPHA})`,
 }
 
 /** Ant Tag 预设（概览卡 advTxt 等）：高分档用蓝，与「国际标杆」及全站 --blue 一致 */
@@ -51,12 +60,11 @@ export function scoreTierTagPreset(score: number | null | undefined): string {
 }
 
 /**
- * ECharts 柱图填充色：在三档基础上统一附加 `cc`（≈80%）alpha，
- * 与详情区原有「vs NVIDIA」柱图视觉风格保持一致。
+ * ECharts 柱图填充色：三档 hsl + 约 80% 不透明，与详情「vs NVIDIA」柱图风格一致。
  * 缺失档（none）不使用透明度，便于上层自行决定是否渲染。
  */
 export function scoreTierBarColor(score: number | null | undefined): string {
   const tier = scoreTier(score)
   if (tier === 'none') return SCORE_TIER_COLOR.none
-  return SCORE_TIER_COLOR[tier] + 'cc'
+  return SCORE_TIER_BAR_COLOR[tier]
 }

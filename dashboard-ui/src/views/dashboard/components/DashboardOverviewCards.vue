@@ -16,7 +16,7 @@ function platOf(card: CardRow) {
   return PLATFORMS.find((p) => p.key === card.key)!
 }
 
-/** 概览卡得分前景色与 advTxt 标签色：数字等用 scoreTierColor；adv 标签高分档用 scoreTierTagPreset（蓝） */
+/** 概览卡自研列与 ownScoreColStyle 用 scoreTierColor；adv 标签高分档用 scoreTierTagPreset（蓝）。底部「得分」数值与两侧统计同色 */
 function scoreColor(card: CardRow) {
   return scoreTierColor(card.ownScore)
 }
@@ -68,7 +68,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
       @click="goDetail(c.key)"
     >
       <div class="card-head">
-        <div class="card-head-row card-head-row--top">
+        <div class="card-head-row card-head-row--main">
           <div class="card-logo" aria-hidden="true">
             <img
               v-if="platIconSrc(c.key)"
@@ -83,7 +83,29 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
               :style="{ background: platOf(c).color }"
             >{{ platOf(c).logo }}</span>
           </div>
-          <div class="card-brand-name">{{ platOf(c).name }}</div>
+          <div class="card-head-center">
+            <div class="card-brand-name">{{ platOf(c).name }}</div>
+            <div class="card-head-tags">
+              <a-tag
+                size="small"
+                :class="{ 'overview-tag--theme-blue': platOf(c).domestic }"
+                :color="platOf(c).domestic ? 'blue' : 'green'"
+              >
+                {{ platOf(c).type }}
+              </a-tag>
+              <a-tag
+                v-if="c.advTxt"
+                size="small"
+                :class="{ 'overview-tag--theme-blue': scoreTagPreset(c) === 'blue' }"
+                :color="scoreTagPreset(c)"
+              >
+                <template v-for="(seg, idx) in advTxtSegments(c.advTxt)" :key="idx">
+                  <strong v-if="seg.bold" class="adv-txt-num">{{ seg.text }}</strong>
+                  <template v-else>{{ seg.text }}</template>
+                </template>
+              </a-tag>
+            </div>
+          </div>
           <a-button
             type="text"
             size="small"
@@ -101,26 +123,6 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
               }}</span>
             </span>
           </a-button>
-        </div>
-        <div class="card-head-row card-head-row--tag">
-          <a-tag
-            size="small"
-            :class="{ 'overview-tag--theme-blue': platOf(c).domestic }"
-            :color="platOf(c).domestic ? 'blue' : 'green'"
-          >
-            {{ platOf(c).type }}
-          </a-tag>
-          <a-tag
-            v-if="c.advTxt"
-            size="small"
-            :class="{ 'overview-tag--theme-blue': scoreTagPreset(c) === 'blue' }"
-            :color="scoreTagPreset(c)"
-          >
-            <template v-for="(seg, idx) in advTxtSegments(c.advTxt)" :key="idx">
-              <strong v-if="seg.bold" class="adv-txt-num">{{ seg.text }}</strong>
-              <template v-else>{{ seg.text }}</template>
-            </template>
-          </a-tag>
         </div>
       </div>
       <div
@@ -155,7 +157,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
         </div>
         <div class="stat-item">
           <div class="stat-lbl">得分</div>
-          <div class="stat-val" :style="{ color: scoreColor(c) }">{{
+          <div class="stat-val">{{
             c.ownScore != null ? c.ownScore : '—'
           }}</div>
         </div>
@@ -165,29 +167,36 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 </template>
 
 <style scoped>
-/* 概览平台卡片：扁平描边容器（业务逻辑未改，仅 UI） */
+/* 概览平台卡片：浅灰底 + 白块对比区（仅 UI；中间自研列档色仍由 ownScoreColStyle 控制） */
 .dashboard-overview-cards {
-  --overview-card-border: #e5e8ef;
-  /* 已加入对比：与「移除对比」浅蓝底、标签同系描边 */
-  --overview-card-border-in-compare: color-mix(in srgb, var(--blue) 40%, #e8eaf2);
-  --overview-card-shadow-hover: 0 4px 14px rgba(22, 43, 117, 0.12);
-  --overview-card-radius: 4px;
+  --overview-card-border: #e8e8e8;
+  --overview-card-border-in-compare: color-mix(in srgb, var(--blue) 45%, #d9d9d9);
+  --overview-card-hover-bg: #e2e5ee;
+  --overview-card-radius: 8px;
+  --overview-muted: #7d89b0;
+  /* 卡片内芯片/平台名称：略偏薰衣草灰蓝，与标签等 --overview-muted 区分 */
+  --overview-brand-name: #8a94b7;
+  --overview-caption: #9aa3bf;
+  --overview-hover-title: #3d4a63;
+  --overview-hover-tag-bg: #6b7389;
+  --overview-hover-btn-bg: #5a6478;
+  --overview-hover-btn-in-bg: #5c4f7a;
 
   display: grid;
   width: 100%;
   box-sizing: border-box;
-  /* 每行三列均分剩余宽度；minmax(0,1fr) 防止长内容撑破网格 */
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  row-gap: 15px;
+  column-gap: 22px;
 }
 
 .dashboard-overview-cards__empty {
   grid-column: 1 / -1;
   text-align: center;
   padding: 50px;
-  color: #aaa;
+  color: var(--overview-caption);
   font-size: 14px;
-  background: #fff;
+  background: #f2f2f2;
   border-radius: var(--overview-card-radius);
   border: 1px solid var(--overview-card-border);
   box-shadow: none;
@@ -195,32 +204,49 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 
 .score-card {
   font-size: 14px;
-  background: #fff;
+  background: #f2f2f2;
   border-radius: var(--overview-card-radius);
-  border: 1px solid var(--overview-card-border);
-  padding: 22px;
+  border: 1px solid transparent;
+  padding: 10px;
   box-shadow: none;
   cursor: pointer;
   transition:
     border-color 0.2s ease,
-    background-color 0.2s ease,
-    box-shadow 0.2s ease;
+    background-color 0.2s ease;
   position: relative;
   overflow: hidden;
 }
 
-/* 双类链提高优先级，避免 scoped 下与 .score-card 的 border 简写权重拉扯导致仍为灰边 */
 .score-card.score-card--in-compare {
   border: 1px solid var(--overview-card-border-in-compare);
-  box-shadow: 0 2px 10px rgba(91, 126, 201, 0.14);
+  box-shadow: 0 2px 12px rgba(91, 126, 201, 0.12);
 }
 
-/* 悬停一律主题蓝 + 轻阴影（覆盖已加入对比时的描边/阴影） */
 .score-card:hover {
-  transform: none;
-  box-shadow: var(--overview-card-shadow-hover);
-  background: #fafbfc;
-  border-color: var(--color-primary);
+  background: var(--overview-card-hover-bg);
+  box-shadow: none;
+  border-color: transparent;
+}
+
+/* 悬停时与示意图一致：标题加深、标签反色、对比钮深色底白图标 */
+.score-card:hover .card-brand-name {
+  color: var(--overview-hover-title);
+}
+
+.score-card:hover .card-head-tags :deep(.ant-tag) {
+  color: #fff !important;
+  background: var(--overview-hover-tag-bg) !important;
+  border: none !important;
+}
+
+.score-card:hover .card-head-tags :deep(.overview-tag--theme-blue.ant-tag) {
+  color: #fff !important;
+  background: var(--overview-hover-tag-bg) !important;
+  border: none !important;
+}
+
+.score-card:hover .card-head-tags :deep(.overview-tag--theme-blue .adv-txt-num) {
+  color: #fff !important;
 }
 
 .score-card::before {
@@ -228,132 +254,199 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 }
 
 .card-head {
-  --card-logo-size: 40px;
-  --card-head-inline-gap: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 18px;
+  --card-logo-size: 58px;
+  --card-head-inline-gap: 12px;
+  /* 与 tag 同高，+/- 按钮宽高与之对齐 */
+  --overview-chip-h: 28px;
+  margin-bottom: 16px;
 }
 
-.card-head-row--top {
+.card-head-row--main {
   display: flex;
   align-items: center;
   gap: var(--card-head-inline-gap);
   min-width: 0;
 }
 
-.card-head-compare-btn {
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-/* type="text"：不包 Wave，去掉点击水波纹/扩散动画；样式仍按原默认按钮意图覆盖 */
-.card-head-compare-btn.ant-btn.ant-btn-text {
-  border-radius: 2px;
-  border: none;
-  box-shadow: none;
-  font-size: 12px;
-  color: #4e5969;
-  background: transparent;
-  padding-inline: 8px;
-  height: auto;
-  transition: none;
-}
-
-/* 未加入：hover / 键盘聚焦时浅灰底（不含「移除对比」绿底状态） */
-.card-head-compare-btn.ant-btn:not(.card-head-compare-btn--in):hover,
-.card-head-compare-btn.ant-btn:not(.card-head-compare-btn--in):focus-visible {
-  border: none;
-  box-shadow: none;
-  color: #4e5969;
-  background: #f2f3f5;
-}
-
-/* 仅「有鼠标焦点但鼠标未悬停」时清掉底色；否则与 :hover 同时命中时透明会盖掉浅灰 */
-.card-head-compare-btn.ant-btn:not(.card-head-compare-btn--in):focus:not(:focus-visible):not(:hover) {
-  border: none;
-  box-shadow: none;
-  color: #4e5969;
-  background: transparent;
-}
-
-.card-head-compare-btn__inner {
-  display: inline-flex;
+.card-head-center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
+  gap: 8px 15px;
 }
 
-.card-head-compare-btn__txt {
-  color: inherit;
+.card-brand-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--overview-brand-name);
+  letter-spacing: 0.02em;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.2s ease;
 }
 
-.card-head-compare-btn__ico {
-  font-size: 12px;
-  color: inherit;
-}
-
-/* 已加入对比：主题色文字，无底色、无边框 */
-.card-head-compare-btn--in.ant-btn.ant-btn-text {
-  color: var(--purple);
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none;
-}
-
-.card-head-compare-btn--in.ant-btn.ant-btn-text:hover,
-.card-head-compare-btn--in.ant-btn.ant-btn-text:focus-visible {
-  color: var(--purple);
-  background: transparent !important;
-  border: none !important;
-}
-
-.card-head-compare-btn--in.ant-btn.ant-btn-text:focus:not(:focus-visible):not(:hover) {
-  color: var(--purple);
-  background: transparent !important;
-  border: none !important;
-}
-
-/* 第二行：国产（蓝）/ 国际标杆（绿）与「自研快」等并列，与头像左对齐；圆角 6px */
-.card-head-row--tag {
+.card-head-tags {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+  min-width: 0;
 }
 
-.card-head-row--tag :deep(.ant-tag) {
-  border-radius: 6px;
+.card-head-tags :deep(.ant-tag) {
+  margin: 0 !important;
+  border-radius: 4px !important;
   font-size: 14px !important;
+  line-height: 1.35 !important;
+  min-height: var(--overview-chip-h) !important;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 2px 10px !important;
+  color: var(--overview-muted) !important;
+  background: #fff !important;
+  border: none !important;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
-/* 国产 + adv 高分档：覆盖 Ant preset blue，贴近 :root --blue / --purple */
-.card-head-row--tag :deep(.overview-tag--theme-blue.ant-tag) {
-  color: var(--purple) !important;
-  background: color-mix(in srgb, var(--blue) 13%, #ffffff) !important;
-  border-color: color-mix(in srgb, var(--blue) 40%, #e8eaf2) !important;
+.card-head-tags :deep(.overview-tag--theme-blue.ant-tag) {
+  color: var(--overview-muted) !important;
+  background: #fff !important;
+  border: none !important;
 }
 
-.card-head-row--tag :deep(.overview-tag--theme-blue .adv-txt-num) {
-  color: var(--blue) !important;
+.card-head-tags :deep(.overview-tag--theme-blue .adv-txt-num) {
+  color: var(--overview-muted) !important;
 }
 
 .adv-txt-num {
   font-weight: 700;
 }
 
+.card-head-compare-btn {
+  flex-shrink: 0;
+}
+
+/* 对比：与 tag 同尺寸方块、无边框，仅图标（文案保留在 DOM 供读屏） */
+.card-head-compare-btn.ant-btn.ant-btn-text {
+  border-radius: 4px;
+  border: none !important;
+  box-shadow: none;
+  font-size: 14px;
+  color: var(--overview-muted);
+  background: #fff;
+  padding: 0 !important;
+  width: var(--overview-chip-h) !important;
+  height: var(--overview-chip-h) !important;
+  min-width: var(--overview-chip-h) !important;
+  min-height: var(--overview-chip-h) !important;
+  line-height: 1 !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* 卡片悬停或按钮自身悬停/聚焦：深色方钮 + 白图标（替代原先主题蓝描边效果） */
+.score-card:hover .card-head-compare-btn.ant-btn:not(.card-head-compare-btn--in),
+.card-head-compare-btn.ant-btn:not(.card-head-compare-btn--in):hover,
+.card-head-compare-btn.ant-btn:not(.card-head-compare-btn--in):focus-visible {
+  color: #fff;
+  background: var(--overview-hover-btn-bg);
+  border: none !important;
+  box-shadow: none;
+}
+
+/* 仅当卡片未悬停时收敛「鼠标焦点但非 :focus-visible」的底色，避免盖住 .score-card:hover 下的深色按钮 */
+.score-card:not(:hover) .card-head-compare-btn.ant-btn:not(.card-head-compare-btn--in):focus:not(:focus-visible):not(:hover) {
+  color: var(--overview-muted);
+  background: #fff;
+  border: none !important;
+  box-shadow: none;
+}
+
+.card-head-compare-btn__inner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-head-compare-btn__txt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.card-head-compare-btn__ico {
+  font-size: 14px;
+  color: inherit;
+}
+
+.card-head-compare-btn--in.ant-btn.ant-btn-text {
+  color: var(--purple);
+  background: #fff !important;
+  border: none !important;
+  box-shadow: none;
+}
+
+.score-card:hover .card-head-compare-btn--in.ant-btn.ant-btn-text {
+  color: #fff !important;
+  background: var(--overview-hover-btn-in-bg) !important;
+  border: none !important;
+}
+
+.card-head-compare-btn--in.ant-btn.ant-btn-text:hover,
+.card-head-compare-btn--in.ant-btn.ant-btn-text:focus-visible {
+  color: var(--purple);
+  background: #faf8ff !important;
+  border: none !important;
+}
+
+.score-card:hover .card-head-compare-btn--in.ant-btn.ant-btn-text:hover,
+.score-card:hover .card-head-compare-btn--in.ant-btn.ant-btn-text:focus-visible {
+  color: #fff !important;
+  background: color-mix(in srgb, var(--overview-hover-btn-in-bg) 92%, #000) !important;
+  border: none !important;
+}
+
+.card-head-compare-btn--in.ant-btn.ant-btn-text:focus:not(:focus-visible):not(:hover) {
+  color: var(--purple);
+  background: #fff !important;
+  border: none !important;
+}
+
+.score-card:hover .card-head-compare-btn--in.ant-btn.ant-btn-text:focus:not(:focus-visible):not(:hover) {
+  color: #fff !important;
+  background: var(--overview-hover-btn-in-bg) !important;
+  border: none !important;
+}
+
 .card-logo {
   width: var(--card-logo-size);
   height: var(--card-logo-size);
   flex-shrink: 0;
-  padding: 0;
-  border-radius: 7px;
+  padding: 4px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: #fff;
+  border: none;
   box-sizing: border-box;
 }
 
@@ -374,25 +467,14 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   color: #fff;
   font-size: 14px;
   font-weight: 700;
-  border-radius: inherit;
-}
-
-.card-brand-name {
-  flex: 1;
-  font-size: 14px;
-  font-weight: 700;
-  color: #1a1a2e;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  border-radius: 8px;
 }
 
 .card-scores {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 18px;
 }
 
 .card-scores--single {
@@ -401,58 +483,78 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
 
 .score-col {
   text-align: center;
-  padding: 14px 10px;
-  border-radius: 4px;
-  background: #f2f3f5;
+  padding: 16px 12px 14px;
+  border-radius: 8px;
+  background: #fff;
+  border: none;
+  box-sizing: border-box;
 }
 
 .sc-label {
   font-size: 14px;
-  color: #888;
-  margin-bottom: 6px;
+  font-weight: 600;
+  margin-bottom: 8px;
 }
 
 .sc-num {
-  font-size: 17px;
+  font-size: 32px;
   font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   margin-bottom: 2px;
 }
 
 .sc-cap {
-  font-size: 12px;
-  color: #888;
-  line-height: 1.2;
-  margin-bottom: 4px;
+  font-size: 14px;
+  line-height: 1.25;
+  margin-bottom: 6px;
 }
 
 .sc-cap--base {
-  color: #8c8c8c;
+  color: var(--overview-muted);
 }
 
-/* 自研列字色由模板内 ownScoreColStyle（与得分同档）控制 */
-
-/* 灰底列：字色加深，保证在 #F2F3F5 上可读 */
 .sc-label.sc-label--base {
-  color: #595959;
+  color: var(--overview-muted);
 }
 
 .sc-num.sc-num--base {
-  color: #262626;
+  color: var(--overview-muted);
 }
 
 .sc-val.sc-val--base {
-  color: #595959;
+  color: var(--overview-muted);
+  font-weight: 600;
 }
 
 .sc-val {
   font-size: 14px;
-  color: #666;
+  font-weight: 600;
+}
+
+.stat-lbl {
+  font-size: 14px;
+  color: var(--overview-caption);
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+
+.stat-val {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--overview-muted);
+}
+
+.stat-val--wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .card-stats {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
   padding: 0;
   margin: 0;
   background: transparent;
@@ -464,25 +566,6 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
   flex: 1 1 0;
   min-width: 0;
   text-align: center;
-}
-
-.stat-lbl {
-  font-size: 14px;
-  color: #aaa;
-  margin-bottom: 3px;
-  white-space: nowrap;
-}
-
-.stat-val {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1a1a2e;
-}
-
-.stat-val--wrap {
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
 }
 
 @media (max-width: 1024px) {

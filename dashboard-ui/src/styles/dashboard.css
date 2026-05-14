@@ -107,7 +107,7 @@ body{
   display:block;font-size:15px;font-weight:700;color:#fff;line-height:1.3;
 }
 .sb-section-line{
-  margin-top:10px;height:1px;background:rgba(255,255,255,0.28);
+  margin-top:10px;height:1px;background:#fff;
   width:100%;
 }
 
@@ -153,7 +153,7 @@ body{
   padding:4px;
   display:block;
 }
-.brand-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;}
+.brand-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px;}
 .brand-name{font-size:15px;font-weight:600;color:#fff;line-height:1.25;}
 .brand-tagline{
   font-size:12px;font-weight:400;color:rgba(255,255,255,0.78);line-height:1.25;
@@ -246,7 +246,8 @@ body{
   min-height:0;
   /* 滚动由各子视图自行承担：详情页标题栏固定在卡片顶，正文在 .detail-panel__scroll 内滚动 */
   overflow:hidden;
-  padding:0 0 16px;
+  padding:0;
+  margin:0 10px;
 }
 .overview-panel,
 .detail-wrap,
@@ -258,7 +259,10 @@ body{
   display:block;
   flex:1;
   min-height:0;
+  overflow-x:hidden;
   overflow-y:auto;
+  /* 底部留白：避免最后一行卡片贴底被白卡片圆角 / overflow 裁切 */
+  padding-bottom:20px;
 }
 .compare-wrap.active{
   display:flex;
@@ -360,14 +364,14 @@ tr:hover > td:not(.ant-table-cell){background:#fff;}
 .prec-badge{padding:3px 8px;border-radius:4px;font-size:11px;font-weight:500;}
 .p-fp16{background:#e3f2fd;color:#1565c0;}
 .p-bf16{background:#f3e5f5;color:#7b1fa2;}
-.p-fp32{background:#e8f5e9;color:#2e7d32;}
+.p-fp32{background:#e8f5e9;color:hsl(128.43deg 84.62% 28.04%);}
 .score-cell{display:flex;align-items:center;gap:6px;}
 .score-num{font-weight:700;color:var(--blue);}
-.score-up{color:#00c853;}
-.score-dn{color:#ef5350;}
+.score-up{color:hsl(128.43deg 84.62% 28.04%);}
+.score-dn{color:hsl(0deg 100% 50%);}
 .score-na{color:#999;font-weight:600;}
 .op-warn-icon{cursor:help;font-size:14px;}
-.op-detail-row--warn td:first-child{box-shadow:inset 3px 0 0 #c62828;}
+.op-detail-row--warn td:first-child{box-shadow:inset 3px 0 0 hsl(0deg 100% 50%);}
 .dual-bar{display:flex;flex-direction:column;gap:3px;min-width:110px;}
 .dual-row{display:flex;align-items:center;gap:4px;}
 .dual-lbl{

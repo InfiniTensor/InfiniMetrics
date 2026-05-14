@@ -24,8 +24,8 @@ withDefaults(
   min-height: 0;
   height: 100%;
   overflow: hidden;
-  padding: 16px;
-  border-radius: 4px;
+  padding: 16px 16px 16px 16px;
+  border-radius: 8px;
   background: #fff;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
 }
