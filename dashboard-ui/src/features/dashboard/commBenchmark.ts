@@ -96,11 +96,13 @@ function commPickMaxBwRow(rows: CommImportRow[], want: 'p2p' | 'allreduce'): Com
 /**
  * 概览卡：
  * - 子集仅含一种 comm_type（如顶栏筛成 p2p / allreduce）：大分 = 该类型下 **bw 最高** 一行的 `vsA100`，`openScore` 为空。
- * - 同时含 p2p 与 allreduce：左/右大分为各自类型 max-bw 行的 `vsA100`。
+ * - 同时含 p2p 与 allreduce：左/右大分为各自类型 max-bw 行的 `vsA100`；`footerScore` = 两者相对 NVIDIA 百分数较高者（供底部「得分」）。
  */
 export function buildCommCardMetrics(rows: CommImportRow[]): {
   ownScore: number
   openScore: number | null
+  /** 概览卡底部「得分」：双列时为 max(p2p, allreduce) 的 vs%；单列时同 ownScore */
+  footerScore: number
   ownVal: string
   openVal: string | null
   n: number
@@ -136,6 +138,7 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
     return {
       ownScore,
       openScore: null,
+      footerScore: ownScore,
       ownVal,
       openVal: null,
       n: rows.length,
@@ -164,6 +167,7 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
     return {
       ownScore,
       openScore: null,
+      footerScore: ownScore,
       ownVal,
       openVal: null,
       n: rows.length,
@@ -177,6 +181,7 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
 
   const ownScore = p2p!.vsA100
   const openScore = ar!.vsA100
+  const footerScore = Math.max(ownScore, openScore)
   const ownVal = `${formatCommBandwidthGb(p2p!.bw)} GB/s`
   const openVal = `${formatCommBandwidthGb(ar!.bw)} GB/s`
   const rep = (p2p!.bw >= ar!.bw ? p2p! : ar!)
@@ -196,6 +201,7 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
   return {
     ownScore,
     openScore,
+    footerScore,
     ownVal,
     openVal,
     n: rows.length,

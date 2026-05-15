@@ -165,7 +165,7 @@ function advTxtSegments(text: string): { text: string; bold: boolean }[] {
         <div class="stat-item">
           <div class="stat-lbl">得分</div>
           <div class="stat-val">{{
-            c.ownScore != null ? c.ownScore : '—'
+            c.footerScore != null ? c.footerScore : c.ownScore != null ? c.ownScore : '—'
           }}</div>
         </div>
       </div>

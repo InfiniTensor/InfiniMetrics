@@ -13508,6 +13508,7 @@ export const COMM_CARD_FROM_FILES = {
     "openFw": "allreduce",
     "ownScore": 20,
     "openScore": 131,
+    "footerScore": 131,
     "ownVal": "53.1 GB/s",
     "openVal": "45.8 GB/s",
     "n": 2,
@@ -13521,6 +13522,7 @@ export const COMM_CARD_FROM_FILES = {
     "openFw": "allreduce",
     "ownScore": 100,
     "openScore": 100,
+    "footerScore": 100,
     "ownVal": "270 GB/s",
     "openVal": "35 GB/s",
     "n": 2,
@@ -13606,7 +13608,7 @@ export const BW_TABLE_FROM_FILES = {
   ],
   "nvidia": [
     {
-      "model": "A100",
+      "model": "NVIDIA",
       "add": 1630.7558,
       "copy": 1585.1489,
       "scale": 1579.7755,
@@ -13630,7 +13632,7 @@ export const BW_CARD_FROM_FILES = {
     "n": 1,
     "extra": "910B3",
     "adv": false,
-    "advTxt": "相对 NVIDIA A100 基线 96%"
+    "advTxt": "相对 NVIDIA 基线 96%"
   },
   "cambricon": {
     "key": "cambricon",
@@ -13643,7 +13645,7 @@ export const BW_CARD_FROM_FILES = {
     "n": 2,
     "extra": "MLU370 / MLU590",
     "adv": true,
-    "advTxt": "HBM 均值相对 NVIDIA A100 基线 133%"
+    "advTxt": "HBM 均值相对 NVIDIA 基线 133%"
   },
   "iluvatar": {
     "key": "iluvatar",
@@ -13656,7 +13658,7 @@ export const BW_CARD_FROM_FILES = {
     "n": 2,
     "extra": "TG150 / TG200",
     "adv": false,
-    "advTxt": "相对 NVIDIA A100 基线 36%"
+    "advTxt": "相对 NVIDIA 基线 36%"
   },
   "metax": {
     "key": "metax",
@@ -13669,7 +13671,7 @@ export const BW_CARD_FROM_FILES = {
     "n": 1,
     "extra": "C500",
     "adv": true,
-    "advTxt": "HBM 均值相对 NVIDIA A100 基线 104%"
+    "advTxt": "HBM 均值相对 NVIDIA 基线 104%"
   },
   "mthreads": {
     "key": "mthreads",
@@ -13682,7 +13684,7 @@ export const BW_CARD_FROM_FILES = {
     "n": 1,
     "extra": "S5000",
     "adv": false,
-    "advTxt": "相对 NVIDIA A100 基线 87%"
+    "advTxt": "相对 NVIDIA 基线 87%"
   },
   "nvidia": {
     "key": "nvidia",
@@ -13693,14 +13695,14 @@ export const BW_CARD_FROM_FILES = {
     "ownScore": 100,
     "ownVal": "1607.5 GB/s",
     "n": 1,
-    "extra": "A100",
+    "extra": "NVIDIA",
     "adv": true,
-    "advTxt": "HBM 均值相对 NVIDIA A100 基线 100%"
+    "advTxt": "HBM 均值相对 NVIDIA 基线 100%"
   }
 } as Record<string, Record<string, unknown>>
 
 export const BENCHMARK_DATA_META = {
-  "generatedAt": "2026-05-14T02:43:48.822Z",
+  "generatedAt": "2026-05-15T02:58:35.857Z",
   "operatorSources": [
     "new_data\\operator\\ascend_operator_20260430.csv",
     "new_data\\operator\\cambricon_operator_20260506.csv",
@@ -13751,7 +13753,8 @@ export const BENCHMARK_DATA_META = {
     "iluvatar": "2026-04-29",
     "metax": "2026-04-29",
     "mthreads": "2026-04-29",
-    "nvidia": "2026-04-29"
+    "nvidia": "2026-04-29",
+    "~$metax": "2026-04-29"
   },
   "bwDatasetUpdatedAt": "2026-04-29"
 }

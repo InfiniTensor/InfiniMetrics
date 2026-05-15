@@ -320,6 +320,7 @@ export function buildInferCardMetrics(
 /**
  * 详情吞吐柱图：按 batch+inLen 归并（同一组多 out_len 取各侧 TPS 最大），
  * 类目 `bs{batch} in{inLen}`，与产品 X 轴格式一致。
+ * 仅保留「当前平台与 NVIDIA 在该 (batch, inLen) 上均有有效吞吐」的类目，避免单侧无数据仍占轴位。
  */
 export function alignInferBarByBatchIn<
   T extends { batch: number; inLen: number; tps: number },
@@ -336,7 +337,10 @@ export function alignInferBarByBatchIn<
   }
   const pm = mergeMax(plat)
   const nm = mergeMax(nv)
-  const keys = new Set<string>([...pm.keys(), ...nm.keys()])
+  const keys = new Set<string>()
+  for (const k of pm.keys()) {
+    if (nm.has(k)) keys.add(k)
+  }
   const sorted = [...keys].sort((a, b) => {
     const [ab, ai] = a.split(':').map(Number)
     const [bb, bi] = b.split(':').map(Number)

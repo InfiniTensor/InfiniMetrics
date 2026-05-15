@@ -23,7 +23,7 @@ const compareTableColumns: ColumnsType<CompareTableRecord> = [
   { title: '开源/参考值', key: 'openVal', width: 132, ellipsis: true },
   { title: '测试条数', key: 'n', width: 96 },
   { title: '配置', key: 'extra', minWidth: 140, width: 200, ellipsis: true },
-  { title: '相对 A100', key: 'delta', width: 112 },
+  { title: '相对 NVIDIA', key: 'delta', width: 112 },
 ]
 
 function compareRowKey(r: CompareTableRecord) {

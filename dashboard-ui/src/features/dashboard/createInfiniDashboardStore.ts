@@ -524,7 +524,7 @@ export function createInfiniDashboardStore() {
       if (!rows?.length) return {}
       const categories = rows.map((r) => `${r.framework}·${r.model}`)
       const gridBottom = maxCompactDetailBarGridBottom(categories)
-      return buildTrainBarVs(rows, { gridBottom })
+      return buildTrainBarVs(rows, { gridBottom, trainPlatBarName: plat.name })
     }
     if (dk === 'comm') {
       const rows = commDetailRows.value
@@ -585,14 +585,18 @@ export function createInfiniDashboardStore() {
 
   const tableNotice = computed(() => {
     const k = activeDimKey.value
+    /**
+     * 算子维度（产品亦称「测试维度」）数据明细「得分说明」——文案已定稿。
+     * 禁止在未获产品书面确认的情况下修改下列 return 字符串或删减本注释块。
+     */
     if (k === 'op')
-      return '每行得分 = PyTorch延迟 ÷ InfiniCore延迟 × 100（同 shape + dtype）· >100 自研更快；备注含 failed / Device Type Not Supported 时 InfiniCore 延迟不参与计分，得分显示为「—」· ✦ InfiniCore 为自研框架'
+      return '每行得分 = PyTorch延迟 ÷ InfiniCore延迟 × 100（同 shape + dtype）· >100 自研更快 · 平均得分 = 所有行均值 · ✦ InfiniCore 为自研框架'
     if (k === 'infer')
-      return 'Prefill / Decode 吞吐（tokens/s）· 相对 NVIDIA 同 batch+in-len+out-len 配置；顶栏 Batch / In-len 与表格、KPI、柱状图联动取交集'
+      return '吞吐量（tokens/s）· 数据越高越好 · vs NVIDIA InfiniLM 同配置'
     if (k === 'train')
-      return '训练吞吐 tpps = tokens per process per second · 相对 NVIDIA 同 (framework, model, n_gpu, seq_len, dtype) 配置；顶栏「框架」与表格、KPI、柱状图联动'
+      return '训练吞吐 tpps = tokens per process per second · vs NVIDIA Megatron 基线'
     if (k === 'comm')
-      return '带宽 GB/s · 行级 vs NVIDIA = 同 (comm_type, n_gpu) 下本机 bw ÷ NVIDIA bw ×100；顶栏「通信类型」与表格、柱状图联动；上方四格 KPI 为全表各通信类型代表行（同类型取最高带宽）'
+      return '带宽 vs NVIDIA NVLink 基线 · 单向带宽'
     if (k === 'bw')
       return '访存带宽（GB/s）vs NVIDIA 访存带宽 · add / copy / scale / triad 四模式均值'
     return ''
@@ -816,7 +820,7 @@ export function createInfiniDashboardStore() {
           {
             val: best?.avg != null ? bwVsNvidiaPercent(best.avg) + '%' : '—',
             lbl: 'vs NVIDIA',
-            sub: `A100 基线 ${BW_NVIDIA_BASELINE_GBPS} GB/s`,
+            sub: `NVIDIA 基线 ${BW_NVIDIA_BASELINE_GBPS} GB/s`,
             valSm: true,
           },
           {

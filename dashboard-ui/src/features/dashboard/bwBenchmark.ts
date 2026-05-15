@@ -1,11 +1,11 @@
 /**
  * 访存维度（`new_data/bw`）：文件列 `model`、`add_bw_GBps`、`copy_bw_GBps`、`scale_bw_GBps`、`triad_bw_GBps`、`bw_GBps`（表头规范化后为下划线小写）、`date`、`tester`、`remarks`。
- * 得分统一：四模式均值 `avg` 对 **NVIDIA A100 固定基线** `BW_NVIDIA_BASELINE_GBPS` × 100（行级 `vsNvidia`、概览「全部」）。
+ * 得分统一：四模式均值 `avg` 对 **NVIDIA 固定基线** `BW_NVIDIA_BASELINE_GBPS` × 100（行级 `vsNvidia`、概览「全部」）。
  * 详情顶栏指定单模式时，表格「vs NVIDIA（该模式）」与 KPI 一致：该行该模式值 ÷ NVIDIA 参考行（`pickBestBwRow`）同模式实测 ×100；参考列缺失时回退为固定基线。
  * 概览指定单模式时，卡片叠层得分 = 该平台该模式峰值 ÷ NVIDIA 参考行（`pickBestBwRow(nvidia)`）同模式 ×100；参考列缺失时回退固定基线。
  */
 
-/** 规格：NVIDIA A100 四模式均值对标基线（GB/s） */
+/** 规格：NVIDIA 四模式均值对标基线（GB/s） */
 export const BW_NVIDIA_BASELINE_GBPS = 1607.46
 
 export type BwDetailRow = {
@@ -15,7 +15,7 @@ export type BwDetailRow = {
   scale: number | null
   triad: number | null
   avg: number | null
-  /** 行级：该行四模式均值 `avg` 对 A100 基线之百分比（与 `bwVsNvidiaPercent(avg)` 一致） */
+  /** 行级：该行四模式均值 `avg` 对 NVIDIA 基线之百分比（与 `bwVsNvidiaPercent(avg)` 一致） */
   vsNvidia: number
   remarks?: string
   tester?: string
@@ -61,7 +61,7 @@ export function buildBwCardMetrics(rows: BwDetailRow[]): {
   if (!rows.length) return null
   const best = pickBestBwRow(rows)
   if (!best || best.avg == null) return null
-  /** 大分与详情表「vs NVIDIA」列一致（avg 对 A100） */
+  /** 大分与详情表「vs NVIDIA」列一致（avg 对 NVIDIA 基线） */
   const vs = best.vsNvidia
   const ownVal = `${best.avg.toFixed(1)} GB/s`
   const names = [...new Set(rows.map((r) => String(r.model || '').trim()).filter(Boolean))].sort((a, b) =>
@@ -70,8 +70,8 @@ export function buildBwCardMetrics(rows: BwDetailRow[]): {
   const extra = names.length ? names.join(' / ') : best.model || '—'
   const adv = vs >= 100
   const advTxt = adv
-    ? `HBM 均值相对 NVIDIA A100 基线 ${vs}%`
-    : `相对 NVIDIA A100 基线 ${vs}%`
+    ? `HBM 均值相对 NVIDIA 基线 ${vs}%`
+    : `相对 NVIDIA 基线 ${vs}%`
   return {
     ownScore: vs,
     ownVal,

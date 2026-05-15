@@ -55,6 +55,8 @@ export type CardRow = {
   n?: number
   ownFw?: string
   openFw?: string
+  /** 通信概览双列时：底部「得分」= max(p2p vs%, allreduce vs%)；其它维度或未设时底部仍用 ownScore */
+  footerScore?: number | null
   /** 推理概览：左/右列大分下方小字 */
   inferOwnCaption?: string
   inferOpenCaption?: string
@@ -176,6 +178,7 @@ function overviewCardNoFilterData(card: CardRow, scope: string): CardRow {
     adv: false,
     /** 产品要求：概览卡禁止再展示「暂无该筛选数据」之类弱化文案，留空让 a-tag 不渲染 */
     advTxt: '',
+    footerScore: null,
   }
 }
 
@@ -290,6 +293,7 @@ export function overlayCommOverviewCardFromFilters(
     extra: m.extra,
     adv: m.adv,
     advTxt: m.advTxt,
+    footerScore: m.footerScore,
   }
 }
 
@@ -355,8 +359,8 @@ export function overlayBwOverviewCardFromFilters(
       : bwVsNvidiaPercent(val)
   const adv = vs >= 100
   const advTxt = adv
-    ? `${modePill} 带宽相对 NVIDIA A100 参考行同模式 ${vs}%`
-    : `${modePill} 相对 NVIDIA A100 参考行同模式 ${vs}%`
+    ? `${modePill} 带宽相对 NVIDIA 参考行同模式 ${vs}%`
+    : `${modePill} 相对 NVIDIA 参考行同模式 ${vs}%`
   return {
     ...card,
     ownFw: card.ownFw ?? 'HBM均值',

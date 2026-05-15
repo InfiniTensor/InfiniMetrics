@@ -102,6 +102,31 @@ function inferSortTps(a: InferRow, b: InferRow) {
   return (a.tps ?? 0) - (b.tps ?? 0)
 }
 
+function inferSortModel(a: InferRow, b: InferRow) {
+  return String(a.model ?? '').localeCompare(String(b.model ?? ''), 'en')
+}
+
+function inferSortBatch(a: InferRow, b: InferRow) {
+  return a.batch - b.batch
+}
+
+function inferSortInLen(a: InferRow, b: InferRow) {
+  return a.inLen - b.inLen
+}
+
+function inferSortOutLen(a: InferRow, b: InferRow) {
+  const va = a.outLen
+  const vb = b.outLen
+  if (va == null && vb == null) return 0
+  if (va == null) return 1
+  if (vb == null) return -1
+  return va - vb
+}
+
+function inferSortDtype(a: InferRow, b: InferRow) {
+  return String(a.dtype ?? '').localeCompare(String(b.dtype ?? ''), 'en')
+}
+
 function inferSortTtft(a: InferRow, b: InferRow) {
   const va = a.ttft
   const vb = b.ttft
@@ -326,16 +351,54 @@ function opCustomRow(r: OpDetailRow) {
 }
 
 const inferTableColumns = computed<ColumnsType<InferRow>>(() => {
+  const tab = detailState.value.inferTab
   const cols: ColumnsType<InferRow> = [
-    { title: '模型', key: 'model', minWidth: 160, width: 168 },
-    { title: 'Batch', dataIndex: 'batch', key: 'batch', width: 84 },
-    { title: 'In-len', dataIndex: 'inLen', key: 'inLen', width: 84 },
-    { title: 'Out-len', key: 'outLen', width: 84 },
-    { title: '精度', key: 'dtype', width: 88 },
     {
-      title: 'TPS',
+      title: '模型',
+      dataIndex: 'model',
+      key: 'model',
+      minWidth: 160,
+      width: 168,
+      sorter: inferSortModel,
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: 'Batch',
+      dataIndex: 'batch',
+      key: 'batch',
+      width: 84,
+      sorter: inferSortBatch,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'In-len',
+      dataIndex: 'inLen',
+      key: 'inLen',
+      width: 84,
+      sorter: inferSortInLen,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: 'Out-len',
+      dataIndex: 'outLen',
+      key: 'outLen',
+      width: 84,
+      sorter: inferSortOutLen,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: '精度',
+      dataIndex: 'dtype',
+      key: 'dtype',
+      width: 88,
+      sorter: inferSortDtype,
+      sortDirections: ['ascend', 'descend'],
+    },
+    {
+      title: tab === 'prefill' ? 'Prefill 吞吐（tokens/s）' : 'Decode 吞吐（tokens/s）',
+      dataIndex: 'tps',
       key: 'tps',
-      width: 108,
+      width: 132,
       sorter: inferSortTps,
       sortDirections: ['descend', 'ascend'],
     },
@@ -783,7 +846,11 @@ function inferRowKey(r: InferRow) {
                 <span v-else style="color: #000000">—</span>
               </template>
               <template v-else-if="column.key === 'tps'">
-                <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{ record.tps.toLocaleString() }}</span>
+                <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{
+                  record.tps != null && Number.isFinite(record.tps)
+                    ? record.tps.toLocaleString()
+                    : '—'
+                }}</span>
               </template>
               <template v-else-if="column.key === 'ttft'">
                 <span style="color: #000000">{{ record.ttft ? record.ttft + 'ms' : '—' }}</span>

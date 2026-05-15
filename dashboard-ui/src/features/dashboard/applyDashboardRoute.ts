@@ -128,13 +128,14 @@ export function applyDashboardRoute(
         const li = Math.min(Math.max(0, pin[1] ?? 0), inLenPills.length - 1)
         const bLab = batchPills[bi]
         const lLab = inLenPills[li]
-        const batchOk = bi === 0 || bLab === '全部' || batches.has(Number(bLab))
-        const inLenOk = li === 0 || lLab === '全部' || lens.has(Number(lLab))
-        if (
-          batchOk &&
-          inLenOk &&
-          inferPlatHasFilteredRow(plat.key, inferTbl, bLab, lLab)
-        ) {
+        /**
+         * 详情顶栏推理筛与算子/通信一致：不展示「全部」pill（见 DashboardFilterBar）。
+         * 若沿用概览的索引 0 或「全部」文案，store 里仍是 unionIndex 0，详情区无对应按钮 → 表现为未选中。
+         * 仅当 Batch、In-len 均为具体项且在平台数据中存在时才沿用概览选择。
+         */
+        const batchOk = bi > 0 && bLab !== '全部' && batches.has(Number(bLab))
+        const inLenOk = li > 0 && lLab !== '全部' && lens.has(Number(lLab))
+        if (batchOk && inLenOk && inferPlatHasFilteredRow(plat.key, inferTbl, bLab, lLab)) {
           foundBi = bi
           foundLi = li
         }

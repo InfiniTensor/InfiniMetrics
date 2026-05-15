@@ -83,7 +83,7 @@ function bwStaticRow(r: {
 }
 
 export const PLATFORMS = [
-  {key:'nvidia',    name:'NVIDIA A100', type:'国际标杆', color:'#76b900', domestic:false, logo:'NV'},
+  {key:'nvidia',    name:'NVIDIA', type:'国际标杆', color:'#76b900', domestic:false, logo:'NV'},
   {key:'mthreads',  name:'摩尔线程',   type:'国产',     color:'#0066cc', domestic:true,  logo:'MT'},
   {key:'cambricon', name:'寒武纪',      type:'国产',     color:'#c0392b', domestic:true,  logo:'CB'},
   {key:'metax',     name:'沐曦',        type:'国产',     color:'#1a73e8', domestic:true,  logo:'MX'},
@@ -140,11 +140,11 @@ function mergeTrainDimensionCards(staticCards: CardRow[]): CardRow[] {
 
 const CARD_DATA_INFER_STATIC: CardRow[] = [
   {key:'nvidia',    ownScore:100, openScore:100, ownVal:'13.5K tok/s', openVal:'3.3K tok/s', n:30, extra:'batch=64 in=256 out=128', ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'基准平台'},
-  {key:'mthreads',  ownScore:90,  openScore:52,  ownVal:'7.3K tok/s',  openVal:'1.8K tok/s', n:30, extra:'batch=64 in=32 out=128',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 10% vs A100'},
-  {key:'cambricon', ownScore:17,  openScore:20,  ownVal:'1.4K tok/s',  openVal:'221 tok/s',  n:30, extra:'batch=16 in=32 out=128',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 83% vs A100'},
-  {key:'hygon',     ownScore:103, openScore:45,  ownVal:'8.4K tok/s',  openVal:'33.4K tok/s',n:30, extra:'batch=64 in=32 out=256',  ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 3% vs A100'},
-  {key:'metax',     ownScore:82,  openScore:88,  ownVal:'1.4K tok/s',  openVal:'66.8K tok/s',n:30, extra:'batch=1 in=32 out=256',   ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 18% vs A100'},
-  {key:'generic',   ownScore:140, openScore:110, ownVal:'2.5K tok/s',  openVal:'83.7K tok/s',n:30, extra:'batch=1 in=32 out=256',   ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 40% vs A100'},
+  {key:'mthreads',  ownScore:90,  openScore:52,  ownVal:'7.3K tok/s',  openVal:'1.8K tok/s', n:30, extra:'batch=64 in=32 out=128',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 10% vs NVIDIA'},
+  {key:'cambricon', ownScore:17,  openScore:20,  ownVal:'1.4K tok/s',  openVal:'221 tok/s',  n:30, extra:'batch=16 in=32 out=128',  ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 83% vs NVIDIA'},
+  {key:'hygon',     ownScore:103, openScore:45,  ownVal:'8.4K tok/s',  openVal:'33.4K tok/s',n:30, extra:'batch=64 in=32 out=256',  ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 3% vs NVIDIA'},
+  {key:'metax',     ownScore:82,  openScore:88,  ownVal:'1.4K tok/s',  openVal:'66.8K tok/s',n:30, extra:'batch=1 in=32 out=256',   ownFw:'Prefill ✦', openFw:'Decode', adv:false, advTxt:'落后 18% vs NVIDIA'},
+  {key:'generic',   ownScore:140, openScore:110, ownVal:'2.5K tok/s',  openVal:'83.7K tok/s',n:30, extra:'batch=1 in=32 out=256',   ownFw:'Prefill ✦', openFw:'Decode', adv:true,  advTxt:'领先 40% vs NVIDIA'},
 ]
 
 // Card data per dimension — ownFw=自研框架 label, openFw=开源框架 label
@@ -183,12 +183,12 @@ function mergeBwDimensionCards(staticCards: CardRow[]): CardRow[] {
 }
 
 const CARD_DATA_BW_STATIC: CardRow[] = [
-  {key:'nvidia',    ownScore:null, openScore:null, ownVal:'1607.5 GB/s', openVal:null, n:4, extra:'A100', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'访存基准'},
-  {key:'cambricon', ownScore:null, openScore:null, ownVal:'2131.4 GB/s', openVal:null, n:4, extra:'MLU370 / MLU590', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100'},
-  {key:'mthreads',  ownScore:null, openScore:null, ownVal:'1400.9 GB/s', openVal:null, n:4, extra:'S5000', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 13%'},
-  {key:'ascend',    ownScore:null, openScore:null, ownVal:'1540.0 GB/s', openVal:null, n:1, extra:'910B3', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 4%'},
-  {key:'metax',     ownScore:null, openScore:null, ownVal:'1677.7 GB/s', openVal:null, n:4, extra:'C500', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 A100 4%'},
-  {key:'iluvatar',  ownScore:null, openScore:null, ownVal:'586.0 GB/s',  openVal:null, n:1, extra:'TG150', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 A100 64%'},
+  {key:'nvidia',    ownScore:null, openScore:null, ownVal:'1607.5 GB/s', openVal:null, n:4, extra:'NVIDIA', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'访存基准'},
+  {key:'cambricon', ownScore:null, openScore:null, ownVal:'2131.4 GB/s', openVal:null, n:4, extra:'MLU370 / MLU590', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 NVIDIA'},
+  {key:'mthreads',  ownScore:null, openScore:null, ownVal:'1400.9 GB/s', openVal:null, n:4, extra:'S5000', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 NVIDIA 13%'},
+  {key:'ascend',    ownScore:null, openScore:null, ownVal:'1540.0 GB/s', openVal:null, n:1, extra:'910B3', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 NVIDIA 4%'},
+  {key:'metax',     ownScore:null, openScore:null, ownVal:'1677.7 GB/s', openVal:null, n:4, extra:'C500', ownFw:'HBM均值', openFw:'', adv:true,  advTxt:'超越 NVIDIA 4%'},
+  {key:'iluvatar',  ownScore:null, openScore:null, ownVal:'586.0 GB/s',  openVal:null, n:1, extra:'TG150', ownFw:'HBM均值', openFw:'', adv:false, advTxt:'落后 NVIDIA 64%'},
 ]
 
 export const CARD_DATA = {
@@ -304,18 +304,18 @@ const OP_TABLE_STATIC = {
 const INFER_TABLE_STATIC = {
   nvidia:{
     prefill:[
-      {batch:1,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:3800,  ttft:8.2,  framework:'InfiniLM'},
-      {batch:4,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:8200,  ttft:9.1,  framework:'InfiniLM'},
-      {batch:16, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:11400, ttft:12.3, framework:'InfiniLM'},
-      {batch:64, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:12900, ttft:24.1, framework:'InfiniLM'},
-      {batch:64, inLen:4096, outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:9800,  ttft:89.5, framework:'InfiniLM'},
+      {batch:1,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:3800,  ttft:8.2,  framework:'InfiniLM'},
+      {batch:4,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:8200,  ttft:9.1,  framework:'InfiniLM'},
+      {batch:16, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:11400, ttft:12.3, framework:'InfiniLM'},
+      {batch:64, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:12900, ttft:24.1, framework:'InfiniLM'},
+      {batch:64, inLen:4096, outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:9800,  ttft:89.5, framework:'InfiniLM'},
     ],
     decode:[
-      {batch:1,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:1200, framework:'InfiniLM'},
-      {batch:4,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:2800, framework:'InfiniLM'},
-      {batch:16, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:3100, framework:'InfiniLM'},
-      {batch:64, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:3700, framework:'InfiniLM'},
-      {batch:64, inLen:4096, outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA A100', date:'2026-04-29', tps:2900, framework:'InfiniLM'},
+      {batch:1,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:1200, framework:'InfiniLM'},
+      {batch:4,  inLen:32,   outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:2800, framework:'InfiniLM'},
+      {batch:16, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:3100, framework:'InfiniLM'},
+      {batch:64, inLen:256,  outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:3700, framework:'InfiniLM'},
+      {batch:64, inLen:4096, outLen:128, model:'9G8B', dtype:'BF16', nGpu:1, remarks:'NVIDIA', date:'2026-04-29', tps:2900, framework:'InfiniLM'},
     ],
   },
   mthreads:{
@@ -561,7 +561,7 @@ export const COMM_TABLE = mergeTrainTableByPlatform(
 const BW_TABLE_STATIC: Record<string, BwDetailRow[]> = {
   nvidia: [
     bwStaticRow({
-      model: 'A100',
+      model: 'NVIDIA',
       add: 1630.7558,
       copy: 1585.1489,
       scale: 1579.7755,

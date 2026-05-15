@@ -12,7 +12,7 @@ export const DETAIL_TEST_ENV_OP_DEVICE: Record<string, string> = {
   hygon: '海光 BW C-3000',
   mthreads: '摩尔 MTT S5000',
   metax: '沐曦 C550',
-  nvidia: '英伟达 A100',
+  nvidia: 'NVIDIA',
   ascend: '昇腾 910B4',
   iluvatar: '天数 TG-V200',
   generic: '阿里 PPU',
@@ -28,7 +28,7 @@ export const DETAIL_TEST_ENV_TRAIN_DEVICE: Record<string, string> = {
 
 /** 通信详情：固定硬件型号 */
 export const DETAIL_TEST_ENV_COMM_DEVICE: Record<string, string> = {
-  nvidia: '英伟达 A100',
+  nvidia: 'NVIDIA',
   metax: '沐曦 C550',
   cambricon: '寒武纪 MLU590',
 }

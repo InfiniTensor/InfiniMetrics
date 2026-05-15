@@ -4,7 +4,7 @@ import { CI_CHART_LABELS } from '@/data'
 import { BW_NVIDIA_BASELINE_GBPS } from '@/features/dashboard/bwBenchmark'
 
 /**
- * 详情页折线/柱图：单系列用主蓝；双系列用主蓝 + 浅绿（与主图例「NVIDIA A100 / NVIDIA」一致，勿改用平台 brand 色）
+ * 详情页折线/柱图：单系列用主蓝；双系列用主蓝 + 浅绿（与主图例「本机 / NVIDIA」一致，勿改用平台 brand 色）
  */
 export const DETAIL_CHART_PRIMARY = '#3381cc'
 export const DETAIL_CHART_SECONDARY = '#b9d9a8'
@@ -150,6 +150,8 @@ export type DetailDimBarChartOpts = {
   bwPlatBarName?: string
   /** 通信「相对 NVIDIA（%）」双柱图：本机系列图例用平台名 */
   commPlatBarName?: string
+  /** 训练「相对 NVIDIA（%）」双柱图：本机系列图例用平台名 */
+  trainPlatBarName?: string
 }
 
 export function buildCiLineOption(seriesData: number[]) {
@@ -294,7 +296,7 @@ export function buildInferPrefillBarOption(prefillRows: InferRow[], nvPrefill: I
       },
       {
         type: 'bar' as const,
-        name: 'A100 Prefill',
+        name: 'NVIDIA Prefill',
         data: nvPrefill.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
@@ -327,7 +329,7 @@ export function buildInferDecodeBarOption(decodeRows: InferRow[], nvDecode: Infe
       },
       {
         type: 'bar' as const,
-        name: 'A100 Decode',
+        name: 'NVIDIA Decode',
         data: nvDecode.map((r) => r.tps),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
@@ -475,27 +477,32 @@ export function buildTrainBarVs(rows: TrainRow[], opts?: DetailDimBarChartOpts) 
   const xUi = compactDetailBarXAxisUi(categories)
   const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
   const gridBottom = opts?.gridBottom ?? xUi.gridBottom
-  const n = categories.length
-  const boundaryGap = detailBarBoundaryGap(n)
-  const barCategoryGap = n <= 3 ? '14%' : '36%'
+  const platName = String(opts?.trainPlatBarName ?? '').trim() || '本机'
   return {
     tooltip: { trigger: 'axis' as const },
+    legend: { top: 2, right: 8 },
     grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
       axisLabel: xUi.axisLabel,
-      boundaryGap,
+      boundaryGap: detailBarBoundaryGap(categories.length),
     },
     yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0, ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
-        name: 'vs NVIDIA (%)',
+        name: `${platName}（相对 NVIDIA）`,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        barCategoryGap,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
         data: rows.map((r) => r.vsA100),
+      },
+      {
+        type: 'bar' as const,
+        name: 'NVIDIA 参考（100%）',
+        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        data: rows.map(() => 100),
       },
     ],
   }
@@ -623,7 +630,7 @@ export function buildBwBarAvg(
       },
       {
         type: 'bar' as const,
-        name: 'NVIDIA A100 基线',
+        name: 'NVIDIA 基线',
         data: valid.map(() => nvidiaAvg),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },

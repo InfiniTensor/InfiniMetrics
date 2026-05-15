@@ -106,27 +106,25 @@ function onBcOverview() {
 
 <style scoped>
 .right-panel {
-  /* 右侧主栏衬底；顶 padding 与侧栏 .sidebar-scroll 一致，便于与「平台筛选」下 1px 横线对齐 */
+  /* 右侧主栏衬底；顶侧不留 padding，避免「概览」面包屑行上方空隙 */
   background: var(--page-bg);
-  padding: 18px 16px 16px;
+  padding: 0 16px 16px;
   gap: 16px;
   min-width: 0;
 }
 
-/*
- * 面包屑下横线：与侧栏 .sb-section-line 同为 1px，并用 padding-top 对齐其纵向位置
- * （侧栏：18 + title≈19.5 + line margin 10；此处：18 + pt + 文≈14.4 + pb → pt≈5）
- */
 .right-panel > .global-bc.visible {
   width: 100%;
   box-sizing: border-box;
-  padding-top: 5px;
+  padding-top: 0;
   padding-bottom: 10px;
   border-bottom: 1px solid #162b75;
 }
 
 .right-panel > .global-bc.visible .bc-item {
   color: #162b75;
+  /* 与顶栏 DashboardFilterBar 筛选标签 / pills（fontSizeSM 16）一致 */
+  font-size: 16px;
 }
 
 .right-panel > .global-bc.visible .bc-item.cur {
@@ -136,6 +134,7 @@ function onBcOverview() {
 
 .right-panel > .global-bc.visible .bc-sep {
   color: rgba(22, 43, 117, 0.32);
+  font-size: 16px;
 }
 
 .right-panel > .global-bc.visible .bc-item:hover {
