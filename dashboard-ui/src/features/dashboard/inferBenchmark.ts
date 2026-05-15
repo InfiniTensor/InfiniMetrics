@@ -248,50 +248,55 @@ export function inferFlatsFromTablePack(
 }
 
 /**
- * 概览卡：Prefill/Decode 峰值与 NVIDIA 全表最大值的百分比；extra 为两路得分中较高者对应峰值行的 batch · in-len · out-len（平局取 Prefill）。
+ * 概览卡：Prefill / Decode 得分取各行 vs NVIDIA（同详情表）的最大值；
+ * 吞吐展示对应取得分最高的那一行；extra 为两路得分较高者所在行的 batch · in-len · out-len（平局取 Prefill）。
  */
-export function buildInferCardMetrics(
-  rows: InferFlatRow[],
-  nvMaxPrefill: number,
-  nvMaxDecode: number,
-): InferCardMetrics | null {
-  if (!rows.length) return null
-  let maxP: number | null = null
-  let maxD: number | null = null
-  let argP: InferFlatRow | null = null
-  let argD: InferFlatRow | null = null
-  const dates: string[] = []
+export type InferOverviewMetricRow = {
+  batch: number
+  inLen: number
+  outLen?: number
+  tps: number
+  vsNvidia?: number | null
+  date?: string
+}
 
+function pickMaxVsNvidiaRow<T extends InferOverviewMetricRow>(rows: T[]): T | null {
+  let best: T | null = null
+  let maxVs = -Infinity
   for (const r of rows) {
-    if (r.date) dates.push(r.date)
-    if (r.prefillTps != null && Number.isFinite(r.prefillTps)) {
-      if (maxP == null || r.prefillTps > maxP) {
-        maxP = r.prefillTps
-        argP = r
-      }
-    }
-    if (r.decodeTps != null && Number.isFinite(r.decodeTps)) {
-      if (maxD == null || r.decodeTps > maxD) {
-        maxD = r.decodeTps
-        argD = r
-      }
+    const v = r.vsNvidia
+    if (v == null || !Number.isFinite(v)) continue
+    if (best == null || v > maxVs) {
+      maxVs = v
+      best = r
     }
   }
+  return best
+}
 
-  const n = rows.filter((r) => r.prefillTps != null || r.decodeTps != null).length
+export function buildInferCardMetrics(
+  prefillRows: InferOverviewMetricRow[],
+  decodeRows: InferOverviewMetricRow[],
+): InferCardMetrics | null {
+  if (!prefillRows.length && !decodeRows.length) return null
+  const argP = pickMaxVsNvidiaRow(prefillRows)
+  const argD = pickMaxVsNvidiaRow(decodeRows)
+  const dates: string[] = []
+  for (const r of [...prefillRows, ...decodeRows]) {
+    if (r.date) dates.push(r.date)
+  }
   const dataDate = dates.length ? [...dates].sort().at(-1) : undefined
 
-  const nvP = nvMaxPrefill > 0 ? nvMaxPrefill : 1
-  const nvD = nvMaxDecode > 0 ? nvMaxDecode : 1
-  const ownScore = maxP != null ? Math.round((maxP / nvP) * 100) : 0
-  const openScore = maxD != null ? Math.round((maxD / nvD) * 100) : 0
-  const ownVal = maxP != null ? formatInferTokPerS(maxP) : '—'
-  const openVal = maxD != null ? formatInferTokPerS(maxD) : '—'
+  const ownScore = argP?.vsNvidia ?? 0
+  const openScore = argD?.vsNvidia ?? 0
+  const ownVal = argP != null ? formatInferTokPerS(argP.tps) : '—'
+  const openVal = argD != null ? formatInferTokPerS(argD.tps) : '—'
+  const n = prefillRows.length + decodeRows.length
 
   const arg =
     argP && argD ? (ownScore >= openScore ? argP : argD) : (argP ?? argD)
   const extra = arg
-    ? `batch=${arg.batch} in=${arg.inLen} out=${arg.outLen}`
+    ? `batch=${arg.batch} in=${arg.inLen} out=${arg.outLen ?? 0}`
     : ''
 
   const adv = ownScore >= 100
@@ -309,8 +314,8 @@ export function buildInferCardMetrics(
     openVal,
     n,
     extra,
-    inferOwnCaption: maxP != null ? 'Prefill 最优' : undefined,
-    inferOpenCaption: maxD != null ? 'Decode 最优' : undefined,
+    inferOwnCaption: argP != null ? 'Prefill 最优' : undefined,
+    inferOpenCaption: argD != null ? 'Decode 最优' : undefined,
     adv,
     advTxt,
     dataDate,
@@ -395,10 +400,10 @@ export function filterInferRows<T extends { batch: number; inLen: number }>(
   })
 }
 
-/** 推理表：用于筛选项并集 / 按平台子集 */
+/** 推理表：用于筛选项并集 / 按平台子集（行字段超集，含详情表 vsNvidia） */
 export type InferTablePack = {
-  prefill?: { batch: number; inLen: number; dtype?: string; date?: string }[]
-  decode?: { batch: number; inLen: number; dtype?: string; date?: string }[]
+  prefill?: (InferOverviewMetricRow & { dtype?: string; [key: string]: unknown })[]
+  decode?: (InferOverviewMetricRow & { dtype?: string; [key: string]: unknown })[]
 }
 
 function inferRowsBothTabs(pack: InferTablePack | undefined) {

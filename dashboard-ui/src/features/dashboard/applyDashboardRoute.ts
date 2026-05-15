@@ -11,6 +11,99 @@ import {
 import { trainPlatHasFramework } from '@/features/dashboard/trainBenchmark'
 import { routeParamString } from '@/utils/routeParams'
 
+/** 概览 pill 为具体项（非「全部」、unionIndex > 0） */
+function isSpecificOverviewPill(idx: number, label: string | undefined): boolean {
+  return idx > 0 && label != null && label !== '全部'
+}
+
+/** 详情顶栏不展示「全部」：取概览已选具体项，否则该平台第一个可用项 */
+function pickDetailFilterIndex(
+  pills: string[],
+  preservedIdx: number | undefined,
+  isValid: (label: string) => boolean,
+): number {
+  const idx = Math.min(Math.max(0, preservedIdx ?? 0), pills.length - 1)
+  const lab = pills[idx]
+  if (isSpecificOverviewPill(idx, lab) && isValid(lab)) {
+    return idx
+  }
+  for (let i = 1; i < pills.length; i++) {
+    const p = pills[i]
+    if (p !== '全部' && isValid(p)) return i
+  }
+  return -1
+}
+
+function firstInferPairOnPlat(
+  platKey: string,
+  inferTbl: Record<string, InferTablePack | undefined>,
+  batchPills: string[],
+  inLenPills: string[],
+  batches: Set<number>,
+  lens: Set<number>,
+  requireRow: boolean,
+): { bi: number; li: number } | null {
+  for (let bi = 1; bi < batchPills.length; bi++) {
+    const bLab = batchPills[bi]
+    if (bLab === '全部' || !batches.has(Number(bLab))) continue
+    for (let li = 1; li < inLenPills.length; li++) {
+      const lLab = inLenPills[li]
+      if (lLab === '全部' || !lens.has(Number(lLab))) continue
+      if (!requireRow || inferPlatHasFilteredRow(platKey, inferTbl, bLab, lLab)) {
+        return { bi, li }
+      }
+    }
+  }
+  return null
+}
+
+/** 概览推理筛选项带入详情：支持仅 Batch / 仅 In-len / 两者皆非「全部」 */
+function resolveInferDetailFilters(
+  platKey: string,
+  inferTbl: Record<string, InferTablePack | undefined>,
+  preserved: Record<number, number> | undefined,
+): { 0: number; 1: number } | null {
+  const inferDim = DIMS.find((d) => d.key === 'infer')!
+  const batchPills = inferDim.filters[0]!.pills
+  const inLenPills = inferDim.filters[1]!.pills
+  const batches = inferNumericSetForPlatform(inferTbl, platKey, 'batch')
+  const lens = inferNumericSetForPlatform(inferTbl, platKey, 'inLen')
+
+  const bi = Math.min(Math.max(0, preserved?.[0] ?? 0), batchPills.length - 1)
+  const li = Math.min(Math.max(0, preserved?.[1] ?? 0), inLenPills.length - 1)
+  const bLab = batchPills[bi]
+  const lLab = inLenPills[li]
+  const batchSpecific = isSpecificOverviewPill(bi, bLab) && batches.has(Number(bLab))
+  const inLenSpecific = isSpecificOverviewPill(li, lLab) && lens.has(Number(lLab))
+
+  if (batchSpecific && inLenSpecific && inferPlatHasFilteredRow(platKey, inferTbl, bLab, lLab)) {
+    return { 0: bi, 1: li }
+  }
+  if (batchSpecific) {
+    for (let lj = 1; lj < inLenPills.length; lj++) {
+      const l = inLenPills[lj]
+      if (l === '全部' || !lens.has(Number(l))) continue
+      if (inferPlatHasFilteredRow(platKey, inferTbl, bLab, l)) {
+        return { 0: bi, 1: lj }
+      }
+    }
+  }
+  if (inLenSpecific) {
+    for (let bj = 1; bj < batchPills.length; bj++) {
+      const b = batchPills[bj]
+      if (b === '全部' || !batches.has(Number(b))) continue
+      if (inferPlatHasFilteredRow(platKey, inferTbl, b, lLab)) {
+        return { 0: bj, 1: li }
+      }
+    }
+  }
+
+  const pair =
+    firstInferPairOnPlat(platKey, inferTbl, batchPills, inLenPills, batches, lens, true) ??
+    firstInferPairOnPlat(platKey, inferTbl, batchPills, inLenPills, batches, lens, false)
+  return pair ? { 0: pair.bi, 1: pair.li } : null
+}
+
 /** 根据当前 URL 同步仪表盘视图与详情上下文（刷新 / 直达链接 / 浏览器前进后退） */
 export function applyDashboardRoute(
   route: RouteLocationNormalizedLoaded,
@@ -50,19 +143,20 @@ export function applyDashboardRoute(
     store.detailState.value.opKey = defaultOpKey
     store.detailState.value.prec = '全部'
     store.detailState.value.inferTab = 'prefill'
+
     if (dimKey === 'op') {
       const opDim = DIMS.find((d) => d.key === 'op')!
       const unionPills = opDim.filters[0]!.pills
       const precPills = opDim.filters[1]!.pills
       const platDtypes = dtypesForOpPlatform(OP_TABLE, plat.key)
 
-      let typeIdx = preservedOpBar?.[0] ?? 0
-      let typeLabel = unionPills[Math.min(Math.max(0, typeIdx), unionPills.length - 1)] ?? '全部'
-      if (typeIdx === 0 || typeLabel === '全部' || !opKeys.includes(typeLabel)) {
-        store.detailState.value.opKey = defaultOpKey
-        typeLabel = store.detailState.value.opKey
-      } else {
+      const typeIdxRaw = preservedOpBar?.[0] ?? 0
+      const typeLabel =
+        unionPills[Math.min(Math.max(0, typeIdxRaw), unionPills.length - 1)] ?? '全部'
+      if (isSpecificOverviewPill(typeIdxRaw, typeLabel) && opKeys.includes(typeLabel)) {
         store.detailState.value.opKey = typeLabel
+      } else {
+        store.detailState.value.opKey = defaultOpKey
       }
       let typeUnionIdx = unionPills.indexOf(store.detailState.value.opKey)
       if (typeUnionIdx <= 0) {
@@ -75,77 +169,24 @@ export function applyDashboardRoute(
         }
       }
 
-      let precIdx = preservedOpBar?.[1] ?? 0
-      let precLabel = precPills[Math.min(Math.max(0, precIdx), precPills.length - 1)] ?? '全部'
-      if (precIdx === 0 || precLabel === '全部' || !platDtypes.has(precLabel)) {
-        const pickD = precPills.find((lab, i) => i > 0 && platDtypes.has(lab))
-        if (pickD) {
-          precLabel = pickD
-          precIdx = precPills.indexOf(pickD)
-        } else {
-          const sorted = [...platDtypes].sort((a, b) => a.localeCompare(b))
-          const fallback = sorted.find((d) => precPills.includes(d))
-          if (fallback) {
-            precLabel = fallback
-            precIdx = precPills.indexOf(fallback)
-          } else if (precPills.length > 1) {
-            precIdx = 1
-            precLabel = precPills[precIdx]!
-          }
-        }
+      const precIdx = pickDetailFilterIndex(
+        precPills,
+        preservedOpBar?.[1],
+        (lab) => platDtypes.has(lab),
+      )
+      if (precIdx >= 0) {
+        store.detailState.value.prec = precPills[precIdx]!
+        store.filterState.value.op = { 0: typeUnionIdx, 1: precIdx }
+      } else {
+        store.filterState.value.op = { 0: typeUnionIdx, 1: 0 }
       }
-      store.detailState.value.prec = precLabel
-      store.filterState.value.op = { 0: typeUnionIdx, 1: precIdx }
     }
 
     const inferTbl = INFER_TABLE as Record<string, InferTablePack | undefined>
     if (dimKey === 'infer') {
-      const inferDim = DIMS.find((d) => d.key === 'infer')!
-      const batchPills = inferDim.filters[0]!.pills
-      const inLenPills = inferDim.filters[1]!.pills
-      const batches = inferNumericSetForPlatform(inferTbl, plat.key, 'batch')
-      const lens = inferNumericSetForPlatform(inferTbl, plat.key, 'inLen')
-      let foundBi = -1
-      let foundLi = -1
-      const tryInferPair = (requireFilteredRow: boolean) => {
-        for (let bi = 1; bi < batchPills.length; bi++) {
-          const bLab = batchPills[bi]
-          if (bLab === '全部' || !batches.has(Number(bLab))) continue
-          for (let li = 1; li < inLenPills.length; li++) {
-            const lLab = inLenPills[li]
-            if (lLab === '全部' || !lens.has(Number(lLab))) continue
-            if (!requireFilteredRow || inferPlatHasFilteredRow(plat.key, inferTbl, bLab, lLab)) {
-              foundBi = bi
-              foundLi = li
-              return
-            }
-          }
-        }
-      }
-      const pin = preservedInferBar
-      if (pin != null) {
-        const bi = Math.min(Math.max(0, pin[0] ?? 0), batchPills.length - 1)
-        const li = Math.min(Math.max(0, pin[1] ?? 0), inLenPills.length - 1)
-        const bLab = batchPills[bi]
-        const lLab = inLenPills[li]
-        /**
-         * 详情顶栏推理筛与算子/通信一致：不展示「全部」pill（见 DashboardFilterBar）。
-         * 若沿用概览的索引 0 或「全部」文案，store 里仍是 unionIndex 0，详情区无对应按钮 → 表现为未选中。
-         * 仅当 Batch、In-len 均为具体项且在平台数据中存在时才沿用概览选择。
-         */
-        const batchOk = bi > 0 && bLab !== '全部' && batches.has(Number(bLab))
-        const inLenOk = li > 0 && lLab !== '全部' && lens.has(Number(lLab))
-        if (batchOk && inLenOk && inferPlatHasFilteredRow(plat.key, inferTbl, bLab, lLab)) {
-          foundBi = bi
-          foundLi = li
-        }
-      }
-      if (foundBi < 0) {
-        tryInferPair(true)
-        if (foundBi < 0) tryInferPair(false)
-      }
-      if (foundBi >= 0 && foundLi >= 0) {
-        store.filterState.value.infer = { 0: foundBi, 1: foundLi }
+      const inferFilters = resolveInferDetailFilters(plat.key, inferTbl, preservedInferBar)
+      if (inferFilters) {
+        store.filterState.value.infer = inferFilters
       }
     }
 
@@ -153,23 +194,9 @@ export function applyDashboardRoute(
       const trainDim = DIMS.find((d) => d.key === 'train')!
       const fwPills = trainDim.filters[0]!.pills
       const trainTbl = TRAIN_TABLE as Record<string, { framework: string }[] | undefined>
-      let pickedFw = -1
-      const pti = preservedTrainBar?.[0]
-      if (pti != null) {
-        const idx = Math.min(Math.max(0, pti), fwPills.length - 1)
-        const lab = fwPills[idx]
-        if (idx === 0 || lab === '全部' || trainPlatHasFramework(plat.key, trainTbl, lab)) {
-          pickedFw = idx
-        }
-      }
-      if (pickedFw < 0) {
-        for (let i = 1; i < fwPills.length; i++) {
-          if (trainPlatHasFramework(plat.key, trainTbl, fwPills[i])) {
-            pickedFw = i
-            break
-          }
-        }
-      }
+      const pickedFw = pickDetailFilterIndex(fwPills, preservedTrainBar?.[0], (lab) =>
+        trainPlatHasFramework(plat.key, trainTbl, lab),
+      )
       if (pickedFw >= 0) {
         store.filterState.value.train = { 0: pickedFw }
       }
@@ -179,24 +206,9 @@ export function applyDashboardRoute(
       const commDim = DIMS.find((d) => d.key === 'comm')!
       const typePills = commDim.filters[0]!.pills
       const commTbl = COMM_TABLE as Record<string, { commType: string }[] | undefined>
-      let pickedComm = -1
-      const pci = preservedCommBar?.[0]
-      if (pci != null) {
-        const idx = Math.min(Math.max(0, pci), typePills.length - 1)
-        const lab = typePills[idx]
-        // 详情顶栏与其他维度一致不展示「全部」：概览为「全部」时勿沿用索引 0，交给下方回退逻辑
-        if (idx > 0 && lab !== '全部' && commPlatHasCommType(plat.key, commTbl, lab)) {
-          pickedComm = idx
-        }
-      }
-      if (pickedComm < 0) {
-        for (let i = 1; i < typePills.length; i++) {
-          if (commPlatHasCommType(plat.key, commTbl, typePills[i])) {
-            pickedComm = i
-            break
-          }
-        }
-      }
+      const pickedComm = pickDetailFilterIndex(typePills, preservedCommBar?.[0], (lab) =>
+        commPlatHasCommType(plat.key, commTbl, lab),
+      )
       if (pickedComm >= 0) {
         store.filterState.value.comm = { 0: pickedComm }
       }
@@ -206,27 +218,14 @@ export function applyDashboardRoute(
       const bwDim = DIMS.find((d) => d.key === 'bw')!
       const modePills = bwDim.filters[0]!.pills
       const bwTbl = BW_TABLE as Parameters<typeof bwPlatHasMode>[1]
-      let pickedBw = -1
-      const pbi = preservedBwBar?.[0]
-      if (pbi != null) {
-        const idx = Math.min(Math.max(0, pbi), modePills.length - 1)
-        const lab = modePills[idx]
-        if (idx === 0 || lab === '全部' || bwPlatHasMode(plat.key, bwTbl, lab)) {
-          pickedBw = idx
-        }
-      }
-      if (pickedBw < 0) {
-        for (let i = 1; i < modePills.length; i++) {
-          if (bwPlatHasMode(plat.key, bwTbl, modePills[i])) {
-            pickedBw = i
-            break
-          }
-        }
-      }
+      const pickedBw = pickDetailFilterIndex(modePills, preservedBwBar?.[0], (lab) =>
+        bwPlatHasMode(plat.key, bwTbl, lab),
+      )
       if (pickedBw >= 0) {
         store.filterState.value.bw = { 0: pickedBw }
       }
     }
+
     store.bcBrand.value = plat.name
     store.bcDim.value = DIMS[dimIdx].label
     store.switchMainView('detail')

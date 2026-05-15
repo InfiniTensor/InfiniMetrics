@@ -93,10 +93,28 @@ function commPickMaxBwRow(rows: CommImportRow[], want: 'p2p' | 'allreduce'): Com
   return list.reduce((a, b) => (a.bw >= b.bw ? a : b))
 }
 
+function commExtraFromRow(r: CommImportRow): string {
+  const linkRaw = String(r.linkType ?? '')
+    .replace(/\s+/g, '')
+    .toLowerCase()
+  return `${linkRaw || '—'} · ${r.nGpu}GPU`
+}
+
+/** 概览底部「配置」：p2p / allreduce 各自 max-bw 行中 vs% 较高者（平局取 p2p） */
+function commPickOverviewConfigRow(
+  p2p: CommImportRow | null,
+  ar: CommImportRow | null,
+): CommImportRow | null {
+  if (!p2p && !ar) return null
+  if (p2p && !ar) return p2p
+  if (ar && !p2p) return ar
+  return p2p!.vsA100 >= ar!.vsA100 ? p2p! : ar!
+}
+
 /**
  * 概览卡：
  * - 子集仅含一种 comm_type（如顶栏筛成 p2p / allreduce）：大分 = 该类型下 **bw 最高** 一行的 `vsA100`，`openScore` 为空。
- * - 同时含 p2p 与 allreduce：左/右大分为各自类型 max-bw 行的 `vsA100`；`footerScore` = 两者相对 NVIDIA 百分数较高者（供底部「得分」）。
+ * - 同时含 p2p 与 allreduce：左/右大分为各自类型 max-bw 行的 `vsA100`；底部「得分」与「配置」均取两者 vs% 较高者对应行。
  */
 export function buildCommCardMetrics(rows: CommImportRow[]): {
   ownScore: number
@@ -124,10 +142,7 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
   if (p2p && !ar) {
     const ownScore = p2p.vsA100
     const ownVal = `${formatCommBandwidthGb(p2p.bw)} GB/s`
-    const linkRaw = String(p2p.linkType ?? '')
-      .replace(/\s+/g, '')
-      .toLowerCase()
-    const extra = `${linkRaw || '—'} · ${p2p.nGpu}GPU`
+    const extra = commExtraFromRow(p2p)
     const adv = ownScore >= 100
     const advTxt =
       ownScore >= 100
@@ -153,10 +168,7 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
   if (ar && !p2p) {
     const ownScore = ar.vsA100
     const ownVal = `${formatCommBandwidthGb(ar.bw)} GB/s`
-    const linkRaw = String(ar.linkType ?? '')
-      .replace(/\s+/g, '')
-      .toLowerCase()
-    const extra = `${linkRaw || '—'} · ${ar.nGpu}GPU`
+    const extra = commExtraFromRow(ar)
     const adv = ownScore >= 100
     const advTxt =
       ownScore >= 100
@@ -184,11 +196,8 @@ export function buildCommCardMetrics(rows: CommImportRow[]): {
   const footerScore = Math.max(ownScore, openScore)
   const ownVal = `${formatCommBandwidthGb(p2p!.bw)} GB/s`
   const openVal = `${formatCommBandwidthGb(ar!.bw)} GB/s`
-  const rep = (p2p!.bw >= ar!.bw ? p2p! : ar!)
-  const linkRaw = String(rep.linkType ?? '')
-    .replace(/\s+/g, '')
-    .toLowerCase()
-  const extra = `${linkRaw || '—'} · ${rep.nGpu}GPU`
+  const rep = commPickOverviewConfigRow(p2p, ar)!
+  const extra = commExtraFromRow(rep)
 
   const adv = ownScore >= 100 || openScore >= 100
   let advTxt = `P2P ${ownScore}% · AllReduce ${openScore}%（相对 NVIDIA）`

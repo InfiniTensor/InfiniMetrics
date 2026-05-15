@@ -24,10 +24,7 @@ import {
 import {
   buildInferCardMetrics,
   filterInferRows,
-  inferFlatsFromTablePack,
   inferPlatHasFilteredRow,
-  maxInferMetric,
-  type InferFlatRow,
   type InferTablePack,
 } from '@/features/dashboard/inferBenchmark'
 import {
@@ -183,7 +180,7 @@ function overviewCardNoFilterData(card: CardRow, scope: string): CardRow {
 }
 
 /**
- * 推理概览：Batch / In-len 非「全部」时按 INFER_TABLE 子集重算（与 `buildInferCardMetrics` / import 脚本一致）。
+ * 推理概览：按 INFER_TABLE 子集重算（与 `buildInferCardMetrics` / import 脚本一致）；Batch / In-len 为「全部」时不收窄行集。
  */
 export function overlayInferOverviewCardFromFilters(
   card: CardRow,
@@ -197,30 +194,10 @@ export function overlayInferOverviewCardFromFilters(
   ]
     .filter(Boolean)
     .join(' ')
-  let nvFlats = filterInferRows(
-    inferFlatsFromTablePack('nvidia', inferTbl.nvidia),
-    batchPill,
-    inLenPill,
-  ) as InferFlatRow[]
-  let nvMaxP = maxInferMetric(nvFlats, 'prefillTps')
-  let nvMaxD = maxInferMetric(nvFlats, 'decodeTps')
-  if (nvMaxP <= 0 || nvMaxD <= 0) {
-    for (const pk of Object.keys(inferTbl)) {
-      const f = filterInferRows(
-        inferFlatsFromTablePack(pk, inferTbl[pk]),
-        batchPill,
-        inLenPill,
-      ) as InferFlatRow[]
-      nvMaxP = Math.max(nvMaxP, maxInferMetric(f, 'prefillTps'))
-      nvMaxD = Math.max(nvMaxD, maxInferMetric(f, 'decodeTps'))
-    }
-  }
-  const platFlats = filterInferRows(
-    inferFlatsFromTablePack(card.key, inferTbl[card.key]),
-    batchPill,
-    inLenPill,
-  ) as InferFlatRow[]
-  const m = buildInferCardMetrics(platFlats, nvMaxP || 1, nvMaxD || 1)
+  const pack = inferTbl[card.key]
+  const pre = filterInferRows(pack?.prefill ?? [], batchPill, inLenPill)
+  const dec = filterInferRows(pack?.decode ?? [], batchPill, inLenPill)
+  const m = buildInferCardMetrics(pre, dec)
   if (!m) {
     return overviewCardNoFilterData(card, scope)
   }
@@ -269,7 +246,7 @@ export function overlayTrainOverviewCardFromFilters(
   }
 }
 
-/** 通信概览：通信类型非「全部」时按 COMM_TABLE 子集重算 */
+/** 通信概览：按 COMM_TABLE 子集重算（与 `buildCommCardMetrics` / import 脚本一致）；通信类型为「全部」时不收窄行集。 */
 export function overlayCommOverviewCardFromFilters(
   card: CardRow,
   commTbl: Record<string, CommDetailRow[] | undefined>,

@@ -191,13 +191,10 @@ export function createInfiniDashboardStore() {
       const fs = filterState.value.infer || {}
       const batchPill = dim.filters[0]?.pills[fs[0] ?? 0]
       const inLenPill = dim.filters[1]?.pills[fs[1] ?? 0]
-      const hasSpecific = (fs[0] ?? 0) !== 0 || (fs[1] ?? 0) !== 0
-      if (hasSpecific) {
-        const inferTbl = INFER_TABLE as Record<string, InferTablePack | undefined>
-        return data.map((c) =>
-          overlayInferOverviewCardFromFilters(c, inferTbl, batchPill, inLenPill),
-        )
-      }
+      const inferTbl = INFER_TABLE as Record<string, InferTablePack | undefined>
+      return data.map((c) =>
+        overlayInferOverviewCardFromFilters(c, inferTbl, batchPill, inLenPill),
+      )
     } else if (dim.key === 'train') {
       const fs = filterState.value.train || {}
       const fwPill = dim.filters[0]?.pills[fs[0] ?? 0]
@@ -208,10 +205,7 @@ export function createInfiniDashboardStore() {
     } else if (dim.key === 'comm') {
       const fs = filterState.value.comm || {}
       const typePill = dim.filters[0]?.pills[fs[0] ?? 0]
-      const hasSpecific = (fs[0] ?? 0) !== 0
-      if (hasSpecific) {
-        return data.map((c) => overlayCommOverviewCardFromFilters(c, CTABLE, typePill))
-      }
+      return data.map((c) => overlayCommOverviewCardFromFilters(c, CTABLE, typePill))
     } else if (dim.key === 'bw') {
       const fs = filterState.value.bw || {}
       const modePill = dim.filters[0]?.pills[fs[0] ?? 0]

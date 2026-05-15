@@ -116,15 +116,23 @@ function onBcOverview() {
 .right-panel > .global-bc.visible {
   width: 100%;
   box-sizing: border-box;
-  padding-top: 0;
-  padding-bottom: 10px;
+  align-items: center;
+  padding-top: var(--dash-nav-pad-top);
+  padding-bottom: var(--dash-nav-rule-gap);
+  min-height: calc(
+    var(--dash-nav-pad-top) + var(--dash-nav-header-text-h) + var(--dash-nav-rule-gap)
+  );
   border-bottom: 1px solid #162b75;
 }
 
 .right-panel > .global-bc.visible .bc-item {
   color: #162b75;
-  /* 与顶栏 DashboardFilterBar 筛选标签 / pills（fontSizeSM 16）一致 */
+  /* 与顶栏 DashboardFilterBar 筛选标签 / pills（fontSizeSM 16）一致；行高与侧栏标题区同高以对齐横线 */
   font-size: 16px;
+  line-height: var(--dash-nav-label-lh);
+  min-height: var(--dash-nav-header-text-h);
+  display: inline-flex;
+  align-items: center;
 }
 
 .right-panel > .global-bc.visible .bc-item.cur {

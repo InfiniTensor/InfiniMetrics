@@ -327,15 +327,6 @@ function parseInferCsvNew(
   return { flats, prefill, decode }
 }
 
-function maxInferMetric(rows: InferFlatRow[], key: 'prefillTps' | 'decodeTps'): number {
-  let m = 0
-  for (const r of rows) {
-    const v = r[key]
-    if (v != null && Number.isFinite(v) && v > m) m = v
-  }
-  return m
-}
-
 function pickLatestByPlatform(dir: string, pattern: RegExp) {
   const map: Record<string, { date: string; full: string }> = {}
   if (!fs.existsSync(dir)) return map
@@ -896,16 +887,6 @@ function main() {
   }
 
   const INFER_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
-  const nvFlats = inferFlatByPlat.nvidia || []
-  let nvMaxPrefill = maxInferMetric(nvFlats, 'prefillTps')
-  let nvMaxDecode = maxInferMetric(nvFlats, 'decodeTps')
-  if (nvMaxPrefill <= 0 || nvMaxDecode <= 0) {
-    for (const f of Object.values(inferFlatByPlat)) {
-      nvMaxPrefill = Math.max(nvMaxPrefill, maxInferMetric(f, 'prefillTps'))
-      nvMaxDecode = Math.max(nvMaxDecode, maxInferMetric(f, 'decodeTps'))
-    }
-  }
-
   let maxInferDate = ''
   for (const [, flats] of Object.entries(inferFlatByPlat)) {
     for (const r of flats) {
@@ -917,8 +898,8 @@ function main() {
   }
   if (maxInferDate) meta.inferDatasetUpdatedAt = maxInferDate
 
-  for (const [plat, flats] of Object.entries(inferFlatByPlat)) {
-    const m = buildInferCardMetrics(flats, nvMaxPrefill || 1, nvMaxDecode || 1)
+  for (const [plat, pack] of Object.entries(INFER_TABLE_FROM_FILES)) {
+    const m = buildInferCardMetrics(pack.prefill, pack.decode)
     if (m) {
       const { dataDate: _drop, ...card } = m
       INFER_CARD_FROM_FILES[plat] = {
