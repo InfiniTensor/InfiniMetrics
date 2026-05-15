@@ -50,17 +50,17 @@ function onSetDim(i: number) {
 
 function onTogglePlat(key: string) {
   togglePlat(key)
-  leaveCompareOrSyncOverview()
+  leaveCompareOrSyncOverview({ fromPlatformNav: true })
 }
 
 function onSelectAll() {
   selectAll()
-  leaveCompareOrSyncOverview()
+  leaveCompareOrSyncOverview({ fromPlatformNav: true })
 }
 
 function onSelectDomestic() {
   selectDomestic()
-  leaveCompareOrSyncOverview()
+  leaveCompareOrSyncOverview({ fromPlatformNav: true })
 }
 
 /** 标题下小字：国际标杆 / 国产（与 PLATFORMS.type 一致，缺省时按 domestic 推断） */

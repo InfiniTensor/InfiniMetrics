@@ -351,7 +351,6 @@ function opCustomRow(r: OpDetailRow) {
 }
 
 const inferTableColumns = computed<ColumnsType<InferRow>>(() => {
-  const tab = detailState.value.inferTab
   const cols: ColumnsType<InferRow> = [
     {
       title: '模型',
@@ -395,7 +394,7 @@ const inferTableColumns = computed<ColumnsType<InferRow>>(() => {
       sortDirections: ['ascend', 'descend'],
     },
     {
-      title: tab === 'prefill' ? 'Prefill 吞吐（tokens/s）' : 'Decode 吞吐（tokens/s）',
+      title: 'TPS',
       dataIndex: 'tps',
       key: 'tps',
       width: 132,
