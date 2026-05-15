@@ -22,13 +22,12 @@ import {
 } from '@/features/dashboard/operatorBenchmark'
 import { BW_NVIDIA_BASELINE_GBPS, bwVsNvidiaPercent } from '@/features/dashboard/bwBenchmark'
 import { scoreTierColor, SCORE_TIER_COLOR } from '@/utils/scoreColor'
-import { DETAIL_CHART_PRIMARY, DETAIL_CHART_SECONDARY } from '@/utils/echartsInfini'
+import { DETAIL_DUAL_BAR_PRIMARY, DETAIL_DUAL_BAR_SECONDARY } from '@/utils/echartsInfini'
 
 const route = useRoute()
 const store = useInfiniDashboard()
 const {
   activeDimKey,
-  detailTitle,
   detailState,
   detailPlat,
   detailKpiCells,
@@ -53,21 +52,30 @@ const {
 
 const { goOverview } = useDashboardNavigation()
 
-/** 标题与 URL 一致，避免 store 与路由瞬时不同步时误显其它平台（如访存点昇腾却显示 NVIDIA） */
-const detailTitleDisplay = computed(() => {
-  if (route.name !== 'detail') return detailTitle.value
-  const pk = routeParamString(route.params.platKey)
-  const dk = routeParamString(route.params.dimKey)
-  const plat = PLATFORMS.find((p) => p.key === pk)
-  const dim = DIMS.find((d) => d.key === dk)
-  if (!plat || !dim) return detailTitle.value
-  return `${plat.name} · ${dim.label}详情`
+/** 「维度名 + 详情」与 URL 维度一致；芯片名单独 tag，与 URL 平台一致 */
+const detailPageTitle = computed(() => {
+  if (route.name === 'detail') {
+    const dk = routeParamString(route.params.dimKey)
+    const dim = DIMS.find((d) => d.key === dk)
+    if (dim) return `${dim.label}详情`
+  }
+  const dim = DIMS.find((d) => d.key === activeDimKey.value)
+  return dim ? `${dim.label}详情` : '详情'
+})
+
+const detailChipNameDisplay = computed(() => {
+  if (route.name === 'detail') {
+    const pk = routeParamString(route.params.platKey)
+    const plat = PLATFORMS.find((p) => p.key === pk)
+    if (plat) return plat.name
+  }
+  return detailPlat.value.name
 })
 
 /** 数据明细表：除「得分」「vs NVIDIA（百分数）」列外，正文统一黑色 */
 const DETAIL_TABLE_BODY_COLOR = '#000000'
 
-/** 数据明细「对比列」条形填充色：与详情折线/柱图主图例一致（见 echartsInfini DETAIL_CHART_*） */
+/** 数据明细「对比」横条及同列数值色：与详情双柱图 DETAIL_CHART_* 一致 */
 const inferMaxTps = computed(() => {
   const rows = inferDetailTabRows.value as { tps: number }[]
   const nv = inferNvidiaTabRows.value as { tps: number }[]
@@ -519,7 +527,7 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
           ? h('span', { style: { color: textCol, fontStyle: 'italic' } }, '数据待补充')
           : null
       }
-      return h('span', { style: { color: textCol } }, bwGbpsCell(record[mode]))
+      return h('span', { style: { color: DETAIL_DUAL_BAR_PRIMARY, fontWeight: 700 } }, bwGbpsCell(record[mode]))
     },
   })
 
@@ -539,7 +547,7 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
       customRender: ({ record }) =>
         record.avg == null
           ? null
-          : h('span', { style: { color: textCol } }, bwGbpsCell(record.avg)),
+          : h('span', { style: { color: DETAIL_DUAL_BAR_PRIMARY, fontWeight: 700 } }, bwGbpsCell(record.avg)),
     },
     {
       title: mk ? `vs NVIDIA（${mk}）` : 'vs NVIDIA',
@@ -592,24 +600,24 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
         const nvMs = Number.isFinite(nvShow) ? nvShow.toFixed(1) : BW_NVIDIA_BASELINE_GBPS.toFixed(1)
         return h('div', { class: 'dual-bar' }, [
           h('div', { class: 'dual-row' }, [
-            h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: textCol } }, logo),
+            h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: DETAIL_DUAL_BAR_PRIMARY } }, logo),
             h('div', { class: 'dual-track' }, [
               h('div', {
                 class: 'dual-fill',
-                style: { width: platW, background: DETAIL_CHART_PRIMARY },
+                style: { width: platW, background: DETAIL_DUAL_BAR_PRIMARY },
               }),
             ]),
-            h('span', { class: 'dual-ms', style: { color: textCol } }, platMs),
+            h('span', { class: 'dual-ms', style: { color: DETAIL_DUAL_BAR_PRIMARY } }, platMs),
           ]),
           h('div', { class: 'dual-row' }, [
-            h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: textCol } }, 'NVIDIA 基线'),
+            h('span', { class: 'dual-lbl dual-lbl--bw', style: { color: DETAIL_DUAL_BAR_SECONDARY } }, 'NVIDIA 基线'),
             h('div', { class: 'dual-track' }, [
               h('div', {
                 class: 'dual-fill',
-                style: { width: nvW, background: DETAIL_CHART_SECONDARY },
+                style: { width: nvW, background: DETAIL_DUAL_BAR_SECONDARY },
               }),
             ]),
-            h('span', { class: 'dual-ms', style: { color: textCol } }, nvMs),
+            h('span', { class: 'dual-ms', style: { color: DETAIL_DUAL_BAR_SECONDARY } }, nvMs),
           ]),
         ])
       },
@@ -652,32 +660,30 @@ function inferRowKey(r: InferRow) {
   <div class="detail-panel">
     <header class="detail-panel__header">
       <div class="detail-title-row">
-        <div class="detail-title">{{ detailTitleDisplay }}</div>
-        <a-button type="primary" @click="goOverview">返回概览</a-button>
+        <div class="detail-title-group">
+          <span class="detail-title">{{ detailPageTitle }}</span>
+          <span class="detail-chip-tag">{{ detailChipNameDisplay }}</span>
+        </div>
+        <button type="button" class="detail-back-btn" @click="goOverview">返回概览</button>
       </div>
     </header>
     <div class="detail-panel__scroll">
-      <!-- 测试环境横条（各维度：n_gpu · date · device，缺省项不展示）：紧接标题下方、KPI 卡片上方 -->
+      <!-- 测试环境横条：随详情正文滚动（各维度 n_gpu · date · device） -->
       <div class="detail-test-env-bar">
-        <span class="detail-test-env-bar__icon" aria-hidden="true">🖥</span>
-        <span class="detail-test-env-bar__title">测试环境</span>
-        <span class="detail-test-env-bar__sep">|</span>
-        <span class="detail-test-env-bar__line">{{ detailTestEnvLine }}</span>
+        <span class="detail-test-env-bar__left">
+          <span class="detail-test-env-bar__title">测试环境</span>
+          <span class="detail-test-env-bar__sep">|</span>
+          <span class="detail-test-env-bar__line">{{ detailTestEnvLine }}</span>
+        </span>
         <span class="detail-test-env-bar__source">{{ detailTestEnvSourceHint }}</span>
       </div>
-
       <div class="kpi-grid">
         <div
           v-for="(cell, idx) in detailKpiCells"
           :key="idx"
           class="kpi-card"
         >
-          <div
-            class="kpi-val"
-            :style="{
-              color: (cell as { muted?: boolean }).muted ? '#999' : undefined,
-            }"
-          >
+          <div class="kpi-val">
             {{ cell.val }}
           </div>
           <div class="kpi-lbl">{{ cell.lbl }}</div>
@@ -692,26 +698,28 @@ function inferRowKey(r: InferRow) {
         <div class="table-card">
       <div class="table-head-row">
         <div class="table-title">数据明细</div>
+        <div v-if="activeDimKey === 'infer'" class="infer-throughput-tab-row">
+          <button
+            type="button"
+            class="detail-back-btn infer-throughput-btn"
+            :class="{ 'infer-throughput-btn--inactive': detailState.inferTab !== 'prefill' }"
+            @click="setInferTab('prefill')"
+          >
+            Prefill 吞吐量
+          </button>
+          <button
+            type="button"
+            class="detail-back-btn infer-throughput-btn"
+            :class="{ 'infer-throughput-btn--inactive': detailState.inferTab !== 'decode' }"
+            @click="setInferTab('decode')"
+          >
+            Decode 吞吐量
+          </button>
+        </div>
       </div>
       <div class="detail-table-notice">
         <div class="detail-table-notice__label">得分说明：</div>
         <div class="detail-table-notice__body">{{ tableNotice }}</div>
-      </div>
-      <div v-if="activeDimKey === 'infer'" class="infer-throughput-tab-row">
-        <a-space :size="8">
-          <a-button
-            :type="detailState.inferTab === 'prefill' ? 'primary' : 'default'"
-            @click="setInferTab('prefill')"
-          >
-            Prefill 吞吐量
-          </a-button>
-          <a-button
-            :type="detailState.inferTab === 'decode' ? 'primary' : 'default'"
-            @click="setInferTab('decode')"
-          >
-            Decode 吞吐量
-          </a-button>
-        </a-space>
       </div>
 
       <!-- 数据明细 -->
@@ -720,6 +728,7 @@ function inferRowKey(r: InferRow) {
         <template v-if="activeDimKey === 'op'">
           <a-table
             v-if="opDetailRows.length"
+            class="op-detail-table"
             :columns="opTableColumns"
             :data-source="(opDetailRows as OpDetailRow[])"
             :pagination="false"
@@ -731,25 +740,27 @@ function inferRowKey(r: InferRow) {
           >
             <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'shape'">
-                <span class="op-shape-lead">
-                  <span
-                    v-if="opRemarksContainsFailed((record as OpDetailRow).remarks)"
-                    class="op-failed-lead-icon"
-                    title="remarks 含 failed"
-                    aria-hidden="true"
-                    >⚠</span
-                  >
-                  <span class="shape-cell">{{ record.shape }}</span>
-                </span>
+                <div class="op-shape-cell-wrap" :title="(record as OpDetailRow).shape">
+                  <span class="op-shape-lead">
+                    <span
+                      v-if="opRemarksContainsFailed((record as OpDetailRow).remarks)"
+                      class="op-failed-lead-icon"
+                      title="remarks 含 failed"
+                      aria-hidden="true"
+                      >⚠</span
+                    >
+                    <span class="shape-cell">{{ (record as OpDetailRow).shape }}</span>
+                  </span>
+                </div>
               </template>
               <template v-else-if="column.key === 'dtype'">
                 <span class="prec-badge" :class="precClass(record.dtype)">{{ record.dtype }}</span>
               </template>
               <template v-else-if="column.key === 'ic'">
-                <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{ record.ic.toFixed(4) }}ms</span>
+                <span :style="{ color: DETAIL_DUAL_BAR_PRIMARY, fontWeight: 700 }">{{ record.ic.toFixed(4) }}ms</span>
               </template>
               <template v-else-if="column.key === 'pt'">
-                <span style="color: #000000">{{ record.pt.toFixed(4) }}ms</span>
+                <span :style="{ color: DETAIL_DUAL_BAR_SECONDARY, fontWeight: 700 }">{{ record.pt.toFixed(4) }}ms</span>
               </template>
               <template v-else-if="column.key === 'score'">
                 <div class="score-cell">
@@ -785,30 +796,30 @@ function inferRowKey(r: InferRow) {
               <template v-else-if="column.key === 'dual'">
                 <div class="dual-bar">
                   <div class="dual-row">
-                    <span class="dual-lbl" :style="{ color: DETAIL_TABLE_BODY_COLOR }">InfiniCore</span>
+                    <span class="dual-lbl" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">InfiniCore</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
                         :style="{
                           width: Math.round(((record.ic as number) / opLatencyMax) * 100) + '%',
-                          background: DETAIL_CHART_PRIMARY,
+                          background: DETAIL_DUAL_BAR_PRIMARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{ record.ic.toFixed(4) }}ms</span>
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">{{ record.ic.toFixed(4) }}ms</span>
                   </div>
                   <div class="dual-row">
-                    <span class="dual-lbl" style="color: #000000">PyTorch</span>
+                    <span class="dual-lbl" :style="{ color: DETAIL_DUAL_BAR_SECONDARY }">PyTorch</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
                         :style="{
                           width: Math.round(((record.pt as number) / opLatencyMax) * 100) + '%',
-                          background: DETAIL_CHART_SECONDARY,
+                          background: DETAIL_DUAL_BAR_SECONDARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" style="color: #000000">{{ record.pt.toFixed(4) }}ms</span>
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_SECONDARY }">{{ record.pt.toFixed(4) }}ms</span>
                   </div>
                 </div>
               </template>
@@ -845,7 +856,7 @@ function inferRowKey(r: InferRow) {
                 <span v-else style="color: #000000">—</span>
               </template>
               <template v-else-if="column.key === 'tps'">
-                <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{
+                <span :style="{ color: DETAIL_DUAL_BAR_PRIMARY, fontWeight: 700 }">{{
                   record.tps != null && Number.isFinite(record.tps)
                     ? record.tps.toLocaleString()
                     : '—'
@@ -877,33 +888,33 @@ function inferRowKey(r: InferRow) {
                         class="dual-fill"
                         :style="{
                           width: Math.round((record.tps / inferMaxTps) * 100) + '%',
-                          background: DETAIL_CHART_PRIMARY,
+                          background: DETAIL_DUAL_BAR_PRIMARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">{{
                       record.tps.toLocaleString()
                     }}</span>
                   </div>
                 </div>
                 <div v-else class="dual-bar">
                   <div class="dual-row">
-                    <span class="dual-lbl" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{ detailPlat.logo }}</span>
+                    <span class="dual-lbl" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">{{ detailPlat.logo }}</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
                         :style="{
                           width: Math.round((record.tps / inferMaxTps) * 100) + '%',
-                          background: DETAIL_CHART_PRIMARY,
+                          background: DETAIL_DUAL_BAR_PRIMARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">{{
                       record.tps.toLocaleString()
                     }}</span>
                   </div>
                   <div v-if="nvInferMatch(record as InferRow)" class="dual-row">
-                    <span class="dual-lbl" style="color: #000000">NV</span>
+                    <span class="dual-lbl" :style="{ color: DETAIL_DUAL_BAR_SECONDARY }">NV</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
@@ -912,11 +923,11 @@ function inferRowKey(r: InferRow) {
                             Math.round(
                               ((nvInferMatch(record as InferRow)!.tps || 0) / inferMaxTps) * 100,
                             ) + '%',
-                          background: DETAIL_CHART_SECONDARY,
+                          background: DETAIL_DUAL_BAR_SECONDARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" style="color: #000000">{{
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_SECONDARY }">{{
                       (nvInferMatch(record as InferRow)!.tps ?? 0).toLocaleString()
                     }}</span>
                   </div>
@@ -967,7 +978,7 @@ function inferRowKey(r: InferRow) {
                 </template>
               </template>
               <template v-else-if="column.key === 'tps'">
-                <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">
+                <span :style="{ color: DETAIL_DUAL_BAR_PRIMARY, fontWeight: 700 }">
                   {{ record.tps.toLocaleString() }} tpps
                 </span>
               </template>
@@ -975,7 +986,7 @@ function inferRowKey(r: InferRow) {
                 <span style="color: #000000">{{ record.note || '—' }}</span>
               </template>
               <template v-else-if="column.key === 'baseline'">
-                <span style="color: #000000">{{ record.baseline.toLocaleString() }} tpps</span>
+                <span :style="{ color: DETAIL_DUAL_BAR_SECONDARY, fontWeight: 700 }">{{ record.baseline.toLocaleString() }} tpps</span>
               </template>
               <template v-else-if="column.key === 'vsA100'">
                 <span
@@ -1013,7 +1024,7 @@ function inferRowKey(r: InferRow) {
               </template>
               <template v-else-if="column.key === 'nGpu'">{{ record.nGpu }} GPU</template>
               <template v-else-if="column.key === 'bw'">
-                <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">
+                <span :style="{ color: DETAIL_DUAL_BAR_PRIMARY, fontWeight: 700 }">
                   {{ formatCommBandwidthGb(record.bw) }} GB/s
                 </span>
               </template>
@@ -1021,7 +1032,7 @@ function inferRowKey(r: InferRow) {
                 <span style="color: #000000">{{ record.note || '—' }}</span>
               </template>
               <template v-else-if="column.key === 'baseline'">
-                <span :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{ formatCommBandwidthGb(record.baseline) }} GB/s</span>
+                <span :style="{ color: DETAIL_DUAL_BAR_SECONDARY, fontWeight: 700 }">{{ formatCommBandwidthGb(record.baseline) }} GB/s</span>
               </template>
               <template v-else-if="column.key === 'vsA100'">
                 <span
@@ -1041,33 +1052,33 @@ function inferRowKey(r: InferRow) {
                         class="dual-fill"
                         :style="{
                           width: Math.round((record.bw / commBwMax) * 100) + '%',
-                          background: DETAIL_CHART_PRIMARY,
+                          background: DETAIL_DUAL_BAR_PRIMARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">{{
                       formatCommBandwidthGb(record.bw)
                     }}</span>
                   </div>
                 </div>
                 <div v-else class="dual-bar">
                   <div class="dual-row">
-                    <span class="dual-lbl" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{ detailPlat.logo }}</span>
+                    <span class="dual-lbl" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">{{ detailPlat.logo }}</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
                         :style="{
                           width: Math.round((record.bw / commBwMax) * 100) + '%',
-                          background: DETAIL_CHART_PRIMARY,
+                          background: DETAIL_DUAL_BAR_PRIMARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_PRIMARY }">{{
                       formatCommBandwidthGb(record.bw)
                     }}</span>
                   </div>
                   <div v-if="nvCommMatch(record as CommRowLite)" class="dual-row">
-                    <span class="dual-lbl" style="color: #000000">NV</span>
+                    <span class="dual-lbl" :style="{ color: DETAIL_DUAL_BAR_SECONDARY }">NV</span>
                     <div class="dual-track">
                       <div
                         class="dual-fill"
@@ -1076,11 +1087,11 @@ function inferRowKey(r: InferRow) {
                             Math.round(
                               ((nvCommMatch(record as CommRowLite)!.bw || 0) / commBwMax) * 100,
                             ) + '%',
-                          background: DETAIL_CHART_SECONDARY,
+                          background: DETAIL_DUAL_BAR_SECONDARY,
                         }"
                       />
                     </div>
-                    <span class="dual-ms" :style="{ color: DETAIL_TABLE_BODY_COLOR }">{{
+                    <span class="dual-ms" :style="{ color: DETAIL_DUAL_BAR_SECONDARY }">{{
                       formatCommBandwidthGb(nvCommMatch(record as CommRowLite)!.bw)
                     }}</span>
                   </div>
@@ -1137,7 +1148,7 @@ function inferRowKey(r: InferRow) {
 
     <!-- CI -->
     <div class="ci-card">
-      <a-tabs v-model:activeKey="ciTabKey">
+      <a-tabs v-model:activeKey="ciTabKey" class="ci-detail-tabs">
         <a-tab-pane key="ci-stats" tab="CI 运行统计">
           <div class="ci-stats-grid">
             <div class="ci-stat">
@@ -1207,58 +1218,90 @@ function inferRowKey(r: InferRow) {
   padding-bottom: 4px;
   background-color: #fff;
 }
-/* 测试环境条：与全站主题蓝（--blue / --purple）一致 */
+/* 测试环境条：与筛选项 pill 同高；置于滚动区内，随页面滚动 */
 .detail-panel__scroll .detail-test-env-bar {
-  margin-bottom: 16px;
-  padding: 10px 14px;
-  background: color-mix(in srgb, var(--blue) 11%, #ffffff);
-  border-left: 4px solid var(--blue);
-  border-radius: 0;
+  box-sizing: border-box;
+  margin-bottom: 13px;
+  height: 28px;
+  padding: 0 14px;
+  background: rgb(125, 134, 173);
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--purple);
+  justify-content: space-between;
+  gap: 13px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 26px;
+  color: #fff;
 }
-.detail-test-env-bar__icon {
-  flex-shrink: 0;
-  opacity: 0.88;
+.detail-test-env-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
 }
 .detail-test-env-bar__title {
   flex-shrink: 0;
   font-weight: 600;
-  color: var(--purple);
+  color: #fff;
 }
 .detail-test-env-bar__sep {
   flex-shrink: 0;
-  color: var(--blue);
-  opacity: 0.42;
+  color: rgba(255, 255, 255, 0.55);
   font-weight: 300;
 }
 .detail-test-env-bar__line {
-  flex: 1;
   min-width: 0;
-  font-weight: 500;
-  color: var(--blue);
+  font-weight: 600;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .detail-test-env-bar__source {
   flex-shrink: 0;
-  margin-left: auto;
-  max-width: 42%;
-  font-size: 13px;
-  color: color-mix(in srgb, var(--purple) 72%, #6b7280);
-  font-style: italic;
+  max-width: 46%;
+  min-width: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 26px;
+  color: rgba(255, 255, 255, 0.92);
   text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .detail-panel__scroll .kpi-grid {
-  margin-bottom: 16px;
+  margin-bottom: 28px;
 }
 .detail-env-table-gap {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 13px;
   background-color: #ffffff;
+}
+/* 详情页内：与全局间距对齐；数据明细卡片去框线、去内边距 */
+.detail-panel__scroll .table-card {
+  margin-bottom: 28px;
+  border: none;
+  padding: 0;
+}
+.detail-panel__scroll .table-head-row {
+  margin-bottom: 1px;
+}
+.detail-panel__scroll .charts-grid {
+  gap: 18px;
+}
+.detail-panel__scroll .ci-stats-grid {
+  gap: 13px;
+}
+/* 详情：折线柱图 / CI 去掉外框与卡片内边距，与测试环境横条同宽对齐 */
+.detail-panel__scroll .chart-card,
+.detail-panel__scroll .ci-card {
+  border: none;
+  padding: 0;
 }
 /* 数据明细上方：左「得分说明」、右正文，两列 */
 .detail-table-notice {
@@ -1266,8 +1309,8 @@ function inferRowKey(r: InferRow) {
   grid-template-columns: max-content 1fr;
   column-gap: 0;
   align-items: start;
-  margin-bottom: 12px;
-  font-size: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
   line-height: 1.55;
   color: #8c8c8c;
 }
@@ -1283,38 +1326,103 @@ function inferRowKey(r: InferRow) {
   margin: 0;
   padding: 0;
 }
-/* 推理：得分说明下方，Prefill / Decode 切换（默认尺寸按钮，右对齐） */
+/* 推理：与「数据明细」标题同行右侧；与 .detail-back-btn 同形，未选态略淡 */
 .infer-throughput-tab-row {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: flex-end;
-  margin-bottom: 12px;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.infer-throughput-btn.infer-throughput-btn--inactive {
+  opacity: 0.55;
+}
+.infer-throughput-btn.infer-throughput-btn--inactive:hover {
+  opacity: 0.72;
 }
 /* 详情表格：表头与表体单元格一律左对齐 */
 .detail-panel__scroll :deep(.ant-table-thead > tr > th.ant-table-cell),
 .detail-panel__scroll :deep(.ant-table-tbody > tr > td.ant-table-cell) {
   text-align: left !important;
 }
-/* 详情双图：略收标题与卡片底留白，配合 ECharts grid.bottom 收紧绘图区下方空白 */
+/* 详情：数据明细标题与详情页主标题（.detail-title）同字号、字重、颜色、行高 */
+.detail-panel__scroll .table-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(13, 21, 60);
+  line-height: 26px;
+}
+/* 详情双图：折线/柱图标题同上；略收标题与卡片底留白 */
 .detail-panel__scroll .charts-grid .chart-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(13, 21, 60);
+  line-height: 26px;
   margin-bottom: 8px;
 }
 .detail-panel__scroll .charts-grid .chart-card {
-  padding: 18px 22px 8px;
+  padding: 0;
 }
 .detail-chart {
   height: 280px;
   width: 100%;
+  display: block;
+  line-height: 0;
 }
 .ci-chart {
   height: 220px;
   width: 100%;
+  display: block;
+  line-height: 0;
 }
 
+/* CI 区块 Tabs：与详情主标题 .detail-title 同字号、字重、颜色（覆盖主题蓝） */
+.detail-panel__scroll .ci-detail-tabs :deep(.ant-tabs-tab) {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 26px;
+  color: rgb(13, 21, 60) !important;
+  padding: 10px 0;
+}
+.detail-panel__scroll .ci-detail-tabs :deep(.ant-tabs-tab-btn) {
+  color: rgb(13, 21, 60) !important;
+}
+.detail-panel__scroll .ci-detail-tabs :deep(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+  color: rgb(13, 21, 60) !important;
+  text-shadow: none;
+}
+.detail-panel__scroll .ci-detail-tabs :deep(.ant-tabs-tab:hover .ant-tabs-tab-btn) {
+  color: rgb(13, 21, 60) !important;
+}
+.detail-panel__scroll .ci-detail-tabs :deep(.ant-tabs-ink-bar) {
+  background: rgb(13, 21, 60);
+}
+
+/* 算子表首列（Shape）：固定列宽内单行省略，避免字符被硬裁切 */
+.detail-panel__scroll :deep(.op-detail-table .ant-table-tbody > tr > td:first-child.ant-table-cell) {
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.op-shape-cell-wrap {
+  min-width: 0;
+  width: 100%;
+  overflow: hidden;
+}
 .op-shape-lead {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 4px;
   min-width: 0;
+  width: 100%;
+}
+.op-shape-lead .shape-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .op-failed-lead-icon {
   flex-shrink: 0;

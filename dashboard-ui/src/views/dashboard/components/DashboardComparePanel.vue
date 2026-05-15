@@ -7,6 +7,7 @@ import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
 import { SCORE_TIER_COLOR } from '@/utils/scoreColor'
+import { DETAIL_DUAL_BAR_PRIMARY, DETAIL_DUAL_BAR_SECONDARY } from '@/utils/echartsInfini'
 
 type CompareTableRecord = {
   plat: (typeof PLATFORMS)[number]
@@ -166,10 +167,10 @@ const showLatencyChart = computed(
               </span>
             </template>
             <template v-else-if="column.key === 'ownVal'">
-              {{ record.card.ownVal || '—' }}
+              <span :style="{ color: DETAIL_DUAL_BAR_PRIMARY, fontWeight: 700 }">{{ record.card.ownVal || '—' }}</span>
             </template>
             <template v-else-if="column.key === 'openVal'">
-              {{ record.card.openVal || '—' }}
+              <span :style="{ color: DETAIL_DUAL_BAR_SECONDARY, fontWeight: 700 }">{{ record.card.openVal || '—' }}</span>
             </template>
             <template v-else-if="column.key === 'n'">
               {{ record.card.n ?? '—' }}
@@ -225,8 +226,10 @@ const showLatencyChart = computed(
 .compare-chart {
   height: 240px;
   width: 100%;
+  display: block;
+  line-height: 0;
 }
 .charts-grid .chart-card {
-  padding-bottom: 12px;
+  padding-bottom: 0;
 }
 </style>

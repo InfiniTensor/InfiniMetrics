@@ -294,13 +294,13 @@ body{
   line-height:1.2;
 }
 .global-bc.visible{display:flex;}
-.global-bc .bc-item{font-size:12px;line-height:1.2;color:#aaa;cursor:pointer;}
+.global-bc .bc-item{font-size:16px;line-height:1.2;color:#aaa;cursor:pointer;}
 .global-bc .bc-item:hover{color:var(--blue);}
 .global-bc .bc-item.cur{color:#1a1a2e;font-weight:600;}
-.global-bc .bc-sep{color:#ddd;font-size:12px;line-height:1.2;}
+.global-bc .bc-sep{color:#ddd;font-size:16px;line-height:1.2;}
 
 .bc-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
-.bc-item{font-size:13px;color:#888;cursor:pointer;}
+.bc-item{font-size:16px;color:#888;cursor:pointer;}
 .bc-item:hover{color:var(--blue);}
 .bc-item.cur{color:#1a1a2e;font-weight:600;}
 .bc-sep{color:#ccc;}
@@ -308,19 +308,69 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:12px;
   background:#fff;
-  padding-bottom:14px;
+  padding-bottom:0;
   margin-bottom:0;
 }
-.detail-title{font-size:17px;font-weight:700;color:#1a1a2e;}
+.detail-title-group{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  min-width:0;
+}
+.detail-title{font-size:16px;font-weight:700;color:rgb(13,21,60);line-height:26px;}
+/* 与 DashboardFilterBar 筛选项 .filter-row .ant-btn-sm 同高、同字号、同水平内边距 */
+.detail-chip-tag{
+  box-sizing:border-box;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 14px;
+  border-radius:6px;
+  background:rgb(125,134,173);
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  line-height:26px;
+  white-space:nowrap;
+}
+.detail-back-btn{
+  box-sizing:border-box;
+  flex-shrink:0;
+  margin:0;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:28px;
+  padding:0 14px;
+  border:none;
+  border-radius:6px;
+  background:rgb(125,134,173);
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  line-height:26px;
+  cursor:pointer;
+  font-family:inherit;
+  transition:filter .15s ease;
+}
+.detail-back-btn:hover{filter:brightness(1.06);}
+.detail-back-btn:active{filter:brightness(0.96);}
+.detail-panel__header{
+  flex-shrink:0;
+  margin-bottom:13px;
+}
 
 /* KPI cards */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;}
 .kpi-card{
-  padding:18px;background:#FAFAFA;
-  border-radius:var(--card-radius);text-align:center;
+  padding:18px;background:rgb(244,244,244);
+  border-radius:8px;text-align:center;
 }
-.kpi-val{font-size:28px;font-weight:700;color:var(--blue);margin-bottom:4px;line-height:1.2;}
+.kpi-val{font-size:32px;font-weight:700;color:rgb(11,132,28);margin-bottom:4px;line-height:1.2;}
 .kpi-lbl{font-size:14px;color:#767676;}
 .kpi-sub{font-size:14px;color:#9a9a9a;margin-top:3px;line-height:1.4;}
 
@@ -358,14 +408,37 @@ body{
 .table-head-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
 .table-title{font-size:15px;font-weight:700;color:#1a1a2e;}
 .table-wrap{overflow-x:auto;}
+
+/* 全站 Ant Design Table：表头/表体各放大一号；表头上下 padding 各减 8px（相对常见 16px 默认 → 8px）；表头背景 #f4f4f4 */
+.ant-table-wrapper .ant-table {
+  font-size: 15px;
+}
+.ant-table-wrapper .ant-table-thead > tr > th.ant-table-cell {
+  font-size: 15px;
+  font-weight: 600;
+  background: #f4f4f4 !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+.ant-table-wrapper .ant-table-thead > tr > th.ant-table-cell.ant-table-cell-fix-left,
+.ant-table-wrapper .ant-table-thead > tr > th.ant-table-cell-fix-right {
+  background: #f4f4f4 !important;
+}
+.ant-table-sticky-holder .ant-table-thead > tr > th.ant-table-cell {
+  background: #f4f4f4 !important;
+}
+.ant-table-wrapper .ant-table-tbody > tr > td.ant-table-cell {
+  font-size: 15px;
+}
+
 table{width:100%;border-collapse:collapse;}
-/* 仅作用于非 ant-design-vue Table，避免覆盖 a-table 默认字号与表头样式 */
+/* 仅作用于非 ant-design-vue Table，避免与上方 a-table 规则重复 */
 th:not(.ant-table-cell){
-  text-align:left;padding:12px 14px;background:#fff;
-  color:#888;font-size:12px;font-weight:600;border-bottom:2px solid #e4e6eb;
+  text-align:left;padding:4px 14px;background:#f4f4f4;
+  color:#888;font-size:13px;font-weight:600;border-bottom:2px solid #e4e6eb;
 }
 td:not(.ant-table-cell){
-  padding:14px 14px;border-bottom:1px solid #f0f2f5;font-size:13px;color:#1a1a2e;background:#fff;
+  padding:14px 14px;border-bottom:1px solid #f0f2f5;font-size:14px;color:#1a1a2e;background:#fff;
 }
 tr:hover > td:not(.ant-table-cell){background:#fff;}
 .shape-cell{font-family:'Courier New',monospace;color:var(--blue);}
@@ -381,23 +454,23 @@ tr:hover > td:not(.ant-table-cell){background:#fff;}
 .op-warn-icon{cursor:help;font-size:14px;}
 .op-detail-row--warn td:first-child{box-shadow:inset 3px 0 0 hsl(0deg 100% 50%);}
 .dual-bar{display:flex;flex-direction:column;gap:3px;min-width:110px;}
-.dual-row{display:flex;align-items:center;gap:4px;}
+/* 标签宽随文字；标签↔横条、横条↔数值 各 8px */
+.dual-row{display:flex;align-items:center;gap:8px;}
 .dual-lbl{
-  font-size:12px;
-  font-weight:400;
+  font-size:14px;
+  flex:0 0 auto;
   flex-shrink:0;
-  flex:0 0 88px;
-  min-width:88px;
-  max-width:88px;
-  text-align:right;
+  max-width:11rem;
+  text-align:left;
   white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
   box-sizing:border-box;
 }
-/* 访存带宽对比等：显式标记（样式与 .dual-lbl 一致，保留类名便于语义） */
-.dual-lbl.dual-lbl--bw{flex:0 0 88px;text-align:right;}
+/* 访存带宽等：.dual-lbl--bw 仅作语义类名，宽度规则同上 */
 .dual-track{flex:1;height:4px;background:#f0f0f0;border-radius:2px;overflow:hidden;}
 .dual-fill{height:100%;border-radius:2px;}
-.dual-ms{font-size:12px;font-weight:400;flex-shrink:0;min-width:52px;text-align:left;white-space:nowrap;}
+.dual-ms{font-size:14px;flex-shrink:0;min-width:52px;text-align:left;white-space:nowrap;}
 
 /* Charts */
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
@@ -412,10 +485,10 @@ tr:hover > td:not(.ant-table-cell){background:#fff;}
 .ci-tab.active{background:var(--grad);color:#fff;}
 .ci-content{display:none;}
 .ci-content.active{display:block;}
-.ci-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:18px;}
-.ci-stat{padding:14px;background:#FAFAFA;border-radius:var(--card-radius);text-align:center;}
-.ci-stat-val{font-size:22px;font-weight:700;color:var(--blue);}
-.ci-stat-lbl{font-size:11px;color:#888;margin-top:4px;}
+.ci-stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px;}
+.ci-stat{padding:18px;background:rgb(244,244,244);border-radius:8px;text-align:center;}
+.ci-stat-val{font-size:32px;font-weight:700;color:rgb(11,132,28);margin-bottom:4px;line-height:1.2;}
+.ci-stat-lbl{font-size:14px;color:#767676;}
 
 
 /* ══ Compare feature ══ */

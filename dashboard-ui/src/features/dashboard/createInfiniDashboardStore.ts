@@ -572,9 +572,8 @@ export function createInfiniDashboardStore() {
   })
 
   const detailTitle = computed(() => {
-    const plat = detailPlat.value
     const dim = DIMS[activeDim.value]
-    return `${plat.name} · ${dim.label}详情`
+    return `${dim.label}详情`
   })
 
   const tableNotice = computed(() => {
@@ -668,7 +667,6 @@ export function createInfiniDashboardStore() {
           lbl: 'PyTorch 代表延迟',
           sub: '开源基准',
           valSm: true,
-          muted: true,
         },
       ]
     }
