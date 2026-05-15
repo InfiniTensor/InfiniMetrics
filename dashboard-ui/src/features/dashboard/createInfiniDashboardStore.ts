@@ -431,7 +431,10 @@ export function createInfiniDashboardStore() {
         al.nvVals,
         plat.name,
         'NVIDIA',
-        { gridBottom: inferDetailTwinGridBottom.value },
+        {
+          gridBottom: inferDetailTwinGridBottom.value,
+          omitTwinBaselineSeries: pk === 'nvidia',
+        },
       )
     }
     if (dk === 'train') {
@@ -439,7 +442,10 @@ export function createInfiniDashboardStore() {
       if (!rows?.length) return {}
       const categories = rows.map((r) => `${r.framework}·${r.model}`)
       const gridBottom = maxCompactDetailBarGridBottom(categories)
-      return buildTrainBarThroughput(rows, { gridBottom })
+      return buildTrainBarThroughput(rows, {
+        gridBottom,
+        omitTwinBaselineSeries: detailState.value.platKey === 'nvidia',
+      })
     }
     if (dk === 'comm') {
       const rows = commDetailRows.value
@@ -447,7 +453,10 @@ export function createInfiniDashboardStore() {
       const catsBw = rows.map((r) => r.commType + ' ' + r.nGpu + 'GPU')
       const catsVs = rows.map((r) => r.commType)
       const gridBottom = maxCompactDetailBarGridBottom(catsBw, catsVs)
-      return buildCommBarBw(rows, { gridBottom })
+      return buildCommBarBw(rows, {
+        gridBottom,
+        omitTwinBaselineSeries: detailState.value.platKey === 'nvidia',
+      })
     }
     if (dk === 'bw') {
       const mk = bwModeKey.value
@@ -463,11 +472,17 @@ export function createInfiniDashboardStore() {
         const nv = bwNvidiaRefRow.value?.[mk]
         const baseline =
           nv != null && Number.isFinite(nv) && nv > 0 ? nv : BW_NVIDIA_BASELINE_GBPS
-        return buildBwBarAvg(mapped, baseline, `${mk} GB/s`, { gridBottom })
+        return buildBwBarAvg(mapped, baseline, `${mk} GB/s`, {
+          gridBottom,
+          omitTwinBaselineSeries: detailState.value.platKey === 'nvidia',
+        })
       }
       const filtered = rows.filter((r) => r.avg != null)
       if (!filtered.length) return {}
-      return buildBwBarAvg(filtered, BW_NVIDIA_BASELINE_GBPS, '均值 GB/s', { gridBottom })
+      return buildBwBarAvg(filtered, BW_NVIDIA_BASELINE_GBPS, '均值 GB/s', {
+        gridBottom,
+        omitTwinBaselineSeries: detailState.value.platKey === 'nvidia',
+      })
     }
     return {}
   })
@@ -510,7 +525,10 @@ export function createInfiniDashboardStore() {
         al.nvVals,
         plat.name,
         'NVIDIA',
-        { gridBottom: inferDetailTwinGridBottom.value },
+        {
+          gridBottom: inferDetailTwinGridBottom.value,
+          omitTwinBaselineSeries: pk === 'nvidia',
+        },
       )
     }
     if (dk === 'train') {
@@ -518,7 +536,11 @@ export function createInfiniDashboardStore() {
       if (!rows?.length) return {}
       const categories = rows.map((r) => `${r.framework}·${r.model}`)
       const gridBottom = maxCompactDetailBarGridBottom(categories)
-      return buildTrainBarVs(rows, { gridBottom, trainPlatBarName: plat.name })
+      return buildTrainBarVs(rows, {
+        gridBottom,
+        trainPlatBarName: plat.name,
+        omitTwinBaselineSeries: detailState.value.platKey === 'nvidia',
+      })
     }
     if (dk === 'comm') {
       const rows = commDetailRows.value
@@ -526,7 +548,11 @@ export function createInfiniDashboardStore() {
       const catsBw = rows.map((r) => r.commType + ' ' + r.nGpu + 'GPU')
       const catsVs = rows.map((r) => r.commType)
       const gridBottom = maxCompactDetailBarGridBottom(catsBw, catsVs)
-      return buildCommBarVs(rows, { gridBottom, commPlatBarName: plat.name })
+      return buildCommBarVs(rows, {
+        gridBottom,
+        commPlatBarName: plat.name,
+        omitTwinBaselineSeries: detailState.value.platKey === 'nvidia',
+      })
     }
     if (dk === 'bw') {
       const platKey = detailState.value.platKey
@@ -544,11 +570,15 @@ export function createInfiniDashboardStore() {
         return buildBwBarModes(rowsWithMode, nvidiaRow, mk, {
           gridBottom,
           bwPlatBarName: plat.name,
+          omitTwinBaselineSeries: platKey === 'nvidia',
         })
       }
       const best = pickBestBwRowByMode(rowsFull, null)
       if (!best) return {}
-      return buildBwBarModes(best, nvidiaRow, null, { gridBottom })
+      return buildBwBarModes(best, nvidiaRow, null, {
+        gridBottom,
+        omitTwinBaselineSeries: platKey === 'nvidia',
+      })
     }
     return {}
   })
@@ -566,9 +596,8 @@ export function createInfiniDashboardStore() {
     const cards = compareCards.value.filter((c) => parseLatencyMs(c.ownVal as string) != null)
     const names = cards.map((c) => PLATFORMS.find((p) => p.key === c.key)!.name)
     const latencies = cards.map((c) => parseLatencyMs(c.ownVal as string) as number)
-    const colors = cards.map((c) => PLATFORMS.find((p) => p.key === c.key)!.color)
     if (!latencies.length) return {}
-    return buildCompareLatencyBar(names, latencies, colors)
+    return buildCompareLatencyBar(names, latencies)
   })
 
   const detailTitle = computed(() => {
@@ -596,13 +625,6 @@ export function createInfiniDashboardStore() {
   })
 
   const comparePageTitle = computed(() => `${DIMS[activeDim.value].label} · 平台横向对比`)
-
-  const comparePageSubtitle = computed(() =>
-    compareCards.value
-      .map((c) => PLATFORMS.find((p) => p.key === c.key)?.name || '')
-      .filter(Boolean)
-      .join(' vs '),
-  )
 
   const compareKpiBlocks = computed(() => {
     const cards = compareCards.value
@@ -999,7 +1021,6 @@ export function createInfiniDashboardStore() {
     detailTitle,
     tableNotice,
     comparePageTitle,
-    comparePageSubtitle,
     compareKpiBlocks,
     compareTableRows,
     detailKpiCells,

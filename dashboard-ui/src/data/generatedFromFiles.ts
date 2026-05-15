@@ -6128,6 +6128,342 @@ export const OP_TABLE_FROM_FILES = {
       }
     ]
   },
+  "iluvatar": {
+    "Add": [
+      {
+        "shape": "M=16, N=5632",
+        "dtype": "FP32",
+        "ic": 0.018091,
+        "pt": 0.013261,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=16, N=5632",
+        "dtype": "FP16",
+        "ic": 0.017943,
+        "pt": 0.013256,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=16, N=5632",
+        "dtype": "BF16",
+        "ic": 0.017936,
+        "pt": 0.013259,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, seq=4, hidden=5632",
+        "dtype": "FP32",
+        "ic": 0.018109,
+        "pt": 0.013253,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, seq=4, hidden=5632",
+        "dtype": "FP16",
+        "ic": 0.01807,
+        "pt": 0.013254,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, seq=4, hidden=5632",
+        "dtype": "BF16",
+        "ic": 0.017949,
+        "pt": 0.013256,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=16, N=4096",
+        "dtype": "FP32",
+        "ic": 0.015533,
+        "pt": 0.013234,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=16, N=4096",
+        "dtype": "FP16",
+        "ic": 0.01548,
+        "pt": 0.015507,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=16, N=4096",
+        "dtype": "BF16",
+        "ic": 0.015423,
+        "pt": 0.013239,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      }
+    ],
+    "CausalSoftmax": [
+      {
+        "shape": "bs=32, seq=512",
+        "dtype": "FP32",
+        "ic": 0.014831,
+        "pt": 0.056516,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=32, seq=512",
+        "dtype": "FP16",
+        "ic": 0.014861,
+        "pt": 0.079162,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=32, seq=512",
+        "dtype": "BF16",
+        "ic": 0.014852,
+        "pt": 0.07824,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, heads=20, seq=512",
+        "dtype": "FP32",
+        "ic": 0.018157,
+        "pt": 0.069146,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, heads=20, seq=512",
+        "dtype": "FP16",
+        "ic": 0.018821,
+        "pt": 0.095368,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, heads=20, seq=512",
+        "dtype": "BF16",
+        "ic": 0.018789,
+        "pt": 0.093892,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      }
+    ],
+    "Gemm": [
+      {
+        "shape": "M=1, N=2048, K=2048",
+        "dtype": "FP32",
+        "ic": 0.106198,
+        "pt": 0.106446,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=1, N=2048, K=2048",
+        "dtype": "FP16",
+        "ic": 0.029884,
+        "pt": 0.043085,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=1, N=2048, K=2048",
+        "dtype": "BF16",
+        "ic": 0.02975,
+        "pt": 0.042972,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=6, N=2560, K=2048",
+        "dtype": "FP32",
+        "ic": 0.107323,
+        "pt": 0.107532,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=6, N=2560, K=2048",
+        "dtype": "FP16",
+        "ic": 0.032285,
+        "pt": 0.031953,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "M=6, N=2560, K=2048",
+        "dtype": "BF16",
+        "ic": 0.03161,
+        "pt": 0.031559,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, M=48, N=6, K=64",
+        "dtype": "FP32",
+        "ic": 0.017041,
+        "pt": 0.017063,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, M=48, N=6, K=64",
+        "dtype": "FP16",
+        "ic": 0.019818,
+        "pt": 0.019791,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, M=48, N=6, K=64",
+        "dtype": "BF16",
+        "ic": 0.01982,
+        "pt": 0.019802,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      }
+    ],
+    "RMSNorm": [
+      {
+        "shape": "bs=2, seq=4, hidden=2048",
+        "dtype": "FP32",
+        "ic": 0.020596,
+        "pt": 0.058063,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=2, seq=4, hidden=2048",
+        "dtype": "FP16",
+        "ic": 0.010745,
+        "pt": 0.096919,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=2, seq=4, hidden=2048",
+        "dtype": "BF16",
+        "ic": 0.010727,
+        "pt": 0.095763,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=16, hidden=5632",
+        "dtype": "FP32",
+        "ic": 0.012264,
+        "pt": 0.096833,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=16, hidden=5632",
+        "dtype": "FP16",
+        "ic": 0.012252,
+        "pt": 0.159268,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=16, hidden=5632",
+        "dtype": "BF16",
+        "ic": 0.012267,
+        "pt": 0.157596,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      }
+    ],
+    "Swiglu": [
+      {
+        "shape": "bs=16, hidden=5632",
+        "dtype": "FP32",
+        "ic": 0.018709,
+        "pt": 0.05494,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=16, hidden=5632",
+        "dtype": "FP16",
+        "ic": 0.018283,
+        "pt": 0.129268,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=16, hidden=5632",
+        "dtype": "BF16",
+        "ic": 0.018187,
+        "pt": 0.129152,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, seq=4, hidden=5632",
+        "dtype": "FP32",
+        "ic": 0.018531,
+        "pt": 0.054879,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, seq=4, hidden=5632",
+        "dtype": "FP16",
+        "ic": 0.018303,
+        "pt": 0.12923,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      },
+      {
+        "shape": "bs=4, seq=4, hidden=5632",
+        "dtype": "BF16",
+        "ic": 0.018231,
+        "pt": 0.128135,
+        "remarks": "TG-V200",
+        "scoreEligible": true,
+        "date": "5/14/26"
+      }
+    ]
+  },
   "nvidia": {
     "CausalSoftmax": [
       {
@@ -7620,6 +7956,20 @@ export const OP_CARD_FROM_FILES = {
     "opRecordSub": "7 算子",
     "adv": true,
     "advTxt": "自研快 1900%"
+  },
+  "iluvatar": {
+    "key": "iluvatar",
+    "openScore": 100,
+    "ownFw": "InfiniCore ✦",
+    "openFw": "PyTorch",
+    "ownScore": 1300,
+    "ownVal": "0.012ms",
+    "openVal": "0.159ms",
+    "n": 36,
+    "extra": "bs=16,hidden=5632 · FP16",
+    "opRecordSub": "5 算子",
+    "adv": true,
+    "advTxt": "自研快 1200%"
   },
   "nvidia": {
     "key": "nvidia",
@@ -13512,7 +13862,7 @@ export const COMM_CARD_FROM_FILES = {
     "ownVal": "53.1 GB/s",
     "openVal": "45.8 GB/s",
     "n": 2,
-    "extra": "metaxlink · 2GPU",
+    "extra": "metaxlink · 8GPU",
     "adv": true,
     "advTxt": "AllReduce 相对 NVIDIA 131%（P2P 20%）"
   },
@@ -13702,13 +14052,14 @@ export const BW_CARD_FROM_FILES = {
 } as Record<string, Record<string, unknown>>
 
 export const BENCHMARK_DATA_META = {
-  "generatedAt": "2026-05-15T06:17:37.120Z",
+  "generatedAt": "2026-05-15T09:04:45.073Z",
   "operatorSources": [
     "new_data\\operator\\ascend_operator_20260430.csv",
     "new_data\\operator\\cambricon_operator_20260506.csv",
     "new_data\\operator\\hygon_operator_20260429.csv",
     "new_data\\operator\\metax_operator_20260429.csv",
     "new_data\\operator\\moore_operator_20260429.csv",
+    "new_data\\operator\\iluvatar_operator_20260514.xlsx",
     "new_data\\operator\\ops_data.csv"
   ],
   "inferSources": [
@@ -13735,7 +14086,7 @@ export const BENCHMARK_DATA_META = {
     "new_data\\bw\\mthreads_bw_20260429.xlsx",
     "new_data\\bw\\nvidia_bw_20260429.xlsx"
   ],
-  "opDatasetUpdatedAt": "2026-05-06",
+  "opDatasetUpdatedAt": "5-14-26",
   "inferDatasetUpdatedAt": "2026-05-06",
   "trainSourceFileDateByPlatform": {
     "metax": "2026-04-29",

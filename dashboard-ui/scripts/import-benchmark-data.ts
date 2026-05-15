@@ -6,7 +6,7 @@
  *
  * 通信：`new_data/comm/{plat}_comm_YYYYMMDD.xlsx` 或同名的 `.csv`（同平台同时存在时优先 CSV）；文件名 8 位日期会参与行内日期的对齐。列：link_type、comm_type、n_gpu、bw_GBps（表头规范化后为 bw_gbps）、date、remarks。
  * 访存：`{plat}_bw_YYYYMMDD.csv` 或 `.xlsx`（同平台同时存在时优先 CSV）、可选的 `bw/bw_template.csv`（多平台、含 platform 列）。列：model、add_bw_GBps、copy_bw_GBps、scale_bw_GBps、triad_bw_GBps、bw_GBps、date、tester、remarks（表头规范化后为下划线小写）。
- * 算子 / 推理 / 训练 / 通信规则见各 `*Benchmark.ts`。
+ * 算子：`{plat}_operator_YYYYMMDD.csv` 或 `.xlsx`（同平台同时存在时优先日期较新者；日期相同优先 CSV）。推理 / 训练 / 通信规则见各 `*Benchmark.ts`。
  */
 import { parse } from 'csv-parse/sync'
 import fs from 'fs'
@@ -113,19 +113,12 @@ function normalizeShape(s: unknown): string {
     .replace(/,\s*/g, ', ')
 }
 
-function parseOperatorCsv(
-  filePath: string,
+function parseOperatorRecords(
+  records: Record<string, string>[],
   forcedPlatform: string | undefined,
 ): { byPlat: Record<string, Record<string, OperatorTableRow[]>>; flatByPlat: Record<string, OperatorFlat[]> } {
   const byPlat: Record<string, Record<string, OperatorTableRow[]>> = {}
   const flatByPlat: Record<string, OperatorFlat[]> = {}
-  const text = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')
-  const records = parse(text, {
-    columns: true,
-    skip_empty_lines: true,
-    trim: true,
-    relax_column_count: true,
-  }) as Record<string, string>[]
 
   for (const row of records) {
     const plat = forcedPlatform ?? normalizePlatform(row.platform)
@@ -159,6 +152,47 @@ function parseOperatorCsv(
     flatByPlat[plat].push({ opKey, shape, dtype, ic, pt, remarks, date })
   }
   return { byPlat, flatByPlat }
+}
+
+function parseOperatorCsv(
+  filePath: string,
+  forcedPlatform: string | undefined,
+): { byPlat: Record<string, Record<string, OperatorTableRow[]>>; flatByPlat: Record<string, OperatorFlat[]> } {
+  const text = fs.readFileSync(filePath, 'utf8').replace(/^\uFEFF/, '')
+  const records = parse(text, {
+    columns: true,
+    skip_empty_lines: true,
+    trim: true,
+    relax_column_count: true,
+  }) as Record<string, string>[]
+  return parseOperatorRecords(records, forcedPlatform)
+}
+
+function parseOperatorFromFile(
+  filePath: string,
+  forcedPlatform: string | undefined,
+): { byPlat: Record<string, Record<string, OperatorTableRow[]>>; flatByPlat: Record<string, OperatorFlat[]> } {
+  if (filePath.toLowerCase().endsWith('.xlsx')) {
+    return parseOperatorRecords(readFirstSheetStringRecords(filePath), forcedPlatform)
+  }
+  return parseOperatorCsv(filePath, forcedPlatform)
+}
+
+/** 与访存一致：各平台取最新日期的 csv 或 xlsx；同日优先 csv */
+function pickLatestOperatorByPlatform(): Record<string, { date: string; full: string }> {
+  const csvMap = pickLatestByPlatform(DATA_OPERATOR, /^(.+)_operator_(\d+)\.csv$/i)
+  const xlsxMap = pickLatestByPlatform(DATA_OPERATOR, /^(.+)_operator_(\d+)\.xlsx$/i)
+  const plats = new Set([...Object.keys(csvMap), ...Object.keys(xlsxMap)])
+  const out: Record<string, { date: string; full: string }> = {}
+  for (const plat of plats) {
+    const c = csvMap[plat]
+    const x = xlsxMap[plat]
+    if (!c) out[plat] = x!
+    else if (!x) out[plat] = c
+    else if (c.date !== x.date) out[plat] = c.date > x.date ? c : x
+    else out[plat] = c
+  }
+  return out
 }
 
 type OperatorFlat = {
@@ -832,9 +866,9 @@ function main() {
   const OP_CARD_FROM_FILES: Record<string, Record<string, unknown>> = {}
   const flatAccumulator: Record<string, OperatorFlat[]> = {}
 
-  const datedOp = pickLatestByPlatform(DATA_OPERATOR, /^(.+)_operator_(\d+)\.csv$/)
+  const datedOp = pickLatestOperatorByPlatform()
   for (const [plat, { full }] of Object.entries(datedOp)) {
-    const { byPlat, flatByPlat } = parseOperatorCsv(full, plat)
+    const { byPlat, flatByPlat } = parseOperatorFromFile(full, plat)
     if (parsedHasPlat(byPlat, plat)) {
       OP_TABLE_FROM_FILES[plat] = byPlat[plat]
       meta.operatorSources.push(full.replace(ROOT + path.sep, ''))

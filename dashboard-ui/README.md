@@ -10,7 +10,7 @@ npm run dev
 
 浏览器打开终端里提示的本地地址（一般为 `http://localhost:5173`）。
 
-若更新了仓库根目录下的评测 CSV，可先生成前端数据再启动：
+若更新了仓库根目录 `new_data/**` 下的评测数据（算子为 CSV 或 `*_operator_*.xlsx`，其余维度见 `scripts/import-benchmark-data.ts` 顶部说明），可先生成前端数据再启动：
 
 ```bash
 npm run generate:data

@@ -4,15 +4,16 @@ import { CI_CHART_LABELS } from '@/data'
 import { BW_NVIDIA_BASELINE_GBPS } from '@/features/dashboard/bwBenchmark'
 
 /**
- * 详情页折线/柱图：双系列主色与图例一致（实测/本机 + NVIDIA 基线）；
+ * 详情页折线/柱图：双系列主色与图例一致（本机/实测蓝 + 基线或 PyTorch 等辅色）；
  * 与数据明细「对比」横条常量 DETAIL_DUAL_BAR_* 同源
  */
 export const DETAIL_CHART_PRIMARY = '#5B9BD5'
-export const DETAIL_CHART_SECONDARY = '#C5E0B4'
+/** 辅色（PyTorch / NVIDIA 基线等）：白底可读，略浅于纯深绿 */
+export const DETAIL_CHART_SECONDARY = '#83BB46'
 
 /** 详情数据明细「对比」双横条及同列标签/数值色（与上方双柱图系列色一致） */
 export const DETAIL_DUAL_BAR_PRIMARY = '#5B9BD5'
-export const DETAIL_DUAL_BAR_SECONDARY = '#C5E0B4'
+export const DETAIL_DUAL_BAR_SECONDARY = '#83BB46'
 
 /** 详情页图表：坐标轴刻度、轴名、图例、悬浮提示等文字统一为 14px */
 export const DETAIL_CHART_AXIS_FONT_SIZE = 14
@@ -140,27 +141,28 @@ function categoryBarXAxisUi(categories: string[]): {
 } {
   const n = categories.length
   const c = DETAIL_AXIS_TEXT_COLOR
+  const fs = DETAIL_CHART_AXIS_FONT_SIZE
   if (categoryBarLabelsFitHorizontal(categories)) {
     return {
-      gridBottom: 38,
-      axisLabel: { interval: 0, rotate: 0, fontSize: 11, margin: 6, color: c },
+      gridBottom: 44,
+      axisLabel: { interval: 0, rotate: 0, fontSize: fs, margin: 8, color: c },
     }
   }
   if (n <= 8) {
     return {
-      gridBottom: 50,
-      axisLabel: { interval: 0, rotate: 28, fontSize: 10, margin: 6, color: c },
+      gridBottom: 58,
+      axisLabel: { interval: 0, rotate: 28, fontSize: fs, margin: 8, color: c },
     }
   }
   if (n <= 15) {
     return {
-      gridBottom: 68,
-      axisLabel: { interval: 0, rotate: 42, fontSize: 9, margin: 8, color: c },
+      gridBottom: 78,
+      axisLabel: { interval: 0, rotate: 42, fontSize: fs, margin: 10, color: c },
     }
   }
   return {
-    gridBottom: 90,
-    axisLabel: { interval: 0, rotate: 55, fontSize: 8, margin: 8, color: c },
+    gridBottom: 102,
+    axisLabel: { interval: 0, rotate: 55, fontSize: fs, margin: 10, color: c },
   }
 }
 
@@ -195,6 +197,11 @@ export type DetailDimBarChartOpts = {
   commPlatBarName?: string
   /** 训练「相对 NVIDIA（%）」双柱图：本机系列图例用平台名 */
   trainPlatBarName?: string
+  /**
+   * 详情平台为 NVIDIA（国际标杆）时：无跨平台对照意义，不画第二根「参考 / 基线」柱，
+   * 避免与第一根数值相同却占双簇宽。
+   */
+  omitTwinBaselineSeries?: boolean
 }
 
 export function buildCiLineOption(seriesData: number[]) {
@@ -415,13 +422,17 @@ export function buildInferPrefillBarAligned(
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
-      {
-        type: 'bar' as const,
-        name: nvSeriesName,
-        data: nvVals,
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: nvSeriesName,
+              data: nvVals,
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+            },
+          ]),
     ],
   }
 }
@@ -456,13 +467,17 @@ export function buildInferDecodeBarAligned(
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
-      {
-        type: 'bar' as const,
-        name: nvSeriesName,
-        data: nvVals,
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: nvSeriesName,
+              data: nvVals,
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+            },
+          ]),
     ],
   }
 }
@@ -507,14 +522,18 @@ export function buildTrainBarThroughput(rows: TrainRow[], opts?: DetailDimBarCha
         barCategoryGap,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
-      {
-        type: 'bar' as const,
-        name: 'NVIDIA 基线',
-        data: rows.map((r) => r.baseline),
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        barCategoryGap,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: 'NVIDIA 基线',
+              data: rows.map((r) => r.baseline),
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              barCategoryGap,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+            },
+          ]),
     ],
   }
 }
@@ -544,13 +563,17 @@ export function buildTrainBarVs(rows: TrainRow[], opts?: DetailDimBarChartOpts) 
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
         data: rows.map((r) => r.vsA100),
       },
-      {
-        type: 'bar' as const,
-        name: 'NVIDIA 参考（100%）',
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-        data: rows.map(() => 100),
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: 'NVIDIA 参考（100%）',
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+              data: rows.map(() => 100),
+            },
+          ]),
     ],
   }
 }
@@ -589,13 +612,17 @@ export function buildCommBarBw(rows: CommRow[], opts?: DetailDimBarChartOpts) {
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
-      {
-        type: 'bar' as const,
-        name: 'NVIDIA 基线',
-        data: rows.map((r) => r.baseline),
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: 'NVIDIA 基线',
+              data: rows.map((r) => r.baseline),
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+            },
+          ]),
     ],
   }
 }
@@ -625,13 +652,17 @@ export function buildCommBarVs(rows: CommRow[], opts?: DetailDimBarChartOpts) {
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
         data: rows.map((r) => r.vsA100),
       },
-      {
-        type: 'bar' as const,
-        name: 'NVIDIA 参考（100%）',
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-        data: rows.map(() => 100),
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: 'NVIDIA 参考（100%）',
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+              data: rows.map(() => 100),
+            },
+          ]),
     ],
   }
 }
@@ -675,13 +706,17 @@ export function buildBwBarAvg(
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
-      {
-        type: 'bar' as const,
-        name: 'NVIDIA 基线',
-        data: valid.map(() => nvidiaAvg),
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: 'NVIDIA 基线',
+              data: valid.map(() => nvidiaAvg),
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+            },
+          ]),
     ],
   }
 }
@@ -758,13 +793,17 @@ export function buildBwBarModes(
           barMaxWidth: DETAIL_BAR_MAX_WIDTH,
           itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
         },
-        {
-          type: 'bar' as const,
-          name: nvSeriesName,
-          data: valid.map(() => 100),
-          barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-          itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-        },
+        ...(opts?.omitTwinBaselineSeries
+          ? []
+          : [
+              {
+                type: 'bar' as const,
+                name: nvSeriesName,
+                data: valid.map(() => 100),
+                barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+                itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+              },
+            ]),
       ],
     }
   }
@@ -795,13 +834,17 @@ export function buildBwBarModes(
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
-      {
-        type: 'bar' as const,
-        name: nvSeriesName,
-        data: modes.map(() => 100),
-        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
-      },
+      ...(opts?.omitTwinBaselineSeries
+        ? []
+        : [
+            {
+              type: 'bar' as const,
+              name: nvSeriesName,
+              data: modes.map(() => 100),
+              barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+              itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+            },
+          ]),
     ],
   }
 }
@@ -817,11 +860,16 @@ type PlatLite = { key: string; name: string; color: string }
 export function buildCompareScoreBar(cards: CardLite[], plats: PlatLite[]) {
   const categories = plats.map((p) => p.name)
   const xUi = categoryBarXAxisUi(categories)
-  const compareGridBottom = Math.min(xUi.gridBottom, 20)
+  const gridBottom = categoryBarLabelsFitHorizontal(categories)
+    ? DETAIL_DIM_BAR_GRID_BOTTOM
+    : xUi.gridBottom
   return {
-    tooltip: { trigger: 'axis' as const },
-    legend: { top: 0, right: 8, textStyle: { fontSize: 11, color: DETAIL_AXIS_TEXT_COLOR } },
-    grid: { ...DETAIL_BAR_GRID, left: COMPARE_BAR_GRID_LEFT, top: 36, bottom: compareGridBottom },
+    tooltip: {
+      trigger: 'axis' as const,
+      textStyle: { fontSize: DETAIL_CHART_AXIS_FONT_SIZE, color: DETAIL_AXIS_TEXT_COLOR },
+    },
+    legend: { ...DETAIL_CHART_LEGEND, right: 8 },
+    grid: { ...DETAIL_BAR_GRID, left: COMPARE_BAR_GRID_LEFT, top: 44, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: categories,
@@ -834,9 +882,16 @@ export function buildCompareScoreBar(cards: CardLite[], plats: PlatLite[]) {
       nameLocation: 'middle' as const,
       nameRotate: 90,
       nameGap: COMPARE_Y_NAME_GAP_SCORE,
-      nameTextStyle: { fontSize: 11, color: DETAIL_AXIS_TEXT_COLOR },
+      nameTextStyle: {
+        fontSize: DETAIL_CHART_AXIS_FONT_SIZE,
+        color: DETAIL_AXIS_TEXT_COLOR,
+      },
       min: 0,
-      axisLabel: { formatter: (v: number) => v + '×', color: DETAIL_AXIS_TEXT_COLOR },
+      axisLabel: {
+        fontSize: DETAIL_CHART_AXIS_FONT_SIZE,
+        formatter: (v: number) => v + '×',
+        color: DETAIL_AXIS_TEXT_COLOR,
+      },
       splitLine: { lineStyle: { color: '#f0f0f0' } },
     },
     series: [
@@ -844,34 +899,33 @@ export function buildCompareScoreBar(cards: CardLite[], plats: PlatLite[]) {
         type: 'bar' as const,
         name: '自研提速倍率（×）',
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        data: cards.map((c, i) => ({
-          value: c.ownScore != null ? Number((c.ownScore / 100).toFixed(2)) : 0,
-          itemStyle: { color: plats[i].color + 'cc', borderRadius: [2, 2, 0, 0] },
-        })),
+        itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        data: cards.map((c) =>
+          c.ownScore != null ? Number((c.ownScore / 100).toFixed(2)) : 0,
+        ),
       },
       {
         type: 'bar' as const,
         name: '开源基准（×1.0）',
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        data: cards.map(() => ({
-          value: 1,
-          itemStyle: { color: '#bbbbbb55', borderRadius: [2, 2, 0, 0] },
-        })),
+        /** 与详情/概览双柱辅色一致（绿），图例与柱同色 */
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        data: cards.map(() => 1),
       },
     ],
   }
 }
 
-export function buildCompareLatencyBar(
-  names: string[],
-  latencies: number[],
-  colors: string[],
-) {
+/** 各平台代表延迟同一指标，柱色与详情/概览柱状图主系列一致（不用平台品牌色） */
+export function buildCompareLatencyBar(names: string[], latencies: number[]) {
   const xUi = categoryBarXAxisUi(names)
-  const compareGridBottom = Math.min(xUi.gridBottom, 20)
+  const gridBottom = categoryBarLabelsFitHorizontal(names) ? DETAIL_DIM_BAR_GRID_BOTTOM : xUi.gridBottom
   return {
-    tooltip: { trigger: 'axis' as const },
-    grid: { ...DETAIL_BAR_GRID, left: COMPARE_BAR_GRID_LEFT, top: 36, bottom: compareGridBottom },
+    tooltip: {
+      trigger: 'axis' as const,
+      textStyle: { fontSize: DETAIL_CHART_AXIS_FONT_SIZE, color: DETAIL_AXIS_TEXT_COLOR },
+    },
+    grid: { ...DETAIL_BAR_GRID, left: COMPARE_BAR_GRID_LEFT, top: 28, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
       data: names,
@@ -884,9 +938,15 @@ export function buildCompareLatencyBar(
       nameLocation: 'middle' as const,
       nameRotate: 90,
       nameGap: COMPARE_Y_NAME_GAP_LATENCY,
-      nameTextStyle: { fontSize: 11, color: DETAIL_AXIS_TEXT_COLOR },
+      nameTextStyle: {
+        fontSize: DETAIL_CHART_AXIS_FONT_SIZE,
+        color: DETAIL_AXIS_TEXT_COLOR,
+      },
       min: 0,
-      axisLabel: { color: DETAIL_AXIS_TEXT_COLOR },
+      axisLabel: {
+        fontSize: DETAIL_CHART_AXIS_FONT_SIZE,
+        color: DETAIL_AXIS_TEXT_COLOR,
+      },
       splitLine: { lineStyle: { color: '#f0f0f0' } },
     },
     series: [
@@ -894,9 +954,9 @@ export function buildCompareLatencyBar(
         type: 'bar' as const,
         name: '自研延迟 ms',
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
-        data: latencies.map((v, i) => ({
+        data: latencies.map((v) => ({
           value: v,
-          itemStyle: { color: colors[i] + 'cc', borderRadius: [2, 2, 0, 0] },
+          itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
         })),
       },
     ],
