@@ -183,7 +183,8 @@ export function applyDashboardRoute(
       if (pci != null) {
         const idx = Math.min(Math.max(0, pci), typePills.length - 1)
         const lab = typePills[idx]
-        if (idx === 0 || lab === '全部' || commPlatHasCommType(plat.key, commTbl, lab)) {
+        // 详情顶栏与其他维度一致不展示「全部」：概览为「全部」时勿沿用索引 0，交给下方回退逻辑
+        if (idx > 0 && lab !== '全部' && commPlatHasCommType(plat.key, commTbl, lab)) {
           pickedComm = idx
         }
       }

@@ -366,7 +366,7 @@ export function overlayBwOverviewCardFromFilters(
     ownScore: vs,
     ownVal: `${val.toFixed(1)} GB/s`,
     n: withMode.length,
-    extra: `${best.model} · ${modePill}`,
+    extra: String(best.model || '').trim() || '—',
     adv,
     advTxt,
   }

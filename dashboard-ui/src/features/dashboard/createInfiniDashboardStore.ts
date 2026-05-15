@@ -37,7 +37,13 @@ import {
   filterInferRows,
   type InferTablePack,
 } from '@/features/dashboard/inferBenchmark'
-import { filterCommRows, formatCommBandwidthGb, commNvidiaBaselineBw, commVsPercent } from '@/features/dashboard/commBenchmark'
+import {
+  filterCommRows,
+  formatCommBandwidthGb,
+  commNvidiaBaselineBw,
+  commVsPercent,
+  normalizeCommType,
+} from '@/features/dashboard/commBenchmark'
 import { BW_NVIDIA_BASELINE_GBPS, bwVsNvidiaPercent, pickBestBwRow, pickBestBwRowByMode, type BwModeKey } from '@/features/dashboard/bwBenchmark'
 import { filterTrainRows } from '@/features/dashboard/trainBenchmark'
 import {
@@ -526,7 +532,7 @@ export function createInfiniDashboardStore() {
       const catsBw = rows.map((r) => r.commType + ' ' + r.nGpu + 'GPU')
       const catsVs = rows.map((r) => r.commType)
       const gridBottom = maxCompactDetailBarGridBottom(catsBw, catsVs)
-      return buildCommBarVs(rows, { gridBottom })
+      return buildCommBarVs(rows, { gridBottom, commPlatBarName: plat.name })
     }
     if (dk === 'bw') {
       const platKey = detailState.value.platKey
@@ -586,7 +592,7 @@ export function createInfiniDashboardStore() {
     if (k === 'train')
       return '训练吞吐 tpps = tokens per process per second · 相对 NVIDIA 同 (framework, model, n_gpu, seq_len, dtype) 配置；顶栏「框架」与表格、KPI、柱状图联动'
     if (k === 'comm')
-      return '带宽 GB/s · 行级 vs NVIDIA = 同 (comm_type, n_gpu) 下本机 bw ÷ NVIDIA bw ×100；顶栏「通信类型」与表格、KPI、柱状图联动'
+      return '带宽 GB/s · 行级 vs NVIDIA = 同 (comm_type, n_gpu) 下本机 bw ÷ NVIDIA bw ×100；顶栏「通信类型」与表格、柱状图联动；上方四格 KPI 为全表各通信类型代表行（同类型取最高带宽）'
     if (k === 'bw')
       return '访存带宽（GB/s）vs NVIDIA 访存带宽 · add / copy / scale / triad 四模式均值'
     return ''
@@ -751,14 +757,16 @@ export function createInfiniDashboardStore() {
       ]
     }
     if (dimKey === 'comm') {
-      const rows = commDetailRows.value
+      // 四格 KPI：全表按类型取最高带宽代表行，不受顶栏「通信类型」子集影响（表格/图仍用 commDetailRows）
+      const allRows = CTABLE[platKey] || []
       const nvRows = commNvidiaBaselineRows.value
-      const sorted = [...(rows || [])].sort((a, b) => {
-        if (a.commType !== b.commType) return a.commType.localeCompare(b.commType)
-        return a.nGpu - b.nGpu
-      })
-      const p2p = sorted.find((r) => r.commType === 'p2p')
-      const ar = sorted.find((r) => r.commType === 'allreduce')
+      const pickMaxBwByType = (want: 'p2p' | 'allreduce') => {
+        const list = allRows.filter((r) => normalizeCommType(r.commType) === want)
+        if (!list.length) return undefined
+        return list.reduce((a, b) => (a.bw >= b.bw ? a : b))
+      }
+      const p2p = pickMaxBwByType('p2p')
+      const ar = pickMaxBwByType('allreduce')
       const p2pNvBw = p2p ? commNvidiaBaselineBw(nvRows, 'p2p', p2p.nGpu) : undefined
       const arNvBw = ar ? commNvidiaBaselineBw(nvRows, 'allreduce', ar.nGpu) : undefined
       const p2pVsPct =

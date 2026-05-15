@@ -148,6 +148,8 @@ export type DetailDimBarChartOpts = {
   gridBottom?: number
   /** 访存「多型号 + 单模式」柱图：本机系列图例用平台名（如寒武纪） */
   bwPlatBarName?: string
+  /** 通信「相对 NVIDIA（%）」双柱图：本机系列图例用平台名 */
+  commPlatBarName?: string
 }
 
 export function buildCiLineOption(seriesData: number[]) {
@@ -549,8 +551,10 @@ export function buildCommBarVs(rows: CommRow[], opts?: DetailDimBarChartOpts) {
   const xUi = compactDetailBarXAxisUi(categories)
   const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
   const gridBottom = opts?.gridBottom ?? xUi.gridBottom
+  const platName = String(opts?.commPlatBarName ?? '').trim() || '本机'
   return {
     tooltip: { trigger: 'axis' as const },
+    legend: { top: 2, right: 8 },
     grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
       type: 'category' as const,
@@ -562,10 +566,17 @@ export function buildCommBarVs(rows: CommRow[], opts?: DetailDimBarChartOpts) {
     series: [
       {
         type: 'bar' as const,
-        name: 'vs NVIDIA (%)',
+        name: `${platName}（相对 NVIDIA）`,
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
         data: rows.map((r) => r.vsA100),
+      },
+      {
+        type: 'bar' as const,
+        name: 'NVIDIA 参考（100%）',
+        barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+        itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        data: rows.map(() => 100),
       },
     ],
   }
