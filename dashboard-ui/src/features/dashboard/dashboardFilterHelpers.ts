@@ -12,6 +12,7 @@ import {
   buildBwCardMetrics,
   bwPlatHasMode,
   bwVsNvidiaPercent,
+  pickBestBwRow,
   type BwDetailRow,
 } from '@/features/dashboard/bwBenchmark'
 import {
@@ -345,12 +346,17 @@ export function overlayBwOverviewCardFromFilters(
   }
   const best = withMode.reduce((a, b) => ((a[mk] ?? 0) >= (b[mk] ?? 0) ? a : b))
   const val = best[mk] as number
-  /** 与详情「vs NVIDIA」一致：当前模式带宽 ÷ A100 固定基线 × 100 */
-  const vs = bwVsNvidiaPercent(val)
+  const nvRows = bwTbl.nvidia || []
+  const nvRef = pickBestBwRow(nvRows) ?? nvRows[0] ?? null
+  const nvV = nvRef?.[mk]
+  const vs =
+    nvV != null && Number.isFinite(nvV) && nvV > 0
+      ? Math.round((val / nvV) * 100)
+      : bwVsNvidiaPercent(val)
   const adv = vs >= 100
   const advTxt = adv
-    ? `${modePill} 带宽相对 NVIDIA A100 基线 ${vs}%`
-    : `${modePill} 相对 NVIDIA A100 基线 ${vs}%`
+    ? `${modePill} 带宽相对 NVIDIA A100 参考行同模式 ${vs}%`
+    : `${modePill} 相对 NVIDIA A100 参考行同模式 ${vs}%`
   return {
     ...card,
     ownFw: card.ownFw ?? 'HBM均值',

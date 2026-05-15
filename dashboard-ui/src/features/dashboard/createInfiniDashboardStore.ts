@@ -16,6 +16,7 @@ import {
   type TrainDetailRow,
 } from '@/data'
 import {
+  applyCardFilter,
   avgOpScore,
   overlayBwOverviewCardFromFilters,
   overlayCommOverviewCardFromFilters,
@@ -221,6 +222,7 @@ export function createInfiniDashboardStore() {
     const raw = (CARD_DATA as Record<string, CardRow[]>)[dim.key] || []
     let data = raw.filter((c) => selectedPlatKeys.value.includes(c.key))
     data = applyDimFilterOverlays(dim, data)
+    data = applyCardFilter(data, activeDim.value, filterState.value)
     const sorted = [...data].sort((a, b) => {
       const va = a.ownScore ?? 0
       const vb = b.ownScore ?? 0
@@ -236,7 +238,7 @@ export function createInfiniDashboardStore() {
     const raw = (CARD_DATA as Record<string, CardRow[]>)[dim.key] || []
     let data = raw.filter((c) => comparePlatKeys.value.includes(c.key))
     data = applyDimFilterOverlays(dim, data)
-    return data
+    return applyCardFilter(data, activeDim.value, filterState.value)
   })
 
   const detailPlat = computed(() => PLATFORMS.find((p) => p.key === detailState.value.platKey)!)
@@ -534,10 +536,19 @@ export function createInfiniDashboardStore() {
       const pair = bwTwinBarCategoryLists(mk, rowsDetail)
       if (!pair) return {}
       const gridBottom = maxCompactDetailBarGridBottom(pair.left, pair.right)
-      const best = pickBestBwRowByMode(rowsFull, mk)
       const nvidiaRow = bwNvidiaRefRow.value
-      if (!best || !nvidiaRow) return {}
-      return buildBwBarModes(best, nvidiaRow, mk, { gridBottom })
+      if (!nvidiaRow) return {}
+      if (mk) {
+        const rowsWithMode = rowsDetail.filter((r) => r[mk] != null && Number.isFinite(r[mk] as number))
+        if (!rowsWithMode.length) return {}
+        return buildBwBarModes(rowsWithMode, nvidiaRow, mk, {
+          gridBottom,
+          bwPlatBarName: plat.name,
+        })
+      }
+      const best = pickBestBwRowByMode(rowsFull, null)
+      if (!best) return {}
+      return buildBwBarModes(best, nvidiaRow, null, { gridBottom })
     }
     return {}
   })
@@ -577,7 +588,7 @@ export function createInfiniDashboardStore() {
     if (k === 'comm')
       return '带宽 GB/s · 行级 vs NVIDIA = 同 (comm_type, n_gpu) 下本机 bw ÷ NVIDIA bw ×100；顶栏「通信类型」与表格、KPI、柱状图联动'
     if (k === 'bw')
-      return '访存带宽 GB/s · 行级 vs NVIDIA = 当前带宽÷A100 基线(1607.46 GB/s)×100；顶栏「模式」与详情表、KPI、折线/柱图联动；「全部」下详情表列出全部型号，折线第二根柱为 A100 固定基线；指定模式时柱图为该模式对比、折线为各型号该列带宽'
+      return '访存带宽（GB/s）vs NVIDIA 访存带宽 · add / copy / scale / triad 四模式均值'
     return ''
   })
 

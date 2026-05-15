@@ -245,7 +245,7 @@ const detailChartRightTitle = computed(() => {
     case 'comm':
       return '相对 NVIDIA（%）'
     case 'bw':
-      return '访存模式对比'
+      return '相对 NVIDIA（%）'
     default:
       return ''
   }
@@ -431,7 +431,13 @@ const bwTableColumns = computed<ColumnsType<BwDetailRow>>(() => {
   const vsPct = (record: BwDetailRow): number => {
     if (mk) {
       const v = record[mk]
-      if (v != null && Number.isFinite(v)) return bwVsNvidiaPercent(v)
+      if (v != null && Number.isFinite(v)) {
+        const nvV = nv?.[mk]
+        if (nvV != null && Number.isFinite(nvV) && nvV > 0) {
+          return Math.round((v / nvV) * 100)
+        }
+        return bwVsNvidiaPercent(v)
+      }
     }
     return record.vsNvidia
   }

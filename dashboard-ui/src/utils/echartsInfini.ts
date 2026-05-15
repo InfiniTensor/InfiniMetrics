@@ -1,6 +1,7 @@
 /** ECharts option 构建 — 数值来自 @/data，与 dashboard_preview.html Chart.js 一致 */
 
 import { CI_CHART_LABELS } from '@/data'
+import { BW_NVIDIA_BASELINE_GBPS } from '@/features/dashboard/bwBenchmark'
 
 /**
  * 详情页折线/柱图：单系列用主蓝；双系列用主蓝 + 浅绿（与主图例「NVIDIA A100 / NVIDIA」一致，勿改用平台 brand 色）
@@ -142,7 +143,12 @@ export function maxCompactDetailBarGridBottom(...categoryLists: (string[] | unde
   return m
 }
 
-export type DetailDimBarChartOpts = { gridTop?: number; gridBottom?: number }
+export type DetailDimBarChartOpts = {
+  gridTop?: number
+  gridBottom?: number
+  /** 访存「多型号 + 单模式」柱图：本机系列图例用平台名（如寒武纪） */
+  bwPlatBarName?: string
+}
 
 export function buildCiLineOption(seriesData: number[]) {
   const cats = [...CI_CHART_LABELS]
@@ -617,25 +623,95 @@ export function buildBwBarAvg(
 
 type BwBarMode = 'add' | 'copy' | 'scale' | 'triad'
 
+function bwNvDenomGbps(nvidiaRow: BwRow, m: BwBarMode): number {
+  const v = nvidiaRow[m]
+  return v != null && Number.isFinite(v) && v > 0 ? (v as number) : BW_NVIDIA_BASELINE_GBPS
+}
+
+function bwPctVsNv(platGbps: number | null | undefined, nvDenomGbps: number): number {
+  if (platGbps == null || !Number.isFinite(platGbps) || nvDenomGbps <= 0) return 0
+  return Math.round((platGbps / nvDenomGbps) * 100)
+}
+
+function bwBarPctAxisTooltipFormatter(params: unknown): string {
+  if (!Array.isArray(params) || !params.length) return ''
+  const first = params[0] as { axisValueLabel?: string; axisValue?: string }
+  const title = String(first.axisValueLabel ?? first.axisValue ?? '')
+  const lines = (params as { marker?: string; seriesName?: string; value?: number }[])
+    .filter((p) => p.seriesName != null)
+    .map((p) => `${p.marker ?? ''}${p.seriesName}: ${p.value ?? '—'}%`)
+  return title ? `${title}<br/>${lines.join('<br/>')}` : lines.join('<br/>')
+}
+
+const BW_BAR_MODES_PCT_TOOLTIP = {
+  trigger: 'axis' as const,
+  formatter: bwBarPctAxisTooltipFormatter,
+}
+
 export function buildBwBarModes(
-  bestRow: BwRow,
+  platRowOrRows: BwRow | BwRow[],
   nvidiaRow: BwRow,
   singleMode?: BwBarMode | null,
   opts?: DetailDimBarChartOpts,
 ) {
-  const modes = (singleMode ? [singleMode] : (['add', 'copy', 'scale', 'triad'] as const))
+  const platRows = Array.isArray(platRowOrRows) ? platRowOrRows : [platRowOrRows]
+  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
+
+  /** 顶栏指定单一模式时：X 轴为各型号；数值为相对 NVIDIA 同模式带宽的百分比，参考柱恒为 100% */
+  if (singleMode) {
+    const mk = singleMode
+    const valid = platRows.filter((r) => r[mk] != null && Number.isFinite(r[mk] as number))
+    if (!valid.length) {
+      return {}
+    }
+    const categories = valid.map((r) => r.model || '—')
+    const xUi = compactDetailBarXAxisUi(categories)
+    const gridBottom = opts?.gridBottom ?? xUi.gridBottom
+    const nvDenom = bwNvDenomGbps(nvidiaRow, mk)
+    const platSeriesName =
+      valid.length > 1
+        ? `${opts?.bwPlatBarName ?? valid[0]?.model ?? '本机'}（${mk}）`
+        : `${valid[0]?.model || '自研'}（${mk}）`
+    const nvSeriesName = 'NVIDIA 参考（100%）'
+    return {
+      tooltip: BW_BAR_MODES_PCT_TOOLTIP,
+      legend: { top: 2, right: 8 },
+      grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
+      xAxis: {
+        type: 'category' as const,
+        data: categories,
+        axisLabel: xUi.axisLabel,
+        boundaryGap: detailBarBoundaryGap(categories.length),
+      },
+      yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0, ...DETAIL_VALUE_AXIS_NAME },
+      series: [
+        {
+          type: 'bar' as const,
+          name: platSeriesName,
+          data: valid.map((r) => bwPctVsNv(r[mk] as number, nvDenom)),
+          barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+          itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        },
+        {
+          type: 'bar' as const,
+          name: nvSeriesName,
+          data: valid.map(() => 100),
+          barMaxWidth: DETAIL_BAR_MAX_WIDTH,
+          itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
+        },
+      ],
+    }
+  }
+
+  const bestRow = platRows[0]
+  const modes = ['add', 'copy', 'scale', 'triad'] as const
   const categories = [...modes]
   const xUi = compactDetailBarXAxisUi(categories)
-  const gridTop = opts?.gridTop ?? DETAIL_DIM_TWIN_BAR_GRID_TOP
   const gridBottom = opts?.gridBottom ?? xUi.gridBottom
-  const platSeriesName = singleMode
-    ? `${bestRow.model || '自研'}（${singleMode}）`
-    : bestRow.model || '自研'
-  const nvSeriesName = singleMode
-    ? `NVIDIA A100（${singleMode}）`
-    : 'NVIDIA A100（四模式参考）'
+  const platSeriesName = bestRow.model || '自研'
+  const nvSeriesName = 'NVIDIA 参考（100%）'
   return {
-    tooltip: { trigger: 'axis' as const },
+    tooltip: BW_BAR_MODES_PCT_TOOLTIP,
     legend: { top: 2, right: 8 },
     grid: { ...DETAIL_BAR_GRID, top: gridTop, bottom: gridBottom },
     xAxis: {
@@ -644,19 +720,19 @@ export function buildBwBarModes(
       axisLabel: xUi.axisLabel,
       boundaryGap: detailBarBoundaryGap(categories.length),
     },
-    yAxis: { type: 'value' as const, name: 'GB/s', ...DETAIL_VALUE_AXIS_NAME },
+    yAxis: { type: 'value' as const, name: '% vs NVIDIA', min: 0, ...DETAIL_VALUE_AXIS_NAME },
     series: [
       {
         type: 'bar' as const,
         name: platSeriesName,
-        data: modes.map((m) => bestRow[m] as number),
+        data: modes.map((m) => bwPctVsNv(bestRow[m], bwNvDenomGbps(nvidiaRow, m))),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_PRIMARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },
       {
         type: 'bar' as const,
         name: nvSeriesName,
-        data: modes.map((m) => nvidiaRow[m] as number),
+        data: modes.map(() => 100),
         barMaxWidth: DETAIL_BAR_MAX_WIDTH,
         itemStyle: { color: DETAIL_CHART_SECONDARY_SOFT, borderRadius: [2, 2, 0, 0] },
       },

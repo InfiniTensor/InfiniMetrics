@@ -1,8 +1,8 @@
 /**
  * 访存维度（`new_data/bw`）：文件列 `model`、`add_bw_GBps`、`copy_bw_GBps`、`scale_bw_GBps`、`triad_bw_GBps`、`bw_GBps`（表头规范化后为下划线小写）、`date`、`tester`、`remarks`。
- * 得分统一：当前指标 ÷ **NVIDIA A100 固定基线** `BW_NVIDIA_BASELINE_GBPS` × 100（与详情「vs NVIDIA」一致）。
- * 行级：四模式均值 `avg` 对 A100 得 `vsNvidia`；各模式单列亦可同公式对比 A100。
- * 概览「全部」：`pickBestBwRow`（按 avg）行的 `vsNvidia`；extra 为全表 model 去重拼接。
+ * 得分统一：四模式均值 `avg` 对 **NVIDIA A100 固定基线** `BW_NVIDIA_BASELINE_GBPS` × 100（行级 `vsNvidia`、概览「全部」）。
+ * 详情顶栏指定单模式时，表格「vs NVIDIA（该模式）」与 KPI 一致：该行该模式值 ÷ NVIDIA 参考行（`pickBestBwRow`）同模式实测 ×100；参考列缺失时回退为固定基线。
+ * 概览指定单模式时，卡片叠层得分 = 该平台该模式峰值 ÷ NVIDIA 参考行（`pickBestBwRow(nvidia)`）同模式 ×100；参考列缺失时回退固定基线。
  */
 
 /** 规格：NVIDIA A100 四模式均值对标基线（GB/s） */
