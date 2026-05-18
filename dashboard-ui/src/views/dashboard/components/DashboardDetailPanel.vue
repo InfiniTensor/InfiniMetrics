@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { computed, h, watch, nextTick, ref, toValue } from 'vue'
+import { computed, h, watch, ref, toValue } from 'vue'
 import type { ColumnsType } from 'ant-design-vue/es/table'
 import type { TrainDetailRow } from '@/data'
 import { trainMatchKey, parseTrainFlashAttnParts } from '@/features/dashboard/trainBenchmark'
 import { formatCommBandwidthGb, type CommImportRow } from '@/features/dashboard/commBenchmark'
 import type { BwDetailRow, BwModeKey } from '@/features/dashboard/bwBenchmark'
 import { useRoute } from 'vue-router'
-import VChart from 'vue-echarts'
+import DashboardVChart from '@/components/DashboardVChart.vue'
+import { useEchartsGridResize } from '@/composables/useEchartsGridResize'
 import {
   CI_SUMMARY,
   DIMS,
@@ -27,6 +28,7 @@ import { DETAIL_DUAL_BAR_PRIMARY, DETAIL_DUAL_BAR_SECONDARY } from '@/utils/echa
 const route = useRoute()
 const store = useInfiniDashboard()
 const {
+  currentView,
   activeDimKey,
   detailState,
   detailPlat,
@@ -214,39 +216,41 @@ function hasChart(opt: object) {
   return opt && Object.keys(opt).length > 0
 }
 
-/** vue-echarts 首次 setOption 默认 merge；与切换维度后的增量更新叠加会残留旧 yAxis 样式，导致轴名位置首屏与刷新不一致 */
-const detailEchartsUpdateOptions = { notMerge: true }
+const chartsGridRef = ref<HTMLElement | null>(null)
+const detailLineChartRef = ref<InstanceType<typeof DashboardVChart> | null>(null)
+const detailBarChartRef = ref<InstanceType<typeof DashboardVChart> | null>(null)
+const detailCiChartRef = ref<InstanceType<typeof DashboardVChart> | null>(null)
 
-/** 算子详情双图：首屏容器宽度未稳定时 ECharts 会误判类目宽度导致 X 轴叠字，layout 后再 resize */
-const opDetailLineChartRef = ref<{ resize: () => void } | null>(null)
-const opDetailBarChartRef = ref<{ resize: () => void } | null>(null)
-
-function resizeOpDetailTwinCharts() {
-  void nextTick(() => {
-    opDetailLineChartRef.value?.resize()
-    opDetailBarChartRef.value?.resize()
-    requestAnimationFrame(() => {
-      opDetailLineChartRef.value?.resize()
-      opDetailBarChartRef.value?.resize()
-    })
-  })
-}
-
-watch(
+const { scheduleResize: scheduleDetailTwinChartsResize } = useEchartsGridResize(
+  chartsGridRef,
+  () => [detailLineChartRef.value, detailBarChartRef.value],
   () => [
     activeDimKey.value,
     detailState.value.platKey,
     detailState.value.opKey,
-    opDetailRows.value.length,
+    detailState.value.inferTab,
+    toValue(lineChartOption),
+    toValue(barChartOption),
   ],
-  () => {
-    if (activeDimKey.value !== 'op') return
-    const lo = toValue(lineChartOption) as object
-    const bo = toValue(barChartOption) as object
-    if (!hasChart(lo) || !hasChart(bo)) return
-    resizeOpDetailTwinCharts()
+)
+
+const ciCardRef = ref<HTMLElement | null>(null)
+
+const { scheduleResize: scheduleDetailCiChartResize } = useEchartsGridResize(
+  ciCardRef,
+  () => [detailCiChartRef.value],
+  () => [toValue(ciChartOption), ciTabKey.value],
+)
+
+/** 从概览/对比切回详情时容器由 display:none 变为可见，需重算图表宽高 */
+watch(
+  currentView,
+  (v) => {
+    if (v !== 'detail') return
+    scheduleDetailTwinChartsResize()
+    scheduleDetailCiChartResize()
   },
-  { flush: 'post', immediate: true },
+  { flush: 'post' },
 )
 
 /** 详情区主图标题（推理维度不用算子文案） */
@@ -1121,33 +1125,31 @@ function inferRowKey(r: InferRow) {
       </div>
 
     <!-- 主图（与 HTML 标题文案一致） -->
-    <div class="charts-grid">
+    <div ref="chartsGridRef" class="charts-grid">
       <div class="chart-card">
         <div class="chart-title">{{ detailChartLeftTitle }}</div>
-        <v-chart
+        <DashboardVChart
           v-if="hasChart(lineChartOption)"
-          ref="opDetailLineChartRef"
+          ref="detailLineChartRef"
           class="detail-chart"
           :option="lineChartOption"
-          :update-options="detailEchartsUpdateOptions"
-          autoresize
+          not-merge
         />
       </div>
       <div class="chart-card">
         <div class="chart-title">{{ detailChartRightTitle }}</div>
-        <v-chart
+        <DashboardVChart
           v-if="hasChart(barChartOption)"
-          ref="opDetailBarChartRef"
+          ref="detailBarChartRef"
           class="detail-chart"
           :option="barChartOption"
-          :update-options="detailEchartsUpdateOptions"
-          autoresize
+          not-merge
         />
       </div>
     </div>
 
     <!-- CI -->
-    <div class="ci-card">
+    <div ref="ciCardRef" class="ci-card">
       <a-tabs v-model:activeKey="ciTabKey" class="ci-detail-tabs">
         <a-tab-pane key="ci-stats" tab="CI 运行统计">
           <div class="ci-stats-grid">
@@ -1168,12 +1170,12 @@ function inferRowKey(r: InferRow) {
               <div class="ci-stat-lbl">失败用例</div>
             </div>
           </div>
-          <v-chart
+          <DashboardVChart
             v-if="hasChart(ciChartOption)"
+            ref="detailCiChartRef"
             class="ci-chart"
             :option="ciChartOption"
-            :update-options="detailEchartsUpdateOptions"
-            autoresize
+            not-merge
           />
         </a-tab-pane>
         <a-tab-pane key="dispatcher" tab="Dispatcher 汇总">

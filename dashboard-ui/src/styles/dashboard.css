@@ -474,6 +474,7 @@ tr:hover > td:not(.ant-table-cell){background:#fff;}
 
 /* Charts */
 .charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.charts-grid .chart-card{min-width:0;}
 .chart-title{font-size:15px;font-weight:700;color:#1a1a2e;margin-bottom:16px;}
 
 /* CI section（.ci-card 样式与 .table-card / .chart-card 共用上方模块卡片规则） */

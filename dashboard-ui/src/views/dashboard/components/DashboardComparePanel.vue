@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, toValue, watch } from 'vue'
 import type { ColumnsType } from 'ant-design-vue/es/table'
-import VChart from 'vue-echarts'
+import DashboardVChart from '@/components/DashboardVChart.vue'
 import { PLATFORMS } from '@/data'
 import type { CardRow } from '@/features/dashboard/dashboardFilterHelpers'
 import { useInfiniDashboard } from '@/composables/useInfiniDashboard'
 import { useDashboardNavigation } from '@/composables/useDashboardNavigation'
+import { useEchartsGridResize } from '@/composables/useEchartsGridResize'
 import { scoreTierColor } from '@/utils/scoreColor'
 
 /** public 根目录下的品牌图（与文件名一致） */
@@ -56,6 +57,7 @@ function compareDeltaText(delta: number | null) {
 }
 
 const {
+  currentView,
   comparePageTitle,
   compareKpiBlocks,
   compareScoreOption,
@@ -70,6 +72,25 @@ function hasChart(opt: object) {
 
 const showLatencyChart = computed(
   () => hasChart(compareLatencyOption.value as object),
+)
+
+const compareChartsGridRef = ref<HTMLElement | null>(null)
+const compareScoreChartRef = ref<InstanceType<typeof DashboardVChart> | null>(null)
+const compareLatencyChartRef = ref<InstanceType<typeof DashboardVChart> | null>(null)
+
+const { scheduleResize: scheduleCompareChartsResize } = useEchartsGridResize(
+  compareChartsGridRef,
+  () => [compareScoreChartRef.value, compareLatencyChartRef.value],
+  () => [toValue(compareScoreOption), toValue(compareLatencyOption), showLatencyChart.value],
+)
+
+watch(
+  currentView,
+  (v) => {
+    if (v !== 'compare') return
+    scheduleCompareChartsResize()
+  },
+  { flush: 'post' },
 )
 </script>
 
@@ -122,6 +143,7 @@ const showLatencyChart = computed(
       </div>
 
     <div
+      ref="compareChartsGridRef"
       class="charts-grid"
       :class="{ 'charts-grid--compare-single-chart': !showLatencyChart }"
     >
@@ -130,11 +152,11 @@ const showLatencyChart = computed(
         <div class="compare-chart-desc">
           相对开源基准的提速倍率 · 灰线为基准×1.0 · 越高越好
         </div>
-        <v-chart
+        <DashboardVChart
           v-if="hasChart(compareScoreOption)"
+          ref="compareScoreChartRef"
           class="compare-chart"
           :option="compareScoreOption"
-          autoresize
         />
       </div>
       <div v-if="showLatencyChart" class="chart-card">
@@ -142,7 +164,11 @@ const showLatencyChart = computed(
         <div class="compare-chart-desc">
           各平台代表算子延迟值 · 单位 ms · 越低越好
         </div>
-        <v-chart class="compare-chart" :option="compareLatencyOption" autoresize />
+        <DashboardVChart
+          ref="compareLatencyChartRef"
+          class="compare-chart"
+          :option="compareLatencyOption"
+        />
       </div>
     </div>
 
